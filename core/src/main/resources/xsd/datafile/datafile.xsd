@@ -202,6 +202,8 @@
             <xs:attribute name="crc" type="xs:string"/>
             <xs:attribute name="sha1" type="xs:string"/>
             <xs:attribute name="md5" type="xs:string"/>
+            <!-- Not actually in the DTD, but it seems they're using this now -->
+            <xs:attribute name="serial" type="xs:string"/>
             <xs:attribute name="merge" type="xs:string"/>
             <xs:attribute default="good" name="status">
                 <xs:simpleType>
