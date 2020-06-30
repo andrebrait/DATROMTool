@@ -22,14 +22,14 @@
             <xs:attribute default="0" name="start_offset">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
-                        <xs:pattern value="^-?[a-fA-F0-9]+$"/>
+                        <xs:pattern value="-?[a-fA-F0-9]+"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
             <xs:attribute default="EOF" name="end_offset">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
-                        <xs:pattern value="(^EOF$)|(^-?[a-fA-F0-9]+$)"/>
+                        <xs:pattern value="(EOF)|(-?[a-fA-F0-9]+)"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
@@ -81,7 +81,7 @@
                     <xs:attribute name="size">
                         <xs:simpleType>
                             <xs:restriction base="xs:string">
-                                <xs:pattern value="(^PO2$)|(^-?[a-fA-F0-9]+$)"/>
+                                <xs:pattern value="(PO2)|(-?[a-fA-F0-9]+)"/>
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:attribute>
@@ -107,14 +107,14 @@
                 <xs:attribute default="0" name="offset">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
-                            <xs:pattern value="^-?[a-fA-F0-9]+$"/>
+                            <xs:pattern value="-?[a-fA-F0-9]+"/>
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:attribute>
                 <xs:attribute name="value">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
-                            <xs:pattern value="^-?[a-fA-F0-9]+$"/>
+                            <xs:pattern value="-?[a-fA-F0-9]+"/>
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:attribute>
@@ -127,7 +127,7 @@
                 <xs:attribute name="mask">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
-                            <xs:pattern value="^[a-fA-F0-9]+$"/>
+                            <xs:pattern value="[a-fA-F0-9]+"/>
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:attribute>
