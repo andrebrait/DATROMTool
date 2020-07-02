@@ -1,0 +1,164 @@
+[
+  {
+    "code": "ASI",
+    "pattern": "Asia",
+    "languages": [
+      "zh"
+    ]
+  },
+  {
+    "code": "ARG",
+    "pattern": "Argentina",
+    "languages": [
+      "es"
+    ]
+  },
+  {
+    "code": "AUS",
+    "pattern": "Australia",
+    "languages": [
+      "en"
+    ]
+  },
+  {
+    "code": "BRA",
+    "pattern": "Brazil",
+    "languages": [
+      "pt"
+    ]
+  },
+  {
+    "code": "CAN",
+    "pattern": "Canada",
+    "languages": [
+      "en",
+      "fr"
+    ]
+  },
+  {
+    "code": "CHN",
+    "pattern": "(China)|(Hong Kong)",
+    "languages": [
+      "zh"
+    ]
+  },
+  {
+    "code": "DAN",
+    "pattern": "Denmark",
+    "languages": [
+      "da"
+    ]
+  },
+  {
+    "code": "EUR",
+    "pattern": "(Europe)|(World)",
+    "languages": [
+      "en"
+    ]
+  },
+  {
+    "code": "FRA",
+    "pattern": "France",
+    "languages": [
+      "fr"
+    ]
+  },
+  {
+    "code": "FYN",
+    "pattern": "Finland",
+    "languages": [
+      "fi"
+    ]
+  },
+  {
+    "code": "GER",
+    "pattern": "Germany",
+    "languages": [
+      "de"
+    ]
+  },
+  {
+    "code": "GRE",
+    "pattern": "Greece",
+    "languages": [
+      "el"
+    ]
+  },
+  {
+    "code": "ITA",
+    "pattern": "Italy",
+    "languages": [
+      "it"
+    ]
+  },
+  {
+    "code": "JPN",
+    "pattern": "(Japan)|(World)",
+    "languages": [
+      "ja"
+    ]
+  },
+  {
+    "code": "HOL",
+    "pattern": "Netherlands",
+    "languages": [
+      "nl"
+    ]
+  },
+  {
+    "code": "KOR",
+    "pattern": "Korea",
+    "languages": [
+      "ko"
+    ]
+  },
+  {
+    "code": "MEX",
+    "pattern": "Mexico",
+    "languages": [
+      "es"
+    ]
+  },
+  {
+    "code": "NOR",
+    "pattern": "Norway",
+    "languages": [
+      "no"
+    ]
+  },
+  {
+    "code": "RUS",
+    "pattern": "Russia",
+    "languages": [
+      "ru"
+    ]
+  },
+  {
+    "code": "SPA",
+    "pattern": "Spain",
+    "languages": [
+      "es"
+    ]
+  },
+  {
+    "code": "SWE",
+    "pattern": "Sweden",
+    "languages": [
+      "sv"
+    ]
+  },
+  {
+    "code": "USA",
+    "pattern": "(USA)|(World)",
+    "languages": [
+      "en"
+    ]
+  },
+  {
+    "code": "TAI",
+    "pattern": "Taiwan",
+    "languages": [
+      "zh"
+    ]
+  }
+]
