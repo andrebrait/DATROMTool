@@ -2,29 +2,37 @@ package io.github.datromtool;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import io.github.datromtool.data.RegionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 public final class SerializationHelper {
 
     private final static Logger logger = LoggerFactory.getLogger(SerializationHelper.class);
 
+    private static final Path REGION_DATA_CONFIG_PATH = Paths.get("config", "region-data.yaml");
+    private static final TypeReference<List<RegionData>>
+            REGION_DATA_LIST_REFERENCE = new TypeReference<List<RegionData>>() {
+    };
+
     private final XmlMapper xmlMapper;
     private final JsonMapper jsonMapper;
+    private final YAMLMapper yamlMapper;
 
     public static SerializationHelper getInstance() {
         return SerializationHelperHolder.INSTANCE;
@@ -38,6 +46,7 @@ public final class SerializationHelper {
     private SerializationHelper() {
         this.xmlMapper = createXmlMapper();
         this.jsonMapper = createJsonMapper();
+        this.yamlMapper = createYamlMapper();
     }
 
     private static XmlMapper createXmlMapper() {
@@ -64,24 +73,15 @@ public final class SerializationHelper {
                 .build();
     }
 
-    private static final class LoggingErrorHandler implements ErrorHandler {
-
-        @Override
-        public void warning(SAXParseException exception) {
-            logger.warn("XML parsing warning", exception);
-        }
-
-        @Override
-        public void error(SAXParseException exception) throws SAXException {
-            logger.error("XML parsing error", exception);
-            throw exception;
-        }
-
-        @Override
-        public void fatalError(SAXParseException exception) throws SAXException {
-            logger.error("XML parsing fatal error", exception);
-            throw exception;
-        }
+    private static YAMLMapper createYamlMapper() {
+        return YAMLMapper.builder()
+                .addModule(new JavaTimeModule())
+                .addModule(new Jdk8Module())
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .serializationInclusion(JsonInclude.Include.NON_NULL)
+                .build();
     }
 
     public <T> T loadXml(Path xml, Class<T> tClass) throws Exception {
@@ -94,5 +94,42 @@ public final class SerializationHelper {
         try (InputStream inputStream = Files.newInputStream(json)) {
             return jsonMapper.readValue(inputStream, tClass);
         }
+    }
+
+    public <T> T loadYaml(Path yaml, Class<T> tClass) throws Exception {
+        try (InputStream inputStream = Files.newInputStream(yaml)) {
+            return yamlMapper.readValue(inputStream, tClass);
+        }
+    }
+
+    public <T> T loadXml(Path xml, TypeReference<T> typeReference) throws Exception {
+        try (InputStream inputStream = Files.newInputStream(xml)) {
+            return xmlMapper.readValue(inputStream, typeReference);
+        }
+    }
+
+    public <T> T loadJson(Path json, TypeReference<T> typeReference) throws Exception {
+        try (InputStream inputStream = Files.newInputStream(json)) {
+            return jsonMapper.readValue(inputStream, typeReference);
+        }
+    }
+
+    public <T> T loadYaml(Path yaml, TypeReference<T> typeReference) throws Exception {
+        try (InputStream inputStream = Files.newInputStream(yaml)) {
+            return yamlMapper.readValue(inputStream, typeReference);
+        }
+    }
+
+    public List<RegionData> loadRegionData() throws Exception {
+        if (REGION_DATA_CONFIG_PATH.toFile().isFile()) {
+            try {
+                return loadYaml(REGION_DATA_CONFIG_PATH, REGION_DATA_LIST_REFERENCE);
+            } catch (Exception e) {
+                logger.error("Could not load custom region config from file", e);
+            }
+        }
+        return loadYaml(
+                Paths.get(ClassLoader.getSystemResource("config/region-data.yaml").toURI()),
+                REGION_DATA_LIST_REFERENCE);
     }
 }

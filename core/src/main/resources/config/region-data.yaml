@@ -1,0 +1,93 @@
+- code: ASI
+  pattern: "(?i)Asia"
+  languages:
+    - zh
+- code: ARG
+  pattern: "(?i)Argentina"
+  languages:
+    - es
+- code: AUS
+  pattern: "(?i)Australia"
+  languages:
+    - en
+- code: BRA
+  pattern: "(?i)Brazil"
+  languages:
+    - pt
+- code: CAN
+  pattern: "(?i)Canada"
+  languages:
+    - en
+    - fr
+- code: CHN
+  pattern: "(?i)(China)|(Hong Kong)"
+  languages:
+    - zh
+- code: DAN
+  pattern: "(?i)Denmark"
+  languages:
+    - da
+- code: EUR
+  pattern: "(?i)(Europe)|(World)"
+  languages:
+    - en
+- code: FRA
+  pattern: "(?i)France"
+  languages:
+    - fr
+- code: FYN
+  pattern: "(?i)Finland"
+  languages:
+    - fi
+- code: GER
+  pattern: "(?i)Germany"
+  languages:
+    - de
+- code: GRE
+  pattern: "(?i)Greece"
+  languages:
+    - el
+- code: ITA
+  pattern: "(?i)Italy"
+  languages:
+    - it
+- code: JPN
+  pattern: "(?i)(Japan)|(World)"
+  languages:
+    - ja
+- code: HOL
+  pattern: "(?i)Netherlands"
+  languages:
+    - nl
+- code: KOR
+  pattern: "(?i)Korea"
+  languages:
+    - ko
+- code: MEX
+  pattern: "(?i)Mexico"
+  languages:
+    - es
+- code: NOR
+  pattern: "(?i)Norway"
+  languages:
+    - "no"
+- code: RUS
+  pattern: "(?i)Russia"
+  languages:
+    - ru
+- code: SPA
+  pattern: "(?i)Spain"
+  languages:
+    - es
+- code: SWE
+  pattern: "(?i)Sweden"
+  languages:
+    - sv
+- code: USA
+  pattern: "(?i)(USA)|(World)"
+  languages:
+    - en
+- code: TAI
+  pattern: "(?i)Taiwan"
+  languages:
+    - zh
