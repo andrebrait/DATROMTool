@@ -1,5 +1,6 @@
 package io.github.datromtool;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -48,6 +49,7 @@ public final class SerializationHelper {
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .build();
     }
 
@@ -58,6 +60,7 @@ public final class SerializationHelper {
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .build();
     }
 
