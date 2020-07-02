@@ -42,12 +42,12 @@ class SerializationHelperTest {
         Assertions.assertFalse(regionDataList.isEmpty());
     }
 
-    private static Stream<Arguments> validNoIntroDats() throws Exception {
+    static Stream<Arguments> validNoIntroDats() throws Exception {
         URL folderUrl = ClassLoader.getSystemResource("valid/dats/no-intro");
         return Files.list(Paths.get(folderUrl.toURI())).map(Arguments::of);
     }
 
-    private static Stream<Arguments> validHeaders() throws Exception {
+    static Stream<Arguments> validHeaders() throws Exception {
         URL folderUrl = ClassLoader.getSystemResource("headers");
         return Files.list(Paths.get(folderUrl.toURI())).map(Arguments::of);
     }
