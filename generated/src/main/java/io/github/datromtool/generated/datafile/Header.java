@@ -1,6 +1,9 @@
 
 package io.github.datromtool.generated.datafile;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -54,6 +57,8 @@ import javax.xml.bind.annotation.XmlType;
     "romcenter"
 })
 @XmlRootElement(name = "header")
+@ToString
+@EqualsAndHashCode
 public class Header {
 
     @XmlElement(required = true)

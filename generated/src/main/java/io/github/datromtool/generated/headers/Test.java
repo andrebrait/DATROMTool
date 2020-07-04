@@ -1,6 +1,9 @@
 
 package io.github.datromtool.generated.headers;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -31,6 +34,8 @@ import javax.xml.bind.annotation.XmlType;
     File.class,
     Binarytest.class
 })
+@ToString
+@EqualsAndHashCode
 public class Test {
 
     @XmlAttribute(name = "result")

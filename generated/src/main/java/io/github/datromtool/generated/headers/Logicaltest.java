@@ -1,6 +1,9 @@
 
 package io.github.datromtool.generated.headers;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -38,6 +41,8 @@ import javax.xml.bind.annotation.XmlType;
     And.class,
     Or.class
 })
+@ToString
+@EqualsAndHashCode
 public class Logicaltest
     extends Binarytest
 {

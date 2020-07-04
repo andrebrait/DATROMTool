@@ -1,13 +1,16 @@
 
 package io.github.datromtool.generated.headers;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -67,6 +70,8 @@ import javax.xml.bind.annotation.XmlType;
     "file"
 })
 @XmlRootElement(name = "rule")
+@ToString
+@EqualsAndHashCode
 public class Rule {
 
     protected List<Data> data;
