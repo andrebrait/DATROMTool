@@ -1,7 +1,7 @@
 regions:
   - code: "ASI"
     pattern: "(?i)Asia"
-    languages: ["zh"]
+    languages: ["zh"] # TODO check if this is correct
   - code: "ARG"
     pattern: "(?i)Argentina"
     languages: ["es"]
@@ -13,7 +13,7 @@ regions:
     languages: ["pt"]
   - code: "CAN"
     pattern: "(?i)Canada"
-    languages: ["en", "fr"]
+    languages: ["en", "fr"] # TODO check if this is correct
   - code: "CHN"
     pattern: "(?i)(?:China)|(?:Hong Kong)"
     languages: ["zh"]
@@ -67,4 +67,4 @@ regions:
     languages: ["en"]
   - code: "TAI"
     pattern: "(?i)Taiwan"
-    languages: ["zh"]
+    languages: ["zh"] # TODO check if this is correct

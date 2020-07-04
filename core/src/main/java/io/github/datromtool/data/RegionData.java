@@ -1,7 +1,8 @@
 package io.github.datromtool.data;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import lombok.Builder;
+import lombok.NonNull;
 import lombok.Value;
 
 import java.util.regex.Pattern;
@@ -13,12 +14,15 @@ public class RegionData {
     @Value
     @Builder
     public static class RegionDataEntry {
-
+        @NonNull
         String code;
+        @NonNull
         Pattern pattern;
-        ImmutableList<String> languages;
+        @NonNull
+        ImmutableSet<String> languages;
     }
 
-    ImmutableList<RegionDataEntry> regions;
+    @NonNull
+    ImmutableSet<RegionDataEntry> regions;
 
 }
