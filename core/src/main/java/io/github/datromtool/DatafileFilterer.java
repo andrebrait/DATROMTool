@@ -46,8 +46,8 @@ public final class DatafileFilterer {
                             return p.containsAnyRegion(filter.getRegions())
                                     && p.containsAnyLanguage(filter.getLanguages());
                         case ALL_WITH_LANG:
-                            return p.containsAnyLanguage(filter.getLanguages())
-                                    || p.containsAnyRegion(filter.getRegions());
+                            return p.containsAnyRegion(filter.getRegions())
+                                    || p.containsAnyLanguage(filter.getLanguages());
                         case ALL_REGIONS:
                         default:
                             return true;
