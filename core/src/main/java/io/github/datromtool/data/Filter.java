@@ -1,16 +1,15 @@
 package io.github.datromtool.data;
 
+import com.google.common.collect.ImmutableList;
 import lombok.Builder;
 import lombok.Value;
-
-import java.util.List;
 
 @Value
 @Builder
 public class Filter {
 
-    List<String> regions;
-    List<String> languages;
+    ImmutableList<String> regions;
+    ImmutableList<String> languages;
 
 
 }

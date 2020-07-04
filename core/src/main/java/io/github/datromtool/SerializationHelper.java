@@ -2,12 +2,12 @@ package io.github.datromtool;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
@@ -19,16 +19,12 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 public final class SerializationHelper {
 
     private final static Logger logger = LoggerFactory.getLogger(SerializationHelper.class);
 
     private static final Path REGION_DATA_CONFIG_PATH = Paths.get("config", "region-data.yaml");
-    private static final TypeReference<List<RegionData>>
-            REGION_DATA_LIST_REFERENCE = new TypeReference<List<RegionData>>() {
-    };
 
     private final XmlMapper xmlMapper;
     private final JsonMapper jsonMapper;
@@ -55,6 +51,7 @@ public final class SerializationHelper {
                 .addModule(new JaxbAnnotationModule())
                 .addModule(new JavaTimeModule())
                 .addModule(new Jdk8Module())
+                .addModule(new GuavaModule())
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -66,6 +63,7 @@ public final class SerializationHelper {
         return JsonMapper.builder()
                 .addModule(new JavaTimeModule())
                 .addModule(new Jdk8Module())
+                .addModule(new GuavaModule())
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -77,6 +75,7 @@ public final class SerializationHelper {
         return YAMLMapper.builder()
                 .addModule(new JavaTimeModule())
                 .addModule(new Jdk8Module())
+                .addModule(new GuavaModule())
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
@@ -102,34 +101,16 @@ public final class SerializationHelper {
         }
     }
 
-    public <T> T loadXml(Path xml, TypeReference<T> typeReference) throws Exception {
-        try (InputStream inputStream = Files.newInputStream(xml)) {
-            return xmlMapper.readValue(inputStream, typeReference);
-        }
-    }
-
-    public <T> T loadJson(Path json, TypeReference<T> typeReference) throws Exception {
-        try (InputStream inputStream = Files.newInputStream(json)) {
-            return jsonMapper.readValue(inputStream, typeReference);
-        }
-    }
-
-    public <T> T loadYaml(Path yaml, TypeReference<T> typeReference) throws Exception {
-        try (InputStream inputStream = Files.newInputStream(yaml)) {
-            return yamlMapper.readValue(inputStream, typeReference);
-        }
-    }
-
-    public List<RegionData> loadRegionData() throws Exception {
+    public RegionData loadRegionData() throws Exception {
         if (REGION_DATA_CONFIG_PATH.toFile().isFile()) {
             try {
-                return loadYaml(REGION_DATA_CONFIG_PATH, REGION_DATA_LIST_REFERENCE);
+                return loadYaml(REGION_DATA_CONFIG_PATH, RegionData.class);
             } catch (Exception e) {
                 logger.error("Could not load custom region config from file", e);
             }
         }
         return loadYaml(
                 Paths.get(ClassLoader.getSystemResource("config/region-data.yaml").toURI()),
-                REGION_DATA_LIST_REFERENCE);
+                RegionData.class);
     }
 }

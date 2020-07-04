@@ -1,15 +1,24 @@
 package io.github.datromtool.data;
 
+import com.google.common.collect.ImmutableList;
+import lombok.Builder;
 import lombok.Value;
 
-import java.util.List;
 import java.util.regex.Pattern;
 
 @Value
+@Builder
 public class RegionData {
 
-    String code;
-    Pattern pattern;
-    List<String> languages;
+    @Value
+    @Builder
+    public static class RegionDataEntry {
+
+        String code;
+        Pattern pattern;
+        ImmutableList<String> languages;
+    }
+
+    ImmutableList<RegionDataEntry> regions;
 
 }

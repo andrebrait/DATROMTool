@@ -4,7 +4,6 @@ import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.data.RegionData;
 import io.github.datromtool.generated.datafile.Datafile;
 import io.github.datromtool.generated.headers.Detector;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -14,8 +13,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class SerializationHelperTest {
 
@@ -23,23 +24,24 @@ class SerializationHelperTest {
     @MethodSource("validNoIntroDats")
     void testReadDats(Path validFile) throws Exception {
         Datafile datafile = SerializationHelper.getInstance().loadXml(validFile, Datafile.class);
-        Assertions.assertNotNull(datafile);
-        Assertions.assertFalse(datafile.getGame().isEmpty());
+        assertNotNull(datafile);
+        assertFalse(datafile.getGame().isEmpty());
     }
 
     @ParameterizedTest
     @MethodSource("validHeaders")
     void testReadDetectors(Path validFile) throws Exception {
         Detector detector = SerializationHelper.getInstance().loadXml(validFile, Detector.class);
-        Assertions.assertNotNull(detector);
-        Assertions.assertFalse(detector.getRule().isEmpty());
+        assertNotNull(detector);
+        assertFalse(detector.getRule().isEmpty());
     }
 
     @Test
     void testLoadRegionData() throws Exception {
-        List<RegionData> regionDataList = SerializationHelper.getInstance().loadRegionData();
-        Assertions.assertNotNull(regionDataList);
-        Assertions.assertFalse(regionDataList.isEmpty());
+        RegionData regionData = SerializationHelper.getInstance().loadRegionData();
+        assertNotNull(regionData);
+        assertNotNull(regionData.getRegions());
+        assertFalse(regionData.getRegions().isEmpty());
     }
 
     static Stream<Arguments> validNoIntroDats() throws Exception {
