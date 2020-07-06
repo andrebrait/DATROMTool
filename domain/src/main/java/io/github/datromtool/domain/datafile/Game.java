@@ -57,12 +57,12 @@ public class Game {
     @NonNull
     @Builder.Default
     @JacksonXmlProperty(localName = "biosset")
-    ImmutableList<BIOSSet> BIOSSets = ImmutableList.of();
+    ImmutableList<BiosSet> biosSets = ImmutableList.of();
 
     @NonNull
     @Builder.Default
     @JacksonXmlProperty(localName = "rom")
-    ImmutableList<ROM> roms = ImmutableList.of();
+    ImmutableList<Rom> roms = ImmutableList.of();
 
     @NonNull
     @Builder.Default
@@ -91,7 +91,7 @@ public class Game {
     @Builder.Default
     @JacksonXmlProperty(localName = "isbios", isAttribute = true)
     @JsonProperty(defaultValue = "no")
-    YesNo isBIOS = YesNo.NO;
+    YesNo isBios = YesNo.NO;
 
     @JacksonXmlProperty(localName = "cloneof", isAttribute = true)
     String cloneOf;

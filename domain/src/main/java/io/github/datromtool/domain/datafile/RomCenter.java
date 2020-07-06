@@ -53,13 +53,13 @@ public class RomCenter {
     @Builder.Default
     @JacksonXmlProperty(localName = "lockrommode", isAttribute = true)
     @JsonProperty(defaultValue = "no")
-    YesNo isLockROMMode = YesNo.NO;
+    YesNo isLockRomMode = YesNo.NO;
 
     @NonNull
     @Builder.Default
     @JacksonXmlProperty(localName = "lockbiosmode", isAttribute = true)
     @JsonProperty(defaultValue = "no")
-    YesNo isLockBIOSMode = YesNo.NO;
+    YesNo isLockBiosMode = YesNo.NO;
 
     @NonNull
     @Builder.Default

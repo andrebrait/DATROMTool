@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import io.github.datromtool.domain.datafile.enumerations.YesNo;
+import io.github.datromtool.domain.datafile.enumerations.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -22,8 +22,8 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor(access = PRIVATE)
 @NoArgsConstructor(access = PRIVATE, force = true)
 @JsonInclude(NON_DEFAULT)
-@JacksonXmlRootElement(localName = "biosset")
-public class BIOSSet {
+@JacksonXmlRootElement(localName = "rom")
+public class Rom {
 
     @NonNull
     @JacksonXmlProperty(isAttribute = true)
@@ -33,13 +33,24 @@ public class BIOSSet {
     @NonNull
     @JacksonXmlProperty(isAttribute = true)
     @JsonProperty(required = true)
-    String description;
+    String size;
 
-    @NonNull
-    @Builder.Default
     @JacksonXmlProperty(isAttribute = true)
-    @JsonProperty(value = "default", defaultValue = "no")
-    YesNo isDefault = YesNo.NO;
+    String crc;
+
+    @JacksonXmlProperty(isAttribute = true)
+    String sha1;
+
+    @JacksonXmlProperty(isAttribute = true)
+    String md5;
+
+    @JacksonXmlProperty(isAttribute = true)
+    String merge;
+
+    @JacksonXmlProperty(isAttribute = true)
+    Status status;
+
+    @JacksonXmlProperty(isAttribute = true)
+    String date;
 
 }
-
