@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Commodore - Plus-4 (Parent-Clone)</name>
+		<description>Commodore - Plus-4 (Parent-Clone)</description>
+		<version>20090105-000000</version>
+		<date>20090105-000000</date>
+		<author></author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="[BIOS] Commodore 1551 (USA, Europe)">
+		<description>[BIOS] Commodore 1551 (USA, Europe)</description>
+		<rom name="[BIOS] Commodore 1551 (USA, Europe).u4" size="16384" crc="6d16d024" md5="0c767bf0a84d7751af056e53a074c9e2" sha1="fae3c788ad9a6cc2dbdfbcf6c0264b2ca921d55e"/>
+	</game>
+	<game name="[BIOS] Commodore 232 (Japan) (Proto)">
+		<description>[BIOS] Commodore 232 (Japan) (Proto)</description>
+		<rom name="[BIOS] Commodore 232 (Japan) (Proto).u24" size="16384" crc="dbdc3319" md5="a213823557421b66f9813ff19af48c01" sha1="3c77caf72914c1c0a0875b3a7f6935cd30c54201"/>
+		<rom name="[BIOS] Commodore 232 (Japan) (Proto).u23" size="16384" crc="74eaae87" md5="44a4ae400e3b4f7533a47ae0df1be78c" sha1="161c96b4ad20f3a4f2321808e37a5ded26a135dd"/>
+	</game>
+	<game name="[BIOS] Commodore Plus-4 (Europe) (R3)">
+		<description>[BIOS] Commodore Plus-4 (Europe) (R3)</description>
+		<rom name="[BIOS] Commodore Plus-4 (Europe) (R3).u25" size="16384" crc="4fd1d8cb" md5="2994d5463ef8524deb4231a9c764767c" sha1="3b69f6e7cb4c18bb08e203fb18b7dabfa853390f"/>
+		<rom name="[BIOS] Commodore Plus-4 (Europe) (R3).u26" size="16384" crc="109de2fc" md5="ac34591c820fe607d527e04e95bce465" sha1="0ad7ac2db7da692d972e586ca0dfd747d82c7693"/>
+		<rom name="[BIOS] Commodore Plus-4 (Europe) (R3).u24" size="16384" crc="77bab934" md5="4b4c383206fc5dcf8e3de1ae9fb1686b" sha1="97814dab9d757fe5a3a61d357a9a81da588a9783"/>
+		<rom name="[BIOS] Commodore Plus-4 (Europe) (R3).u23" size="16384" crc="74eaae87" md5="44a4ae400e3b4f7533a47ae0df1be78c" sha1="161c96b4ad20f3a4f2321808e37a5ded26a135dd"/>
+	</game>
+	<game name="[BIOS] Commodore Plus-4 (Europe) (R4)">
+		<description>[BIOS] Commodore Plus-4 (Europe) (R4)</description>
+		<rom name="[BIOS] Commodore Plus-4 (Europe) (R4).u25" size="16384" crc="4fd1d8cb" md5="2994d5463ef8524deb4231a9c764767c" sha1="3b69f6e7cb4c18bb08e203fb18b7dabfa853390f"/>
+		<rom name="[BIOS] Commodore Plus-4 (Europe) (R4).u26" size="16384" crc="109de2fc" md5="ac34591c820fe607d527e04e95bce465" sha1="0ad7ac2db7da692d972e586ca0dfd747d82c7693"/>
+		<rom name="[BIOS] Commodore Plus-4 (Europe) (R4).u24" size="16384" crc="be54ed79" md5="971cdd88b12b568cea7582e3a1341fd3" sha1="514ad3c29d01a2c0a3b143d9c1d4143b1912b793"/>
+		<rom name="[BIOS] Commodore Plus-4 (Europe) (R4).u23" size="16384" crc="74eaae87" md5="44a4ae400e3b4f7533a47ae0df1be78c" sha1="161c96b4ad20f3a4f2321808e37a5ded26a135dd"/>
+	</game>
+	<game name="[BIOS] Commodore Plus-4 (Europe) (R5)">
+		<description>[BIOS] Commodore Plus-4 (Europe) (R5)</description>
+		<rom name="[BIOS] Commodore Plus-4 (Europe) (R5).u25" size="16384" crc="4fd1d8cb" md5="2994d5463ef8524deb4231a9c764767c" sha1="3b69f6e7cb4c18bb08e203fb18b7dabfa853390f"/>
+		<rom name="[BIOS] Commodore Plus-4 (Europe) (R5).u26" size="16384" crc="109de2fc" md5="ac34591c820fe607d527e04e95bce465" sha1="0ad7ac2db7da692d972e586ca0dfd747d82c7693"/>
+		<rom name="[BIOS] Commodore Plus-4 (Europe) (R5).u24" size="16384" crc="71c07bd4" md5="89f5263665a8dc10c8f8abc38f5f7eb9" sha1="7c7e07f016391174a557e790c4ef1cbe33512cdb"/>
+		<rom name="[BIOS] Commodore Plus-4 (Europe) (R5).u23" size="16384" crc="74eaae87" md5="44a4ae400e3b4f7533a47ae0df1be78c" sha1="161c96b4ad20f3a4f2321808e37a5ded26a135dd"/>
+	</game>
+	<game name="[BIOS] Commodore Plus-4 (USA) (R4)">
+		<description>[BIOS] Commodore Plus-4 (USA) (R4)</description>
+		<rom name="[BIOS] Commodore Plus-4 (USA) (R4).u25" size="16384" crc="4fd1d8cb" md5="2994d5463ef8524deb4231a9c764767c" sha1="3b69f6e7cb4c18bb08e203fb18b7dabfa853390f"/>
+		<rom name="[BIOS] Commodore Plus-4 (USA) (R4).u26" size="16384" crc="109de2fc" md5="ac34591c820fe607d527e04e95bce465" sha1="0ad7ac2db7da692d972e586ca0dfd747d82c7693"/>
+		<rom name="[BIOS] Commodore Plus-4 (USA) (R4).u24" size="16384" crc="799a633d" md5="13dd5a03c8d55ec01375a730fb155d4c" sha1="5df52c693387c0e2b5d682613a3b5a65477311cf"/>
+		<rom name="[BIOS] Commodore Plus-4 (USA) (R4).u23" size="16384" crc="74eaae87" md5="44a4ae400e3b4f7533a47ae0df1be78c" sha1="161c96b4ad20f3a4f2321808e37a5ded26a135dd"/>
+	</game>
+	<game name="[BIOS] Commodore Plus-4 (USA) (R5)">
+		<description>[BIOS] Commodore Plus-4 (USA) (R5)</description>
+		<rom name="[BIOS] Commodore Plus-4 (USA) (R5).u25" size="16384" crc="4fd1d8cb" md5="2994d5463ef8524deb4231a9c764767c" sha1="3b69f6e7cb4c18bb08e203fb18b7dabfa853390f"/>
+		<rom name="[BIOS] Commodore Plus-4 (USA) (R5).u26" size="16384" crc="109de2fc" md5="ac34591c820fe607d527e04e95bce465" sha1="0ad7ac2db7da692d972e586ca0dfd747d82c7693"/>
+		<rom name="[BIOS] Commodore Plus-4 (USA) (R5).u24" size="16384" crc="70295038" md5="b3c450c36a88b491281d18fdf3e94ab0" sha1="a3d9e5be091b98de39a046ab167fb7632d053682"/>
+		<rom name="[BIOS] Commodore Plus-4 (USA) (R5).u23" size="16384" crc="74eaae87" md5="44a4ae400e3b4f7533a47ae0df1be78c" sha1="161c96b4ad20f3a4f2321808e37a5ded26a135dd"/>
+	</game>
+	<game name="[BIOS] Commodore V364 (USA) (Proto)">
+		<description>[BIOS] Commodore V364 (USA) (Proto)</description>
+		<rom name="[BIOS] Commodore V364 (USA) (Proto).u25" size="16384" crc="4fd1d8cb" md5="2994d5463ef8524deb4231a9c764767c" sha1="3b69f6e7cb4c18bb08e203fb18b7dabfa853390f"/>
+		<rom name="[BIOS] Commodore V364 (USA) (Proto).u26" size="16384" crc="109de2fc" md5="ac34591c820fe607d527e04e95bce465" sha1="0ad7ac2db7da692d972e586ca0dfd747d82c7693"/>
+		<rom name="[BIOS] Commodore V364 (USA) (Proto).u23" size="16384" crc="74eaae87" md5="44a4ae400e3b4f7533a47ae0df1be78c" sha1="161c96b4ad20f3a4f2321808e37a5ded26a135dd"/>
+		<rom name="[BIOS] Commodore V364 (USA) (Proto).bin" size="16384" crc="5227c2ee" md5="0073ace3874a2c5ca5de9cf64cdfbbd4" sha1="59af401cbb2194f689898271c6e8aafa28a7af11"/>
+		<rom name="[BIOS] Commodore V364 (USA) (Proto).u24" size="16384" crc="84fd4f7a" md5="7abb51257595b233a1a63ae58c330a65" sha1="b9a5b5dacd57ca117ef0b3af29e91998bf4d7e5f"/>
+	</game>
+	<game name="Atomic Mission (USA, Europe)">
+		<description>Atomic Mission (USA, Europe)</description>
+		<rom name="Atomic Mission (USA, Europe).bin" size="16384" crc="a059fccb" md5="a19ad12cbf2261117df58ae64bd635ca" sha1="e919531d016596ec1a2fd349bbe6691716297f35"/>
+	</game>
+	<game name="Calc Plus (USA) (Program)">
+		<description>Calc Plus (USA) (Program)</description>
+		<rom name="Calc Plus (USA) (Program).bin" size="32768" crc="54aa7b9d" md5="2389b94d9c59e0d01587bc1af5fb110b" sha1="1fb1103636a1ef3bc97e6cbe730eee552b326bd1"/>
+	</game>
+	<game name="Commodore 16 Keyboard Tutorial Cartridge (USA) (Program)">
+		<description>Commodore 16 Keyboard Tutorial Cartridge (USA) (Program)</description>
+		<rom name="Commodore 16 Keyboard Tutorial Cartridge (USA) (Program).bin" size="32768" crc="2aeead68" md5="e1e7394386ef02a05c8209506b053558" sha1="1664374f6c9515f5e2ac40741775aaaa7c31520d"/>
+	</game>
+	<game name="Financial Advisor (USA) (Program)">
+		<description>Financial Advisor (USA) (Program)</description>
+		<rom name="Financial Advisor (USA) (Program).bin" size="16384" crc="5b0e82ae" md5="5fd76819bc109612727f98590b92d67d" sha1="0f1b8b20331c8c502fed507eca5d66683667757b"/>
+	</game>
+	<game name="Jack Attack (USA, Europe)">
+		<description>Jack Attack (USA, Europe)</description>
+		<rom name="Jack Attack (USA, Europe).bin" size="16384" crc="6b624fec" md5="b22a426e223f28d8ff5439917d2ab6f5" sha1="ba54810ef1089fdf56b74536f9d679a80ace2dc1"/>
+	</game>
+	<game name="LOGO (USA) (Program)">
+		<description>LOGO (USA) (Program)</description>
+		<rom name="LOGO (USA) (Program).d64" size="174848" crc="f4d84692" md5="7c1922486fae09237527cc07a89039b0" sha1="2850fb13b27b400167d80f2d755481835e3033b5"/>
+		<rom name="LOGO (USA) (Program).bin" size="32768" crc="148541db" md5="2294705cf3bdeffc2e462b200e7ecba0" sha1="c0b474e9c07c85fcdc9778beb8b138caf2813c86"/>
+	</game>
+	<game name="Octasoft BASIC v7.0 (Hungary) (Program)">
+		<description>Octasoft BASIC v7.0 (Hungary) (Program)</description>
+		<rom name="Octasoft BASIC v7.0 (Hungary) (Program).bin" size="16384" crc="e900a1d5" md5="72c7402ff5efe809b521f66bf3588ca5" sha1="5f96bdeffa42c18e869d9d045df65d98a4e561eb"/>
+	</game>
+	<game name="Pirate Adventure (USA, Europe)">
+		<description>Pirate Adventure (USA, Europe)</description>
+		<rom name="Pirate Adventure (USA, Europe).bin" size="16384" crc="a903dc53" md5="23fb5ed28070db858ef410387be1ce89" sha1="410ccb6b304ca30e852fdc6ec33d9dacd7de3493"/>
+	</game>
+	<game name="Strange Odyssey (USA, Europe)">
+		<description>Strange Odyssey (USA, Europe)</description>
+		<rom name="Strange Odyssey (USA, Europe).bin" size="16384" crc="994c9b98" md5="af62e5c69576312c56c4a9ddd02240b2" sha1="30a0707efe24f58525bffc228085f412d574fa3b"/>
+	</game>
+	<game name="Viduzzles (USA, Europe)">
+		<description>Viduzzles (USA, Europe)</description>
+		<rom name="Viduzzles (USA, Europe).bin" size="16384" crc="eaaa44ed" md5="3483621641f0e09666fc7c6f0aedd442" sha1="97c269ab7b57a5ddfe65a06c29986c6ccb3aeb2b"/>
+	</game>
+</datafile>

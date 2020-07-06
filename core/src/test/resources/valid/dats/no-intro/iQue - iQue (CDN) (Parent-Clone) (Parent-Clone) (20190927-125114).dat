@@ -1,0 +1,328 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>iQue - iQue (CDN) (Parent-Clone)</name>
+		<description>iQue - iQue (CDN) (Parent-Clone)</description>
+		<version>20190927-125114</version>
+		<date>20190927-125114</date>
+		<author></author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="Dongwu Senlin (China) (v8)">
+		<description>Dongwu Senlin (China) (v8)</description>
+		<rom name="2104108" size="16138240" crc="0f86effe" md5="abb27076a1ca5632cbf2442f2fd761a0" sha1="8d009e1266fdbabcab307dfca39c8eb2ce2fe047" status="verified"/>
+	</game>
+	<game name="F-Zero X Weilai Saiche (China) (v3)">
+		<description>F-Zero X Weilai Saiche (China) (v3)</description>
+		<rom name="5202103" size="16334848" crc="909367b3" md5="f8aeaabebca1b0d228a5fe3c77740381" sha1="2920132524aa877792f03fab3e2957385aae41e7" status="verified"/>
+	</game>
+	<game name="F-Zero X Weilai Saiche (China) (v2) (Manual)">
+		<description>F-Zero X Weilai Saiche (China) (v2) (Manual)</description>
+		<rom name="5202902" size="180224" crc="ceb2944c" md5="0ed89cbdcd2f96c5c08b70eaaafbc613" sha1="871953819ce2a2d0cd7dfab57f95e966827744eb" status="verified"/>
+	</game>
+	<game name="F-Zero X Weilai Saiche (China) (v4) (Manual)">
+		<description>F-Zero X Weilai Saiche (China) (v4) (Manual)</description>
+		<rom name="5202904" size="294912" crc="6737c794" md5="b2c723a6f625fb99f08db09fc4f9dc60" sha1="a01cd9da8beeac44f44f08fa98cec603232d7ea4" status="verified"/>
+	</game>
+	<game name="F-Zero X Weilai Saiche (China) (Trailer)">
+		<description>F-Zero X Weilai Saiche (China) (Trailer)</description>
+		<rom name="26000001" size="12891544" crc="02d1cc96" md5="6cab8c08c6001ba046b21c1fa08095eb" sha1="e5e8b362ae873e5c3cd5d7c553ee1a601009411c" status="verified"/>
+	</game>
+	<game name="iQue Club (China)">
+		<description>iQue Club (China)</description>
+		<rom name="10000001" size="557056" crc="15da7cec" md5="99bf5e73bde973481df31da37e0323c1" sha1="11e8bed976037bc4ccf77998cbd24f9b2d4db9c7" status="verified"/>
+	</game>
+	<game name="iQue Club (China) (v2)">
+		<description>iQue Club (China) (v2)</description>
+		<rom name="10000002" size="557056" crc="3399854a" md5="998b226b8db3c9ec33714311e5d4518f" sha1="fe5e9a312d902e921730f96625207fdf99dc2cc8" status="verified"/>
+	</game>
+	<game name="iQue Club (China) (v3)">
+		<description>iQue Club (China) (v3)</description>
+		<rom name="10000003" size="573440" crc="638fd248" md5="a872e4b02a6e878b0182078cd3ca7a54" sha1="0eed6b76f3ee7015b309a0e2db51642599b7df3f" status="verified"/>
+	</game>
+	<game name="Maliou Kadingche (China) (v2) (Manual)">
+		<description>Maliou Kadingche (China) (v2) (Manual)</description>
+		<rom name="5201902" size="245760" crc="9eb74f64" md5="aa2d45ced10179f32b74375ef8384a61" sha1="018f08ef7aa62fa343774090856adc7eee3556ec" status="verified"/>
+	</game>
+	<game name="Maliou Kadingche (China) (v4)">
+		<description>Maliou Kadingche (China) (v4)</description>
+		<rom name="5201104" size="12533760" crc="884b13bd" md5="9895e8288f822fee67d4d19fd6bb2caa" sha1="c9d341daa59b196031a457fbb768f9d9457b539c" status="verified"/>
+	</game>
+	<game name="Maliou Kadingche (China) (v5)">
+		<description>Maliou Kadingche (China) (v5)</description>
+		<rom name="5201105" size="12533760" crc="7c2e7213" md5="539f1235e78aa9e01dedee13e9024daa" sha1="a6e1dc67ab968f4bbcf15b761bc72387a3d2fe3a" status="verified"/>
+	</game>
+	<game name="Maliou Kadingche (China) (v6) (Manual)">
+		<description>Maliou Kadingche (China) (v6) (Manual)</description>
+		<rom name="5201906" size="425984" crc="b6696482" md5="072f79b24af22b6363094630a9ed3c3d" sha1="65f930785b9ff5be19ca37eed0c042dee60fd951" status="verified"/>
+	</game>
+	<game name="Maliou Kadingche (China) (Trailer)">
+		<description>Maliou Kadingche (China) (Trailer)</description>
+		<rom name="25000001" size="14887542" crc="a4982815" md5="856ccc7073c9f9908a0ffb08474daf95" sha1="55b1def947aaef82268903548e77d827503657c2" status="verified"/>
+	</game>
+	<game name="Maliou Yisheng (China) (v4)">
+		<description>Maliou Yisheng (China) (v4)</description>
+		<rom name="6101104" size="3358720" crc="e5a3741e" md5="514dcf24c3b6e777157d3f19febb253f" sha1="964fe2891d3351499e5f2d9ee117d87330ae7412" status="verified"/>
+	</game>
+	<game name="Maliou Yisheng (China) (v2) (Manual)">
+		<description>Maliou Yisheng (China) (v2) (Manual)</description>
+		<rom name="6101902" size="294912" crc="7ce72e9b" md5="0b98abaf20f473d4bee8e22f18920748" sha1="36fb571c18d73472a89e02f26cdaea6cde937afb" status="verified"/>
+	</game>
+	<game name="Maliou Yisheng (China) (v4) (Manual)">
+		<description>Maliou Yisheng (China) (v4) (Manual)</description>
+		<rom name="6101904" size="393216" crc="107ba311" md5="e7d1148be9ac6149a35f0c22ddfe234e" sha1="828ea9a8b7666f2d8eae950359812fd5c3e4f276" status="verified"/>
+	</game>
+	<game name="Maliou Yisheng (China) (Trailer)">
+		<description>Maliou Yisheng (China) (Trailer)</description>
+		<rom name="22000001" size="13374918" crc="a5f929f2" md5="e19f4bfac77c82d949565ffea33b2be6" sha1="ff0024156a32f628c569e4d614c4102c49bdda19" status="verified"/>
+	</game>
+	<game name="Rentiantang Mingxing Daluan Dou (China) (v5)">
+		<description>Rentiantang Mingxing Daluan Dou (China) (v5)</description>
+		<rom name="1201105" size="16793600" crc="ad6ca836" md5="49844cb8fe9a45bae2a20837bdd273b8" sha1="7fcb59d677c25859c4a00b82cae846590f2d0ee7" status="verified"/>
+	</game>
+	<game name="Rentiantang Mingxing Daluan Dou (China) (Manual)">
+		<description>Rentiantang Mingxing Daluan Dou (China) (Manual)</description>
+		<rom name="1201901" size="294912" crc="2bd85517" md5="c9bde191187eec7cc8c9b3e693427443" sha1="aca3ddc7f1b939337cc73f9eefee6c5268c41d4d" status="verified"/>
+	</game>
+	<game name="Saierda Chuanshuo - Shiguang zhi Di (China) (v4)">
+		<description>Saierda Chuanshuo - Shiguang zhi Di (China) (v4)</description>
+		<rom name="2101104" size="29868032" crc="45baa341" md5="5ad50ba0418fede5975d8c5a9479026a" sha1="47bad44eb197b619fa7eb534f763267cf4437b08" status="verified"/>
+	</game>
+	<game name="Saierda Chuanshuo - Shiguang zhi Di (China) (v2) (Manual)">
+		<description>Saierda Chuanshuo - Shiguang zhi Di (China) (v2) (Manual)</description>
+		<rom name="2101902" size="278528" crc="e1e4940d" md5="a5b9c4286d63a47311cdae8ca52cc849" sha1="d2c97bf8ed7e30c5112c5c0e1e585052562ad4b3" status="verified"/>
+	</game>
+	<game name="Saierda Chuanshuo - Shiguang zhi Di (China) (v4) (Manual)">
+		<description>Saierda Chuanshuo - Shiguang zhi Di (China) (v4) (Manual)</description>
+		<rom name="2101904" size="425984" crc="e50a4c5c" md5="262992b226c0c70a96613dfb4760804d" sha1="d13c93a6cea784304a2bd148040deb4a65c92cf6" status="verified"/>
+	</game>
+	<game name="Saierda Chuanshuo - Shiguang zhi Di (China)">
+		<description>Saierda Chuanshuo - Shiguang zhi Di (China)</description>
+		<rom name="2106101" size="29868032" crc="955079bb" md5="627df063f2c7363b62104af8136d1398" sha1="770e21955d043ac7f277eb0ba67a8e1b462800b3" status="verified"/>
+	</game>
+	<game name="Saierda Chuanshuo - Shiguang zhi Di (China) (Trailer)">
+		<description>Saierda Chuanshuo - Shiguang zhi Di (China) (Trailer)</description>
+		<rom name="24000001" size="11813196" crc="66e55dde" md5="c1739e4f016f6ea1ea11a3b39ad80d5c" sha1="84d12d53676dfb7bd7783148b802331017093863" status="verified"/>
+	</game>
+	<game name="Shenyou Maliou (China) (v2) (Manual)">
+		<description>Shenyou Maliou (China) (v2) (Manual)</description>
+		<rom name="1101902" size="212992" crc="ffe7f77e" md5="593dc3bdce513b112784b20e2dd46347" sha1="84d89fc95ec39ffafff1ee38c507b0dd31637a88" status="verified"/>
+	</game>
+	<game name="Shenyou Maliou (China) (v4)">
+		<description>Shenyou Maliou (China) (v4)</description>
+		<rom name="1101104" size="8060928" crc="47dbf0d2" md5="c459ba45f0b0071ecf6b62da70f3d0a2" sha1="0891c8118466413ab0130a4e6a2c79cd5c684e64" status="verified"/>
+	</game>
+	<game name="Shenyou Maliou (China) (v6) (Manual)">
+		<description>Shenyou Maliou (China) (v6) (Manual)</description>
+		<rom name="1101906" size="409600" crc="12e05e8f" md5="216ad927dd016582efd548ac0b71d97f" sha1="d784cefd9ebebe005625d405a643d0efa5322d57" status="verified"/>
+	</game>
+	<game name="Shenyou Maliou (China) (Trailer)">
+		<description>Shenyou Maliou (China) (Trailer)</description>
+		<rom name="20000001" size="9742586" crc="db8f2d64" md5="d1869f84ae75516d7d63062c2de87637" sha1="a1b8b047e153868d459f365da288466edf08bfae" status="verified"/>
+	</game>
+	<game name="Shenyou Maliou (China) (Alt) (Trailer)">
+		<description>Shenyou Maliou (China) (Alt) (Trailer)</description>
+		<rom name="20000002" size="12466444" crc="81174c45" md5="18a57a172ae9a554c767a07a8552134d" sha1="73768135f786e295975dc22283d642754151c201" status="verified"/>
+	</game>
+	<game name="Shuishang Motuo (China) (v4)">
+		<description>Shuishang Motuo (China) (v4)</description>
+		<rom name="5101104" size="8159232" crc="4b4963bb" md5="bfff6c33fb58657d7ea4479c10f92c26" sha1="c77dd1c861fe335eb8d72bcb1a3eec1bf227b5fc" status="verified"/>
+	</game>
+	<game name="Shuishang Motuo (China) (v2) (Manual)">
+		<description>Shuishang Motuo (China) (v2) (Manual)</description>
+		<rom name="5101902" size="311296" crc="4e3a7574" md5="6684f2014489afd87d40753cc3d0d44f" sha1="c731962c2989d082e016f2ddb194a01ebc084692" status="verified"/>
+	</game>
+	<game name="Shuishang Motuo (China) (v4) (Manual)">
+		<description>Shuishang Motuo (China) (v4) (Manual)</description>
+		<rom name="5101904" size="491520" crc="2d1444e6" md5="ff0f984e3868ad89c3d7a212054a9b7e" sha1="7c484eddac6c935089f15d19becb9d37fe97632d" status="verified"/>
+	</game>
+	<game name="Shuishang Motuo (China) (Trailer)">
+		<description>Shuishang Motuo (China) (Trailer)</description>
+		<rom name="21000001" size="10017052" crc="cfbbce90" md5="241fecc57e627c495d57819786e94d8f" sha1="4bbe3e42cd1edb332c7517ce4600b28820ad5a8f" status="verified"/>
+	</game>
+	<game name="Shuishang Motuo (China) (Alt) (Trailer)">
+		<description>Shuishang Motuo (China) (Alt) (Trailer)</description>
+		<rom name="21000002" size="12198546" crc="95f1990b" md5="e9130e742eef912d686cc00c4480c635" sha1="0758ad464197138f37e236fb76ee6d2b0d7943c8" status="verified"/>
+	</game>
+	<game name="SKSA (China) (1010) (Firmware)">
+		<description>SKSA (China) (1010) (Firmware)</description>
+		<rom name="1010" size="229376" crc="7567534c" md5="d6e171fc693f61b0456b1a6c187717b7" sha1="80159a8e05c5f6efebada3a235a1a99358e145fc"/>
+	</game>
+	<game name="SKSA (China) (1042) (Firmware)">
+		<description>SKSA (China) (1042) (Firmware)</description>
+		<rom name="1042" size="3817472" crc="cd05ba4f" md5="311434390d3e73d5ff71e369ad6bed75" sha1="cdfc92b23fae811dd75e2cc13493ba00f1071150"/>
+	</game>
+	<game name="SKSA (China) (1011) (Firmware)">
+		<description>SKSA (China) (1011) (Firmware)</description>
+		<rom name="1011" size="3751936" crc="1956b73e" md5="c233d6c6972de294b6b59d99ffd48695" sha1="56a401b9273b19875b95f7ce85c8bc670861cd3e"/>
+	</game>
+	<game name="SKSA (China) (1009) (Firmware)">
+		<description>SKSA (China) (1009) (Firmware)</description>
+		<rom name="1009" size="999424" crc="147644c5" md5="d458b4189de60947aaa44abc5c4235a3" sha1="16628a5b485e39ab52b3fa452ffca2d02fb6dd81"/>
+	</game>
+	<game name="SKSA (China) (1012) (Firmware)">
+		<description>SKSA (China) (1012) (Firmware)</description>
+		<rom name="1012" size="229376" crc="1b63c9fe" md5="c520aaaed20b4371b2ed7bb1063aba7a" sha1="cb3066399e32cd912e664e797f78bcc91546ba0d"/>
+	</game>
+	<game name="SKSA (China) (1013) (Firmware)">
+		<description>SKSA (China) (1013) (Firmware)</description>
+		<rom name="1013" size="3817472" crc="e466b345" md5="134b0ab9afd980e11b5ca983ce597699" sha1="2fc391660336a01a9dec78b407823af94d13b5ff"/>
+	</game>
+	<game name="SKSA (China) (1041) (Firmware)">
+		<description>SKSA (China) (1041) (Firmware)</description>
+		<rom name="1041" size="229376" crc="725ccd8e" md5="66caf8045d0ec67ce8aeb559ab1b4d66" sha1="e71353ce3b8733f62d5e7f1d2829f544a8a78850"/>
+	</game>
+	<game name="SKSA (China) (1043) (Firmware)">
+		<description>SKSA (China) (1043) (Firmware)</description>
+		<rom name="1043" size="229376" crc="3fb7794d" md5="7c9a5c955f4769b5727afc9cd1265b60" sha1="4e580b43ba48305721fca34b43be8be329908dc7"/>
+	</game>
+	<game name="SKSA (China) (1044) (Firmware)">
+		<description>SKSA (China) (1044) (Firmware)</description>
+		<rom name="1044" size="3817472" crc="78e23e47" md5="3a4115a028916fca5a80fad3acd4c986" sha1="81738a22ba406cdf337b322c9bdd724efe950cf0"/>
+	</game>
+	<game name="SKSA (China) (1045) (Firmware)">
+		<description>SKSA (China) (1045) (Firmware)</description>
+		<rom name="1045" size="229376" crc="76c735bf" md5="6ef1f93926c9ebd419715d164369cd23" sha1="45b5b2e5509132e27fe722cf3ff1b6e820e612dd"/>
+	</game>
+	<game name="SKSA (China) (1046) (Firmware)">
+		<description>SKSA (China) (1046) (Firmware)</description>
+		<rom name="1046" size="81920" crc="14e50ca8" md5="ba9f85064673be235c8ad207c281c835" sha1="cebc8bf6e5da7ddf405b5964a51c6863784543f7"/>
+	</game>
+	<game name="SKSA (China) (1047) (Firmware)">
+		<description>SKSA (China) (1047) (Firmware)</description>
+		<rom name="1047" size="229376" crc="8c4bae35" md5="27e1cd69e6233665d2e16d53498a7c77" sha1="65d411dad5e306fad067506c30416f0c0c167940"/>
+	</game>
+	<game name="SKSA (China) (1048) (Firmware)">
+		<description>SKSA (China) (1048) (Firmware)</description>
+		<rom name="1048" size="3817472" crc="e20d5746" md5="bdc17c554fe02fb8704091c6a014667b" sha1="9a95eed0bb3e3e7dad59e756cbe9915c857c26d4"/>
+	</game>
+	<game name="SKSA (China) (1049) (Firmware)">
+		<description>SKSA (China) (1049) (Firmware)</description>
+		<rom name="1049" size="229376" crc="2a02b3a0" md5="e57ee381657a7474bad426a62ae17944" sha1="cad3d5c50b39404a181beaa0cd88ec32d1e81ca9"/>
+	</game>
+	<game name="SKSA (China) (1050) (Firmware)">
+		<description>SKSA (China) (1050) (Firmware)</description>
+		<rom name="1050" size="3817472" crc="7dcb24df" md5="3dc8f20eecfe8c8d064f6eb98932c6dc" sha1="8646ea72db2a749a41bc4248468a7820d581b824"/>
+	</game>
+	<game name="SKSA (China) (1051) (Firmware)">
+		<description>SKSA (China) (1051) (Firmware)</description>
+		<rom name="1051" size="229376" crc="5af08b6f" md5="6268864b22cfc33376f8872ce3f997da" sha1="52ccb35a570a5525cbfaf4d0456304ae5461986f"/>
+	</game>
+	<game name="SKSA (China) (1052) (Firmware)">
+		<description>SKSA (China) (1052) (Firmware)</description>
+		<rom name="1052" size="180224" crc="cc66bafc" md5="7dfd28f9d98da2369a03d6f1a2bc7720" sha1="660d79e414d2f67f199056a8ea6583d615e4eb9f"/>
+	</game>
+	<game name="SKSA (China) (1053) (Firmware)">
+		<description>SKSA (China) (1053) (Firmware)</description>
+		<rom name="1053" size="229376" crc="cfdb5148" md5="41a1fe2867a2134cb1f48c676a7357c3" sha1="0b6d37af345f13cf888dfb881721d46a8c6deede"/>
+	</game>
+	<game name="SKSA (China) (1054) (Firmware)">
+		<description>SKSA (China) (1054) (Firmware)</description>
+		<rom name="1054" size="3817472" crc="f72609df" md5="c97a827eca55a53979d80b0b0c394c0d" sha1="9d017df54cb4a19934904e941aa57682d326056b"/>
+	</game>
+	<game name="SKSA (China) (1062) (Firmware)">
+		<description>SKSA (China) (1062) (Firmware)</description>
+		<rom name="1062" size="983040" crc="198c00e2" md5="def658fb7ac7c9102e3e0939dbd9b1d5" sha1="d62a77002f8a3b755ebf0c9b9856c1d36c07c3c6"/>
+	</game>
+	<game name="SKSA (China) (1071) (Firmware)">
+		<description>SKSA (China) (1071) (Firmware)</description>
+		<rom name="1071" size="180224" crc="d9a96d52" md5="bf6fe626f973ba46dc72ecca016e3b2b" sha1="c98888118c6ac4f3fbccb8d5596d3efcef14a5db"/>
+	</game>
+	<game name="SKSA (China) (1072) (Firmware)">
+		<description>SKSA (China) (1072) (Firmware)</description>
+		<rom name="1072" size="81920" crc="daf55aa5" md5="7119414c90b66c35240524b38566c410" sha1="6f37fb34b9d3f1c84154c18de2638b36c4b10fea"/>
+	</game>
+	<game name="SKSA (China) (1082) (Firmware)">
+		<description>SKSA (China) (1082) (Firmware)</description>
+		<rom name="1082" size="983040" crc="1d293ccc" md5="5b71f99021e92ed96ee5aa791b1f5ba0" sha1="e1fcd2dd85753d7b08a0269406f978a5be5dd1eb"/>
+	</game>
+	<game name="SKSA (China) (1091) (Firmware)">
+		<description>SKSA (China) (1091) (Firmware)</description>
+		<rom name="1091" size="966656" crc="0b17ce01" md5="54339a1a91ac8aeb78488c377108b825" sha1="f41349ad8bac604dee3e82df71835fc87c7f7128"/>
+	</game>
+	<game name="SKSA (China) (1095) (Firmware)">
+		<description>SKSA (China) (1095) (Firmware)</description>
+		<rom name="1095" size="966656" crc="f7cbbedb" md5="e8b5792efe81146b12aa02c39fe1321b" sha1="b1fb820bb33bfe12123138a707f277ff556e471e"/>
+	</game>
+	<game name="SKSA (China) (1099) (Firmware)">
+		<description>SKSA (China) (1099) (Firmware)</description>
+		<rom name="1099" size="966656" crc="ab754fbd" md5="acfa21656253e43bf0266562bfd8ac50" sha1="3584f58e160265d0931131c14cf656b40ac1701c"/>
+	</game>
+	<game name="SKSA (China) (1101) (Firmware)">
+		<description>SKSA (China) (1101) (Firmware)</description>
+		<rom name="1101" size="966656" crc="f0e44a00" md5="ada6c488898dfc4c84a3bdda09e5ece6" sha1="216d0ae7d5f1c0ec83ea668da1b0e93936f121cd"/>
+	</game>
+	<game name="SKSA (China) (1106) (Firmware)">
+		<description>SKSA (China) (1106) (Firmware)</description>
+		<rom name="1106" size="966656" crc="901bf64a" md5="1422b1601f1dcf3053f1d5c175667418" sha1="0059deb22f85bc1c7bfcdb16feba6dd057548053"/>
+	</game>
+	<game name="Xingji Huohu (China) (v4) (Manual)">
+		<description>Xingji Huohu (China) (v4) (Manual)</description>
+		<rom name="4101904" size="229376" crc="e39afeeb" md5="87480cdbc96ee223a59ffc586615f7d3" sha1="a5b65a0aaa782e97ba7cf3208190a446e4fd80df" status="verified"/>
+	</game>
+	<game name="Xingji Huohu (China) (v4)">
+		<description>Xingji Huohu (China) (v4)</description>
+		<rom name="4101104" size="11829248" crc="c36b446c" md5="a35f74bbd3402bddd5d9de80b2dfe8d0" sha1="2f2a1b2124bfea7e6fcbaf7a638575016086d551" status="verified"/>
+	</game>
+	<game name="Xingji Huohu (China) (v5)">
+		<description>Xingji Huohu (China) (v5)</description>
+		<rom name="4101105" size="11829248" crc="9fc9f1fe" md5="1daf559e7fb63e2066c7ca8358b83ee9" sha1="d7305c12282f16f0bc3deb288b9f7857ee318e36" status="verified"/>
+	</game>
+	<game name="Xingji Huohu (China) (v2) (Manual)">
+		<description>Xingji Huohu (China) (v2) (Manual)</description>
+		<rom name="4101902" size="163840" crc="6bc2911b" md5="8741c70e7ec966235e5ce15104ff6c48" sha1="37f16f95687fd8ca96c0ce93f6afef19c32b7180" status="verified"/>
+	</game>
+	<game name="Xingji Huohu (China) (Trailer)">
+		<description>Xingji Huohu (China) (Trailer)</description>
+		<rom name="23000001" size="11565172" crc="490e5206" md5="b98893020ab867494e9b9239ddac14d9" sha1="8027bf01a36dd0d73be50f5d9e75a738adfa73c7" status="verified"/>
+	</game>
+	<game name="Yaoxi Gushi (China)">
+		<description>Yaoxi Gushi (China)</description>
+		<rom name="1102101" size="16023552" crc="40a03c52" md5="f41dd4a1699c271725540b9e9b06905b" sha1="0cd895394655895701b0f220653afeff3b70cf66" status="verified"/>
+	</game>
+	<game name="Yaoxi Gushi (China) (v2) (Manual)">
+		<description>Yaoxi Gushi (China) (v2) (Manual)</description>
+		<rom name="1102902" size="196608" crc="7081b086" md5="4cd568fa411f66fb251eb677f07e621b" sha1="6e7136f677e3345988b60379f5fae9143f505c2b" status="verified"/>
+	</game>
+	<game name="Yaoxi Gushi (China) (v4) (Manual)">
+		<description>Yaoxi Gushi (China) (v4) (Manual)</description>
+		<rom name="1102904" size="245760" crc="18586305" md5="cef3131727fd1acc4cf02a87a46c1154" sha1="0afa05166714ef8477482bd1840522861ac50144" status="verified"/>
+	</game>
+	<game name="Yaoxi Gushi (China) (v6) (Manual)">
+		<description>Yaoxi Gushi (China) (v6) (Manual)</description>
+		<rom name="1102906" size="425984" crc="27d32937" md5="9affe75a1208be881cb959f27af51ee5" sha1="1b6c7e077b24cda4bc9575a52c7a56407e1c5c31" status="verified"/>
+	</game>
+	<game name="Yueye Motuo (China) (v8)">
+		<description>Yueye Motuo (China) (v8)</description>
+		<rom name="5102108" size="16072704" crc="b4ee760a" md5="5adba1ef5cfb3b5368d92cecfccf3836" sha1="9db9d2c06727f14aa7b567080666b0ea46068c78" status="verified"/>
+	</game>
+	<game name="Yueye Motuo (China) (v2) (Manual)">
+		<description>Yueye Motuo (China) (v2) (Manual)</description>
+		<rom name="5102902" size="262144" crc="f27802a2" md5="d293890bd41f129ef631cb3a7170d190" sha1="d3e3bf485a31441b0f557896d7eb9b3b6567b82b" status="verified"/>
+	</game>
+	<game name="Zhipian Maliou (China) (v4)">
+		<description>Zhipian Maliou (China) (v4)</description>
+		<rom name="2102104" size="41943040" crc="78c7f732" md5="0fa599e0c4572d01e0f27053a6c0e2c9" sha1="59189ec033be63837fdab8e1d27ab5cc38d27792" status="verified"/>
+	</game>
+	<game name="Zhipian Maliou (China) (v2) (Manual)">
+		<description>Zhipian Maliou (China) (v2) (Manual)</description>
+		<rom name="2102902" size="376832" crc="ecc4cd3b" md5="7372a3d86180167dfacccb7bac12cad7" sha1="770ecd7f2169a9265848ff3089d76d6e66e3f8fb" status="verified"/>
+	</game>
+	<game name="Zhipian Maliou (China) (v4) (Manual)">
+		<description>Zhipian Maliou (China) (v4) (Manual)</description>
+		<rom name="2102904" size="376832" crc="739b679a" md5="178c6727790b36502e1f720ef1b02056" sha1="2d1e239bdf3624db74f33fa0d56667d64f517b3d" status="verified"/>
+	</game>
+	<game name="Zuhe Jiqiren (China) (v3)">
+		<description>Zuhe Jiqiren (China) (v3)</description>
+		<rom name="2105103" size="16793600" crc="716891ea" md5="6a9bd38bc13cc294484f296c13455720" sha1="7b6101c573182c475e344e7e93db2c6819ee1062" status="verified"/>
+	</game>
+	<game name="Zui yu Fa - Diqiu de Jicheng Zhe (China) (v3)">
+		<description>Zui yu Fa - Diqiu de Jicheng Zhe (China) (v3)</description>
+		<rom name="4102103" size="33636352" crc="0cdb4bdf" md5="ca2f78f45d8dc723c09a3305999c221f" sha1="da82fb44507b8323636ed84723431bb0a759cc34" status="verified"/>
+	</game>
+	<game name="Zui yu Fa - Diqiu de Jicheng Zhe (China) (Manual)">
+		<description>Zui yu Fa - Diqiu de Jicheng Zhe (China) (Manual)</description>
+		<rom name="4102901" size="245760" crc="797001f2" md5="eb5a1601e7555b3962d3a4d27765bb0d" sha1="66cbf1459507a38fdc415bfa8c3f741651290907" status="verified"/>
+	</game>
+</datafile>

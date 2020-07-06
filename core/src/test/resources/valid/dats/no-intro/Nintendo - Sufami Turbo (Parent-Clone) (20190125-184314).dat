@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Nintendo - Sufami Turbo (Parent-Clone)</name>
+		<description>Nintendo - Sufami Turbo (Parent-Clone)</description>
+		<version>20190125-184314</version>
+		<date>20190125-184314</date>
+		<author></author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="Bishoujo Senshi Sailor Moon Sailor Stars - Fuwafuwa Panic 2 (Japan)">
+		<description>Bishoujo Senshi Sailor Moon Sailor Stars - Fuwafuwa Panic 2 (Japan)</description>
+		<release name="Bishoujo Senshi Sailor Moon Sailor Stars - Fuwafuwa Panic 2 (Japan)" region="JPN"/>
+		<rom name="Bishoujo Senshi Sailor Moon Sailor Stars - Fuwafuwa Panic 2 (Japan).st" size="1048576" crc="bb5c4238" md5="55d6940953b7e1ea4d88725cba2fdbca" sha1="f72ea67468cf34360042bdd7974fd588a2407566" status="verified"/>
+	</game>
+	<game name="Crayon Shin-chan - Nagagutsu Dobon!! (Japan)">
+		<description>Crayon Shin-chan - Nagagutsu Dobon!! (Japan)</description>
+		<release name="Crayon Shin-chan - Nagagutsu Dobon!! (Japan)" region="JPN"/>
+		<rom name="Crayon Shin-chan - Nagagutsu Dobon!! (Japan).st" size="524288" crc="8eb753f3" md5="3c951183ae15567c811a675cf44aa22c" sha1="98a99807a958c1175a2b257166d7b08b2be6d442" status="verified"/>
+	</game>
+	<game name="Gegege no Kitarou - Youkai Donjara (Japan)">
+		<description>Gegege no Kitarou - Youkai Donjara (Japan)</description>
+		<release name="Gegege no Kitarou - Youkai Donjara (Japan)" region="JPN"/>
+		<rom name="Gegege no Kitarou - Youkai Donjara (Japan).st" size="524288" crc="4296500d" md5="c9cae86f503bd0b6ebef6c481b179536" sha1="965b2582b13ee361eca93937b1b093049bc8d958" status="verified"/>
+	</game>
+	<game name="Gekisou Sentai Carranger - Zenkai! Racer Senshi (Japan)">
+		<description>Gekisou Sentai Carranger - Zenkai! Racer Senshi (Japan)</description>
+		<release name="Gekisou Sentai Carranger - Zenkai! Racer Senshi (Japan)" region="JPN"/>
+		<rom name="Gekisou Sentai Carranger - Zenkai! Racer Senshi (Japan).st" size="524288" crc="14c66fca" md5="27eb2c85bb733416762fa1bcd91a4ab7" sha1="50b9d6ebf0e3f4b9dad5d0660d6c834820cbe391" status="verified"/>
+	</game>
+	<game name="Poi Poi Ninja World (Japan)">
+		<description>Poi Poi Ninja World (Japan)</description>
+		<release name="Poi Poi Ninja World (Japan)" region="JPN"/>
+		<rom name="Poi Poi Ninja World (Japan).st" size="524288" crc="32b2b3dd" md5="d5c6e9038e60c23b05d5690a03ffa4c9" sha1="ae7421b87a9f4cc7c189680dfbb39453905aa5e6" status="verified"/>
+	</game>
+	<game name="SD Gundam Generation - Axis Senki (Japan)">
+		<description>SD Gundam Generation - Axis Senki (Japan)</description>
+		<release name="SD Gundam Generation - Axis Senki (Japan)" region="JPN"/>
+		<rom name="SD Gundam Generation - Axis Senki (Japan).st" size="524288" crc="72b4235f" md5="16375432c8ffc540b459cfd31723572b" sha1="6f5be110a606f34bb797a30c1f07b84b2ff38425" status="verified"/>
+	</game>
+	<game name="SD Gundam Generation - Babylonia Kenkoku Senki (Japan)">
+		<description>SD Gundam Generation - Babylonia Kenkoku Senki (Japan)</description>
+		<release name="SD Gundam Generation - Babylonia Kenkoku Senki (Japan)" region="JPN"/>
+		<rom name="SD Gundam Generation - Babylonia Kenkoku Senki (Japan).st" size="524288" crc="792d884c" md5="c1305ecd913e12719c5ea07eea4a440e" sha1="f18f680b981077cfa025161cfe6c9594b6d18078" status="verified"/>
+	</game>
+	<game name="SD Gundam Generation - Colony Kakutouki (Japan)">
+		<description>SD Gundam Generation - Colony Kakutouki (Japan)</description>
+		<release name="SD Gundam Generation - Colony Kakutouki (Japan)" region="JPN"/>
+		<rom name="SD Gundam Generation - Colony Kakutouki (Japan).st" size="524288" crc="c5dfa8fd" md5="3e84a2bccc251ff42c01166ba55dfdaf" sha1="0a335ef645d058c2da5389ad622c62d0bffce944" status="verified"/>
+	</game>
+	<game name="SD Gundam Generation - Gryps Senki (Japan)">
+		<description>SD Gundam Generation - Gryps Senki (Japan)</description>
+		<release name="SD Gundam Generation - Gryps Senki (Japan)" region="JPN"/>
+		<rom name="SD Gundam Generation - Gryps Senki (Japan).st" size="524288" crc="48ecae44" md5="3bf7fd80b609beb19fd4c40b65f9224c" sha1="f280004dd92b70b1bf4518e054b4181a9bbba245" status="verified"/>
+	</game>
+	<game name="SD Gundam Generation - Ichinen Sensouki (Japan)">
+		<description>SD Gundam Generation - Ichinen Sensouki (Japan)</description>
+		<release name="SD Gundam Generation - Ichinen Sensouki (Japan)" region="JPN"/>
+		<rom name="SD Gundam Generation - Ichinen Sensouki (Japan).st" size="524288" crc="afd74dcb" md5="84d83ded05c6ec31654dd1e2116e32d3" sha1="adc7716a4b081aba5cde3525881c51ee6d600396" status="verified"/>
+	</game>
+	<game name="SD Gundam Generation - Zanscare Senki (Japan)">
+		<description>SD Gundam Generation - Zanscare Senki (Japan)</description>
+		<release name="SD Gundam Generation - Zanscare Senki (Japan)" region="JPN"/>
+		<rom name="SD Gundam Generation - Zanscare Senki (Japan).st" size="524288" crc="efd3a865" md5="9892637e1523509c16b4e8017e99200f" sha1="d0ebe3cfcc76ec275151c3b9392fc2ff5d3b50da" status="verified"/>
+	</game>
+	<game name="SD Ultra Battle - Seven Densetsu (Japan)">
+		<description>SD Ultra Battle - Seven Densetsu (Japan)</description>
+		<release name="SD Ultra Battle - Seven Densetsu (Japan)" region="JPN"/>
+		<rom name="SD Ultra Battle - Seven Densetsu (Japan).st" size="524288" crc="43ad5a45" md5="bb8daddcf18fc44442baa041888da924" sha1="bfe85a6e6e8c24584ed5983dbf56048c4c8f2287" status="verified"/>
+	</game>
+	<game name="SD Ultra Battle - Ultraman Densetsu (Japan)">
+		<description>SD Ultra Battle - Ultraman Densetsu (Japan)</description>
+		<release name="SD Ultra Battle - Ultraman Densetsu (Japan)" region="JPN"/>
+		<rom name="SD Ultra Battle - Ultraman Densetsu (Japan).st" size="524288" crc="04939d14" md5="bd6aee0e7a861fe738f9cfe69084a3c5" sha1="5527fcc136ff0c0ef53a1c9c2756d4a27afa1526" status="verified"/>
+	</game>
+</datafile>

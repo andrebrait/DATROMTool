@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Casio - PV-1000</name>
+		<description>Casio - PV-1000</description>
+		<version>20200109-103603</version>
+		<author>relax</author>
+		<homepage>No-Intro</homepage>
+		<url>http://www.no-intro.org</url>
+	</header>
+	<game name="Amidar (Japan)">
+		<description>Amidar (Japan)</description>
+		<game_id>GPA-104</game_id>
+		<rom name="Amidar (Japan).bin" size="8192" crc="C82628CC" md5="EE4E2D5B4617C3BF9F11016E1FE1C94E" sha1="00322D4025FEF19728194442F9E06A4CCCD01933"/>
+	</game>
+	<game name="Dig Dug (Japan)">
+		<description>Dig Dug (Japan)</description>
+		<game_id>GPA-105</game_id>
+		<rom name="Dig Dug (Japan).bin" size="16384" crc="A94F02FA" md5="4E2B1C14DCA34084A7612D794642A12A" sha1="502A163C1AE88ECCC7E9782261D86D4090CB41E1"/>
+	</game>
+	<game name="Dirty Chameleon (Japan)">
+		<description>Dirty Chameleon (Japan)</description>
+		<game_id>GPA-114</game_id>
+		<rom name="Dirty Chameleon (Japan).bin" size="8192" crc="8E7FB358" md5="C1250DC9300411C2AA5B6017F07E3176" sha1="63E94CC01410AEFD59B465105E701330DC13C398"/>
+	</game>
+	<game name="Excite Mahjong (Japan)">
+		<description>Excite Mahjong (Japan)</description>
+		<game_id>GPA-115</game_id>
+		<rom name="Excite Mahjong (Japan).bin" size="16384" crc="0D2F829C" md5="B0EF3B9523FB276772FA4433136BC5DB" sha1="6CC9E5D234BC1B483108AE4DC79D644802A64EF0"/>
+	</game>
+	<game name="Fighting Bug (Japan)">
+		<description>Fighting Bug (Japan)</description>
+		<game_id>GPA-110</game_id>
+		<rom name="Fighting Bug (Japan).bin" size="8192" crc="84986255" md5="99E9E3D677065325CB2B2030D82A4C8B" sha1="7202641A387DA90323D149E2F327A5C828856556" status="verified"/>
+	</game>
+	<game name="Naughty Boy (Japan)">
+		<description>Naughty Boy (Japan)</description>
+		<game_id>GPA-112</game_id>
+		<rom name="Naughty Boy (Japan).bin" size="8192" crc="43A13E99" md5="EF6BFD54A18E51370E1AA9A330B66E13" sha1="A72E8606B8B6C8D10050D6D7B1FF87455B623004"/>
+	</game>
+	<game name="Pachinko-UFO (Japan)">
+		<description>Pachinko-UFO (Japan)</description>
+		<game_id>GPA-109</game_id>
+		<rom name="Pachinko-UFO (Japan).bin" size="16384" crc="9EE981AB" md5="AEFAFC42CABC5C6EE40DEFE9EC09B488" sha1="D6CA45430A34CE0090BA882ADE5A2268A862D4F4"/>
+	</game>
+	<game name="Pooyan (Japan)">
+		<description>Pooyan (Japan)</description>
+		<game_id>GPA-101</game_id>
+		<rom name="Pooyan (Japan).bin" size="8192" crc="BD6EDC48" md5="E43B200C31CEC2DD1EBE3331C4BD2BF3" sha1="606B7D603DA23E70012B361D7FFB53EA026F88F5"/>
+	</game>
+	<game name="Space Panic (Japan)">
+		<description>Space Panic (Japan)</description>
+		<game_id>GPA-111</game_id>
+		<rom name="Space Panic (Japan).bin" size="8192" crc="23547111" md5="156FAED893080AED343D760AD7B8A7CE" sha1="B16DBEA89BA9F934A08C274D8BB6CCE06DA13193"/>
+	</game>
+	<game name="Super Cobra (Japan)">
+		<description>Super Cobra (Japan)</description>
+		<game_id>GPA-102</game_id>
+		<rom name="Super Cobra (Japan).bin" size="8192" crc="CDFFC2CD" md5="01E70F498B2E104B4714434014943E1A" sha1="9E748050CCB0FA948B06346D241DFCD11868E8E2"/>
+	</game>
+	<game name="Turpin (Japan)">
+		<description>Turpin (Japan)</description>
+		<game_id>GPA-107</game_id>
+		<rom name="Turpin (Japan).bin" size="8192" crc="A3AEF98D" md5="8FC81BAF228CA5E0F353F0B3AD71D65B" sha1="1F49371B0EBF4FE6C5FB606FD9744F3BB15A619B"/>
+	</game>
+	<game name="Tutankham (Japan)">
+		<description>Tutankham (Japan)</description>
+		<game_id>GPA-103</game_id>
+		<rom name="Tutankham (Japan).bin" size="8192" crc="A0B606D8" md5="F08BE1209A255922D219EC4AAD109703" sha1="56EFA2AB7C4A6DB7B44714E46C5BF2BA71983EE8"/>
+	</game>
+	<game name="Warp &amp; Warp (Japan)">
+		<description>Warp &amp; Warp (Japan)</description>
+		<game_id>GPA-106</game_id>
+		<rom name="Warp &amp; Warp (Japan).bin" size="8192" crc="2A0D4AD9" md5="4AB8E4BE4C3D48A2C92ECD36BEB4D767" sha1="F9FFCA3A1D85B116DD92F118F9EA940BF2449DB5"/>
+	</game>
+</datafile>

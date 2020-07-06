@@ -1,0 +1,1361 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Commodore - 64 (Parent-Clone)</name>
+		<description>Commodore - 64 (Parent-Clone)</description>
+		<version>20151122-035618</version>
+		<date>20151122-035618</date>
+		<author></author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="[BIOS] Commodore 1541 (Japan, USA)">
+		<description>[BIOS] Commodore 1541 (Japan, USA)</description>
+		<rom name="[BIOS] Commodore 1541 (Japan, USA).ub3" size="8192" crc="29ae9752" md5="41f5af978d69fc20f1f2fcad7c2ad8cf" sha1="8e0547430135ba462525c224e76356bd3d430f11"/>
+		<rom name="[BIOS] Commodore 1541 (Japan, USA).ub4" size="8192" crc="9a48d3f0" md5="5ecc503165c18e5b975e57172dfd8303" sha1="7a1054c6156b51c25410caec0f609efb079d3a77"/>
+	</game>
+	<game name="[BIOS] Commodore 1541 (World)">
+		<description>[BIOS] Commodore 1541 (World)</description>
+		<rom name="[BIOS] Commodore 1541 (World).ub3" size="8192" crc="29ae9752" md5="41f5af978d69fc20f1f2fcad7c2ad8cf" sha1="8e0547430135ba462525c224e76356bd3d430f11"/>
+		<rom name="[BIOS] Commodore 1541 (World).ub4" size="8192" crc="b29bab75" md5="95748b59b4c39a8d114a977e3c39d31f" sha1="91321142e226168b1139c30c83896933f317d000"/>
+	</game>
+	<game name="[BIOS] Commodore 1541 (World) (R1)">
+		<description>[BIOS] Commodore 1541 (World) (R1)</description>
+		<rom name="[BIOS] Commodore 1541 (World) (R1).ub3" size="8192" crc="29ae9752" md5="41f5af978d69fc20f1f2fcad7c2ad8cf" sha1="8e0547430135ba462525c224e76356bd3d430f11"/>
+		<rom name="[BIOS] Commodore 1541 (World) (R1).ub4" size="8192" crc="9126e74a" md5="d0c204b7380e81a1277980dab4299dec" sha1="03d17bd745066f1ead801c5183ac1d3af7809744"/>
+	</game>
+	<game name="[BIOS] Commodore 1541 (World) (R2)">
+		<description>[BIOS] Commodore 1541 (World) (R2)</description>
+		<rom name="[BIOS] Commodore 1541 (World) (R2).ub3" size="8192" crc="29ae9752" md5="41f5af978d69fc20f1f2fcad7c2ad8cf" sha1="8e0547430135ba462525c224e76356bd3d430f11"/>
+		<rom name="[BIOS] Commodore 1541 (World) (R2).ub4" size="8192" crc="361c9f37" md5="ea93aaa7016a673aac2294cbb08a9885" sha1="f5d60777440829e46dc91285e662ba072acd2d8b"/>
+	</game>
+	<game name="[BIOS] Commodore 1541-II (World)">
+		<description>[BIOS] Commodore 1541-II (World)</description>
+		<rom name="[BIOS] Commodore 1541-II (World).u4" size="16384" crc="899fa3c5" md5="ada295382a1f2df772a7e5c5c6f34215" sha1="d3b78c3dbac55f5199f33f3fe0036439811f7fb3"/>
+	</game>
+	<game name="[BIOS] Commodore 1541C (World)">
+		<description>[BIOS] Commodore 1541C (World)</description>
+		<rom name="[BIOS] Commodore 1541C (World).ua2" size="16384" crc="1b3ca08d" md5="a304cb0eb0354ba21751925dfb6dec11" sha1="8e893932de8cce244117fcea4c46b7c39c6a7765"/>
+	</game>
+	<game name="[BIOS] Commodore 1541C (World) (R1)">
+		<description>[BIOS] Commodore 1541C (World) (R1)</description>
+		<rom name="[BIOS] Commodore 1541C (World) (R1).ua2" size="16384" crc="2d862d20" md5="1e597a06d8b510fcd2a9ab077e930b41" sha1="38a7a489c7bbc8661cf63476bf1eb07b38b1c704"/>
+	</game>
+	<game name="[BIOS] Commodore 1570 (World)">
+		<description>[BIOS] Commodore 1570 (World)</description>
+		<rom name="[BIOS] Commodore 1570 (World).u2" size="32768" crc="5a0c7937" md5="f0799353f0e22cf7d783e447adcafde2" sha1="5fc06dc82ff6840f183bd43a4d9b8a16956b2f56"/>
+	</game>
+	<game name="[BIOS] Commodore 1571 (World)">
+		<description>[BIOS] Commodore 1571 (World)</description>
+		<rom name="[BIOS] Commodore 1571 (World).u2" size="32768" crc="3889b8b8" md5="1ef9c7f30decb2ecc4ca00c98eb09b0c" sha1="e649ef4419d65829d2afd65e07d31f3ce147d6eb"/>
+	</game>
+	<game name="[BIOS] Commodore 1571 (World) (R1)">
+		<description>[BIOS] Commodore 1571 (World) (R1)</description>
+		<rom name="[BIOS] Commodore 1571 (World) (R1).u2" size="32768" crc="5755bae3" md5="dae964d64b7843ff86c008d396dda208" sha1="f1be619c106641a685f6609e4d43d6fc9eac1e70"/>
+	</game>
+	<game name="[BIOS] Commodore 1571CR (World)">
+		<description>[BIOS] Commodore 1571CR (World)</description>
+		<rom name="[BIOS] Commodore 1571CR (World).102" size="32768" crc="f24efcc4" md5="f9158328494b3e269f86ef419792c2e5" sha1="14ee7a0fb7e1c59c51fbf781f944387037daa3ee"/>
+	</game>
+	<game name="[BIOS] Commodore 1581 (World)">
+		<description>[BIOS] Commodore 1581 (World)</description>
+		<rom name="[BIOS] Commodore 1581 (World).u2" size="32768" crc="113af078" md5="3aad2eab50c9c922521f06ef135488da" sha1="3fc088349ab83e8f5948b7670c866a3c954e6164"/>
+	</game>
+	<game name="[BIOS] Commodore 1581 (World) (R1)">
+		<description>[BIOS] Commodore 1581 (World) (R1)</description>
+		<rom name="[BIOS] Commodore 1581 (World) (R1).u2" size="32768" crc="a9011b84" md5="6a82f92aea2a3afa190fe32d565f39e7" sha1="01228eae6f066bd9b7b2b6a7fa3f667e41dad393"/>
+	</game>
+	<game name="[BIOS] Commodore 64 (Sweden) (R2)">
+		<description>[BIOS] Commodore 64 (Sweden) (R2)</description>
+		<rom name="[BIOS] Commodore 64 (Sweden) (R2).u3" size="8192" crc="f833d117" md5="57af4ae21d4b705c2991d98ed5c1f7b8" sha1="79015323128650c742a3694c9429aa91f355905e"/>
+		<rom name="[BIOS] Commodore 64 (Sweden) (R2).u4" size="8192" crc="8f294c51" md5="b3f80a9d41512ccd0a4288f581385103" sha1="1ec15d62e5f691ed24cc5af637732ec41e576ad8"/>
+		<rom name="[BIOS] Commodore 64 (Sweden) (R2).u5" size="4096" crc="bee9b3fd" md5="5973267e85b7b2b574e780874843180b" sha1="446ae58f7110d74d434301491209299f66798d8a"/>
+	</game>
+	<game name="[BIOS] Commodore 64 (Sweden) (R3)">
+		<description>[BIOS] Commodore 64 (Sweden) (R3)</description>
+		<rom name="[BIOS] Commodore 64 (Sweden) (R3).u3" size="8192" crc="f833d117" md5="57af4ae21d4b705c2991d98ed5c1f7b8" sha1="79015323128650c742a3694c9429aa91f355905e"/>
+		<rom name="[BIOS] Commodore 64 (Sweden) (R3).u4" size="8192" crc="f10c2c25" md5="27e26dbb267c8ebf1cd47105a6ca71e7" sha1="e4f52d9b36c030eb94524eb49f6f0774c1d02e5e"/>
+		<rom name="[BIOS] Commodore 64 (Sweden) (R3).u5" size="4096" crc="bee9b3fd" md5="5973267e85b7b2b574e780874843180b" sha1="446ae58f7110d74d434301491209299f66798d8a"/>
+	</game>
+	<game name="[BIOS] Commodore 64 (USA, Europe) (R1)">
+		<description>[BIOS] Commodore 64 (USA, Europe) (R1)</description>
+		<rom name="[BIOS] Commodore 64 (USA, Europe) (R1).u5" size="4096" crc="ec4272ee" md5="12a4202f5331d45af846af6c58fba946" sha1="adc7c31e18c7c7413d54802ef2f4193da14711aa"/>
+		<rom name="[BIOS] Commodore 64 (USA, Europe) (R1).u3" size="8192" crc="f833d117" md5="57af4ae21d4b705c2991d98ed5c1f7b8" sha1="79015323128650c742a3694c9429aa91f355905e"/>
+		<rom name="[BIOS] Commodore 64 (USA, Europe) (R1).u4" size="8192" crc="dce782fa" md5="1ae0ea224f2b291dafa2c20b990bb7d4" sha1="87cc04d61fc748b82df09856847bb5c2754a2033"/>
+	</game>
+	<game name="[BIOS] Commodore 64 (USA, Europe) (R2)">
+		<description>[BIOS] Commodore 64 (USA, Europe) (R2)</description>
+		<rom name="[BIOS] Commodore 64 (USA, Europe) (R2).u5" size="4096" crc="ec4272ee" md5="12a4202f5331d45af846af6c58fba946" sha1="adc7c31e18c7c7413d54802ef2f4193da14711aa"/>
+		<rom name="[BIOS] Commodore 64 (USA, Europe) (R2).u3" size="8192" crc="f833d117" md5="57af4ae21d4b705c2991d98ed5c1f7b8" sha1="79015323128650c742a3694c9429aa91f355905e"/>
+		<rom name="[BIOS] Commodore 64 (USA, Europe) (R2).u4" size="8192" crc="a5c687b3" md5="7360b296d64e18b88f6cf52289fd99a1" sha1="0e2e4ee3f2d41f00bed72f9ab588b83e306fdb13"/>
+	</game>
+	<game name="[BIOS] Commodore 64 (USA, Europe) (R3)">
+		<description>[BIOS] Commodore 64 (USA, Europe) (R3)</description>
+		<rom name="[BIOS] Commodore 64 (USA, Europe) (R3).u5" size="4096" crc="ec4272ee" md5="12a4202f5331d45af846af6c58fba946" sha1="adc7c31e18c7c7413d54802ef2f4193da14711aa"/>
+		<rom name="[BIOS] Commodore 64 (USA, Europe) (R3).u3" size="8192" crc="f833d117" md5="57af4ae21d4b705c2991d98ed5c1f7b8" sha1="79015323128650c742a3694c9429aa91f355905e"/>
+		<rom name="[BIOS] Commodore 64 (USA, Europe) (R3).u4" size="8192" crc="dbe3e7c7" md5="39065497630802346bce17963f13c092" sha1="1d503e56df85a62fee696e7618dc5b4e781df1bb"/>
+	</game>
+	<game name="[BIOS] Commodore 64C (USA, Europe)">
+		<description>[BIOS] Commodore 64C (USA, Europe)</description>
+		<rom name="[BIOS] Commodore 64C (USA, Europe).u4" size="16384" crc="0010ec31" md5="8c37b056c00a44c0725508b8cedbbefb" sha1="765372a0e16cbb0adf23a07b80f6b682b39fbf88"/>
+		<rom name="[BIOS] Commodore 64C (USA, Europe).u5" size="4096" crc="ec4272ee" md5="12a4202f5331d45af846af6c58fba946" sha1="adc7c31e18c7c7413d54802ef2f4193da14711aa"/>
+	</game>
+	<game name="[BIOS] Commodore 64GS (Europe)">
+		<description>[BIOS] Commodore 64GS (Europe)</description>
+		<rom name="[BIOS] Commodore 64GS (Europe).u4" size="16384" crc="b0a9c2da" md5="049e657afafbdd802e8c6a4f88f3d730" sha1="21940ef5f1bfe67d7537164f7ca130a1095b067a"/>
+		<rom name="[BIOS] Commodore 64GS (Europe).u5" size="4096" crc="ec4272ee" md5="12a4202f5331d45af846af6c58fba946" sha1="adc7c31e18c7c7413d54802ef2f4193da14711aa"/>
+	</game>
+	<game name="[BIOS] Commodore Educator 64 - CBM 4064 - PET 64 (USA, Europe)">
+		<description>[BIOS] Commodore Educator 64 - CBM 4064 - PET 64 (USA, Europe)</description>
+		<rom name="[BIOS] Commodore Educator 64 - CBM 4064 - PET 64 (USA, Europe).u5" size="4096" crc="ec4272ee" md5="12a4202f5331d45af846af6c58fba946" sha1="adc7c31e18c7c7413d54802ef2f4193da14711aa"/>
+		<rom name="[BIOS] Commodore Educator 64 - CBM 4064 - PET 64 (USA, Europe).u3" size="8192" crc="f833d117" md5="57af4ae21d4b705c2991d98ed5c1f7b8" sha1="79015323128650c742a3694c9429aa91f355905e"/>
+		<rom name="[BIOS] Commodore Educator 64 - CBM 4064 - PET 64 (USA, Europe).u4" size="8192" crc="789c8cc5" md5="da92801e3a03b005b746a4dd0b639c7c" sha1="6c4fa9465f6091b174df27dfe679499df447503c"/>
+	</game>
+	<game name="[BIOS] Commodore SX-64 (USA, Europe)">
+		<description>[BIOS] Commodore SX-64 (USA, Europe)</description>
+		<rom name="[BIOS] Commodore SX-64 (USA, Europe).u4" size="8192" crc="2c5965d4" md5="187b8c713b51931e070872bd390b472a" sha1="aa136e91ecf3c5ac64f696b3dbcbfc5ba0871c98"/>
+		<rom name="[BIOS] Commodore SX-64 (USA, Europe).u5" size="4096" crc="ec4272ee" md5="12a4202f5331d45af846af6c58fba946" sha1="adc7c31e18c7c7413d54802ef2f4193da14711aa"/>
+		<rom name="[BIOS] Commodore SX-64 (USA, Europe).u3" size="8192" crc="f833d117" md5="57af4ae21d4b705c2991d98ed5c1f7b8" sha1="79015323128650c742a3694c9429aa91f355905e"/>
+	</game>
+	<game name="[BIOS] Commodore VIP 64 (Sweden)">
+		<description>[BIOS] Commodore VIP 64 (Sweden)</description>
+		<rom name="[BIOS] Commodore VIP 64 (Sweden).u3" size="8192" crc="f833d117" md5="57af4ae21d4b705c2991d98ed5c1f7b8" sha1="79015323128650c742a3694c9429aa91f355905e"/>
+		<rom name="[BIOS] Commodore VIP 64 (Sweden).u4" size="8192" crc="7858d3d7" md5="3abc938cac3d622e1a7041c15b928707" sha1="097cda60469492a8916c2677b7cce4e12a944bc0"/>
+		<rom name="[BIOS] Commodore VIP 64 (Sweden).u5" size="4096" crc="bee9b3fd" md5="5973267e85b7b2b574e780874843180b" sha1="446ae58f7110d74d434301491209299f66798d8a"/>
+	</game>
+	<game name="128er Quickload (USA, Europe) (Program)">
+		<description>128er Quickload (USA, Europe) (Program)</description>
+		<rom name="128er Quickload (USA, Europe) (Program).crt" size="8272" crc="5a9fe981" md5="d54a9d3fc1cd92b2f9b8e2fd078eab41" sha1="d44792f47a592deb3b222baa58897a83953183d7"/>
+	</game>
+	<game name="256K-EPROM-System (Germany) (v5) (Program)">
+		<description>256K-EPROM-System (Germany) (v5) (Program)</description>
+		<rom name="256K-EPROM-System (Germany) (v5) (Program).crt" size="8272" crc="75401b26" md5="fb27e1968d937a81185a865ed798e0fd" sha1="a633c38b5c31598b7bd0e134ffe1d8ec890d3c2b"/>
+	</game>
+	<game name="64 Doctor (USA, Europe) (Program)">
+		<description>64 Doctor (USA, Europe) (Program)</description>
+		<rom name="64 Doctor (USA, Europe) (Program).crt" size="8272" crc="be002f76" md5="2cc57f94bd01e695858212ab4352c58e" sha1="b422ec84f72a54de1d5a49bbfa97c313025525b2"/>
+	</game>
+	<game name="64MON (USA, Europe) (v1.03) (Program)">
+		<description>64MON (USA, Europe) (v1.03) (Program)</description>
+		<rom name="64MON (USA, Europe) (v1.03) (Program).crt" size="8272" crc="d550f094" md5="e9c9e0c6f34ce6113779ab6095742c62" sha1="a595ae8180381b4e6facbf3b87fe3caf7d24d8c6"/>
+	</game>
+	<game name="Action Cartridge Plus (Germany) (v6.0) (Program)">
+		<description>Action Cartridge Plus (Germany) (v6.0) (Program)</description>
+		<rom name="Action Cartridge Plus (Germany) (v6.0) (Program).crt" size="32896" crc="b8f2b3b4" md5="465f7942d0d79f99a31f216cc6840b6c" sha1="3573382ebfbd6e4ae2a91e4e663ff63b2b9ff203"/>
+	</game>
+	<game name="Action Replay Professional (Europe) (v3) (Program) (Unl)">
+		<description>Action Replay Professional (Europe) (v3) (Program) (Unl)</description>
+		<rom name="Action Replay Professional (Europe) (v3) (Program) (Unl).bin" size="16384" crc="bc06a876" md5="72304d6bdae4dcba8ed676bda3cd26c8" sha1="480847ac10ff5389ebfc0bcfdef2bdf53ee6fca9"/>
+	</game>
+	<game name="Action Replay Professional (Europe) (v4.2) (Program) (Unl)">
+		<description>Action Replay Professional (Europe) (v4.2) (Program) (Unl)</description>
+		<rom name="Action Replay Professional (Europe) (v4.2) (Program) (Unl).crt" size="32896" crc="55416f3a" md5="81b506974fb0168b62e91f20b5c921eb" sha1="32b0dbb6bac3d8d74d76ef0b038663b8a4d06d54"/>
+	</game>
+	<game name="Action Replay Professional (Europe) (v6.0) (Program) (Unl)">
+		<description>Action Replay Professional (Europe) (v6.0) (Program) (Unl)</description>
+		<rom name="Action Replay Professional (Europe) (v6.0) (Program) (Unl).crt" size="32896" crc="56ee0efe" md5="4b5aa6c899e1ded103b46122881cd655" sha1="ec921bfbf15b482531975ae2f1eb767e627c0fc3"/>
+	</game>
+	<game name="Action Replay Professional (USA) (v5.0) (Program) (Unl)">
+		<description>Action Replay Professional (USA) (v5.0) (Program) (Unl)</description>
+		<rom name="Action Replay Professional (USA) (v5.0) (Program) (Unl).crt" size="32896" crc="042e05b4" md5="42fabe0f889d6a3a1f1b29adfdb8fc33" sha1="82230bf6af26007ceeb44cf4f249b94b4f13c9b3"/>
+	</game>
+	<game name="Activision Decathlon, The (USA, Europe)">
+		<description>Activision Decathlon, The (USA, Europe)</description>
+		<rom name="Activision Decathlon, The (USA, Europe).crt" size="16464" crc="e5b26a61" md5="6787f1fd61d96d2c74c5194dc0a78634" sha1="a1ac0ff0d3ab90ecfdde1c4e446fdc0bb13bb7b5"/>
+	</game>
+	<game name="Adventure 1 - The Mutant Spiders (USA, Europe)">
+		<description>Adventure 1 - The Mutant Spiders (USA, Europe)</description>
+		<rom name="Adventure 1 - The Mutant Spiders (USA, Europe).crt" size="16464" crc="b0490a7d" md5="2ddfd45aac45ba4693e9326312e2cdcf" sha1="1b086cc3cd79b678d878bd8dd2e7964f4abc0f63"/>
+	</game>
+	<game name="Adventure 3 - The Fourth Sarcophagus (USA, Europe)">
+		<description>Adventure 3 - The Fourth Sarcophagus (USA, Europe)</description>
+		<rom name="Adventure 3 - The Fourth Sarcophagus (USA, Europe).crt" size="16464" crc="961e38fc" md5="2ba6b9b853e5e00025a3eba503582c91" sha1="04eea5908fbe9f8ada38b3bdb6557073370d8384"/>
+	</game>
+	<game name="Adventure Creator (USA, Europe)">
+		<description>Adventure Creator (USA, Europe)</description>
+		<rom name="Adventure Creator (USA, Europe).crt" size="16464" crc="502fc7f8" md5="fec88fe0cb661b4283a06f8e361999b2" sha1="e31ec6f702e4717cf4d25608e78ffc85bdccbcbd"/>
+	</game>
+	<game name="Aegean Voyage (USA, Europe)">
+		<description>Aegean Voyage (USA, Europe)</description>
+		<rom name="Aegean Voyage (USA, Europe).crt" size="16464" crc="47d3d8cc" md5="d91ff569d803dc734760bd60087fffa5" sha1="da413ce48d418d0febf7a4ae7d0139ad55e4af27"/>
+	</game>
+	<game name="After the War (USA, Europe)">
+		<description>After the War (USA, Europe)</description>
+		<rom name="After the War (USA, Europe).crt" size="131392" crc="1469e917" md5="65ccc9b247944bb611b4230157b915bf" sha1="b8ebc081de1c63e1c6f1829a66bf3c9eeedcc4c1"/>
+	</game>
+	<game name="Alf in the Color Caves (USA, Europe)">
+		<description>Alf in the Color Caves (USA, Europe)</description>
+		<rom name="Alf in the Color Caves (USA, Europe).crt" size="16464" crc="cd22f373" md5="c3026a4997f96d6512caf98f2cb97342" sha1="b44914cfd79c0921d285ccd015c5a4646271e5e1"/>
+	</game>
+	<game name="Alien Sidestep (USA, Europe)">
+		<description>Alien Sidestep (USA, Europe)</description>
+		<rom name="Alien Sidestep (USA, Europe).crt" size="8272" crc="cc8d2a02" md5="2e3eb5650cea2381afdd177c6e9ae1f2" sha1="ac1e8d94d543d333775c018fb59c204292187dcb"/>
+	</game>
+	<game name="Alpha Build (USA, Europe)">
+		<description>Alpha Build (USA, Europe)</description>
+		<rom name="Alpha Build (USA, Europe).crt" size="8272" crc="fc50720e" md5="912a423d702f8942aba15938320a4c8c" sha1="7118ac9874ed7dfecb8c398590e25100beb9e1b7"/>
+	</game>
+	<game name="Alphabet Zoo (USA, Europe)">
+		<description>Alphabet Zoo (USA, Europe)</description>
+		<rom name="Alphabet Zoo (USA, Europe).crt" size="16464" crc="185f2310" md5="6c65754e17a2fcd839bebde21c743334" sha1="4f46a2dbf540cd972d65e32a54b6160c9d768725"/>
+	</game>
+	<game name="Arnie Armchair's Howzat Cricket Game (USA, Europe)">
+		<description>Arnie Armchair's Howzat Cricket Game (USA, Europe)</description>
+		<rom name="Arnie Armchair's Howzat Cricket Game (USA, Europe).crt" size="16464" crc="0c74ad83" md5="9cfd38b50bab19a2e565a25b8ab4ea6a" sha1="e590565af4f4d420ed42b83a900b3f75f098db71"/>
+	</game>
+	<game name="Astroblitz (USA, Europe)">
+		<description>Astroblitz (USA, Europe)</description>
+		<rom name="Astroblitz (USA, Europe).crt" size="8272" crc="f10447a9" md5="c5aad2c3b1c076f4631e792a934ce7fa" sha1="e994e6061a296c77dbed8f1d94a1e2cd3b7ae396"/>
+	</game>
+	<game name="Attack of the Mutant Camels (USA)">
+		<description>Attack of the Mutant Camels (USA)</description>
+		<rom name="Attack of the Mutant Camels (USA).crt" size="8272" crc="808f8148" md5="2727d8b53e03fed82365274f0455449a" sha1="50c824a5ae7ef378fb110f92a67401dac1f057da"/>
+	</game>
+	<game name="Avenger (Japan) (v02) (MAX)">
+		<description>Avenger (Japan) (v02) (MAX)</description>
+		<rom name="Avenger (Japan) (v02) (MAX).crt" size="8272" crc="5356af90" md5="1d3fe16c2f5630e6b1b5142e3c0c3f8c" sha1="6791de8d8c5514f2eea7f20b64bdab358f5eaf32"/>
+	</game>
+	<game name="Avenger (USA, Europe) (v03) (MAX)">
+		<description>Avenger (USA, Europe) (v03) (MAX)</description>
+		<rom name="Avenger (USA, Europe) (v03) (MAX).crt" size="8272" crc="6fbf905d" md5="8110868b11147000bc19a3628e977f59" sha1="9cd408062f2bd902800393516f0981733e86b5ac"/>
+	</game>
+	<game name="BadLands (USA, Europe)">
+		<description>BadLands (USA, Europe)</description>
+		<rom name="BadLands (USA, Europe).crt" size="65728" crc="a898340c" md5="f04fa13eb421cca83dbfad0e41123389" sha1="e78d027f50225e665a8c46d2000e4206f2980eb0"/>
+	</game>
+	<game name="Batman - The Movie (Europe)">
+		<description>Batman - The Movie (Europe)</description>
+		<rom name="Batman - The Movie (Europe).crt" size="131392" crc="b8d0b9ce" md5="f0e6f8f1e2dc138d4f28d4c4ede9263c" sha1="64b10e5d4f18c864250c181d6c7bc222e560e3ae"/>
+	</game>
+	<game name="Battle Command (Europe)">
+		<description>Battle Command (Europe)</description>
+		<rom name="Battle Command (Europe).crt" size="131392" crc="9c310d18" md5="bf912cfdcd3d3f97507a6abeb9d96e9c" sha1="862063bc0be0b82d748bb651c96c7d0574e625ed"/>
+	</game>
+	<game name="Battlezone (USA, Europe)">
+		<description>Battlezone (USA, Europe)</description>
+		<rom name="Battlezone (USA, Europe).crt" size="16464" crc="0f61409b" md5="23707bc66da17fb706d2c46f95d0fdbf" sha1="80714b91df92a05cf66b21bf764ebf7a47b39cec"/>
+	</game>
+	<game name="BC's Quest for Tires (USA, Europe)">
+		<description>BC's Quest for Tires (USA, Europe)</description>
+		<rom name="BC's Quest for Tires (USA, Europe).crt" size="16464" crc="254edb67" md5="2f5f4f72990e35b0a806d35bc8b5d680" sha1="489fb3eac1e9209babedeab4f1b65150eee3fd86"/>
+	</game>
+	<game name="Beamrider (USA, Europe)">
+		<description>Beamrider (USA, Europe)</description>
+		<rom name="Beamrider (USA, Europe).crt" size="16464" crc="bb1685ce" md5="0f5ae8944e360ece1baea70ebfe2f6f5" sha1="80912924dd9499bf078165ea88c9c7bcc89686b3"/>
+	</game>
+	<game name="Big Bird's Funhouse (USA, Europe)">
+		<description>Big Bird's Funhouse (USA, Europe)</description>
+		<rom name="Big Bird's Funhouse (USA, Europe).crt" size="16464" crc="0ca54785" md5="f810132f1f8436818c02090428faaf36" sha1="fcfd6b894ccd44de6f66748719bd62f721058b25"/>
+	</game>
+	<game name="Big Bird's Special Delivery (USA, Europe)">
+		<description>Big Bird's Special Delivery (USA, Europe)</description>
+		<rom name="Big Bird's Special Delivery (USA, Europe).crt" size="16464" crc="efb293d1" md5="cf41d62f41e5bd4c8f25fb22329bb040" sha1="1f946dcf964e69ab4d2939ed829627e8236301d8"/>
+	</game>
+	<game name="Black Box (USA, Europe) (v2.0) (Program)">
+		<description>Black Box (USA, Europe) (v2.0) (Program)</description>
+		<rom name="Black Box (USA, Europe) (v2.0) (Program).crt" size="16464" crc="c233227d" md5="c4ec35229764ea130d6259e7f3f7324d" sha1="8b5580c6c212599c70ef0b1243e18137ad8fdaa5"/>
+	</game>
+	<game name="Blueprint (USA, Europe)">
+		<description>Blueprint (USA, Europe)</description>
+		<rom name="Blueprint (USA, Europe).crt" size="16464" crc="8467ca0f" md5="8478f52ee2c1562ac030d33d4a189609" sha1="176114603d153b2f0a40986f3787023488a3d4d1"/>
+	</game>
+	<game name="Bowling (Japan) (MAX)">
+		<description>Bowling (Japan) (MAX)</description>
+		<rom name="Bowling (Japan) (MAX).crt" size="16480" crc="523c56c1" md5="408bdebe4f814cb3f700da41d5b88159" sha1="3b223c46b582a7217fe5f3e41568c64eabf55ee6"/>
+	</game>
+	<game name="Bridge 64 (USA, Europe)">
+		<description>Bridge 64 (USA, Europe)</description>
+		<rom name="Bridge 64 (USA, Europe).crt" size="16464" crc="e2729a5c" md5="66364d4d07717be98212c345adf3a687" sha1="93042daa61982a48cf06744072d33c0085659131"/>
+	</game>
+	<game name="Bubble Burst (USA, Europe)">
+		<description>Bubble Burst (USA, Europe)</description>
+		<rom name="Bubble Burst (USA, Europe).crt" size="16464" crc="d73ce936" md5="b79ee53ebd75e3cd9225e75a752ff8b2" sha1="2692d25dd7127c6334553ba0d91db49bd9279cb7"/>
+	</game>
+	<game name="Buck Rogers - Planet of Zoom (USA, Europe)">
+		<description>Buck Rogers - Planet of Zoom (USA, Europe)</description>
+		<rom name="Buck Rogers - Planet of Zoom (USA, Europe).crt" size="16464" crc="e9066e6c" md5="8b08355f3bf6cd0c3b37780b9118dcb0" sha1="f48567685be0fde1368fc761cb13d8bd5976af29"/>
+	</game>
+	<game name="Bug Crusher (USA, Europe)">
+		<description>Bug Crusher (USA, Europe)</description>
+		<rom name="Bug Crusher (USA, Europe).crt" size="8272" crc="2ccf3fe4" md5="80d8f85464a7ec999089f2eb4acb38f3" sha1="2ceedbbf08a1158e46ed70e67049457a6c8131fb"/>
+	</game>
+	<game name="C-64 Diagnostic (USA, Europe) (Rev 586220) (Program)">
+		<description>C-64 Diagnostic (USA, Europe) (Rev 586220) (Program)</description>
+		<rom name="C-64 Diagnostic (USA, Europe) (Rev 586220) (Program).crt" size="8272" crc="e25e76fe" md5="ffb0bde27a7760fed3999f620b839142" sha1="0ab34db888c924a40c6e9bb3e1cab27f17b05603"/>
+	</game>
+	<game name="C-64 Import Test Diag (USA, Europe) (Program)">
+		<description>C-64 Import Test Diag (USA, Europe) (Program)</description>
+		<rom name="C-64 Import Test Diag (USA, Europe) (Program).crt" size="8272" crc="0031b98f" md5="4674fafa09fe3166075d614f14fe0487" sha1="170ff8b7ccfb124a7416e07d030950acf4664b4b"/>
+	</game>
+	<game name="C64-FORTH (USA, Europe) (Program)">
+		<description>C64-FORTH (USA, Europe) (Program)</description>
+		<rom name="C64-FORTH (USA, Europe) (Program).crt" size="12368" crc="e5d52591" md5="1990120b1f0179c8be975ca166ab40ca" sha1="3095b760da64375681ff4374896c3d151aa2e907"/>
+	</game>
+	<game name="Calc Result - The Spread Sheet - Advanced (USA, Europe) (Program)">
+		<description>Calc Result - The Spread Sheet - Advanced (USA, Europe) (Program)</description>
+		<rom name="Calc Result - The Spread Sheet - Advanced (USA, Europe) (Program).crt" size="8272" crc="67875150" md5="4ae9b84b34a9bc3364f3f548f8f306d6" sha1="e4f1d3c98365d4a03764ec4f86a84c4adb9c31e1"/>
+		<rom name="Calc Result - The Spread Sheet - Advanced (USA, Europe) (Program).d64" size="174848" crc="ed84c27b" md5="0bbeb57dbed9fe6b0e5af56b265588c9" sha1="b5d6169e4e42701ee4ddef17dbc1049754642a19"/>
+	</game>
+	<game name="Calc Result - The Spread Sheet - Easy (USA, Europe) (Program)">
+		<description>Calc Result - The Spread Sheet - Easy (USA, Europe) (Program)</description>
+		<rom name="Calc Result - The Spread Sheet - Easy (USA, Europe) (Program) (ECRBLK).bin" size="8194" crc="a977f2d4" md5="b5563da546c024ab2a040032934d8ba2" sha1="141104cc3b5536c54fe54ee6417dc6b0ce3c821a"/>
+		<rom name="Calc Result - The Spread Sheet - Easy (USA, Europe) (Program) (ECRBLU).bin" size="8194" crc="1e394b6c" md5="788cb31614c62b42f7546d5f021b12ee" sha1="d8f893dd1d87ab77a4e4d9ffd3b3f97d000e8a2e"/>
+		<rom name="Calc Result - The Spread Sheet - Easy (USA, Europe) (Program) (ECRGRN).bin" size="8194" crc="f569c49c" md5="3e4a0a8183b32581bd18eba2f7dbd31d" sha1="4567cbe4b23670449a904f74dcf5ed56c52c16e7"/>
+	</game>
+	<game name="Calc Result - The Spread Sheet - Easy (USA, Europe) (Alt 1) (Program)">
+		<description>Calc Result - The Spread Sheet - Easy (USA, Europe) (Alt 1) (Program)</description>
+		<rom name="Calc Result - The Spread Sheet - Easy (USA, Europe) (Alt 1) (Program) (hn613128).bin" size="16384" crc="927793ec" md5="22232dc88a410eab21ddbf247df11a1b" sha1="2005cf7d8dc024b7bbb730dec6bbeb2ea9e81e57"/>
+		<rom name="Calc Result - The Spread Sheet - Easy (USA, Europe) (Alt 1) (Program) (hn61364).bin" size="8192" crc="f617bec4" md5="91b6af5a19cf00dfe73fa10db961ab2b" sha1="c5ef2418cf9dba3e14f586d5d6997f271b521a24"/>
+	</game>
+	<game name="Capture 2 (USA, Europe) (Program)">
+		<description>Capture 2 (USA, Europe) (Program)</description>
+		<rom name="Capture 2 (USA, Europe) (Program).bin" size="8194" crc="ad360cd4" md5="230ac0314b9e703de37f4b627b52bddb" sha1="1d51253ff7020a635faccc3e4943a1fbf30b1283"/>
+	</game>
+	<game name="Castle Hassle (USA, Europe)">
+		<description>Castle Hassle (USA, Europe)</description>
+		<rom name="Castle Hassle (USA, Europe).crt" size="16464" crc="ed637539" md5="15c6d570fab52f693c0892aa834ac5cd" sha1="c5903c997d3283ee87aa6901253970ba855ff803"/>
+	</game>
+	<game name="Centipede (USA, Europe)">
+		<description>Centipede (USA, Europe)</description>
+		<rom name="Centipede (USA, Europe).crt" size="8272" crc="f9aefb62" md5="737e1145a4d0e3aaa3cf105fca20d8cc" sha1="4955f0c7945798bee38bed348180d868babb1ebd"/>
+	</game>
+	<game name="Chase H.Q. II - Special Criminal Investigation (Europe)">
+		<description>Chase H.Q. II - Special Criminal Investigation (Europe)</description>
+		<rom name="Chase H.Q. II - Special Criminal Investigation (Europe).crt" size="262720" crc="113c8dcb" md5="fb837b1c30574023254c8b2f463041e5" sha1="5690117fbb1698fc44a30bffb682bbf02a3464ac"/>
+	</game>
+	<game name="Checkers (USA, Europe)">
+		<description>Checkers (USA, Europe)</description>
+		<rom name="Checkers (USA, Europe).crt" size="16464" crc="af96f5b7" md5="c074729c86cf44a9c75f79826a14f4c6" sha1="3d0cdd7aa2a75f8186696ff9c0f782ca0eb1ddf8"/>
+	</game>
+	<game name="Choplifter! (USA, Europe)">
+		<description>Choplifter! (USA, Europe)</description>
+		<rom name="Choplifter! (USA, Europe).crt" size="16464" crc="9c2643bf" md5="dff5bc3062a00a25237f7abd64b2e4fd" sha1="704727f139112b418ceaf49e09bc32ed2f8089da"/>
+	</game>
+	<game name="Close Encounters of the Worst Kind (USA, Europe)">
+		<description>Close Encounters of the Worst Kind (USA, Europe)</description>
+		<rom name="Close Encounters of the Worst Kind (USA, Europe).crt" size="8272" crc="58aaf201" md5="b4b90e3c60276572a71d7249c4a19732" sha1="701ae428fa50778b969f61019f3a8194db0fcb0d"/>
+	</game>
+	<game name="Clowns (Japan) (v01) (MAX)">
+		<description>Clowns (Japan) (v01) (MAX)</description>
+		<rom name="Clowns (Japan) (v01) (MAX).crt" size="8272" crc="6e56aba1" md5="0bcbcee0642e1722b17d3e37fc101194" sha1="988e3c433ec22b6a5b83f9a1214084a7d793ba2b"/>
+	</game>
+	<game name="Clowns (Japan) (v02) (MAX)">
+		<description>Clowns (Japan) (v02) (MAX)</description>
+		<rom name="Clowns (Japan) (v02) (MAX).crt" size="8272" crc="3ef0b782" md5="5c9dccb57b10f5e4500ff44e7ad5c843" sha1="b0150d708a086b985c4c81867791bd96fc22811c"/>
+	</game>
+	<game name="Coccinelle cherche dessinateur (France)">
+		<description>Coccinelle cherche dessinateur (France)</description>
+		<rom name="Coccinelle cherche dessinateur (France).crt" size="8272" crc="4b0db110" md5="24f014babfe84955a4ef6d8fb45b0854" sha1="35f25deec4e1fdec7f7cfdab8ea2fa9e8145f5dc"/>
+	</game>
+	<game name="Coco-Notes featuring... the Jazz Scats! (USA, Europe)">
+		<description>Coco-Notes featuring... the Jazz Scats! (USA, Europe)</description>
+		<rom name="Coco-Notes featuring... the Jazz Scats! (USA, Europe).crt" size="16464" crc="1e1ec26f" md5="3c7253744aa4cf01f7a93cd45ab417c1" sha1="f038cedb38d5874aa5ceb5791efb848ec5b3985e"/>
+	</game>
+	<game name="Colossus Chess + Silicon Syborgs + International Football (USA, Europe) (Super Games)">
+		<description>Colossus Chess + Silicon Syborgs + International Football (USA, Europe) (Super Games)</description>
+		<rom name="Colossus Chess + Silicon Syborgs + International Football (USA, Europe) (Super Games).crt" size="65664" crc="ce04e0ce" md5="a38cf68b54e5385ed838dfb230a1807f" sha1="8c43acde7a320f5bd2d467418f3595add97f983a"/>
+	</game>
+	<game name="COMAL 80 (USA, Europe) (Program)">
+		<description>COMAL 80 (USA, Europe) (Program)</description>
+		<rom name="COMAL 80 (USA, Europe) (Program).crt" size="65664" crc="e2b01a12" md5="c869e2337b5c059f698498ca0c08ccb0" sha1="4142d0e3fb9a4e96b58ba3d81d8b2dbe892676fd"/>
+		<rom name="COMAL 80 (USA, Europe) (Program).d64" size="174848" crc="db7659bf" md5="7f5ad2be662b09ca64e183491f6aa974" sha1="e9b8c6c36fd115e767a13b1200951a2a284b7aff"/>
+	</game>
+	<game name="Commodore 64 Diagnostic (USA, Europe) (Program)">
+		<description>Commodore 64 Diagnostic (USA, Europe) (Program)</description>
+		<rom name="Commodore 64 Diagnostic (USA, Europe) (Program).crt" size="8272" crc="2c0aa0f2" md5="4f37d89ce2987bc61c9b1b7a6a3f8d61" sha1="8339ebdf9c135cff015eaf37a9dd2e11a4e1ca94"/>
+	</game>
+	<game name="Congo Bongo (USA, Europe)">
+		<description>Congo Bongo (USA, Europe)</description>
+		<rom name="Congo Bongo (USA, Europe).crt" size="16464" crc="37a8cd4b" md5="64b57c2ce4bd54c7ab30468a33f4b58f" sha1="0cb3d1784842ccf65381abeb428dfc911bc571b7"/>
+	</game>
+	<game name="Conrad Disk Booster (Germany) (Program)">
+		<description>Conrad Disk Booster (Germany) (Program)</description>
+		<rom name="Conrad Disk Booster (Germany) (Program).crt" size="8272" crc="eb5171ae" md5="9305333053c191939d56668c44e4111c" sha1="15aac95fc17ba2e27250d29265286c0f016ef094"/>
+	</game>
+	<game name="Cosmic Life (USA, Europe)">
+		<description>Cosmic Life (USA, Europe)</description>
+		<rom name="Cosmic Life (USA, Europe).crt" size="8272" crc="1a51e6ee" md5="67b2f2d432757a79349701419edd9cf5" sha1="9fa4990add22e8f8f35235c232798f0c48a5a64c"/>
+	</game>
+	<game name="Crisis Mountain (USA, Europe)">
+		<description>Crisis Mountain (USA, Europe)</description>
+		<rom name="Crisis Mountain (USA, Europe).crt" size="16464" crc="af0a7526" md5="47d5c2b2eb24b6d5fb3b1eee1a34f371" sha1="20e66dc61fce21f5dabc410cb8ca672941b17939"/>
+	</game>
+	<game name="Crystal Castles (USA, Europe) (Proto)">
+		<description>Crystal Castles (USA, Europe) (Proto)</description>
+		<rom name="Crystal Castles (USA, Europe) (Proto).crt" size="16464" crc="f3819376" md5="e63681393956f4e3989c10011d7e964d" sha1="e076599b8538a99bbf495e3729f605b0c153814f"/>
+	</game>
+	<game name="Cyberball (USA, Europe)">
+		<description>Cyberball (USA, Europe)</description>
+		<rom name="Cyberball (USA, Europe).crt" size="131392" crc="1862e4bd" md5="47c21400b7a53507283c696b09b87ddd" sha1="7cca0e674df384e365eac8174295d04c82fb6b97"/>
+	</game>
+	<game name="Dance Fantasy (USA, Europe)">
+		<description>Dance Fantasy (USA, Europe)</description>
+		<rom name="Dance Fantasy (USA, Europe).crt" size="8272" crc="5e3dc6f7" md5="1e6aff85ab316a845998b79914ef5439" sha1="d90d203ad65b35feefd211e94c956e0a19be2dfb"/>
+	</game>
+	<game name="Dancing Feats (USA, Europe)">
+		<description>Dancing Feats (USA, Europe)</description>
+		<rom name="Dancing Feats (USA, Europe).crt" size="16464" crc="a19206fc" md5="6378ba6e295f44b533303d23b8ee10d9" sha1="3d170197d87c1b907778e6b6ab3f20078cfa072a"/>
+	</game>
+	<game name="Defender (USA, Europe)">
+		<description>Defender (USA, Europe)</description>
+		<rom name="Defender (USA, Europe).crt" size="16464" crc="e4f6e636" md5="ecefa9553727aa973d9c3312e743d346" sha1="16de079da15b7ad7c8309ef5edc96e6b26f8459c"/>
+	</game>
+	<game name="Dela S-4-Modul (USA, Europe) (Program)">
+		<description>Dela S-4-Modul (USA, Europe) (Program)</description>
+		<rom name="Dela S-4-Modul (USA, Europe) (Program).crt" size="8272" crc="8ce482d4" md5="68a00fef8174f65911999015a8ccd1f4" sha1="82c090bf72ed8b467af8adbd59075b6145f6dff4"/>
+	</game>
+	<game name="Delta Drawing (USA, Europe) (Program)">
+		<description>Delta Drawing (USA, Europe) (Program)</description>
+		<rom name="Delta Drawing (USA, Europe) (Program).crt" size="16464" crc="167c05fb" md5="bc59feabb67b2eddbdec08dd82355e69" sha1="e5ae428fb79a5d1056f27135fdb97180c0f7f96f"/>
+	</game>
+	<game name="Designer's Pencil, The (USA, Europe) (Program)">
+		<description>Designer's Pencil, The (USA, Europe) (Program)</description>
+		<rom name="Designer's Pencil, The (USA, Europe) (Program).crt" size="16464" crc="355a9299" md5="6ddeb12561a4d18d2b7d2f7f4e0a0936" sha1="fbc065f99d5faf7171fec80a3fe089fc43ed1320"/>
+	</game>
+	<game name="Diamond Mine (USA, Europe)">
+		<description>Diamond Mine (USA, Europe)</description>
+		<rom name="Diamond Mine (USA, Europe).crt" size="16464" crc="6218c08e" md5="9eebd669f5a610b6dc99c9ad8cac7bc3" sha1="3b0af5d006ccef2a4c9e73c99016f94312079374"/>
+	</game>
+	<game name="Diary 64 (USA, Europe) (Program)">
+		<description>Diary 64 (USA, Europe) (Program)</description>
+		<rom name="Diary 64 (USA, Europe) (Program).crt" size="8272" crc="25c99a74" md5="ab1bf2b172e0435208cfa10d8b3ab4ae" sha1="6d3301fc18024ea29edd33b31598ac8680b095a1"/>
+	</game>
+	<game name="Dig Dug (USA, Europe)">
+		<description>Dig Dug (USA, Europe)</description>
+		<rom name="Dig Dug (USA, Europe).crt" size="16464" crc="efb363e9" md5="d29204e6c7c41ad1d8c589d36dedb92c" sha1="8b7f79e902b5bc0c5785e42766b0e26521081f02"/>
+	</game>
+	<game name="Doc'64 (USA, Europe) (v2.2) (Program)">
+		<description>Doc'64 (USA, Europe) (v2.2) (Program)</description>
+		<rom name="Doc'64 (USA, Europe) (v2.2) (Program).crt" size="8272" crc="aaf66197" md5="848a26a79d6de26991d264b6b473388b" sha1="d39fae88b9b47cd073d2d48e6b6d644e563c2061"/>
+	</game>
+	<game name="Donkey Kong (USA, Europe)">
+		<description>Donkey Kong (USA, Europe)</description>
+		<rom name="Donkey Kong (USA, Europe).crt" size="16464" crc="325ecfcc" md5="87fbadbf98cea1c971b52caecf5f4b78" sha1="dabdaf94d85da12f81d6efff479eef74330c98b1"/>
+	</game>
+	<game name="Dot Gobbler (USA, Europe)">
+		<description>Dot Gobbler (USA, Europe)</description>
+		<rom name="Dot Gobbler (USA, Europe).crt" size="8272" crc="d3007491" md5="a6e570659c2f41e99fbd1ffa6342e72f" sha1="b5fcb02678e3c0c65bebb27c31900df0b6c024da"/>
+	</game>
+	<game name="Dot Gobbler (USA, Europe) (Alt 1)">
+		<description>Dot Gobbler (USA, Europe) (Alt 1)</description>
+		<rom name="Dot Gobbler (USA, Europe) (Alt 1).crt" size="8272" crc="99072c64" md5="d3ee06aadfe79fb963fe76a4a3123f54" sha1="484738df7a6dd66ba2878489a94c53523855d120"/>
+	</game>
+	<game name="Double Dragon (USA, Europe) (HES)">
+		<description>Double Dragon (USA, Europe) (HES)</description>
+		<rom name="Double Dragon (USA, Europe) (HES).crt" size="131392" crc="077c86bd" md5="bf1d4606cd10dd8f18f2a72d18ddf3e5" sha1="1f221715a8cb72c59889f97f8b5726fe3f1d05e8"/>
+	</game>
+	<game name="Double Dragon (USA, Europe) (Ocean)">
+		<description>Double Dragon (USA, Europe) (Ocean)</description>
+		<rom name="Double Dragon (USA, Europe) (Ocean).crt" size="131392" crc="ee3e2cd7" md5="88b6e9badab42cf3d35bb5c0a1508a74" sha1="55dbc65e0636944ab2e47258944621153b69ae85"/>
+	</game>
+	<game name="Dragonsden (USA, Europe)">
+		<description>Dragonsden (USA, Europe)</description>
+		<rom name="Dragonsden (USA, Europe).crt" size="16464" crc="7930b863" md5="4c656bd9b9f8e8b86d586ce80a721f14" sha1="421d00f5567e906f4ae946d28bac52074bd7144b"/>
+	</game>
+	<game name="Ducks Ahoy! (USA, Europe)">
+		<description>Ducks Ahoy! (USA, Europe)</description>
+		<rom name="Ducks Ahoy! (USA, Europe).crt" size="16464" crc="51e079b5" md5="40f35827f09052020ee14cbbdd5d37bc" sha1="584093393116e09d04df5f2202c57465e120b426"/>
+	</game>
+	<game name="Electronic Mailbox-64 (USA, Europe) (Program)">
+		<description>Electronic Mailbox-64 (USA, Europe) (Program)</description>
+		<rom name="Electronic Mailbox-64 (USA, Europe) (Program).crt" size="8272" crc="3be1ca96" md5="4f90138e4e5271c66fe35093ca4c103a" sha1="9ce4a85a416acb0c3f97802bb39e702c55df9212"/>
+	</game>
+	<game name="Epyx Fast Load Cartridge (USA, Europe) (Program)">
+		<description>Epyx Fast Load Cartridge (USA, Europe) (Program)</description>
+		<rom name="Epyx Fast Load Cartridge (USA, Europe) (Program).crt" size="8272" crc="848282aa" md5="165f10264c2034c26c91c3de5a8c5634" sha1="d903967f5150da9a1a057b1abc24474ddf913fa1"/>
+	</game>
+	<game name="Ernie's Magic Shapes (USA, Europe)">
+		<description>Ernie's Magic Shapes (USA, Europe)</description>
+		<rom name="Ernie's Magic Shapes (USA, Europe).crt" size="16464" crc="0b6a0bef" md5="e38fb93e5d8fa9d96b0234000e75f9bf" sha1="48a005e1dc4810c1b65b6853119d95048647e49e"/>
+	</game>
+	<game name="Espial (USA, Europe)">
+		<description>Espial (USA, Europe)</description>
+		<rom name="Espial (USA, Europe).crt" size="16464" crc="805e8c5f" md5="b191cec2bcd783515acd4c8b22a3b9a9" sha1="81f51a8473f83fbf91da7e427c97785dedac107b"/>
+	</game>
+	<game name="ExBASIC Level II (USA, Europe) (v64.1) (Program)">
+		<description>ExBASIC Level II (USA, Europe) (v64.1) (Program)</description>
+		<rom name="ExBASIC Level II (USA, Europe) (v64.1) (Program).crt" size="8272" crc="f61edcfe" md5="296eff292a3e6ed4a7b2171b3e706d7c" sha1="d48d47487d816e5c2f293e8a0faa6471f7b89c77"/>
+	</game>
+	<game name="Expert, The (USA, Europe) (Program)">
+		<description>Expert, The (USA, Europe) (Program)</description>
+		<rom name="Expert, The (USA, Europe) (Program).crt" size="8272" crc="797ee423" md5="12992996086a257501bb181c0298300b" sha1="33cfd013215fa3e5212140853707e00940e3dbe5"/>
+		<rom name="Expert, The (USA, Europe) (Program) (Euc29).d64" size="174848" crc="0068933c" md5="c8851e52a12b0aa2d02d57989d73b72d" sha1="7cdc43f7fca6ad02f67f169c05d961bde5e5d4ed"/>
+		<rom name="Expert, The (USA, Europe) (Program) (Ex32).d64" size="174848" crc="5c4526ba" md5="d390ab0c88a5a00b9fca01174ce00cfd" sha1="43f69cfc6f6f31cfc5bd56886e40d598ab98e87e"/>
+		<rom name="Expert, The (USA, Europe) (Program) (Ex32u).d64" size="174848" crc="495d0046" md5="d91f773d7c6403e1f56bb3bb5d5535f4" sha1="71dfdd8bdd56a2ab2e4207fe654935909c4402fb"/>
+		<rom name="Expert, The (USA, Europe) (Program) (Expert).t64" size="91001" crc="cdea83a9" md5="f84731c110a88ccf20827cb3cfd96571" sha1="6a6ca1916ae9082e47ab364dcabc1d17cb7f3041"/>
+		<rom name="Expert, The (USA, Europe) (Program) (Expert21).d64" size="174848" crc="3281c3bb" md5="8e5801bf197c27cd11632fba5da1f079" sha1="cd34b8a2e6980f6e7ea068b37a5c0e32a7920610"/>
+		<rom name="Expert, The (USA, Europe) (Program) (Expert27).d64" size="174848" crc="e49c6a5b" md5="f460824ea855d367efae26b0925c6330" sha1="7eaf7c0399221f7c7628310b351f06a1db79ed9e"/>
+		<rom name="Expert, The (USA, Europe) (Program) (Expert29).d64" size="174848" crc="df734252" md5="4e3ecf260e0177451d6e41f6a512059d" sha1="9f0c95692a4b8d0ec39aadd754a175be2803a4fc"/>
+		<rom name="Expert, The (USA, Europe) (Program) (Expert32).d64" size="174848" crc="460b6c0d" md5="aa227948cfeb1ee97c077a8fcb6f3399" sha1="414f37425a328f48b842ad48b7159cdd5b509379"/>
+		<rom name="Expert, The (USA, Europe) (Program) (Utility).d64" size="174848" crc="72d827a9" md5="b4dc043f15d8ef3d20d80220dc17dad8" sha1="96cb8fc0f5c7f3fbfbcece2a09c08c6a751617c2"/>
+	</game>
+	<game name="Express Cartridge (USA, Europe) (Program)">
+		<description>Express Cartridge (USA, Europe) (Program)</description>
+		<rom name="Express Cartridge (USA, Europe) (Program).bin" size="32768" crc="a5841038" md5="f367a0f74349ed8760a2394276e6c488" sha1="280b9fec4424380388d2c97fa33c7cdfddc1ac6e"/>
+	</game>
+	<game name="Facemaker (USA, Europe)">
+		<description>Facemaker (USA, Europe)</description>
+		<rom name="Facemaker (USA, Europe).crt" size="8272" crc="d53e8bda" md5="733b68d8f01742e200f43f6396607a72" sha1="d6c8069ff9279965062b393a63c13326b106180e"/>
+	</game>
+	<game name="Falconian Invaders (USA, Europe)">
+		<description>Falconian Invaders (USA, Europe)</description>
+		<rom name="Falconian Invaders (USA, Europe).crt" size="8272" crc="71b6d7e3" md5="ba2b6b2a0806de51e60bbe5c69153762" sha1="55a4097f12c10ea8e97c3a81dd02de016b235fca"/>
+	</game>
+	<game name="Fiendish Freddy's Big Top o' Fun + International Soccer + Flimbo's Quest + Klax (Europe) (C 64 Games System)">
+		<description>Fiendish Freddy's Big Top o' Fun + International Soccer + Flimbo's Quest + Klax (Europe) (C 64 Games System)</description>
+		<rom name="Fiendish Freddy's Big Top o' Fun + International Soccer + Flimbo's Quest + Klax (Europe) (C 64 Games System).crt" size="525376" crc="beceb54c" md5="79811b0e5b04ced6c4c508258a43beef" sha1="0b35ea869239ed1edbc4b31e6d5da185bf88ea19"/>
+	</game>
+	<game name="Final Cartridge III, The (USA, Europe) (Dec 88) (Program)">
+		<description>Final Cartridge III, The (USA, Europe) (Dec 88) (Program)</description>
+		<rom name="Final Cartridge III, The (USA, Europe) (Dec 88) (Program).crt" size="65664" crc="69734b98" md5="4461f3e55ce52b33bea8a55c2c0f4c7b" sha1="ec4967e58eabee5bcd7ad4fa3976c6be7ce3bc90"/>
+	</game>
+	<game name="Final Cartridge III, The (USA, Europe) (May 88) (Program)">
+		<description>Final Cartridge III, The (USA, Europe) (May 88) (Program)</description>
+		<rom name="Final Cartridge III, The (USA, Europe) (May 88) (Program).crt" size="65664" crc="f6986145" md5="e68b2c49d439e181089b2726f06999f1" sha1="0a2e53f249c347c5e76a82a6e282ded60256b69f"/>
+	</game>
+	<game name="Final Cartridge III, The (USA, Europe) (Nov 87) (Program)">
+		<description>Final Cartridge III, The (USA, Europe) (Nov 87) (Program)</description>
+		<rom name="Final Cartridge III, The (USA, Europe) (Nov 87) (Program).crt" size="65664" crc="b96f2c80" md5="e4f17229eaf424f45e02871cfe3154dc" sha1="a95735db3066daee316b7eeba242a03bd3b801d8"/>
+	</game>
+	<game name="Final Cartridge III, The (USA, Europe) (Sep 87) (Program)">
+		<description>Final Cartridge III, The (USA, Europe) (Sep 87) (Program)</description>
+		<rom name="Final Cartridge III, The (USA, Europe) (Sep 87) (Program).crt" size="65664" crc="cc80b501" md5="93ea6b1f701b169097c04511e360b905" sha1="2f626c9d64d6c07a679cd9fe47a9e906fe64177c"/>
+	</game>
+	<game name="Final Cartridge, The (USA, Europe) (Program)">
+		<description>Final Cartridge, The (USA, Europe) (Program)</description>
+		<rom name="Final Cartridge, The (USA, Europe) (Program).crt" size="16464" crc="1c365a50" md5="731df176d57639ad0b9db5d0dd1ffdb7" sha1="44ce7a1467c552da111c7e386b3d11be7d394353"/>
+	</game>
+	<game name="Financial Advisor, The (USA, Europe) (Program)">
+		<description>Financial Advisor, The (USA, Europe) (Program)</description>
+		<rom name="Financial Advisor, The (USA, Europe) (Program).crt" size="8272" crc="b4626bda" md5="870fea65b3962ded22355c1417b41144" sha1="cb8f9b8af64c9c784102ce6266a83044c701395b"/>
+	</game>
+	<game name="Format- und Hardcopymodul (Germany) (Program)">
+		<description>Format- und Hardcopymodul (Germany) (Program)</description>
+		<rom name="Format- und Hardcopymodul (Germany) (Program).crt" size="8272" crc="52c27b4f" md5="73d031717e6e27cdaad90d215904a09c" sha1="0814f635361e71c3f5168107ca3646a4f5fa3f8f"/>
+	</game>
+	<game name="Fraction Fever (USA, Europe)">
+		<description>Fraction Fever (USA, Europe)</description>
+		<rom name="Fraction Fever (USA, Europe).crt" size="8272" crc="22fec00f" md5="498cbfcbd5b3e9a690b1230e11902a03" sha1="cc90ac12c03150032c97defccbaa477cb92c83a9"/>
+	</game>
+	<game name="Frog Master (USA, Europe)">
+		<description>Frog Master (USA, Europe)</description>
+		<rom name="Frog Master (USA, Europe).crt" size="8272" crc="f48f6b0f" md5="4802096ff320df15db73ff3725076107" sha1="86421a193fe7e9075aa649834f1957f07e2039c6"/>
+	</game>
+	<game name="Frogger (USA, Europe)">
+		<description>Frogger (USA, Europe)</description>
+		<rom name="Frogger (USA, Europe).crt" size="16464" crc="6d8f51a4" md5="1f45af2e07152bcfd04ad1884074efc1" sha1="d5fc2cbe44727c3fc222024f2ff2be84065a7eaf"/>
+	</game>
+	<game name="Frogger + River Raid + Activision Decathlon, The + Beamrider (USA, Europe) (Arcade Classic Pak)">
+		<description>Frogger + River Raid + Activision Decathlon, The + Beamrider (USA, Europe) (Arcade Classic Pak)</description>
+		<rom name="Frogger + River Raid + Activision Decathlon, The + Beamrider (USA, Europe) (Arcade Classic Pak).crt" size="65728" crc="fb321df1" md5="2a57e9b79010692e524d8c2ff19f8acb" sha1="865e394db5dec07cbc46d96a4caf2f112ab6ac52"/>
+	</game>
+	<game name="Frogger II - Threeedeep! (USA, Europe)">
+		<description>Frogger II - Threeedeep! (USA, Europe)</description>
+		<rom name="Frogger II - Threeedeep! (USA, Europe).crt" size="16464" crc="cb2cd61b" md5="c5c23c9d8b11189c87013fee879dead4" sha1="30f8238ab08d46d78b601d1b299721c6c15c959e"/>
+	</game>
+	<game name="Galaxian (USA, Europe)">
+		<description>Galaxian (USA, Europe)</description>
+		<rom name="Galaxian (USA, Europe).crt" size="16464" crc="e3a92d06" md5="a2509b12a88457a764e2037e455de070" sha1="4c3661a686216e4a49d5d13d439b8a2010ea7f61"/>
+	</game>
+	<game name="Galaxions + Munchman (USA, Europe)">
+		<description>Galaxions + Munchman (USA, Europe)</description>
+		<rom name="Galaxions + Munchman (USA, Europe).crt" size="16464" crc="d536f2b6" md5="2dd3d40f4c6fc493b3ddab4e3833d2af" sha1="d6412352c16efeb1229b414174948432ac71c68d"/>
+	</game>
+	<game name="Gateway to Apshai (USA, Europe)">
+		<description>Gateway to Apshai (USA, Europe)</description>
+		<rom name="Gateway to Apshai (USA, Europe).crt" size="16464" crc="a2b964e4" md5="6dd87584ff7bbb44665ab96f3ac9e3bb" sha1="f594bb42778efb1ceaf676fb289459af1d0f9722"/>
+	</game>
+	<game name="Ghostbusters (USA, Europe)">
+		<description>Ghostbusters (USA, Europe)</description>
+		<rom name="Ghostbusters (USA, Europe).crt" size="32896" crc="55a2c9c7" md5="ec7ce7f5426fdfaf991da03f23ea9ded" sha1="38a74f7e86e7c891740e054d2fd4c8c8e4bd6855"/>
+	</game>
+	<game name="Gorf (USA, Europe)">
+		<description>Gorf (USA, Europe)</description>
+		<rom name="Gorf (USA, Europe).crt" size="16464" crc="0ecf0b4a" md5="66883446f2bc1c7f39730574050c04bd" sha1="c01e9accafe7bbbb0b385cbb3aa02a099cf3af3c"/>
+	</game>
+	<game name="Graf 64 (USA, Europe) (Program)">
+		<description>Graf 64 (USA, Europe) (Program)</description>
+		<rom name="Graf 64 (USA, Europe) (Program).crt" size="8272" crc="2aa90a28" md5="1f70183916f14b5be6900c8a1194efb4" sha1="64db35b877fe7ccf116b2b988e1d1098fd5ad547"/>
+	</game>
+	<game name="Gridrunner (USA, Europe)">
+		<description>Gridrunner (USA, Europe)</description>
+		<rom name="Gridrunner (USA, Europe).crt" size="8272" crc="4613dc2e" md5="dde376c734b45169ec48a2106cf320cb" sha1="d59ccbab9ac11522ce4ee034d077b1852c80185e"/>
+	</game>
+	<game name="Gridrunner II - Attack of the Mutant Camels (USA)">
+		<description>Gridrunner II - Attack of the Mutant Camels (USA)</description>
+		<rom name="Gridrunner II - Attack of the Mutant Camels (USA).crt" size="8272" crc="ab1336ff" md5="b8f39d186124cf078e1a3e855797c4ae" sha1="a516f207f6c9bd92ed18d099ddc905262405d22e"/>
+	</game>
+	<game name="Gyruss (USA, Europe)">
+		<description>Gyruss (USA, Europe)</description>
+		<rom name="Gyruss (USA, Europe).crt" size="16464" crc="d5a4bbd6" md5="f25a1ddbcdbaeddc8ee6e2c5144b9f9d" sha1="8d8395d05777b8f4b3d04fc0f3e66b6bb0fdcf74"/>
+	</game>
+	<game name="H.E.R.O. - Helicopter Emergency Rescue Operation (USA, Europe)">
+		<description>H.E.R.O. - Helicopter Emergency Rescue Operation (USA, Europe)</description>
+		<rom name="H.E.R.O. - Helicopter Emergency Rescue Operation (USA, Europe).crt" size="16464" crc="894c1b13" md5="fc04ef231521ce76f92a385899d9ba89" sha1="9968558c1afd6960ad97b783e64b555abace251f"/>
+	</game>
+	<game name="Halftime Battlin' Bands featuring... the Jazz Scats! (USA, Europe)">
+		<description>Halftime Battlin' Bands featuring... the Jazz Scats! (USA, Europe)</description>
+		<rom name="Halftime Battlin' Bands featuring... the Jazz Scats! (USA, Europe).crt" size="16464" crc="115a0d9a" md5="0102b3ac6a3e876187f33d5dcd7063db" sha1="6493020f43e0e10ebc4253aa97dbc39f530cf5db"/>
+	</game>
+	<game name="Happy-Packer (Germany) (Program)">
+		<description>Happy-Packer (Germany) (Program)</description>
+		<rom name="Happy-Packer (Germany) (Program).crt" size="8272" crc="8e3e34e2" md5="56bca11ded4bb3bd12c6884865395055" sha1="7c2b8908eef01c0845c75563159b706cae1c2dd3"/>
+	</game>
+	<game name="HES Mon 64 (USA, Europe) (Program)">
+		<description>HES Mon 64 (USA, Europe) (Program)</description>
+		<rom name="HES Mon 64 (USA, Europe) (Program).crt" size="8272" crc="82b1c134" md5="1399adc771612c1c40bfd6d1660266e2" sha1="f5edf095adf8ea329728bc399c80f257f44879a9"/>
+	</game>
+	<game name="HES Mon 64 (USA, Europe) (Proto) (Program)">
+		<description>HES Mon 64 (USA, Europe) (Proto) (Program)</description>
+		<rom name="HES Mon 64 (USA, Europe) (Proto) (Program).crt" size="8272" crc="b0ec1b6b" md5="224e37d6c17936b527480f54124cc54e" sha1="f85d0218f340f8fc38cef33a3f72643f1dee181f"/>
+	</game>
+	<game name="HES Writer 64 (USA, Europe) (Program)">
+		<description>HES Writer 64 (USA, Europe) (Program)</description>
+		<rom name="HES Writer 64 (USA, Europe) (Program).crt" size="8272" crc="7fac69b2" md5="46790bc68872dfe55524b4aed2a44da4" sha1="87a548b5475a4d6a992be56c464ee2a95a3c4073"/>
+	</game>
+	<game name="Hop Along Counting (USA, Europe)">
+		<description>Hop Along Counting (USA, Europe)</description>
+		<rom name="Hop Along Counting (USA, Europe).crt" size="8272" crc="4034f09f" md5="04288a3542b6d35446c99a6c2f8837b6" sha1="6256625e69f5c228187da1352a07925c8fc433dc"/>
+	</game>
+	<game name="Human Skeleton Tutorial (USA)">
+		<description>Human Skeleton Tutorial (USA)</description>
+		<rom name="Human Skeleton Tutorial (USA).crt" size="8272" crc="7b8f0d44" md5="5f846d2bda873719c1476f00c8e76643" sha1="07c6ad38641bfaf95b2debf5678b8eb0bc3dca2e"/>
+	</game>
+	<game name="Hypra-Disk-Modul II (Germany) (Program)">
+		<description>Hypra-Disk-Modul II (Germany) (Program)</description>
+		<rom name="Hypra-Disk-Modul II (Germany) (Program).crt" size="8272" crc="4843e4d8" md5="b1a58e84e32c6ac18b0cecf008b0d869" sha1="b3ac81a9a7fd386f321ae1a5e8b846b7f8ff2fc8"/>
+	</game>
+	<game name="IEEE-488 (USA, Europe) (Program)">
+		<description>IEEE-488 (USA, Europe) (Program)</description>
+		<rom name="IEEE-488 (USA, Europe) (Program).bin" size="4096" crc="e894e448" md5="01ee1241d21a61313a4994608eb99792" sha1="c62b88b73d79b485ebb250d56065dfa54b8baf4c"/>
+	</game>
+	<game name="International Football (USA, Europe)">
+		<description>International Football (USA, Europe)</description>
+		<rom name="International Football (USA, Europe).crt" size="16464" crc="9f2d74aa" md5="4f82e581c6a509f3e01b93aa73c06e27" sha1="2fca38daedd84fc65fc34e6b52a15f9ddb23311e"/>
+	</game>
+	<game name="Jack Attack (USA, Europe)">
+		<description>Jack Attack (USA, Europe)</description>
+		<rom name="Jack Attack (USA, Europe).crt" size="16464" crc="121c4a0a" md5="ce925e2cbd92e467dbf056352bb9ae4d" sha1="ae908d89b01745be9adf64b3d2d79a9953327148"/>
+	</game>
+	<game name="James Bond 007 (USA, Europe)">
+		<description>James Bond 007 (USA, Europe)</description>
+		<rom name="James Bond 007 (USA, Europe).crt" size="16464" crc="f71185e8" md5="5d9fbb48584367dad7a8f61c76dbc2dc" sha1="778f6b075bcdc77a4067f28f00402927b2f5ae0f"/>
+	</game>
+	<game name="Jawbreaker (USA, Europe)">
+		<description>Jawbreaker (USA, Europe)</description>
+		<rom name="Jawbreaker (USA, Europe).crt" size="8272" crc="910a9d74" md5="e8dc135b5bd05d3ecdd5458c4325d729" sha1="e25f7f25d3c9b5cd6e9dc8b21663ca21de63d829"/>
+	</game>
+	<game name="Juice! (USA, Europe)">
+		<description>Juice! (USA, Europe)</description>
+		<rom name="Juice! (USA, Europe).crt" size="16464" crc="2f2615f3" md5="358359a97bc693ef17904caecfae5574" sha1="c3405c7024e43fcec6528712e70736f1df3591da"/>
+	</game>
+	<game name="Jukebox (USA, Europe)">
+		<description>Jukebox (USA, Europe)</description>
+		<rom name="Jukebox (USA, Europe).crt" size="8272" crc="7d44fba2" md5="b38502118524a01f0eaa5f5ca703ec71" sha1="f370010545aff5aa2056675057a4b1247ecace2c"/>
+	</game>
+	<game name="Jumpman Junior (USA, Europe)">
+		<description>Jumpman Junior (USA, Europe)</description>
+		<rom name="Jumpman Junior (USA, Europe).crt" size="16464" crc="53c7f4cf" md5="c9571805e89b8ab0b87cdfbf08a2d4c1" sha1="ade5bef01e399da7d231b39fe26a229339b6b4c7"/>
+	</game>
+	<game name="Jungle Hunt (USA, Europe)">
+		<description>Jungle Hunt (USA, Europe)</description>
+		<rom name="Jungle Hunt (USA, Europe).crt" size="16464" crc="d7d2b1d1" md5="8f0c7b264a804d354a893449dc55595e" sha1="fdd514de7b47149711e19ece2f4f31640de1bd77"/>
+	</game>
+	<game name="Jupiter Lander (World) (v02) (MAX)">
+		<description>Jupiter Lander (World) (v02) (MAX)</description>
+		<rom name="Jupiter Lander (World) (v02) (MAX).crt" size="8272" crc="1ef5fc6c" md5="f0751c314bca92d9bcab52b390896bc3" sha1="443c205d246c8572bd73d0cd56d0d1e037bb16cd"/>
+	</game>
+	<game name="Kickman (World) (v03) (MAX)">
+		<description>Kickman (World) (v03) (MAX)</description>
+		<rom name="Kickman (World) (v03) (MAX).crt" size="8272" crc="4a07706e" md5="882eec359e0e44124a2f47bbaf724cda" sha1="8f12bb36d33910cf4e25b505766945bc5fe370dc"/>
+	</game>
+	<game name="Kids on Keys (USA, Europe)">
+		<description>Kids on Keys (USA, Europe)</description>
+		<rom name="Kids on Keys (USA, Europe).crt" size="8272" crc="4506e0f7" md5="6bb4f806a5a39174a3110f03de11849e" sha1="b682aebd1086ff0c2e96f9c3d41a81466365dc66"/>
+	</game>
+	<game name="Kindercomp (USA, Europe)">
+		<description>Kindercomp (USA, Europe)</description>
+		<rom name="Kindercomp (USA, Europe).crt" size="8272" crc="2c3ff33e" md5="ca7ad29d664e8eaa45a01df8504bce0b" sha1="4a65d55eba7d483ba20bf5d3a72e909b7fa67bea"/>
+	</game>
+	<game name="Kung-Fu Master (USA, Europe)">
+		<description>Kung-Fu Master (USA, Europe)</description>
+		<rom name="Kung-Fu Master (USA, Europe).crt" size="32896" crc="bb51284e" md5="f8de7783a1088dee75cf16eda1a0be35" sha1="b5569ad36f16dae126aa5d2752be51ba203ee011"/>
+	</game>
+	<game name="Laser Cycles (USA, Europe)">
+		<description>Laser Cycles (USA, Europe)</description>
+		<rom name="Laser Cycles (USA, Europe).crt" size="8272" crc="16a681cb" md5="0ea78d05a8d8ea18c1d2c46259b52f42" sha1="bed1a44f72cc21b2756eb8746ad82c74446f73ee"/>
+	</game>
+	<game name="Lazarian (USA, Europe)">
+		<description>Lazarian (USA, Europe)</description>
+		<rom name="Lazarian (USA, Europe).crt" size="16464" crc="97130687" md5="c1fea21c45826da7afde3f41f4d50d10" sha1="0ca3ed5f3c156f034564ca465280589bb96c0ceb"/>
+	</game>
+	<game name="Lazer Zone (USA, Europe)">
+		<description>Lazer Zone (USA, Europe)</description>
+		<rom name="Lazer Zone (USA, Europe).crt" size="8272" crc="eb462b4a" md5="8aaf8ce4de28db997198c56512667bdf" sha1="b1ef8ae1b907fb33b1a510bfec2680b23397247f"/>
+	</game>
+	<game name="Leader Board - Pro Golf Simulator (USA, Europe)">
+		<description>Leader Board - Pro Golf Simulator (USA, Europe)</description>
+		<rom name="Leader Board - Pro Golf Simulator (USA, Europe).crt" size="32896" crc="51cf1a85" md5="04c955662e34f5ad8dd2d75e75c7eef3" sha1="a4c48dbff8a69f38059200e8ebd57fd5a0f2aef7"/>
+	</game>
+	<game name="Learning with Leeper (USA, Europe)">
+		<description>Learning with Leeper (USA, Europe)</description>
+		<rom name="Learning with Leeper (USA, Europe).crt" size="16464" crc="1a47f824" md5="631acadd16c6cb80f4317c7786015844" sha1="0d741d5114aa02ae197717b75cf2ec44505109d8"/>
+	</game>
+	<game name="LeMans (USA, Europe) (MAX)">
+		<description>LeMans (USA, Europe) (MAX)</description>
+		<rom name="LeMans (USA, Europe) (MAX).crt" size="8272" crc="e7811620" md5="f13665d78b20c1808138b8849a28c4a8" sha1="8e47881e510413245dc73ab8faee95008238264d"/>
+	</game>
+	<game name="Linking Logic (USA, Europe)">
+		<description>Linking Logic (USA, Europe)</description>
+		<rom name="Linking Logic (USA, Europe).crt" size="16464" crc="51b75bf0" md5="c1d47b7b457823f46004f9991bb56d08" sha1="97e01ce75ce2e078c5be6f292da8c1837cfd6a3e"/>
+	</game>
+	<game name="Lode Runner (USA, Europe)">
+		<description>Lode Runner (USA, Europe)</description>
+		<rom name="Lode Runner (USA, Europe).crt" size="16464" crc="13e1e63b" md5="a70766a91dc7a11b93acd0799362adc2" sha1="8ddc802a6cf0d949ffa017376885779b645a755d"/>
+	</game>
+	<game name="Logic Levels (USA, Europe)">
+		<description>Logic Levels (USA, Europe)</description>
+		<rom name="Logic Levels (USA, Europe).crt" size="16464" crc="4b8d4baf" md5="2367139f8fac1004e94e013168315694" sha1="3e5520bd3089f11b8d75d785989d65b76d40e526"/>
+	</game>
+	<game name="Lunar Leeper (USA, Europe)">
+		<description>Lunar Leeper (USA, Europe)</description>
+		<rom name="Lunar Leeper (USA, Europe).crt" size="16464" crc="d763bd3e" md5="0b0df03656257cc1352e95c3094eabc9" sha1="c9c840542969cfbd92188e8eff29750f1e3b5004"/>
+	</game>
+	<game name="Magic Desk I - Type and File (USA, Europe) (CCS) (Program)">
+		<description>Magic Desk I - Type and File (USA, Europe) (CCS) (Program)</description>
+		<rom name="Magic Desk I - Type and File (USA, Europe) (CCS) (Program).crt" size="32896" crc="fde73767" md5="5fb28506c9d743ee579fd25e253f03c7" sha1="26fdbe0dc801d2f74c5f2d5e2134742e92f6a369"/>
+	</game>
+	<game name="Magic Desk I - Type and File (USA, Europe) (VICE) (Program)">
+		<description>Magic Desk I - Type and File (USA, Europe) (VICE) (Program)</description>
+		<rom name="Magic Desk I - Type and File (USA, Europe) (VICE) (Program).crt" size="32896" crc="036788ed" md5="fa81a60ab654f2c1242995a4ded268b7" sha1="fb12662c820e55e4aa17657f8855440d5641ae1c"/>
+	</game>
+	<game name="Magic Formel (USA, Europe) (v1.2) (Program)">
+		<description>Magic Formel (USA, Europe) (v1.2) (Program)</description>
+		<rom name="Magic Formel (USA, Europe) (v1.2) (Program).crt" size="65728" crc="6598c9d1" md5="597200ea68404971bfcd2236ea02103a" sha1="60d912615acc92ed13b0aa29f9b395a4fd002e8e"/>
+	</game>
+	<game name="Magic Voice (USA, Europe) (Program)">
+		<description>Magic Voice (USA, Europe) (Program)</description>
+		<rom name="Magic Voice (USA, Europe) (Program).bin" size="16384" crc="c741fa77" md5="7fe3f0c498b064ab05c89e20151b48b4" sha1="2044028d42def60df79b8ab57d005721b41190fa"/>
+	</game>
+	<game name="Mario's Brewery (USA, Europe)">
+		<description>Mario's Brewery (USA, Europe)</description>
+		<rom name="Mario's Brewery (USA, Europe).crt" size="8272" crc="71e9f4f7" md5="03294512dc7ce47b1b3cdd0ae0290813" sha1="43301b28ca9c0dcdb12099a6275e833cf633d098"/>
+	</game>
+	<game name="MasterType (USA, Europe)">
+		<description>MasterType (USA, Europe)</description>
+		<rom name="MasterType (USA, Europe).crt" size="16464" crc="9a53961f" md5="376e45f21427a545fa140aa2924b1879" sha1="a560664e5359ba7a59dad547eb37f229c4129aef"/>
+	</game>
+	<game name="Math Mileage (USA, Europe)">
+		<description>Math Mileage (USA, Europe)</description>
+		<rom name="Math Mileage (USA, Europe).crt" size="16464" crc="96cd7f72" md5="83aa3833677d3899d4f3f3af3f2f043e" sha1="b7e06d9c8dddb46c6fe9a46cbd9a3be4b6bf786b"/>
+	</game>
+	<game name="MAX BASIC (Japan) (MAX)">
+		<description>MAX BASIC (Japan) (MAX)</description>
+		<rom name="MAX BASIC (Japan) (MAX).crt" size="16480" crc="948d7fd0" md5="0532e33add3dbe11c081f174fe6f4327" sha1="5a89ab22a2e849dfe35b07180c7bd10c2c46f9b1"/>
+	</game>
+	<game name="Maze Man (USA, Europe)">
+		<description>Maze Man (USA, Europe)</description>
+		<rom name="Maze Man (USA, Europe).crt" size="8272" crc="d7c23075" md5="54008211013daefd8db0a66dc6badf1f" sha1="415389f39363a4f55c8588a04b8d25013f303b86"/>
+	</game>
+	<game name="Maze Master (USA, Europe)">
+		<description>Maze Master (USA, Europe)</description>
+		<rom name="Maze Master (USA, Europe).crt" size="16464" crc="9ebe3620" md5="515b9acca90a43d81e356dc5fc6563ea" sha1="15d84f1159e21c888a595da8f3a4b1df2e0fca47"/>
+	</game>
+	<game name="Memory Manor (USA, Europe)">
+		<description>Memory Manor (USA, Europe)</description>
+		<rom name="Memory Manor (USA, Europe).crt" size="8272" crc="fe7e501c" md5="2bfdedfe9080e339c99abf727bd40f45" sha1="392ac23b97f01222a2d73804a14e58e912242810"/>
+	</game>
+	<game name="MicroProse Soccer + Rick Dangerous + Stunt Car Racer (Europe) (Power Play)">
+		<description>MicroProse Soccer + Rick Dangerous + Stunt Car Racer (Europe) (Power Play)</description>
+		<rom name="MicroProse Soccer + Rick Dangerous + Stunt Car Racer (Europe) (Power Play).crt" size="131392" crc="96be8043" md5="fabc7432be0865c9489a9abb75d00328" sha1="b2eff4581a46b84ceac73dcef8e16f15914057c8"/>
+	</game>
+	<game name="Miner 2049er Starring Bounty Bob (USA, Europe)">
+		<description>Miner 2049er Starring Bounty Bob (USA, Europe)</description>
+		<rom name="Miner 2049er Starring Bounty Bob (USA, Europe).crt" size="16464" crc="785b37c8" md5="bea6ac7f311aa3b7954d6c1b52333c6f" sha1="baefba7fcff61315909b10a023f40d31f2216533"/>
+	</game>
+	<game name="MINI BASIC I (Japan) (MAX)">
+		<description>MINI BASIC I (Japan) (MAX)</description>
+		<rom name="MINI BASIC I (Japan) (MAX).crt" size="8272" crc="def7ca41" md5="122e502d8788b6ddbbb443b6be30713a" sha1="9b81077bad49d118763682b279c6cfb345d33bcc"/>
+	</game>
+	<game name="Minnesota Fat's Pool Challenger (USA)">
+		<description>Minnesota Fat's Pool Challenger (USA)</description>
+		<rom name="Minnesota Fat's Pool Challenger (USA).crt" size="8272" crc="2bcd3c61" md5="313ccc7924389076bf8cf61c9989e7fb" sha1="ed12187a2809f458f126878c4acb43d0cac21075"/>
+	</game>
+	<game name="Mole Attack (Japan) (v01) (MAX)">
+		<description>Mole Attack (Japan) (v01) (MAX)</description>
+		<rom name="Mole Attack (Japan) (v01) (MAX).crt" size="8272" crc="a17c6602" md5="a5d7737f94733155ee83128dfe640fa1" sha1="fa128c6ea7f07b295ffd2f10edb0b38936cc2ec3"/>
+	</game>
+	<game name="Money Wars (Japan) (v01) (MAX)">
+		<description>Money Wars (Japan) (v01) (MAX)</description>
+		<rom name="Money Wars (Japan) (v01) (MAX).crt" size="8272" crc="2bc5c748" md5="6f43cacd8ad1c3a5718c3404dcf0c741" sha1="a7513ced6e39f52981a72695c9c7724f5a2186eb"/>
+	</game>
+	<game name="Moon Patrol (USA, Europe)">
+		<description>Moon Patrol (USA, Europe)</description>
+		<rom name="Moon Patrol (USA, Europe).crt" size="16464" crc="9b07e706" md5="88c7544bf0121c0042a9b7f5619e8191" sha1="a258ce75743c5d98e0e66b7331479538a7443e47"/>
+	</game>
+	<game name="Moondust (USA, Europe)">
+		<description>Moondust (USA, Europe)</description>
+		<rom name="Moondust (USA, Europe).crt" size="8272" crc="82b9587f" md5="7df779a2d9cd27aad6fd37287b273c3a" sha1="37434def90a3a0022b520c136cec874c224296f4"/>
+	</game>
+	<game name="Motor Mania (USA, Europe)">
+		<description>Motor Mania (USA, Europe)</description>
+		<rom name="Motor Mania (USA, Europe).crt" size="16464" crc="dc43cf24" md5="9727d61330e3fd7cd18453af183b4eee" sha1="72742d5696962172b5b905bdfe7e21a875cc13c0"/>
+	</game>
+	<game name="Mountain King (USA, Europe)">
+		<description>Mountain King (USA, Europe)</description>
+		<rom name="Mountain King (USA, Europe).crt" size="16464" crc="dc6aa143" md5="beb74e71e13d4814735c4634639038cf" sha1="5e6df5dbc3133ed74f6daac8ec3af2e080edf651"/>
+	</game>
+	<game name="Movie Musical Madness Starring the Jazz Scats (USA, Europe)">
+		<description>Movie Musical Madness Starring the Jazz Scats (USA, Europe)</description>
+		<rom name="Movie Musical Madness Starring the Jazz Scats (USA, Europe).crt" size="16464" crc="10192e17" md5="f0733e3194fc879c30b00cfd25c4fa1e" sha1="f066efeccc6e455c8a11b0d30d7904614f502fd0"/>
+	</game>
+	<game name="Mr. Cool (USA, Europe)">
+		<description>Mr. Cool (USA, Europe)</description>
+		<rom name="Mr. Cool (USA, Europe).crt" size="8272" crc="52e9d37b" md5="3f8cc5365aa2b7c6fc0b0c8dd556f2b5" sha1="3697d0b63cf7f12c2eaeed3936c5f253806eb2c8"/>
+	</game>
+	<game name="Mr. TNT (USA, Europe)">
+		<description>Mr. TNT (USA, Europe)</description>
+		<rom name="Mr. TNT (USA, Europe).crt" size="8272" crc="bebcb664" md5="bdd5fcbb5644165fef5112283aca5b24" sha1="9d919cf5fac62069c002d514fe9619c7ba60a0d0"/>
+	</game>
+	<game name="Ms. Pac-Man (USA, Europe)">
+		<description>Ms. Pac-Man (USA, Europe)</description>
+		<rom name="Ms. Pac-Man (USA, Europe).crt" size="16464" crc="9d87a042" md5="9797ca21888c29f41944a4df5eab2116" sha1="906583f84229c900819804b7765f489b9d27c3be"/>
+	</game>
+	<game name="Muistio 64 (Finland) (Program)">
+		<description>Muistio 64 (Finland) (Program)</description>
+		<rom name="Muistio 64 (Finland) (Program).crt" size="8272" crc="6aff7777" md5="cfefb95c4e2549fc8fb17d73bf205f44" sha1="a3e65a84b94971dc96c2edefd3ac4f8faa2c0959"/>
+	</game>
+	<game name="Music Composer (World) (MAX)">
+		<description>Music Composer (World) (MAX)</description>
+		<rom name="Music Composer (World) (MAX).crt" size="8272" crc="2ee2937d" md5="9d3340f4ccd4dc4faefbd6eec7490a89" sha1="82fed1f68fc424d80d2bdae722c3bd1371098642"/>
+	</game>
+	<game name="Music Machine (USA, Europe) (MAX)">
+		<description>Music Machine (USA, Europe) (MAX)</description>
+		<rom name="Music Machine (USA, Europe) (MAX).crt" size="8272" crc="064eaa1f" md5="a917c2b5eea8d87aaf98c1dcbaa9e762" sha1="62c039620414b6c02b3d077a3f89c181e9e233b6"/>
+	</game>
+	<game name="Myth (Europe)">
+		<description>Myth (Europe)</description>
+		<rom name="Myth (Europe).crt" size="525376" crc="54e485a4" md5="b9fb71ba50568d23714c3c9c80ba919e" sha1="67b4804f5f5246d27855becad35d365665ac52d0"/>
+	</game>
+	<game name="Narco Police (USA, Europe)">
+		<description>Narco Police (USA, Europe)</description>
+		<rom name="Narco Police (USA, Europe).crt" size="131392" crc="48cf411a" md5="dc9e537f2238905b6454ef4c05eef33a" sha1="dc7affab42b83cd403878e9f1ec0ecfb2ba7f8f8"/>
+	</game>
+	<game name="Navy SEALs (Europe)">
+		<description>Navy SEALs (Europe)</description>
+		<rom name="Navy SEALs (Europe).crt" size="131392" crc="65fa2c3d" md5="486b18fbc2a4830dc790f78fbee506ce" sha1="140f7dd0125c9f5f6caf47e4eb0997aeef316979"/>
+	</game>
+	<game name="Ninja Remix (USA, Europe)">
+		<description>Ninja Remix (USA, Europe)</description>
+		<rom name="Ninja Remix (USA, Europe).crt" size="525376" crc="41288ef8" md5="1165683de57d7542096bbe771082c782" sha1="68cc58ba06e62458ce5f9b33ccab32df51dd4464"/>
+	</game>
+	<game name="Nordic Power Action Cartridge (USA, Europe) (v7.2) (Program)">
+		<description>Nordic Power Action Cartridge (USA, Europe) (v7.2) (Program)</description>
+		<rom name="Nordic Power Action Cartridge (USA, Europe) (v7.2) (Program).crt" size="32896" crc="b6a803cf" md5="0612a348f43425e263631b0414e9b51b" sha1="3ec3e610c74efb3a14a2d7232dea3395451c4bf1"/>
+	</game>
+	<game name="Nova Blast (USA, Europe)">
+		<description>Nova Blast (USA, Europe)</description>
+		<rom name="Nova Blast (USA, Europe).crt" size="16464" crc="cc72fd59" md5="4789fd8429ec81e9f2861e8809cb5e15" sha1="bdb1a0e5013badaafbfa057d8bfe773ba3c938e6"/>
+	</game>
+	<game name="Number Nabber, Shape Grabber (USA, Europe)">
+		<description>Number Nabber, Shape Grabber (USA, Europe)</description>
+		<rom name="Number Nabber, Shape Grabber (USA, Europe).crt" size="8272" crc="686baf97" md5="4961c3672624af9a7ea0e5492cca16ff" sha1="79c366704578b13e4e573c27211da255b0d7414f"/>
+	</game>
+	<game name="Number Tumblers (USA, Europe)">
+		<description>Number Tumblers (USA, Europe)</description>
+		<rom name="Number Tumblers (USA, Europe).crt" size="8272" crc="0b2f427e" md5="eed5b75b2e608356c3a4962a09139235" sha1="407809c810e8cd9c12fc297ad9f312861e4f344b"/>
+	</game>
+	<game name="Oil's Well (USA, Europe)">
+		<description>Oil's Well (USA, Europe)</description>
+		<rom name="Oil's Well (USA, Europe).crt" size="16464" crc="c0710a45" md5="e17e1bdda26d317e6a4c84f633e46478" sha1="50142dcace9f7f0a88d55fef6d95584f4c3d84f1"/>
+	</game>
+	<game name="Omega Race (Japan) (v02) (MAX)">
+		<description>Omega Race (Japan) (v02) (MAX)</description>
+		<rom name="Omega Race (Japan) (v02) (MAX).crt" size="8272" crc="60eba43d" md5="a8d373cd070ac3a180a6e8b0344f03fd" sha1="d651aa257421f37d92c0334383998020972a855e"/>
+	</game>
+	<game name="Omega Race (USA, Europe)">
+		<description>Omega Race (USA, Europe)</description>
+		<rom name="Omega Race (USA, Europe).crt" size="8272" crc="c99597c7" md5="48e9d5cb4720976e2615cf1603440943" sha1="f086ea7d8ad6136de45da41b7ff4c0f9bb7c7521"/>
+	</game>
+	<game name="Pac-Man (USA, Europe)">
+		<description>Pac-Man (USA, Europe)</description>
+		<rom name="Pac-Man (USA, Europe).crt" size="8272" crc="a2855ae7" md5="608b9438d0d310ddf59902d5a372d365" sha1="093655680eaa6a4322e74251b01c7ca21e71b9c7"/>
+	</game>
+	<game name="Pagefox (Finland) (Program)">
+		<description>Pagefox (Finland) (Program)</description>
+		<rom name="Pagefox (Finland) (Program) (u1).bin" size="32768" crc="dd6c545a" md5="bbd57fc4805799d2f80d39416ff6f98e" sha1="d32005405cb944f77932901916608232e3c05a42"/>
+		<rom name="Pagefox (Finland) (Program) (u2).bin" size="32768" crc="3dc43ab1" md5="870d15c3f13b134e8564e774c3e920f3" sha1="1a21771e7bf61ca1771de450c8230bd5ac46b1c6"/>
+	</game>
+	<game name="Paint Brush (USA, Europe)">
+		<description>Paint Brush (USA, Europe)</description>
+		<rom name="Paint Brush (USA, Europe).crt" size="16464" crc="71c621c6" md5="6a21305851308037b44a8246515d6c4f" sha1="ff1c84078b084492391645cbe0359039696aec5c"/>
+	</game>
+	<game name="Pancho (France)">
+		<description>Pancho (France)</description>
+		<rom name="Pancho (France).crt" size="16464" crc="cb07fca6" md5="db5322ed81b0bd4a4a2e653c72c74afd" sha1="92f8eb6a8c11177ede95f859a6c36c17e723e166"/>
+	</game>
+	<game name="Pang (Europe)">
+		<description>Pang (Europe)</description>
+		<rom name="Pang (Europe).crt" size="131392" crc="b9d0df9c" md5="f26e4d3911377a1be1475e4d7582213d" sha1="6626558cf394316c3b3d0efee5c9b56acb6d9488"/>
+	</game>
+	<game name="Park Patrol (USA, Europe)">
+		<description>Park Patrol (USA, Europe)</description>
+		<rom name="Park Patrol (USA, Europe).crt" size="32896" crc="325c9305" md5="7ddb98447d4914a77adc59bc52ced239" sha1="da0300bd981f2b51d8495f43a35227bca970983f"/>
+	</game>
+	<game name="Pastfinder (USA, Europe)">
+		<description>Pastfinder (USA, Europe)</description>
+		<rom name="Pastfinder (USA, Europe).crt" size="16464" crc="0695eafc" md5="8cbfa1558c7847137305c2f174870af8" sha1="5a52dabe96489c5c8b5ac0c96d4635283904df86"/>
+	</game>
+	<game name="Peanut Butter Panic (USA, Europe)">
+		<description>Peanut Butter Panic (USA, Europe)</description>
+		<rom name="Peanut Butter Panic (USA, Europe).crt" size="16464" crc="4d37b6e1" md5="f352160d14602a17c476c08521246612" sha1="cd205e1282283e7ff39b2c8190cfaf1e95d70025"/>
+	</game>
+	<game name="Pinball Spectacular (World) (MAX)">
+		<description>Pinball Spectacular (World) (MAX)</description>
+		<rom name="Pinball Spectacular (World) (MAX).crt" size="16480" crc="fff97d02" md5="ea484b335e77608ba479b1059f286f84" sha1="31116d7781b38d310c9283f6c5d459bbd49c2bd0"/>
+	</game>
+	<game name="Pipes (USA, Europe)">
+		<description>Pipes (USA, Europe)</description>
+		<rom name="Pipes (USA, Europe).crt" size="8272" crc="543adccc" md5="c6123e532c37c5f5eff22c58eec4c885" sha1="b6de83f9c65285777fdff134f8b4aa8d603674cb"/>
+	</game>
+	<game name="Pit, The (USA, Europe)">
+		<description>Pit, The (USA, Europe)</description>
+		<rom name="Pit, The (USA, Europe).crt" size="8272" crc="18051680" md5="3173aaa5e65c6e369679a539150a5ae7" sha1="54f7f3243e70b20c5e5513411cecaa9e8deafc30"/>
+	</game>
+	<game name="Pitfall II - Lost Caverns (USA, Europe)">
+		<description>Pitfall II - Lost Caverns (USA, Europe)</description>
+		<rom name="Pitfall II - Lost Caverns (USA, Europe).crt" size="16464" crc="e70444c6" md5="9f89943b1bd6405599e0bc36e6a737c5" sha1="90c9435c1e3594793eed4c682fe5b72194a25233"/>
+	</game>
+	<game name="Pitfall! (USA, Europe)">
+		<description>Pitfall! (USA, Europe)</description>
+		<rom name="Pitfall! (USA, Europe).crt" size="8272" crc="81489ef4" md5="a35faa98ff57f037abe699e01b269c5c" sha1="1cee6f92c35d19051dfd671bdc780dc7584c20d1"/>
+	</game>
+	<game name="Pitstop (USA, Europe)">
+		<description>Pitstop (USA, Europe)</description>
+		<rom name="Pitstop (USA, Europe).crt" size="16464" crc="d86ce20c" md5="0e3e897bad7e3e164c8098e756d9c28a" sha1="f71d386163f57aaac73fb41b5ef79b72b87d8a53"/>
+	</game>
+	<game name="Pole Position (USA, Europe)">
+		<description>Pole Position (USA, Europe)</description>
+		<rom name="Pole Position (USA, Europe).crt" size="16464" crc="b5d9c502" md5="403c4b527e326d229c529871e90bae9a" sha1="33b3ccf72482343c3e847862031e005f5fc9f0e0"/>
+	</game>
+	<game name="Popeye (USA, Europe)">
+		<description>Popeye (USA, Europe)</description>
+		<rom name="Popeye (USA, Europe).crt" size="16464" crc="4b211f27" md5="6f8342725df5c9a327e61bded88ca2c3" sha1="e6ea4d6cb8383597b7565c92e7435a1de7c9929c"/>
+	</game>
+	<game name="Power Cartridge (USA, Europe) (Program)">
+		<description>Power Cartridge (USA, Europe) (Program)</description>
+		<rom name="Power Cartridge (USA, Europe) (Program).crt" size="16480" crc="b9f74014" md5="6d8920c720a9345656fbc1da4a2bca16" sha1="cd85e305ff165f16da11c38216a4e15f752bcd24"/>
+	</game>
+	<game name="Princess and the Frog (USA, Europe)">
+		<description>Princess and the Frog (USA, Europe)</description>
+		<rom name="Princess and the Frog (USA, Europe).crt" size="16464" crc="d2324a36" md5="754773474de82f0249166d70a40d8534" sha1="5e77d9a3125b2ed060d1d3c411350c03b98d1085"/>
+	</game>
+	<game name="Professional Skateboard Simulator + Fast Food + Pro Tennis Simulator (USA, Europe) (Fun Play)">
+		<description>Professional Skateboard Simulator + Fast Food + Pro Tennis Simulator (USA, Europe) (Fun Play)</description>
+		<rom name="Professional Skateboard Simulator + Fast Food + Pro Tennis Simulator (USA, Europe) (Fun Play).crt" size="131392" crc="13d082c1" md5="34fca5f56ee299dccff4c843d080fd37" sha1="9fc25e821ac65f3bc8b23d7dddbd0f97cb172fcb"/>
+	</game>
+	<game name="PS-64 (Finland) (v2.00) (Program)">
+		<description>PS-64 (Finland) (v2.00) (Program)</description>
+		<rom name="PS-64 (Finland) (v2.00) (Program).crt" size="8272" crc="0640ecd2" md5="034284750b83442e9aeb3b2c2ae4eab1" sha1="cf17cb4e8ac8a88734e6279246a7793412e27d80"/>
+	</game>
+	<game name="Q-bert (USA, Europe)">
+		<description>Q-bert (USA, Europe)</description>
+		<rom name="Q-bert (USA, Europe).crt" size="16464" crc="ffcb7904" md5="3d50678fb5c82db7f7cc085c598fcc91" sha1="37b43a2e84702f20cb585d3b7e343b515429346f"/>
+	</game>
+	<game name="Rack 'em Up! (USA, Europe)">
+		<description>Rack 'em Up! (USA, Europe)</description>
+		<rom name="Rack 'em Up! (USA, Europe).crt" size="16464" crc="7c299a2e" md5="aa889ade640980cfebeaf85352235eb5" sha1="74ff59553da45b7f5b94b3cf7f27c7bbca298b12"/>
+	</game>
+	<game name="Radar Rat Race (Japan) (v02) (MAX)">
+		<description>Radar Rat Race (Japan) (v02) (MAX)</description>
+		<rom name="Radar Rat Race (Japan) (v02) (MAX).crt" size="8272" crc="742e5f29" md5="953268d49b474e125a99fa31097935f9" sha1="04d1adccf057c0e9d403fecb7058f7285b1e115e"/>
+	</game>
+	<game name="Radar Rat Race (Japan) (v02) (Alt 1) (MAX)">
+		<description>Radar Rat Race (Japan) (v02) (Alt 1) (MAX)</description>
+		<rom name="Radar Rat Race (Japan) (v02) (Alt 1) (MAX).crt" size="8272" crc="04f400e2" md5="cd24678fea44a2512b0449e7433a5e41" sha1="7fe40cb69aa40c0aa3b3330c5e3ce344f52b4437"/>
+	</game>
+	<game name="Ranch (USA, Europe)">
+		<description>Ranch (USA, Europe)</description>
+		<rom name="Ranch (USA, Europe).crt" size="16464" crc="29424408" md5="3a8ff9385d4ada1102bfd078fbb17050" sha1="595145c17ab0c04030ed86e467d3182c922ca308"/>
+	</game>
+	<game name="Rechenlowe, Der - Fit in Addition und Subtraktion - 2.-3. Schuljahr (Germany)">
+		<description>Rechenlowe, Der - Fit in Addition und Subtraktion - 2.-3. Schuljahr (Germany)</description>
+		<rom name="Rechenlowe, Der - Fit in Addition und Subtraktion - 2.-3. Schuljahr (Germany).crt" size="16464" crc="6b12d4e9" md5="8b19b19cc2050e3a2fcc1e81bbb76bfe" sha1="8e7e731a1c4d0ab2cfb00e0be34acb5090fb2487"/>
+	</game>
+	<game name="Rechenlowe, Der - Fit in Addition und Subtraktion - 3.-4. Schuljahr (Germany)">
+		<description>Rechenlowe, Der - Fit in Addition und Subtraktion - 3.-4. Schuljahr (Germany)</description>
+		<rom name="Rechenlowe, Der - Fit in Addition und Subtraktion - 3.-4. Schuljahr (Germany).crt" size="16464" crc="5604784f" md5="50daae305d1f50cb9b22487e02306381" sha1="d9a866a62568e5c09d461afd69cd1e1fec7f6461"/>
+	</game>
+	<game name="Rechenlowe, Der - Fit in Geometrie - 3.-4. Schuljahr (Germany)">
+		<description>Rechenlowe, Der - Fit in Geometrie - 3.-4. Schuljahr (Germany)</description>
+		<rom name="Rechenlowe, Der - Fit in Geometrie - 3.-4. Schuljahr (Germany).crt" size="16464" crc="913afd77" md5="978946764a8536f6d154d10b86fff8d3" sha1="3fcb6c170fa8106914cba26854520c9b0eea04b3"/>
+	</game>
+	<game name="Rechenlowe, Der - Fit in Mathematik - 1. Schuljahr (Germany)">
+		<description>Rechenlowe, Der - Fit in Mathematik - 1. Schuljahr (Germany)</description>
+		<rom name="Rechenlowe, Der - Fit in Mathematik - 1. Schuljahr (Germany).crt" size="16464" crc="a211bbaa" md5="da00c206b3f97f58e7490a33c270949f" sha1="f05918fc655a3ebc8b197daf5757e7eadc78a2b5"/>
+	</game>
+	<game name="Rechenlowe, Der - Fit in Multiplikation und Division - 2.-3. Schuljahr (Germany)">
+		<description>Rechenlowe, Der - Fit in Multiplikation und Division - 2.-3. Schuljahr (Germany)</description>
+		<rom name="Rechenlowe, Der - Fit in Multiplikation und Division - 2.-3. Schuljahr (Germany).crt" size="16464" crc="a8c2de66" md5="1a912494d9601db1a6bc53b32284111e" sha1="4be9326eda922094fd25af596f82541f03cbfe3d"/>
+	</game>
+	<game name="Rechenlowe, Der - Fit in Multiplikation und Division - 3.-4. Schuljahr (Germany)">
+		<description>Rechenlowe, Der - Fit in Multiplikation und Division - 3.-4. Schuljahr (Germany)</description>
+		<rom name="Rechenlowe, Der - Fit in Multiplikation und Division - 3.-4. Schuljahr (Germany).crt" size="16464" crc="b9a144e7" md5="edfee303af9b25b6a535f23a144ccdaf" sha1="e9500cf1c2314fa4d25569bd8c244aeb621d33d0"/>
+	</game>
+	<game name="Rechtschreiblowe, Der - Fit in Rechtschreibung - 3.-4. Schuljahr (Germany)">
+		<description>Rechtschreiblowe, Der - Fit in Rechtschreibung - 3.-4. Schuljahr (Germany)</description>
+		<rom name="Rechtschreiblowe, Der - Fit in Rechtschreibung - 3.-4. Schuljahr (Germany).crt" size="16464" crc="a8d3f7a5" md5="42d3546a7aec63d3d0c679b56dd91895" sha1="fe3b547d56e8664c48d7ce3d1278d6a30622ad02"/>
+		<rom name="Rechtschreiblowe, Der - Fit in Rechtschreibung - 3.-4. Schuljahr (Germany) (Teil 1).d64" size="174848" crc="cb06a7dd" md5="94db2e4a63137626362f455bbdc5743c" sha1="76ee0ed5b25cd0a0c9e98f12171da1a3eb7c6208"/>
+		<rom name="Rechtschreiblowe, Der - Fit in Rechtschreibung - 3.-4. Schuljahr (Germany) (Teil 2).d64" size="174848" crc="3e279184" md5="50c98e57e25baecf442a1e3831272249" sha1="6857c1570baf89fd76c29ab6533969ffd2768c64"/>
+		<rom name="Rechtschreiblowe, Der - Fit in Rechtschreibung - 3.-4. Schuljahr (Germany) (Teil 3).d64" size="174848" crc="41a40ecb" md5="d1cee0d63c4d9daad134024ae8890e8b" sha1="18266141101dacb2f3a41b9daf834d854efe4084"/>
+	</game>
+	<game name="Retro Ball (USA, Europe)">
+		<description>Retro Ball (USA, Europe)</description>
+		<rom name="Retro Ball (USA, Europe).crt" size="8272" crc="d8b4c487" md5="994ecfe38420d8064f6e6e2bc6569d03" sha1="91352f1402a89a1cceffd78259523e5b6ce9425b"/>
+	</game>
+	<game name="REX-Ramfloppy (USA, Europe) (v4.0) (Program)">
+		<description>REX-Ramfloppy (USA, Europe) (v4.0) (Program)</description>
+		<rom name="REX-Ramfloppy (USA, Europe) (v4.0) (Program).crt" size="8272" crc="ed0c9c7d" md5="bcc47bf3b3b52e74512a1a22a09c5c35" sha1="49b77c27b657150948179257e664ab7de0b24ade"/>
+	</game>
+	<game name="River Raid (USA, Europe)">
+		<description>River Raid (USA, Europe)</description>
+		<rom name="River Raid (USA, Europe).crt" size="16464" crc="4a268aab" md5="6301f1b5aa0b24d040ce094e1ee7f975" sha1="97d8214ad2e4dfc4866a5214865529617153cfcc"/>
+	</game>
+	<game name="Road Race (Japan) (v02) (MAX)">
+		<description>Road Race (Japan) (v02) (MAX)</description>
+		<rom name="Road Race (Japan) (v02) (MAX).crt" size="8272" crc="f8b67adc" md5="bd3b33585d32298a39402abc44487dc8" sha1="90cd0899774c555ffeb3550e53d4118f29a7e02a"/>
+	</game>
+	<game name="RoboCop 2 (Europe)">
+		<description>RoboCop 2 (Europe)</description>
+		<rom name="RoboCop 2 (Europe).crt" size="262720" crc="ff750341" md5="5ecee01da9bc9d658f8b404c2a7aef1b" sha1="6c5cbf346d3c727217a2b02fc040c2fe4f3c3ff2"/>
+	</game>
+	<game name="RoboCop 3 (Europe)">
+		<description>RoboCop 3 (Europe)</description>
+		<rom name="RoboCop 3 (Europe).crt" size="131392" crc="6551ffc7" md5="968d382d591d6aae958d8d2c4318e6e5" sha1="41a323f870333390f72686414e8d31170c4decf2"/>
+	</game>
+	<game name="Robotron - 2084 (USA, Europe)">
+		<description>Robotron - 2084 (USA, Europe)</description>
+		<rom name="Robotron - 2084 (USA, Europe).crt" size="16464" crc="d853ad81" md5="b0c69ba64682d0a9bd0612a02d37f24c" sha1="f8db991c3bce7fdc7b0fdb6c682b1ea02dd4fda5"/>
+	</game>
+	<game name="Rootin' Tootin' (USA, Europe)">
+		<description>Rootin' Tootin' (USA, Europe)</description>
+		<rom name="Rootin' Tootin' (USA, Europe).crt" size="16464" crc="1045728a" md5="2fb540b40e04618124c2eef9e3da2e6a" sha1="789d79e37cfa486a691f9ec43f32cdc6b0b5bead"/>
+	</game>
+	<game name="Sales Cartridge (USA, Europe)">
+		<description>Sales Cartridge (USA, Europe)</description>
+		<rom name="Sales Cartridge (USA, Europe).crt" size="16464" crc="d6f59e50" md5="e4169936acb97250032957854a422d32" sha1="8b3b4fe0043ec4a5259cf202c3de0c832e465c92"/>
+	</game>
+	<game name="Sammy Lightfoot (USA, Europe)">
+		<description>Sammy Lightfoot (USA, Europe)</description>
+		<rom name="Sammy Lightfoot (USA, Europe).crt" size="16464" crc="9318593f" md5="0369d67953f6a1b0d2784c987729899f" sha1="03685c7080098aa2123c72a2046add2433bd630a"/>
+	</game>
+	<game name="Satan (USA, Europe)">
+		<description>Satan (USA, Europe)</description>
+		<rom name="Satan (USA, Europe).crt" size="131392" crc="d1dcf786" md5="3ea6e1b7706634bbd679610e9ffae83f" sha1="0ff75008c19c76f524efe89dab8caa24cd712e78"/>
+	</game>
+	<game name="Save New York (USA, Europe)">
+		<description>Save New York (USA, Europe)</description>
+		<rom name="Save New York (USA, Europe).crt" size="8272" crc="eb4abb78" md5="ac12f60217b66919fd970cbd22e31f34" sha1="dca3a6fe1df4d34bba978e97d9630e6ca1e7f5d9"/>
+	</game>
+	<game name="Sea Speller (USA, Europe)">
+		<description>Sea Speller (USA, Europe)</description>
+		<rom name="Sea Speller (USA, Europe).crt" size="8272" crc="b3653175" md5="7ff37cdcce8ac73256c26bf61923ad3c" sha1="831fd2663c7514bbd46f71290abb87a94f7407a8"/>
+	</game>
+	<game name="Sea Wolf (USA, Europe) (MAX)">
+		<description>Sea Wolf (USA, Europe) (MAX)</description>
+		<rom name="Sea Wolf (USA, Europe) (MAX).crt" size="8272" crc="ab80050c" md5="cb88be7015a118af01e63e565b57ba14" sha1="0f9687abfd233d4383e7dfac4eb16967686e61ca"/>
+	</game>
+	<game name="Seafox (USA, Europe)">
+		<description>Seafox (USA, Europe)</description>
+		<rom name="Seafox (USA, Europe).crt" size="16464" crc="53da6527" md5="3e331464e67d903087f667dc623f8170" sha1="55cd682c28945117a961428282d73bb3c63f4acd"/>
+	</game>
+	<game name="Seahorse Hide'n Seek (USA, Europe)">
+		<description>Seahorse Hide'n Seek (USA, Europe)</description>
+		<rom name="Seahorse Hide'n Seek (USA, Europe).crt" size="16464" crc="b4b9dd54" md5="37512a6bb360ae02d21fac4bace635e1" sha1="ad45eb0d7b25aa5d3c140ee4cda005d3c444e3e6"/>
+	</game>
+	<game name="Serpentine (USA, Europe)">
+		<description>Serpentine (USA, Europe)</description>
+		<rom name="Serpentine (USA, Europe).crt" size="16464" crc="6cce06eb" md5="5700b68d1b6168fe55ec10fdf914c333" sha1="5399ad70d635317ea9f640bde223269eb90f5f93"/>
+	</game>
+	<game name="Sesame Street - Letter-Go-Round (USA, Europe)">
+		<description>Sesame Street - Letter-Go-Round (USA, Europe)</description>
+		<rom name="Sesame Street - Letter-Go-Round (USA, Europe).crt" size="16464" crc="83e34e6c" md5="ac53d9944e46a3695bca5226d5ee5aec" sha1="07ad7d49a80228a1957d73a253de32ca7ef61a3a"/>
+	</game>
+	<game name="Shadow of the Beast (Europe)">
+		<description>Shadow of the Beast (Europe)</description>
+		<rom name="Shadow of the Beast (Europe).crt" size="262720" crc="8464e34f" md5="ff97f50b19082c9805282bb479ba67ec" sha1="50b472ca4e6f2160a72c1cf2e89d95040c8bd0be"/>
+	</game>
+	<game name="Simons' BASIC (USA, Europe) (Program)">
+		<description>Simons' BASIC (USA, Europe) (Program)</description>
+		<rom name="Simons' BASIC (USA, Europe) (Program).crt" size="16480" crc="c87f8844" md5="714cf7390f8a4f87f6c8a32137720115" sha1="6ef395555c2e95d23bebb57ec52720aefc07f289"/>
+	</game>
+	<game name="Solar Fox (USA, Europe)">
+		<description>Solar Fox (USA, Europe)</description>
+		<rom name="Solar Fox (USA, Europe).crt" size="16464" crc="a4e1f2cc" md5="cc4b32ebf6b42ddb3f990cc7106f70dd" sha1="1d6e1630a950f25736d50ea6a1b28bae5b1918c8"/>
+	</game>
+	<game name="Song Maker (USA, Europe)">
+		<description>Song Maker (USA, Europe)</description>
+		<rom name="Song Maker (USA, Europe).crt" size="8272" crc="7d08516f" md5="8ea8dddd6130e51a6534bc181aab4b31" sha1="382dc53db630caed8507aa27614e91a0b35bade0"/>
+	</game>
+	<game name="Space Action (USA, Europe)">
+		<description>Space Action (USA, Europe)</description>
+		<rom name="Space Action (USA, Europe).crt" size="8272" crc="9a5435ce" md5="ea763e0c97f7e9e5e59a6abfd35568c0" sha1="e3d68e1680d7c84c3c72b4615472cf7805488d09"/>
+	</game>
+	<game name="Space Gun (Europe)">
+		<description>Space Gun (Europe)</description>
+		<rom name="Space Gun (Europe).crt" size="262720" crc="963e3859" md5="24900229ffd862bd120642ec89ed744a" sha1="4cd70209455ec180c38a5c24ca355c9524205e4c"/>
+	</game>
+	<game name="Space Ric-O-Shay (USA, Europe)">
+		<description>Space Ric-O-Shay (USA, Europe)</description>
+		<rom name="Space Ric-O-Shay (USA, Europe).crt" size="8272" crc="38016807" md5="63e1c120205a35d974f2816431e54c73" sha1="506d82cb0e460a5ebeb11534020108a085e1cc3d"/>
+	</game>
+	<game name="Space Shuttle - A Journey into Space (USA, Europe)">
+		<description>Space Shuttle - A Journey into Space (USA, Europe)</description>
+		<rom name="Space Shuttle - A Journey into Space (USA, Europe).crt" size="16464" crc="11b15910" md5="c26feb2223a95ceeab6ecae48a3aeef4" sha1="12cb9c7a08a2b59a6defd4a1b8c52da86d02f69e"/>
+	</game>
+	<game name="Speed Math &amp; Bingo Math (USA, Europe) (v01) (MAX)">
+		<description>Speed Math &amp; Bingo Math (USA, Europe) (v01) (MAX)</description>
+		<rom name="Speed Math &amp; Bingo Math (USA, Europe) (v01) (MAX).crt" size="8272" crc="79a06d81" md5="b826c806b1ad1fa38241b65da412acae" sha1="bef9452672b38b25a6027df8988a562ed3c36cb7"/>
+	</game>
+	<game name="Speedsaver $C000 (USA, Europe) (Program)">
+		<description>Speedsaver $C000 (USA, Europe) (Program)</description>
+		<rom name="Speedsaver $C000 (USA, Europe) (Program).crt" size="4176" crc="0988b37f" md5="b96eefbc95b4870c72563b250200951a" sha1="f743225ab43521c0175ea69f30c4a5fac2670d77"/>
+	</game>
+	<game name="Speedsaver Combi (USA, Europe) (Program)">
+		<description>Speedsaver Combi (USA, Europe) (Program)</description>
+		<rom name="Speedsaver Combi (USA, Europe) (Program).crt" size="8272" crc="0b2a7d46" md5="a67667e2e6a9df8ea8a5e02cc188fa79" sha1="ea185cb5ace9a98cee8bb32ec7758bb0d702af7e"/>
+	</game>
+	<game name="Spitball (USA, Europe)">
+		<description>Spitball (USA, Europe)</description>
+		<rom name="Spitball (USA, Europe).crt" size="8272" crc="fd200a52" md5="ba5e96d0156f70844ad8f39386eb6ff1" sha1="748f952aaf041380838c6263992ddf6013866b15"/>
+	</game>
+	<game name="Spy Hunter (USA, Europe)">
+		<description>Spy Hunter (USA, Europe)</description>
+		<rom name="Spy Hunter (USA, Europe).crt" size="16464" crc="af3d67c8" md5="a6e2e959c42977081b139b79f26137ee" sha1="2ef9d4a460a3705a3b45d1443dd75f7cd3447e5c"/>
+	</game>
+	<game name="Star Post (USA, Europe)">
+		<description>Star Post (USA, Europe)</description>
+		<rom name="Star Post (USA, Europe).crt" size="8272" crc="f9cfacfd" md5="df1cca966edd1655be98034be5ac8441" sha1="24c27bc392df82fd79e80d755514ee71aa84fbe4"/>
+	</game>
+	<game name="Star Ranger (USA, Europe)">
+		<description>Star Ranger (USA, Europe)</description>
+		<rom name="Star Ranger (USA, Europe).crt" size="16464" crc="5e4ba52d" md5="33f842ba5e7e5c031f189bdc55d43c20" sha1="e12be8f3b48b0510a5860ba8450fa357654206d1"/>
+	</game>
+	<game name="Star Trek - Strategic Operations Simulator (USA, Europe)">
+		<description>Star Trek - Strategic Operations Simulator (USA, Europe)</description>
+		<rom name="Star Trek - Strategic Operations Simulator (USA, Europe).crt" size="16464" crc="7dbe3728" md5="6527b8d984e0fc0c828ec96baa4a89cb" sha1="0bad894c13cf23b5d7aac4af980106849b01684f"/>
+	</game>
+	<game name="Star Wars - The Arcade Game (USA, Europe)">
+		<description>Star Wars - The Arcade Game (USA, Europe)</description>
+		<rom name="Star Wars - The Arcade Game (USA, Europe).crt" size="16464" crc="ab1ef8b9" md5="173847d31847d3b796a1f31c114302bb" sha1="30608e7f0a77a0adf23ca2c14242e1fcd9f11310"/>
+	</game>
+	<game name="Stat 64 (USA, Europe) (Program)">
+		<description>Stat 64 (USA, Europe) (Program)</description>
+		<rom name="Stat 64 (USA, Europe) (Program).crt" size="8272" crc="1040dcbe" md5="f2846841ff3b3c50d0051fbf12c1a833" sha1="7d4c0daf37af7fd874251a4c1fc8c533899f1bd0"/>
+	</game>
+	<game name="States and Capitals Tutorial (USA)">
+		<description>States and Capitals Tutorial (USA)</description>
+		<rom name="States and Capitals Tutorial (USA).crt" size="8272" crc="a6d18ee5" md5="62679daad5181b29f532ba6b07221dca" sha1="c9a8c7e7941981ead230d97f56673d3351d72e94"/>
+	</game>
+	<game name="Stix (USA, Europe)">
+		<description>Stix (USA, Europe)</description>
+		<rom name="Stix (USA, Europe).crt" size="8272" crc="0b5eea1d" md5="822d18c46f38be0ccf86411055f04a1b" sha1="d379d4adabd39137ee6a90608c9b06665f9c2e12"/>
+	</game>
+	<game name="Story Machine (USA, Europe)">
+		<description>Story Machine (USA, Europe)</description>
+		<rom name="Story Machine (USA, Europe).crt" size="16464" crc="2724ab7e" md5="e36142f48bb20220a3d1d4df29433b85" sha1="a5235fa06b6b363759aeb5d30983526ba57a67ca"/>
+	</game>
+	<game name="Super Alien (Japan) (v01) (MAX)">
+		<description>Super Alien (Japan) (v01) (MAX)</description>
+		<rom name="Super Alien (Japan) (v01) (MAX).crt" size="8272" crc="360bc828" md5="2000bfbfe3de0260446258b925c43a33" sha1="71232275d080d061a5e79e74744eaae1d7b1bef3"/>
+	</game>
+	<game name="Super Expander 64 (USA, Europe) (Program)">
+		<description>Super Expander 64 (USA, Europe) (Program)</description>
+		<rom name="Super Expander 64 (USA, Europe) (Program).crt" size="8272" crc="3ed61a8e" md5="a796212bd5b2462ffe17fa056af49352" sha1="973b8f1c709df2c761bf68da62085583ac2b67fd"/>
+	</game>
+	<game name="Super Explode 5 (USA, Europe) (Program)">
+		<description>Super Explode 5 (USA, Europe) (Program)</description>
+		<rom name="Super Explode 5 (USA, Europe) (Program).bin" size="16386" crc="7aa53acb" md5="3e799848561a77eafc5c021d0e86ebbf" sha1="c925980234c52b0600853b9795803da98aebb208"/>
+	</game>
+	<game name="Super Sketch (USA, Europe)">
+		<description>Super Sketch (USA, Europe)</description>
+		<rom name="Super Sketch (USA, Europe).crt" size="8272" crc="fc6383a8" md5="12791a7ccff012e65dd00a877965a9dc" sha1="10f1df7c51a03694bd2aef823a429016db656c75"/>
+	</game>
+	<game name="Super Smash (USA, Europe)">
+		<description>Super Smash (USA, Europe)</description>
+		<rom name="Super Smash (USA, Europe).crt" size="8272" crc="6cbbd29f" md5="4f1ebb0f31597fada0c27caaf7d29475" sha1="f78b84df0d22b359c6f732eedd72608df9ba84d6"/>
+	</game>
+	<game name="Super Snapshot 5 (Europe) (Program)">
+		<description>Super Snapshot 5 (Europe) (Program)</description>
+		<rom name="Super Snapshot 5 (Europe) (Program).crt" size="65664" crc="82e2e4a0" md5="dd0937d190006f2fd6357d14b6f82c97" sha1="ae0d64f1cb66e6d207421d7a3787100e07485877"/>
+	</game>
+	<game name="Super Snapshot 5 (USA) (Program)">
+		<description>Super Snapshot 5 (USA) (Program)</description>
+		<rom name="Super Snapshot 5 (USA) (Program).crt" size="65664" crc="5fb3e89c" md5="05c8a05452bb722d6a4fa25cbda51d11" sha1="9c4b1776f53891decbc9d782a5ebcdffd7e4017f"/>
+	</game>
+	<game name="Super Zaxxon (USA, Europe)">
+		<description>Super Zaxxon (USA, Europe)</description>
+		<rom name="Super Zaxxon (USA, Europe).crt" size="20592" crc="2e4f7244" md5="b0e05cfbf8e35c630a47a0035b4c67ff" sha1="9f28fffcd674b9a0555f02c6d4d5b94c830d3bce"/>
+	</game>
+	<game name="Tank Wars (USA, Europe)">
+		<description>Tank Wars (USA, Europe)</description>
+		<rom name="Tank Wars (USA, Europe).crt" size="8272" crc="298f8024" md5="677520afe9752b577a84aa431f43d41e" sha1="e3c0c84a2653542a69849bbbac5fddf45de2ad05"/>
+	</game>
+	<game name="Tapper (USA, Europe)">
+		<description>Tapper (USA, Europe)</description>
+		<rom name="Tapper (USA, Europe).crt" size="16464" crc="8d4c9873" md5="d73b21b018e640f361cb5e97dba39f57" sha1="3a0d1cf5aaeb39fb9829b075ac7d8b9a539ad73f"/>
+	</game>
+	<game name="Teledata (Sweden) (Program)">
+		<description>Teledata (Sweden) (Program)</description>
+		<rom name="Teledata (Sweden) (Program).crt" size="8272" crc="bfa76444" md5="c0b5df8f443a33a7faa3f4636222b269" sha1="783c167fff77717350addec161d225fd4b5ea0f8"/>
+	</game>
+	<game name="Tennis (USA) (CCS)">
+		<description>Tennis (USA) (CCS)</description>
+		<rom name="Tennis (USA) (CCS).crt" size="32896" crc="8b3a3235" md5="357240ee7012d92a777fe87d0982f390" sha1="f3fd23ba57f09a315a294c2d362690410d881ed6"/>
+	</game>
+	<game name="Tennis (USA) (VICE)">
+		<description>Tennis (USA) (VICE)</description>
+		<rom name="Tennis (USA) (VICE).crt" size="32896" crc="75ba8dbf" md5="b63b48c1f95c1d7a05491dceae5c4894" sha1="0ee2dfe66b38c4412a674851270385a465efc544"/>
+	</game>
+	<game name="Tenpins (USA, Europe)">
+		<description>Tenpins (USA, Europe)</description>
+		<rom name="Tenpins (USA, Europe).crt" size="8272" crc="5291b664" md5="403309231b0cc9b11b312e43c3734940" sha1="83a032c430013441cb0068487b6e0394bc19ad08"/>
+	</game>
+	<game name="Tenpins + Meteor Runner + Vortex (USA, Europe) (Megafun)">
+		<description>Tenpins + Meteor Runner + Vortex (USA, Europe) (Megafun)</description>
+		<rom name="Tenpins + Meteor Runner + Vortex (USA, Europe) (Megafun).crt" size="32896" crc="e370ed4e" md5="89d7c974bcb0acaba4fd674a6ad2dda7" sha1="7ff3b9a96d971739e9bf42754c743508d303a50c"/>
+	</game>
+	<game name="Terminator 2 - Judgment Day + Modern Music Maker + Image System, The (Europe)">
+		<description>Terminator 2 - Judgment Day + Modern Music Maker + Image System, The (Europe)</description>
+		<rom name="Terminator 2 - Judgment Day + Modern Music Maker + Image System, The (Europe).crt" size="525376" crc="89519613" md5="87b7ca073c3ab14a6f5ca4140ab07299" sha1="05da54db6a4399adcf3bcbca442b17849e5b8e80"/>
+	</game>
+	<game name="Threshold (USA, Europe)">
+		<description>Threshold (USA, Europe)</description>
+		<rom name="Threshold (USA, Europe).crt" size="8272" crc="a280c09f" md5="a2fc4fffaefd6beca1fe8b7d578939a6" sha1="2146b80970b28e6b425f00ddf2fa4c407b786273"/>
+	</game>
+	<game name="Timebound (USA, Europe)">
+		<description>Timebound (USA, Europe)</description>
+		<rom name="Timebound (USA, Europe).crt" size="16464" crc="3dfca6e7" md5="47006854556379a9325d1423b5a735af" sha1="2bf9eccefa104836c690218e781f3274cd6438d1"/>
+	</game>
+	<game name="Toki (Europe)">
+		<description>Toki (Europe)</description>
+		<rom name="Toki (Europe).crt" size="131392" crc="c6b2cb39" md5="30244052ac1b8bbbd702969d0a451f34" sha1="203454e9a56355c438a16dc62abb03ba3cb67122"/>
+	</game>
+	<game name="Tool-64, The (USA, Europe)">
+		<description>Tool-64, The (USA, Europe)</description>
+		<rom name="Tool-64, The (USA, Europe).crt" size="8272" crc="af9368c0" md5="da5c2d4b276c25f0561d547bbf9cc2e2" sha1="8f6957a9b39ec3ff0139399229ecc22ca2926186"/>
+	</game>
+	<game name="Tooth Invaders (USA, Europe)">
+		<description>Tooth Invaders (USA, Europe)</description>
+		<rom name="Tooth Invaders (USA, Europe).crt" size="16464" crc="3b981a91" md5="4bbc9358fce7f76bd8d0a8d6107cb24b" sha1="be96b4327f0271d7645f968b132a15ecef30541a"/>
+	</game>
+	<game name="Toy Bizarre (USA, Europe)">
+		<description>Toy Bizarre (USA, Europe)</description>
+		<rom name="Toy Bizarre (USA, Europe).crt" size="16464" crc="294411f6" md5="88d0aaeddefb7d6151d492e21fa412b3" sha1="536cf77a60ca65f49255218e13a3615c074e3876"/>
+	</game>
+	<game name="Trashman (USA, Europe)">
+		<description>Trashman (USA, Europe)</description>
+		<rom name="Trashman (USA, Europe).crt" size="8272" crc="f03b154d" md5="a48159e2ce7cb5b792358595a79682be" sha1="3b7f6de9f0f41594c3dd3d24b2659bb2b16674fe"/>
+	</game>
+	<game name="Turbo Maze Man (USA, Europe)">
+		<description>Turbo Maze Man (USA, Europe)</description>
+		<rom name="Turbo Maze Man (USA, Europe).crt" size="8272" crc="b2ad433e" md5="152f411a48643f920b68f275b509eac0" sha1="81e3839fd2fbeacf567202490b873e45ecf56f26"/>
+	</game>
+	<game name="Tyler's Dungeons (USA, Europe)">
+		<description>Tyler's Dungeons (USA, Europe)</description>
+		<rom name="Tyler's Dungeons (USA, Europe).crt" size="8272" crc="aa7cb5fc" md5="d6aef8f9e495850fb5ec5da320addc9a" sha1="bc3f714f62d721dbb8aff5cce5aea164a8d7e36f"/>
+	</game>
+	<game name="Ultrex Quadro Maze (USA, Europe)">
+		<description>Ultrex Quadro Maze (USA, Europe)</description>
+		<rom name="Ultrex Quadro Maze (USA, Europe).crt" size="8272" crc="86cb02e3" md5="a29554f234e0569d7b2cc2172836174e" sha1="e3484c7ce0bc87a8ceadfe7ed74c551c9fd8d58d"/>
+	</game>
+	<game name="Up &amp; Add'Em (USA, Europe)">
+		<description>Up &amp; Add'Em (USA, Europe)</description>
+		<rom name="Up &amp; Add'Em (USA, Europe).crt" size="16464" crc="e07b8e79" md5="27f9c0b35f7f3838f69e203fa88731db" sha1="7f5adb45c6ae87211f004b11e2d1463c5979507b"/>
+	</game>
+	<game name="Up for Grabs (USA, Europe)">
+		<description>Up for Grabs (USA, Europe)</description>
+		<rom name="Up for Grabs (USA, Europe).crt" size="8272" crc="0354b59c" md5="46d1ab35bb9102ef117667724923f637" sha1="8c58c0c9fd2e77141d9b01cdebe3b8ea9a77262a"/>
+	</game>
+	<game name="Up'n Down (USA, Europe)">
+		<description>Up'n Down (USA, Europe)</description>
+		<rom name="Up'n Down (USA, Europe).crt" size="16464" crc="775bcc8a" md5="c79de237de303a002394837fa471dc23" sha1="c0377ce24427f539ecddf26ebd76f45b9aba66c0"/>
+	</game>
+	<game name="Utah Counties Tutorial (USA)">
+		<description>Utah Counties Tutorial (USA)</description>
+		<rom name="Utah Counties Tutorial (USA).crt" size="8272" crc="04010756" md5="897f8d785aa7f541a937b73583ba5c99" sha1="a2e10b0787d4a1c7dcef41c7bb5b747794d62bef"/>
+	</game>
+	<game name="VIC-Text 64 (Sweden) (Program)">
+		<description>VIC-Text 64 (Sweden) (Program)</description>
+		<rom name="VIC-Text 64 (Sweden) (Program).crt" size="16464" crc="ffb40ae8" md5="ed24b651d72d4ff6d56c0b65c0c42ca2" sha1="0b609b77da2dea87e52e967d541613a0e365fb07"/>
+	</game>
+	<game name="Videomate (USA, Europe) (Program)">
+		<description>Videomate (USA, Europe) (Program)</description>
+		<rom name="Videomate (USA, Europe) (Program).bin" size="16386" crc="bb587cc4" md5="5f8e37cc25c9479056de07f631df42c5" sha1="245e737febc77e724020fb93f5ca0d48af39fbf5"/>
+	</game>
+	<game name="Viduzzles - Computerized Jigsaw Puzzles (USA, Europe)">
+		<description>Viduzzles - Computerized Jigsaw Puzzles (USA, Europe)</description>
+		<rom name="Viduzzles - Computerized Jigsaw Puzzles (USA, Europe).crt" size="16464" crc="cd2ca138" md5="4dc5a5c619f35d969744946bc1ad4e8e" sha1="4f4fa8d51ccdc5396d98771fc41ab5856d156164"/>
+	</game>
+	<game name="Viking Raider (USA, Europe)">
+		<description>Viking Raider (USA, Europe)</description>
+		<rom name="Viking Raider (USA, Europe).crt" size="16464" crc="d0d81fba" md5="bebbf07ee55d3d9ded0df0d0e5bb5129" sha1="9d780268e52b17353f1c7f7e45749ba48a5f3d2e"/>
+		<rom name="Viking Raider (USA, Europe).d64" size="174848" crc="f3489d8f" md5="eb874406e5b7b1bb703151e3d38b23b8" sha1="1b85f123d9bab8c2cb7168f5d019427e79073530"/>
+	</game>
+	<game name="Vindicators (USA, Europe)">
+		<description>Vindicators (USA, Europe)</description>
+		<rom name="Vindicators (USA, Europe).crt" size="65728" crc="2a02b1a1" md5="9f1f0b312f7b6730d4c6ad323ef669a9" sha1="13c8a82661fb8aa7dce2433320ec898aad49e7f8"/>
+	</game>
+	<game name="Visible Solar System, The (USA, Europe) (MAX)">
+		<description>Visible Solar System, The (USA, Europe) (MAX)</description>
+		<rom name="Visible Solar System, The (USA, Europe) (MAX).crt" size="8272" crc="fb55c641" md5="56083cbc8d55b5faf10a48497fd9d633" sha1="2fdafcf6ef1b18644ffbf1e356468527a6865c1b"/>
+	</game>
+	<game name="Warp Speed (USA, Europe) (v1) (Program)">
+		<description>Warp Speed (USA, Europe) (v1) (Program)</description>
+		<rom name="Warp Speed (USA, Europe) (v1) (Program).crt" size="16464" crc="64dc08b0" md5="426c4996794899dfa4fa9281d923ffce" sha1="d8503380bb52523264d4f8cd4dc4c492bfb2d6b5"/>
+	</game>
+	<game name="Warp Speed (USA, Europe) (v2.0) (Program)">
+		<description>Warp Speed (USA, Europe) (v2.0) (Program)</description>
+		<rom name="Warp Speed (USA, Europe) (v2.0) (Program).crt" size="16464" crc="68cd1077" md5="1c3a814df659c3f5be1a0a236b751294" sha1="59c8d35ac650e5993e379fd84a58aecaa1c1e8e1"/>
+	</game>
+	<game name="Webster - The Word Game (USA, Europe)">
+		<description>Webster - The Word Game (USA, Europe)</description>
+		<rom name="Webster - The Word Game (USA, Europe).crt" size="16464" crc="572029ac" md5="152bd270e0cbbeb848b0e61b59a0d1bf" sha1="82f544f53259394d3985b3ab613d6548275bfe2e"/>
+	</game>
+	<game name="Wizard of Id's Wiztype, The (USA, Europe)">
+		<description>Wizard of Id's Wiztype, The (USA, Europe)</description>
+		<rom name="Wizard of Id's Wiztype, The (USA, Europe).crt" size="16464" crc="5fe07c45" md5="af8070b342b3acdbb64e630b772d0e60" sha1="dc3da126c6257dda5be0d0c80694bb60f715a3f6"/>
+	</game>
+	<game name="Wizard of Wor (Japan) (MAX)">
+		<description>Wizard of Wor (Japan) (MAX)</description>
+		<rom name="Wizard of Wor (Japan) (MAX).crt" size="8272" crc="fa224abf" md5="311fa4155e2673972bd61bc1b1325b25" sha1="71086165b7928fb2a031e1a001361a71ae4279ae"/>
+	</game>
+	<game name="Wizard of Wor (Japan) (v02) (MAX)">
+		<description>Wizard of Wor (Japan) (v02) (MAX)</description>
+		<rom name="Wizard of Wor (Japan) (v02) (MAX).crt" size="8272" crc="e7882b07" md5="5f7f74953b65f8cfb30753bc49271c7a" sha1="1e860083ed95c478b0cbe9f755ebcf7e42c38a54"/>
+	</game>
+	<game name="Wizard of Wor (USA, Europe)">
+		<description>Wizard of Wor (USA, Europe)</description>
+		<rom name="Wizard of Wor (USA, Europe).crt" size="16464" crc="1a5996da" md5="1597893279f7239adbeca0fdb8f30719" sha1="5377c3724d940447a58100d2173c36dd59b96ac4"/>
+	</game>
+	<game name="Wonder Boy (USA, Europe)">
+		<description>Wonder Boy (USA, Europe)</description>
+		<rom name="Wonder Boy (USA, Europe).crt" size="65728" crc="83f069bb" md5="f490dd312c165f663a6c298d0bc46a22" sha1="6978263d4ebf050fce12c1d82f2192f6893dfb4b"/>
+	</game>
+	<game name="Write Now! 64 (USA, Europe) (Program)">
+		<description>Write Now! 64 (USA, Europe) (Program)</description>
+		<rom name="Write Now! 64 (USA, Europe) (Program).crt" size="16464" crc="a77b156e" md5="f8382bfa38bc3cf8820688211feb775a" sha1="6db348d1bac110eeb27432716ea2553b0475236f"/>
+	</game>
+	<game name="Zaxxon (USA, Europe)">
+		<description>Zaxxon (USA, Europe)</description>
+		<rom name="Zaxxon (USA, Europe).crt" size="20592" crc="d3165c28" md5="7a3bfccbc8a72414eb1c2e3ffb711be6" sha1="5da871db29f376fc81eab06b6a6370a9dc6870d9"/>
+	</game>
+	<game name="Zenji (USA, Europe)">
+		<description>Zenji (USA, Europe)</description>
+		<rom name="Zenji (USA, Europe).crt" size="16464" crc="7427d210" md5="c1be21571e20e0d994d67f3019ad801d" sha1="82107a2a3f4308a6a89f4697f3ffcff6e8ee6353"/>
+	</game>
+	<game name="Zone Ranger (USA, Europe)">
+		<description>Zone Ranger (USA, Europe)</description>
+		<rom name="Zone Ranger (USA, Europe).crt" size="16464" crc="16a574f9" md5="7f0926e81ec077c074abfa62f7ab1370" sha1="d755b0687639ca249a098959913fdec2b72f4d90"/>
+	</game>
+</datafile>

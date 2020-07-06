@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Nintendo - Family Computer Disk System (FDSStickBIN)</name>
+		<description>Nintendo - Family Computer Disk System (FDSStickBIN)</description>
+		<version>20200525-135739</version>
+		<author>BigFred, Blank, C. V. Reynolds, chillerecke, dead_screem, DeriLoko3, fuzzball, Gefflon, Hiccup, kazumi213, Money_114, omonim2007, relax, RetroUprising, xuom2</author>
+		<homepage>No-Intro</homepage>
+		<url>http://www.no-intro.org</url>
+		<clrmamepro header="No-Intro_FDS.xml"/>
+	</header>
+	<game name="Egger Land - Souzou e no Tabidachi (Japan) (Beta)">
+		<description>Egger Land - Souzou e no Tabidachi (Japan) (Beta)</description>
+		<rom name="Egger Land - Souzou e no Tabidachi (Japan) (Beta) (Side A).bin" size="66946" crc="2F37F7B4" md5="5691FE6F6F44D2F54A05446352D54326" sha1="C422A1B2FA5CB49BBD5627C976F9A241055E02C1" status="verified"/>
+		<rom name="Egger Land - Souzou e no Tabidachi (Japan) (Beta) (Side B).bin" size="67138" crc="B5E92BC2" md5="185E0D35044B1920187FCA1DFD0572F9" sha1="61A8BBE24327B39AB4855BF93B1CBA61BF38777B" status="verified"/>
+	</game>
+</datafile>

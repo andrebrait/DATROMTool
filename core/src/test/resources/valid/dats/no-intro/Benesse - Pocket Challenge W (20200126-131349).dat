@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Benesse - Pocket Challenge W</name>
+		<description>Benesse - Pocket Challenge W</description>
+		<version>20200126-131349</version>
+		<author>relax, xuom2</author>
+		<homepage>No-Intro</homepage>
+		<url>http://www.no-intro.org</url>
+	</header>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuu1 Eigo (Japan) (0BB111NH)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuu1 Eigo (Japan) (0BB111NH)</description>
+		<game_id>0BB111NH</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuu1 Eigo (Japan) (0BB111NH).pcw" size="2097152" crc="D7FD8C5D" md5="EE8B25E6966EF8FC26AD62F66FCFC5D4" sha1="3139FFBF441E6E0F1B35A013AC77DBC576288D01" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuu1 Eigo (Japan) (0BB113NC)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuu1 Eigo (Japan) (0BB113NC)</description>
+		<game_id>0BB113NC</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuu1 Eigo (Japan) (0BB113NC).pcw" size="2097152" crc="5711252F" md5="BAC730C9A318544A571F474B33383A08" sha1="B7CA12807B580521877D2CF126778544DC07D26C" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuu1 Eigo (Japan) (7BB112SS)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuu1 Eigo (Japan) (7BB112SS)</description>
+		<game_id>7BB112SS</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuu1 Eigo (Japan) (7BB112SS).pcw" size="2097152" crc="FEACC308" md5="CAE81E34A3C1FEA74D592A04F296CBA1" sha1="6A2E230CCD69E1B89708C1C794602987B7365E89" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuu1 Suugaku (Japan)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuu1 Suugaku (Japan)</description>
+		<game_id>1BM111</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuu1 Suugaku (Japan).pcw" size="2097152" crc="5DB9B999" md5="6CF2CBE32D5409C802B91ED59A63C069" sha1="57545C3FD0533FCED5A2C371D0DC957452695A67" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuugaku Chiri (Japan)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuugaku Chiri (Japan)</description>
+		<game_id>9BD410</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuugaku Chiri (Japan).pcw" size="2097152" crc="A1B3C2C9" md5="08D85A36BA346FFAA5E71F6683026AE8" sha1="8E4964369B1C56EA634044F1A47824D169E06BE7" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuugaku Chiri - Rekishi Pack (Japan) (0BD401)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuugaku Chiri - Rekishi Pack (Japan) (0BD401)</description>
+		<game_id>0BD401</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuugaku Chiri - Rekishi Pack (Japan) (0BD401).pcw" size="2097152" crc="660E84A5" md5="AD5187CE9F82C6FD7C6C89896D6FB63B" sha1="3D4031BD6AF883BC71AD2631A57AED082E48881B" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuugaku Chiri - Rekishi Pack (Japan) (0BD400)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuugaku Chiri - Rekishi Pack (Japan) (0BD400)</description>
+		<game_id>0BD400</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuugaku Chiri - Rekishi Pack (Japan) (0BD400).pcw" size="2097152" crc="21895AF8" md5="D8DD8D9A78E0991FC4A57B1DA4171DE2" sha1="3F3149FDB7CEB36F7F3262EB9B29EDA973C8D1EF" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuugaku Kokugo - Hyakunin Isshu (Japan)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuugaku Kokugo - Hyakunin Isshu (Japan)</description>
+		<game_id>1BK401</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuugaku Kokugo - Hyakunin Isshu (Japan).pcw" size="4194304" crc="B0444C88" md5="98217FE8495F84AF98265857D52F77BC" sha1="E2EB6C6ECA3C489D230F7FBFF5B9C5BC3758FC00" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuugaku Koumin (Japan) (7BE310)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuugaku Koumin (Japan) (7BE310)</description>
+		<game_id>7BE310</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuugaku Koumin (Japan) (7BE310).pcw" size="1048576" crc="EFEF730E" md5="9E20E7139F5B230461A7AE7394A7BCF0" sha1="6F4906D36FC751CF2C52BF9FF4A388FD19AE51D2" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuugaku Koumin (Japan) (0BE311)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuugaku Koumin (Japan) (0BE311)</description>
+		<game_id>0BE311</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuugaku Koumin (Japan) (0BE311).pcw" size="1048576" crc="BF9DA3EA" md5="98A018CF8749CDBF419D81AB926ECB7B" sha1="423266D16F6FECC367223C45658E3802176F1F7A" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuugaku Rika (Japan) (7BF411)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuugaku Rika (Japan) (7BF411)</description>
+		<game_id>7BF411</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuugaku Rika (Japan) (7BF411).pcw" size="2097152" crc="0C80EC13" md5="16142EA3F4A169B542E4F9FDED5354F1" sha1="FACF2824E053BADB12790C0346C9ADF267EB0ABC" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuugaku Rika (Japan) (7BF412)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuugaku Rika (Japan) (7BF412)</description>
+		<game_id>7BF412</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuugaku Rika (Japan) (7BF412).pcw" size="2097152" crc="336289BC" md5="07867610752373E116703EB18821AD78" sha1="4236CE0221B351F12D885959B15AA715FAA4E167" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuugaku Rika Pack (Japan) (1BF400)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuugaku Rika Pack (Japan) (1BF400)</description>
+		<game_id>1BF400</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuugaku Rika Pack (Japan) (1BF400).pcw" size="4194304" crc="6205144B" md5="FFFD09272F2E0D48D9459749D2963146" sha1="7735DF6916A098EB4D988642214E204F59E78D61" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Chuugaku Rika Pack (Japan) (0BF400)">
+		<description>Shinkenzemi Chuugaku Kouza - Chuugaku Rika Pack (Japan) (0BF400)</description>
+		<game_id>0BF400</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Chuugaku Rika Pack (Japan) (0BF400).pcw" size="2097152" crc="341E732B" md5="6223D9A91EEB2EB34D5D6EB8F7C18E2C" sha1="CF6FD71CED47D67BCAD3E9E45A1ECB295BC7EB68" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Jitsugi 4 Kyouka (Japan)">
+		<description>Shinkenzemi Chuugaku Kouza - Jitsugi 4 Kyouka (Japan)</description>
+		<game_id>9BG410</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Jitsugi 4 Kyouka (Japan).pcw" size="4194304" crc="E34787BB" md5="18024B2C136C5ECFEB26FD99451421CA" sha1="047702D12370185477F36D2BD9A499285AE53D52" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Koukou Juken (Japan) (9BI711)">
+		<description>Shinkenzemi Chuugaku Kouza - Koukou Juken (Japan) (9BI711)</description>
+		<game_id>9BI711</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Koukou Juken (Japan) (9BI711).pcw" size="4194304" crc="61F2A31B" md5="AD115E429019CE318DF4104D6B7EBCBA" sha1="8DC5CD801DCF751B3DB2AC1C7A5DC262FA8BA690" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Koukou Juken (Japan) (9BI712)">
+		<description>Shinkenzemi Chuugaku Kouza - Koukou Juken (Japan) (9BI712)</description>
+		<game_id>9BI712</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Koukou Juken (Japan) (9BI712).pcw" size="2097152" crc="0FCDC311" md5="E71AE6712FEC513BB41D511F01E2EE0F" sha1="1F6D2E1A2993C3D9AD703D02EE1B3175E170A0AF" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Chuugaku Kouza - Koukou Juken (Japan) (7BI711)">
+		<description>Shinkenzemi Chuugaku Kouza - Koukou Juken (Japan) (7BI711)</description>
+		<game_id>7BI711</game_id>
+		<rom name="Shinkenzemi Chuugaku Kouza - Koukou Juken (Japan) (7BI711).pcw" size="4194304" crc="53C2FF43" md5="C089E348DC1873EED4FE1F09F2444F23" sha1="1BABA9ECB24B46D9319BF0B13B1D8E5409FF5214" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Koukou Kouza - Daigaku Juken Series - Hinshutsu Eitango (Japan) (7BBD01)">
+		<description>Shinkenzemi Koukou Kouza - Daigaku Juken Series - Hinshutsu Eitango (Japan) (7BBD01)</description>
+		<game_id>7BBD01</game_id>
+		<rom name="Shinkenzemi Koukou Kouza - Daigaku Juken Series - Hinshutsu Eitango (Japan) (7BBD01).pcw" size="4194304" crc="2C7BE12D" md5="CD77724DB773A59A88E9E283F140E605" sha1="98EF9D52216F8DFED0E8597DFE5181511FAB1219" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Koukou Kouza - Daigaku Juken Series - Hinshutsu Eitango (Japan) (7BBD02)">
+		<description>Shinkenzemi Koukou Kouza - Daigaku Juken Series - Hinshutsu Eitango (Japan) (7BBD02)</description>
+		<game_id>7BBD02</game_id>
+		<rom name="Shinkenzemi Koukou Kouza - Daigaku Juken Series - Hinshutsu Eitango (Japan) (7BBD02).pcw" size="4194304" crc="C3DB01F2" md5="35A65C9750D2BBD9172EF54B5A0E917C" sha1="00AA30156EA3FDC4D436E73719F5C6BF8565FC61" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Koukou Kouza - Daigaku Juken Series - Juuyou Eigo Koubun (Japan)">
+		<description>Shinkenzemi Koukou Kouza - Daigaku Juken Series - Juuyou Eigo Koubun (Japan)</description>
+		<game_id>7BBD03</game_id>
+		<rom name="Shinkenzemi Koukou Kouza - Daigaku Juken Series - Juuyou Eigo Koubun (Japan).pcw" size="2097152" crc="9C9C0426" md5="2D727DB788714DC6B70E87B180415163" sha1="B99B44FF1CF203316E35E2637C06D34ED16B7089" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Koukou Kouza - Hinshutsu Yokaishi Kouryaku (Japan) (9BCD01)">
+		<description>Shinkenzemi Koukou Kouza - Hinshutsu Yokaishi Kouryaku (Japan) (9BCD01)</description>
+		<game_id>9BCD01</game_id>
+		<rom name="Shinkenzemi Koukou Kouza - Hinshutsu Yokaishi Kouryaku (Japan) (9BCD01).pcw" size="4194304" crc="9E274AC9" md5="E3E1FC49A16838DE72CE440ED8CD793E" sha1="ABBD8F9AADF4F5A118AA51C639703C86D086C02C" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Koukou Kouza - Hinshutsu Yokaishi Kouryaku (Japan) (9BCD02)">
+		<description>Shinkenzemi Koukou Kouza - Hinshutsu Yokaishi Kouryaku (Japan) (9BCD02)</description>
+		<game_id>9BCD02</game_id>
+		<rom name="Shinkenzemi Koukou Kouza - Hinshutsu Yokaishi Kouryaku (Japan) (9BCD02).pcw" size="4194304" crc="7911AEC2" md5="A70F0FE4EE8617153F7665CEBAD97ACF" sha1="390916D7E2903E362A32C1BFC883661543CB070C" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Koukou Kouza - Juuyou Kobun Kouryaku (Japan) (0BKD01)">
+		<description>Shinkenzemi Koukou Kouza - Juuyou Kobun Kouryaku (Japan) (0BKD01)</description>
+		<game_id>0BKD01</game_id>
+		<rom name="Shinkenzemi Koukou Kouza - Juuyou Kobun Kouryaku (Japan) (0BKD01).pcw" size="4194304" crc="C6157409" md5="69B1FF24FAE4464CA339CD3DE270D62F" sha1="3F0BD5AAA7CEE3FAB0D7434943805D2C35EF220F" status="verified"/>
+	</game>
+	<game name="Shinkenzemi Koukou Kouza - Juuyou Kobun Kouryaku (Japan) (8BKD01)">
+		<description>Shinkenzemi Koukou Kouza - Juuyou Kobun Kouryaku (Japan) (8BKD01)</description>
+		<game_id>8BKD01</game_id>
+		<rom name="Shinkenzemi Koukou Kouza - Juuyou Kobun Kouryaku (Japan) (8BKD01).pcw" size="4194304" crc="F5DF48F5" md5="D52A62CC344C950EFF2C4EE0339B6C3B" sha1="870EE10ECD3CFF631D5A3559B7B7B3F504684CFD" status="verified"/>
+	</game>
+</datafile>

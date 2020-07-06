@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Tiger - Game.com (Parent-Clone)</name>
+		<description>Tiger - Game.com (Parent-Clone)</description>
+		<version>20081125-110950</version>
+		<date>20081125-110950</date>
+		<author>alexian</author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="[BIOS] Tiger Game.com (USA) (External)">
+		<description>[BIOS] Tiger Game.com (USA) (External)</description>
+		<release name="[BIOS] Tiger Game.com (USA) (External)" region="USA"/>
+		<rom name="[BIOS] Tiger Game.com (USA) (External).tgc" size="262144" crc="e235a589" md5="813364d4863b1d7b7b8fd6a97a416bcf" sha1="97f782e72d738f4d7b861363266bf46b438d9b50"/>
+	</game>
+	<game name="[BIOS] Tiger Game.com (USA) (Internal)">
+		<description>[BIOS] Tiger Game.com (USA) (Internal)</description>
+		<release name="[BIOS] Tiger Game.com (USA) (Internal)" region="USA"/>
+		<rom name="[BIOS] Tiger Game.com (USA) (Internal).tgc" size="4096" crc="a0cec361" md5="f7bcefb6daf923c8e5ea2eb69f619efe" sha1="03368237e8fed4a8724f3b4a1596cf4b17c96d33"/>
+	</game>
+	<game name="Batman &amp; Robin (USA)">
+		<description>Batman &amp; Robin (USA)</description>
+		<release name="Batman &amp; Robin (USA)" region="USA"/>
+		<rom name="Batman &amp; Robin (USA).tgc" size="2097152" crc="b336e530" md5="6e074ab25011af7b2d9a5d1b2d53b425" sha1="066d5cddce9729044ad598ad3cc3489a834f5197"/>
+	</game>
+	<game name="Centipede (USA)">
+		<description>Centipede (USA)</description>
+		<release name="Centipede (USA)" region="USA"/>
+		<rom name="Centipede (USA).tgc" size="262144" crc="1a041ff0" md5="c10a26933ff3167507fcdf0dbe212327" sha1="b3d50e0cca6e2a539fba5883854aaf26424ab382"/>
+	</game>
+	<game name="Duke Nukem 3D (USA)">
+		<description>Duke Nukem 3D (USA)</description>
+		<release name="Duke Nukem 3D (USA)" region="USA"/>
+		<rom name="Duke Nukem 3D (USA).tgc" size="2097152" crc="884568d1" md5="4877b49ade7eae99a00abb842db43f63" sha1="9aaa1cf3b12f14201079dfbdd4c17fe868972de6"/>
+	</game>
+	<game name="Fighters Megamix (USA)">
+		<description>Fighters Megamix (USA)</description>
+		<release name="Fighters Megamix (USA)" region="USA"/>
+		<rom name="Fighters Megamix (USA).tgc" size="2097152" crc="061e943f" md5="86703ceb47787f9e124bac8a173cc6c9" sha1="c165e5f4b61341ae0e8a4d141b28e18108942326"/>
+	</game>
+	<game name="Frogger (USA)">
+		<description>Frogger (USA)</description>
+		<release name="Frogger (USA)" region="USA"/>
+		<rom name="Frogger (USA).tgc" size="1048576" crc="10e4c5cd" md5="fa21cc065473e9631561e7392f3c2ddd" sha1="8224d3e71a3da2f4029bee8b62b4a0c108c054e4"/>
+	</game>
+	<game name="Henry (USA)">
+		<description>Henry (USA)</description>
+		<release name="Henry (USA)" region="USA"/>
+		<rom name="Henry (USA).tgc" size="1048576" crc="75d3c8d8" md5="70cf0d6dd2e85249a6cd8f1652f75fbc" sha1="b72a03af1dec0c621f9eda89ded3845724bb34ac"/>
+	</game>
+	<game name="Indy 500 (USA)">
+		<description>Indy 500 (USA)</description>
+		<release name="Indy 500 (USA)" region="USA"/>
+		<rom name="Indy 500 (USA).tgc" size="1048576" crc="845ed281" md5="9bda8ce6a6b253d02a1538bd52a7ba1b" sha1="117bfa1c831fbcf4a1d507cb70b6e0636c29bbd3"/>
+	</game>
+	<game name="Internet (USA)">
+		<description>Internet (USA)</description>
+		<release name="Internet (USA)" region="USA"/>
+		<rom name="Internet (USA).tgc" size="262144" crc="7e721a84" md5="16dccfeb686746787f80d045cd9d3ab9" sha1="4c6b5b91a70397cb5e1add4ab53afe3ec0fe2072"/>
+	</game>
+	<game name="Jeopardy! (USA)">
+		<description>Jeopardy! (USA)</description>
+		<release name="Jeopardy! (USA)" region="USA"/>
+		<rom name="Jeopardy! (USA).tgc" size="1048576" crc="8c512912" md5="0166dbff51138b866d51de137266974d" sha1="c60ac5e59c3cc092506bc47adb60b40a9415bc97"/>
+	</game>
+	<game name="Jurassic Park - The Lost World (USA)">
+		<description>Jurassic Park - The Lost World (USA)</description>
+		<release name="Jurassic Park - The Lost World (USA)" region="USA"/>
+		<rom name="Jurassic Park - The Lost World (USA).tgc" size="2097152" crc="b422c5f8" md5="cb137ab815c85424fbe5b2ce9f6bed44" sha1="648badcac6c386d7ff40f917e34bd309e737c027"/>
+	</game>
+	<game name="Lights Out (USA)">
+		<description>Lights Out (USA)</description>
+		<release name="Lights Out (USA)" region="USA"/>
+		<rom name="Lights Out (USA).tgc" size="32768" crc="496efa62" md5="d1a158ad9e1c77d576f3385a09b63685" sha1="1d91b616caa2d35f53ec5680aada8f75e2f0ac43"/>
+	</game>
+	<game name="Monopoly (USA)">
+		<description>Monopoly (USA)</description>
+		<release name="Monopoly (USA)" region="USA"/>
+		<rom name="Monopoly (USA).tgc" size="2097152" crc="d6a65a07" md5="eb184a1cd54a76851ebfd47407b018af" sha1="8057144f6995eafff6d893383114b48f4c77abc3"/>
+	</game>
+	<game name="Mortal Kombat Trilogy (USA)">
+		<description>Mortal Kombat Trilogy (USA)</description>
+		<release name="Mortal Kombat Trilogy (USA)" region="USA"/>
+		<rom name="Mortal Kombat Trilogy (USA).tgc" size="2097152" crc="bd29c844" md5="19a2c977ceeaff193e7e4d37effbdf92" sha1="a560ad2b916a9e4ace917d7e707cdcafbffe6e66"/>
+	</game>
+	<game name="Quiz Wiz - Cyber Trivia (USA)">
+		<description>Quiz Wiz - Cyber Trivia (USA)</description>
+		<release name="Quiz Wiz - Cyber Trivia (USA)" region="USA"/>
+		<rom name="Quiz Wiz - Cyber Trivia (USA).tgc" size="1048576" crc="0e018f6a" md5="b5b7fba3bd7ad97cdab419eb68365100" sha1="c9c4435bdcea2b9ddaa2768f28f286abd382608d"/>
+	</game>
+	<game name="Resident Evil 2 (USA)">
+		<description>Resident Evil 2 (USA)</description>
+		<release name="Resident Evil 2 (USA)" region="USA"/>
+		<rom name="Resident Evil 2 (USA).tgc" size="2097152" crc="0984c7f5" md5="78cd38ae5188559a76e8086f0b9e3832" sha1="e32357d08b07a6a8f6a7e64205cca35e50225269"/>
+	</game>
+	<game name="Scrabble (USA)">
+		<description>Scrabble (USA)</description>
+		<release name="Scrabble (USA)" region="USA"/>
+		<rom name="Scrabble (USA).tgc" size="2097152" crc="4d4ad909" md5="82792aba49381b4f90af02971e383162" sha1="2735d59964fe7c1d43bd260df86b9dfbc1bfd736"/>
+	</game>
+	<game name="Sonic Jam (USA)">
+		<description>Sonic Jam (USA)</description>
+		<release name="Sonic Jam (USA)" region="USA"/>
+		<rom name="Sonic Jam (USA).tgc" size="2097152" crc="8b4a63f9" md5="10a19c8b536ce8e767445e04abdea9cb" sha1="393a98138c8825ed61990e1b15e1967f87068ac6"/>
+	</game>
+	<game name="Tiger Casino (USA)">
+		<description>Tiger Casino (USA)</description>
+		<release name="Tiger Casino (USA)" region="USA"/>
+		<rom name="Tiger Casino (USA).tgc" size="2097152" crc="e7fb8fd9" md5="368b9cc007917688a3882746bba5903d" sha1="3620491b531b9fce67545e822eff2f99c1adb4a4"/>
+	</game>
+	<game name="Tiger Web Link (USA)">
+		<description>Tiger Web Link (USA)</description>
+		<release name="Tiger Web Link (USA)" region="USA"/>
+		<rom name="Tiger Web Link (USA).tgc" size="262144" crc="4c13e65b" md5="d81f29d4946b376b01574f6c35879628" sha1="d4e08fc050c006ed6c1a177a1f4c41b4a68c26bb"/>
+	</game>
+	<game name="Wheel of Fortune (USA)">
+		<description>Wheel of Fortune (USA)</description>
+		<release name="Wheel of Fortune (USA)" region="USA"/>
+		<rom name="Wheel of Fortune (USA).tgc" size="524288" crc="048347a0" md5="890b7afe263c49ac764a5d10479898d4" sha1="298c2b87754dd93481feea1d9e01585a1e269770"/>
+	</game>
+	<game name="Wheel of Fortune 2 (USA)">
+		<description>Wheel of Fortune 2 (USA)</description>
+		<release name="Wheel of Fortune 2 (USA)" region="USA"/>
+		<rom name="Wheel of Fortune 2 (USA).tgc" size="524288" crc="b91e2e32" md5="20347cfa962765c6f22a6ea48d3abe83" sha1="30ddd349b8bdc21ef7ada4772ab1f3a9318ab0c8"/>
+	</game>
+	<game name="Williams Arcade Classics (USA)">
+		<description>Williams Arcade Classics (USA)</description>
+		<release name="Williams Arcade Classics (USA)" region="USA"/>
+		<rom name="Williams Arcade Classics (USA).tgc" size="1048576" crc="f894065d" md5="6b4dc428a6eb45b130265f86e0116d58" sha1="5e2164fa76546b2795af7b04a766e31784b82eca"/>
+	</game>
+</datafile>

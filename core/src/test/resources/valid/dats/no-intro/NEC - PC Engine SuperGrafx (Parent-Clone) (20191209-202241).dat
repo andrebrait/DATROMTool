@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>NEC - PC Engine SuperGrafx (Parent-Clone)</name>
+		<description>NEC - PC Engine SuperGrafx (Parent-Clone)</description>
+		<version>20191209-202241</version>
+		<date>20191209-202241</date>
+		<author>BitLooter</author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="1941 - Counter Attack (Japan)">
+		<description>1941 - Counter Attack (Japan)</description>
+		<release name="1941 - Counter Attack (Japan)" region="JPN"/>
+		<rom name="1941 - Counter Attack (Japan).pce" size="1048576" crc="8c4588e2" md5="30686dba4795521174658de2492e0046" sha1="66873b0e0cc699aa75daf06a3f74c0508037e605"/>
+	</game>
+	<game name="Aldynes - The Misson Code for Rage Crisis (Japan)">
+		<description>Aldynes - The Misson Code for Rage Crisis (Japan)</description>
+		<release name="Aldynes - The Misson Code for Rage Crisis (Japan)" region="JPN"/>
+		<rom name="Aldynes - The Misson Code for Rage Crisis (Japan).pce" size="1048576" crc="4c2126b0" md5="8ce21667658ef9c025ad007f65147c6d" sha1="d876248ee1b80ad11633fd4be8aa21a187b52193"/>
+	</game>
+	<game name="Battle Ace (Japan)">
+		<description>Battle Ace (Japan)</description>
+		<release name="Battle Ace (Japan)" region="JPN"/>
+		<rom name="Battle Ace (Japan).pce" size="524288" crc="3b13af61" md5="fc0053c0c050353b87886b1b89349168" sha1="edc8f7d2233c92ebd309ac804527c461851a4b63"/>
+	</game>
+	<game name="Daimakaimura (Japan)">
+		<description>Daimakaimura (Japan)</description>
+		<release name="Daimakaimura (Japan)" region="JPN"/>
+		<rom name="Daimakaimura (Japan).pce" size="1048576" crc="b486a8ed" md5="6d9ff6f70608166c88fd2553d44ca17a" sha1="cab9e4a1a8b6da07cc2c5cc35949928199a417ee" status="verified"/>
+	</game>
+	<game name="Madou King Granzort (Japan)">
+		<description>Madou King Granzort (Japan)</description>
+		<release name="Madou King Granzort (Japan)" region="JPN"/>
+		<rom name="Madou King Granzort (Japan).pce" size="524288" crc="1f041166" md5="7e1e489c50fc6213196e6dbb704f6671" sha1="5ed16565753c902e14da9a0c5361ef01fa74463b"/>
+	</game>
+</datafile>

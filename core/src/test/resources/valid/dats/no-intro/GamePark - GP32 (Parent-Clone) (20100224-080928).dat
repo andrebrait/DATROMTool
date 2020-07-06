@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>GamePark - GP32 (Parent-Clone)</name>
+		<description>GamePark - GP32 (Parent-Clone)</description>
+		<version>20100224-080928</version>
+		<date>20100224-080928</date>
+		<author>alexian</author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="[BIOS] GamePark GP32 (Europe) (v1.6.6)">
+		<description>[BIOS] GamePark GP32 (Europe) (v1.6.6)</description>
+		<release name="[BIOS] GamePark GP32 (Europe) (v1.6.6)" region="EUR"/>
+		<rom name="[BIOS] GamePark GP32 (Europe) (v1.6.6).bin" size="524288" crc="5fb16cb7" md5="4e944d02e46d4a740f68de7c42af93fb" sha1="7c04636c1f15f3f8e3c25e51da7d685e3d07976e"/>
+	</game>
+	<game name="[BIOS] GamePark GP32 (Europe) (v1.5.7)" cloneof="[BIOS] GamePark GP32 (Europe) (v1.6.6)">
+		<description>[BIOS] GamePark GP32 (Europe) (v1.5.7)</description>
+		<rom name="[BIOS] GamePark GP32 (Europe) (v1.5.7).bin" size="524288" crc="b1e35643" md5="19021cc891119c0872d46e87fc0ffe35" sha1="1566bc2a27980602e9eb501cf8b2d62939bfd1e5"/>
+	</game>
+	<game name="[BIOS] GamePark GP32 (Korea) (v1.5.6)" cloneof="[BIOS] GamePark GP32 (Europe) (v1.6.6)">
+		<description>[BIOS] GamePark GP32 (Korea) (v1.5.6)</description>
+		<release name="[BIOS] GamePark GP32 (Korea) (v1.5.6)" region="KOR"/>
+		<rom name="[BIOS] GamePark GP32 (Korea) (v1.5.6).bin" size="524288" crc="667fb1c8" md5="1e4d3216719acea231b81dfcf6069aef" sha1="d179ab8e96411272b6a1d683e59da752067f9da8"/>
+	</game>
+	<game name="[BIOS] GamePark GP32 (Europe) (v1.6.6) (Beta)" cloneof="[BIOS] GamePark GP32 (Europe) (v1.6.6)">
+		<description>[BIOS] GamePark GP32 (Europe) (v1.6.6) (Beta)</description>
+		<rom name="[BIOS] GamePark GP32 (Europe) (v1.6.6) (Beta).bin" size="524288" crc="b6aebf84" md5="2d3634237cdae7d746711086a5b1b484" sha1="3ff033fc247fb8a64e8656f9a810bd4d2f48e954"/>
+	</game>
+	<game name="[BIOS] GamePark GP32 (Korea) (v1.0.0)" cloneof="[BIOS] GamePark GP32 (Europe) (v1.6.6)">
+		<description>[BIOS] GamePark GP32 (Korea) (v1.0.0)</description>
+		<rom name="[BIOS] GamePark GP32 (Korea) (v1.0.0).bin" size="524288" crc="d9925ac9" md5="cac4b56c0db80922cae75403faef40af" sha1="3604d0d7210ed72eddd3e3e0c108f1102508423c"/>
+	</game>
+	<game name="[BIOS] GamePark GP32 (Europe) (v1.6.6) (2004-10-10)" cloneof="[BIOS] GamePark GP32 (Europe) (v1.6.6)">
+		<description>[BIOS] GamePark GP32 (Europe) (v1.6.6) (2004-10-10)</description>
+		<rom name="[BIOS] GamePark GP32 (Europe) (v1.6.6) (2004-10-10).bin" size="524288" crc="5247b681" md5="f3354866c9ef7b20a2f7b0c4e7150996" sha1="dfb45187bd44febcb51ed128be3355a2dad1416b"/>
+	</game>
+	<game name="[BIOS] GamePark GP32 (Europe) (v1.6.6) (2003-05-21)" cloneof="[BIOS] GamePark GP32 (Europe) (v1.6.6)">
+		<description>[BIOS] GamePark GP32 (Europe) (v1.6.6) (2003-05-21)</description>
+		<rom name="[BIOS] GamePark GP32 (Europe) (v1.6.6) (2003-05-21).bin" size="524288" crc="4548a840" md5="f78092f15f6ffe15975901ee4e92c680" sha1="1ad0cab0af28fb45c182e5e8c87ead2aaa4fffe1"/>
+	</game>
+	<game name="Astonishia Story R (Korea)">
+		<description>Astonishia Story R (Korea)</description>
+		<release name="Astonishia Story R (Korea)" region="KOR"/>
+		<rom name="Astonishia Story R (Korea).smc" size="34604032" crc="49e57a20" md5="95db70f40897e05306439b8c7614f281" sha1="c894b0dd8b934c77580187d7972490f5e59f2372"/>
+	</game>
+	<game name="Blue Angelo - Angels from the Shrine (Europe) (En,Fr,De,Es,It,Pt)">
+		<description>Blue Angelo - Angels from the Shrine (Europe) (En,Fr,De,Es,It,Pt)</description>
+		<release name="Blue Angelo - Angels from the Shrine (Europe) (En,Fr,De,Es,It,Pt)" region="EUR"/>
+		<rom name="Blue Angelo - Angels from the Shrine (Europe) (En,Fr,De,Es,It,Pt).smc" size="17302528" crc="54ff5945" md5="8b22486246c4a979e3f469f6ea4b7b4f" sha1="369f96bb41378ab4108d0dc8866148b328cbd75e"/>
+	</game>
+	<game name="Dooly Soccer 2002 (Korea)">
+		<description>Dooly Soccer 2002 (Korea)</description>
+		<release name="Dooly Soccer 2002 (Korea)" region="KOR"/>
+		<rom name="Dooly Soccer 2002 (Korea).smc" size="17302528" crc="cc95d224" md5="ce71c359076bd440e7dfcfcf30b338f2" sha1="0347cd106cba22b0d2e1170d44ec1d302e982a5e"/>
+	</game>
+	<game name="Dungeon &amp; Guarder - Dragon Gore (Europe)">
+		<description>Dungeon &amp; Guarder - Dragon Gore (Europe)</description>
+		<release name="Dungeon &amp; Guarder - Dragon Gore (Europe)" region="EUR"/>
+		<rom name="Dungeon &amp; Guarder - Dragon Gore (Europe).smc" size="17302528" crc="e76d34a6" md5="4b7309a84ada9cf69964eb87872d5499" sha1="433da4a0cdbf3c797f62bf01bfa86608434b04f2"/>
+	</game>
+	<game name="Dungeon &amp; Guarder - Dragon Gore (Korea)" cloneof="Dungeon &amp; Guarder - Dragon Gore (Europe)">
+		<description>Dungeon &amp; Guarder - Dragon Gore (Korea)</description>
+		<release name="Dungeon &amp; Guarder - Dragon Gore (Korea)" region="KOR"/>
+		<rom name="Dungeon &amp; Guarder - Dragon Gore (Korea).smc" size="17302528" crc="0e3bf8ce" md5="93e65544f35fcf2734ae4a1083c3a298" sha1="93c358177ae221f33e0aef793f83cc027ede0cfc"/>
+	</game>
+	<game name="Dyhard - With Infinite Stairs (Europe)">
+		<description>Dyhard - With Infinite Stairs (Europe)</description>
+		<release name="Dyhard - With Infinite Stairs (Europe)" region="EUR"/>
+		<rom name="Dyhard - With Infinite Stairs (Europe).smc" size="17302528" crc="c16523fb" md5="5e7a1e15bffa6adaf46a974e47f9ce06" sha1="b684b443b1450f98a43953393352b0724a9171cb"/>
+	</game>
+	<game name="Dyhard - With Infinite Stairs (Korea)" cloneof="Dyhard - With Infinite Stairs (Europe)">
+		<description>Dyhard - With Infinite Stairs (Korea)</description>
+		<release name="Dyhard - With Infinite Stairs (Korea)" region="KOR"/>
+		<rom name="Dyhard - With Infinite Stairs (Korea).smc" size="17302528" crc="a82d4e88" md5="79e2cd66f19d5c447fee48a9e4ed2c34" sha1="091c0f41954c03b9979683dd957a9dbbc4e28405"/>
+	</game>
+	<game name="GP Fight (Korea)">
+		<description>GP Fight (Korea)</description>
+		<release name="GP Fight (Korea)" region="KOR"/>
+		<rom name="GP Fight (Korea).smc" size="17302528" crc="d7551f7f" md5="59f0fcae2ab0e01d2b59ad1e8f0f184f" sha1="3bb0dfba690eb8b3885e48f4c0a981b8c96cda9b"/>
+	</game>
+	<game name="Hany Party Game (Korea)">
+		<description>Hany Party Game (Korea)</description>
+		<release name="Hany Party Game (Korea)" region="KOR"/>
+		<rom name="Hany Party Game (Korea).smc" size="17302528" crc="b7a78b6f" md5="0d4075f6c177f71eabb856eca407baaf" sha1="d7cf21ba51c7fea4257a7309eb31f96e635c783b"/>
+	</game>
+	<game name="Her Knights - All for the Princess (Europe)">
+		<description>Her Knights - All for the Princess (Europe)</description>
+		<release name="Her Knights - All for the Princess (Europe)" region="EUR"/>
+		<rom name="Her Knights - All for the Princess (Europe).smc" size="17302528" crc="1e0150ea" md5="b561135cf79cd02e3577146c26b3dc41" sha1="d137f8ed7e2a092037d64d8cf65bace68e2d6ebb"/>
+	</game>
+	<game name="Her Knights - All for Princess - Deadline (Korea)" cloneof="Her Knights - All for the Princess (Europe)">
+		<description>Her Knights - All for Princess - Deadline (Korea)</description>
+		<release name="Her Knights - All for Princess - Deadline (Korea)" region="KOR"/>
+		<rom name="Her Knights - All for Princess - Deadline (Korea).smc" size="17302528" crc="e61a93b2" md5="43036c384ce10683eb9371375b9cc7c6" sha1="4ced58d61f831cbfc0d0a369e559ad364cb71541"/>
+	</game>
+	<game name="Kimchiman GP32 (Korea)">
+		<description>Kimchiman GP32 (Korea)</description>
+		<release name="Kimchiman GP32 (Korea)" region="KOR"/>
+		<rom name="Kimchiman GP32 (Korea).smc" size="17302528" crc="6b7d6985" md5="bcfa9c1c078c438198f8c5302c73c25c" sha1="593ff3500abb654e297f2f66cae92ec893db6906"/>
+	</game>
+	<game name="Little Girl Mill of a Gingko, The (Korea)">
+		<description>Little Girl Mill of a Gingko, The (Korea)</description>
+		<release name="Little Girl Mill of a Gingko, The (Korea)" region="KOR"/>
+		<rom name="Little Girl Mill of a Gingko, The (Korea).smc" size="17302528" crc="44868758" md5="28284fa9789aa2868c0e0c29814463ad" sha1="1ce508583d7bdd176209c2ef3a606e7686590b87"/>
+	</game>
+	<game name="Little Wizard (Europe)">
+		<description>Little Wizard (Europe)</description>
+		<release name="Little Wizard (Europe)" region="EUR"/>
+		<rom name="Little Wizard (Europe).smc" size="17302528" crc="47d66121" md5="fb042b0746cb376b1dc3d9fe7a0ee782" sha1="ef1cae9d810ee55aeefb86410843241503df30f1"/>
+	</game>
+	<game name="Little Wizard (Korea)" cloneof="Little Wizard (Europe)">
+		<description>Little Wizard (Korea)</description>
+		<release name="Little Wizard (Korea)" region="KOR"/>
+		<rom name="Little Wizard (Korea).smc" size="17302528" crc="0107b043" md5="d11b7ff88d23c871cf3a7083dece1d92" sha1="27387e388dabb3bf78ab2d4cac1b8a0104f62e49"/>
+	</game>
+	<game name="OneShot Voca (Korea)">
+		<description>OneShot Voca (Korea)</description>
+		<release name="OneShot Voca (Korea)" region="KOR"/>
+		<rom name="OneShot Voca (Korea).smc" size="17302528" crc="4cedef98" md5="89bb9560b170b122c92e2f7ab893048c" sha1="69f1f554077397cccc17cc66c3e0f520005fa439"/>
+	</game>
+	<game name="Princess Maker 2 (Korea)">
+		<description>Princess Maker 2 (Korea)</description>
+		<release name="Princess Maker 2 (Korea)" region="KOR"/>
+		<rom name="Princess Maker 2 (Korea).smc" size="17302528" crc="3c50aad0" md5="8234109c225bc51558ec7358bad12201" sha1="2a55ffc4b69ac6515903b11d5c1a67559ed42891"/>
+	</game>
+	<game name="Rally Pop (Korea)">
+		<description>Rally Pop (Korea)</description>
+		<release name="Rally Pop (Korea)" region="KOR"/>
+		<rom name="Rally Pop (Korea).smc" size="17302528" crc="ce07aaa6" md5="b31b7739b93bd3503b7c8fe4d1fbf308" sha1="f7e8c59c88adcce506cb6b8a86fd2ad9b307468f"/>
+	</game>
+	<game name="Raphael (Korea)">
+		<description>Raphael (Korea)</description>
+		<release name="Raphael (Korea)" region="KOR"/>
+		<rom name="Raphael (Korea).smc" size="17302528" crc="d8f55b72" md5="cc49c5de1f2a210ae31353d51b168e8b" sha1="9d4e4dd297dd33ecfa22a90826c0efccb47be323"/>
+	</game>
+	<game name="Tanggle's Magic Square (Korea)">
+		<description>Tanggle's Magic Square (Korea)</description>
+		<release name="Tanggle's Magic Square (Korea)" region="KOR"/>
+		<rom name="Tanggle's Magic Square (Korea).smc" size="17302528" crc="f1555016" md5="df3975c7c82e95fedebb4a85b043177f" sha1="3dccead2a6e1fa11ec5d66f248eeacf9f25106d5"/>
+	</game>
+	<game name="Therapy (Korea)">
+		<description>Therapy (Korea)</description>
+		<release name="Therapy (Korea)" region="KOR"/>
+		<rom name="Therapy (Korea).smc" size="17302528" crc="6ff45a35" md5="c9cf16ddaf73de63a4f3d0ba28cf6a38" sha1="7ded192d9dce09c92dc5a83ccb0b477219f33b11"/>
+	</game>
+	<game name="Tomak - Save the Earth, Again (Europe) (v2.0)">
+		<description>Tomak - Save the Earth, Again (Europe) (v2.0)</description>
+		<release name="Tomak - Save the Earth, Again (Europe) (v2.0)" region="EUR"/>
+		<rom name="Tomak - Save the Earth, Again (Europe) (v2.0).smc" size="17302528" crc="eec1c3db" md5="90ac7332d078caebd45ba8b01dfe18d3" sha1="9c0e29cfa7be8a6644c63499b7065d4e5f40208e"/>
+	</game>
+	<game name="Tomak - Save the Earth, Again (Europe) (v1.0)" cloneof="Tomak - Save the Earth, Again (Europe) (v2.0)">
+		<description>Tomak - Save the Earth, Again (Europe) (v1.0)</description>
+		<rom name="Tomak - Save the Earth, Again (Europe) (v1.0).smc" size="17302528" crc="eea98281" md5="6b9c59bd7f3fe7a180ef5d15817abc5a" sha1="0767d37cd7dd29bb572a82cc05d766e8e7321dd9"/>
+	</game>
+	<game name="Tomak - Save the Earth, Again (Korea)" cloneof="Tomak - Save the Earth, Again (Europe) (v2.0)">
+		<description>Tomak - Save the Earth, Again (Korea)</description>
+		<release name="Tomak - Save the Earth, Again (Korea)" region="KOR"/>
+		<rom name="Tomak - Save the Earth, Again (Korea).smc" size="17302528" crc="f8c9f4ce" md5="da229619951277574a190558563ed08f" sha1="87b196f94bb5361563d7b35ba732b56e214be08e"/>
+	</game>
+	<game name="W.B.W. - Wanna Be Wizard! (Korea)">
+		<description>W.B.W. - Wanna Be Wizard! (Korea)</description>
+		<release name="W.B.W. - Wanna Be Wizard! (Korea)" region="KOR"/>
+		<rom name="W.B.W. - Wanna Be Wizard! (Korea).smc" size="17302528" crc="25386f14" md5="4ebe86cde3d3faff384a6fb5ca4246ec" sha1="cb19613a9377aef5be77bb00138fd8d0b201737e"/>
+	</game>
+	<game name="Wizard Slayer (Korea)">
+		<description>Wizard Slayer (Korea)</description>
+		<release name="Wizard Slayer (Korea)" region="KOR"/>
+		<rom name="Wizard Slayer (Korea).smc" size="17302528" crc="d7f6d3cf" md5="fda625ca66be09908880fed253d24898" sha1="a6801cee5cdc2f76d318df1880d8441bf9405de3"/>
+	</game>
+	<game name="Woody &amp; Kunta - Treasure Island (Europe)">
+		<description>Woody &amp; Kunta - Treasure Island (Europe)</description>
+		<release name="Woody &amp; Kunta - Treasure Island (Europe)" region="EUR"/>
+		<rom name="Woody &amp; Kunta - Treasure Island (Europe).smc" size="17302528" crc="ab479052" md5="c77e84df52823cd86ab2e9740570bb4f" sha1="cd1df6228293dc8193e779bdba562f3040e21b4a"/>
+	</game>
+	<game name="Woody &amp; Kunta - Treasure Island (Korea)" cloneof="Woody &amp; Kunta - Treasure Island (Europe)">
+		<description>Woody &amp; Kunta - Treasure Island (Korea)</description>
+		<release name="Woody &amp; Kunta - Treasure Island (Korea)" region="KOR"/>
+		<rom name="Woody &amp; Kunta - Treasure Island (Korea).smc" size="17302528" crc="de2142bc" md5="6dfb8fe822d6520d0b31462fd0d5627e" sha1="9e768faa8300cd5b3102f433aae53a6f4d3d7f1f"/>
+	</game>
+</datafile>

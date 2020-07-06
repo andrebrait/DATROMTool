@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Fukutake Publishing - StudyBox</name>
+		<description>Fukutake Publishing - StudyBox</description>
+		<version>20200113-140743</version>
+		<author>relax, xuom2</author>
+		<homepage>No-Intro</homepage>
+		<url>http://www.no-intro.org</url>
+	</header>
+	<game name="[BIOS] StudyBox (Japan) (Unl)">
+		<description>[BIOS] StudyBox (Japan) (Unl)</description>
+		<rom name="[BIOS] StudyBox (Japan) (Unl).nes" size="262144" crc="0D473EE6" md5="7E1F62847980693234B418727C6786FF" sha1="3A5683E8C417A07C3252E1DB4A054EFFDF75CB6E"/>
+	</game>
+	<game name="Enjoy English 01 Gou (Japan) (Unl)">
+		<description>Enjoy English 01 Gou (Japan) (Unl)</description>
+		<rom name="Enjoy English 01 Gou (Japan) (Unl).study" size="154286443" crc="46EFEB79" md5="87C311E9FB9F1ADD398D0E64D0C6FB4B" sha1="9C97E2553E12A31403C3827D1E4967FCFD057B16" status="verified"/>
+	</game>
+	<game name="Enjoy English 02 Gou (Japan) (Unl)">
+		<description>Enjoy English 02 Gou (Japan) (Unl)</description>
+		<rom name="Enjoy English 02 Gou (Japan) (Unl).study" size="164588701" crc="A4E45752" md5="BF56247E8E9B8AC273CEDC802AE85D8F" sha1="8D2E9F2CD4FEF7D22D98FFF6FC2E78B6F2985EFD" status="verified"/>
+	</game>
+	<game name="Enjoy English 03 Gou (Japan) (Unl)">
+		<description>Enjoy English 03 Gou (Japan) (Unl)</description>
+		<rom name="Enjoy English 03 Gou (Japan) (Unl).study" size="153497844" crc="B817E203" md5="2583CC85A2802EDB8F7139D5778F9838" sha1="4D1D75E96FED5437978D7AA068CA292823A79205" status="verified"/>
+	</game>
+	<game name="Enjoy English 04 Gou (Japan) (Unl)">
+		<description>Enjoy English 04 Gou (Japan) (Unl)</description>
+		<rom name="Enjoy English 04 Gou (Japan) (Unl).study" size="164420489" crc="3696615A" md5="7844FBC7EA3D0C512A3A07A8150834CA" sha1="9B95F2857FA545FECCF95EBE3DA841D8990A0E8F" status="verified"/>
+	</game>
+	<game name="Enjoy English 05 Gou (Japan) (Unl)">
+		<description>Enjoy English 05 Gou (Japan) (Unl)</description>
+		<rom name="Enjoy English 05 Gou (Japan) (Unl).study" size="154272460" crc="30BD302C" md5="9334980DE9ACB37FF0C32DA0AF0D4379" sha1="4E7F71884F55342F53DC29DFE1C5B36AA830BEB3" status="verified"/>
+	</game>
+	<game name="Enjoy English 06 Gou (Japan) (Unl)">
+		<description>Enjoy English 06 Gou (Japan) (Unl)</description>
+		<rom name="Enjoy English 06 Gou (Japan) (Unl).study" size="164642690" crc="8BE845E6" md5="AB0D406F98F20F7884B0DEB51D5A297F" sha1="707B5B8FE6658E4D9156B2AFCC2947A04C100598" status="verified"/>
+	</game>
+	<game name="Enjoy English 07 Gou (Japan) (Unl)">
+		<description>Enjoy English 07 Gou (Japan) (Unl)</description>
+		<rom name="Enjoy English 07 Gou (Japan) (Unl).study" size="170035805" crc="7566D16D" md5="B4DAF038FC4C286480461DDFBD17E4F3" sha1="3C93AB3259FE57E7C49F3E9EDA176498D5EE2772" status="verified"/>
+	</game>
+	<game name="Enjoy English 08 Gou (Japan) (Unl)">
+		<description>Enjoy English 08 Gou (Japan) (Unl)</description>
+		<rom name="Enjoy English 08 Gou (Japan) (Unl).study" size="165545810" crc="CD9FA456" md5="D87164BCDCB217BF5C0191307BD063B3" sha1="A4FBCCF4A1A351AEB3E9D6BF031BC7E6672EC3C5" status="verified"/>
+	</game>
+	<game name="Enjoy English 09 Gou (Japan) (Unl)">
+		<description>Enjoy English 09 Gou (Japan) (Unl)</description>
+		<rom name="Enjoy English 09 Gou (Japan) (Unl).study" size="162417625" crc="AE4B1EF8" md5="C939F627F5C60D7D5F2CD329847ABC59" sha1="ED35CE946DB9CB70614676EE1AAB9A558490BD41" status="verified"/>
+	</game>
+	<game name="Enjoy English 10 Gou (Japan) (Unl)">
+		<description>Enjoy English 10 Gou (Japan) (Unl)</description>
+		<rom name="Enjoy English 10 Gou (Japan) (Unl).study" size="161465606" crc="5D56818C" md5="A16480F841BA59AFF7A3A5DFAC56BA66" sha1="E344DE79D8F3EBB05B5AA18E60504F01663B094F" status="verified"/>
+	</game>
+	<game name="Enjoy English 11 Gou (Japan) (Unl)">
+		<description>Enjoy English 11 Gou (Japan) (Unl)</description>
+		<rom name="Enjoy English 11 Gou (Japan) (Unl).study" size="178466605" crc="C745A4AF" md5="FBA6C339D5DAFDE764639A011D8CCCBF" sha1="9D2F6B30C07D0BD64536919657E76E6447AB0C27" status="verified"/>
+	</game>
+	<game name="Enjoy English 12 Gou (Japan) (Unl)">
+		<description>Enjoy English 12 Gou (Japan) (Unl)</description>
+		<rom name="Enjoy English 12 Gou (Japan) (Unl).study" size="178155433" crc="A336B1E2" md5="533293787323C4BF31F670D332067CB6" sha1="D348CC64B3E49BC9EA66A8356BEF11F3032EAC7B" status="verified"/>
+	</game>
+</datafile>

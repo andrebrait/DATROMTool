@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Funtech - Super Acan (Parent-Clone)</name>
+		<description>Funtech - Super Acan (Parent-Clone)</description>
+		<version>20200111-044109</version>
+		<date>20200111-044109</date>
+		<author>alexian, BitLooter</author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="Boom Zoo (Taiwan)">
+		<description>Boom Zoo (Taiwan)</description>
+		<release name="Boom Zoo (Taiwan)" region="TAI"/>
+		<rom name="Boom Zoo (Taiwan).bin" size="524288" crc="6099bb44" md5="62aba0124eec12567f0facd8475d4ef8" sha1="0b5fbe2117bb77a827453c5489b3af691e5c7ade"/>
+	</game>
+	<game name="Formosa Duel (Taiwan)">
+		<description>Formosa Duel (Taiwan)</description>
+		<release name="Formosa Duel (Taiwan)" region="TAI"/>
+		<rom name="Formosa Duel (Taiwan).bin" size="1048576" crc="b2bf31dc" md5="7c637797ae8f3c1e92230a9fa80e8269" sha1="8d0680e1322af21b20d5cee2c100b05cf4217815"/>
+	</game>
+	<game name="Gambling Lord (Taiwan)">
+		<description>Gambling Lord (Taiwan)</description>
+		<release name="Gambling Lord (Taiwan)" region="TAI"/>
+		<rom name="Gambling Lord (Taiwan).bin" size="2097152" crc="ac4fa721" md5="99a7216288b76485dbfea69f679ae002" sha1="0fda223817f0b50f0ce9687076d29df3d1b86960"/>
+	</game>
+	<game name="Journey to the Laugh (Taiwan)">
+		<description>Journey to the Laugh (Taiwan)</description>
+		<release name="Journey to the Laugh (Taiwan)" region="TAI"/>
+		<rom name="Journey to the Laugh (Taiwan).bin" size="2097152" crc="cee25eea" md5="fb45bfe814878e759ecb413484848db9" sha1="fc82fc3a7d55571494cd62d8807160e22cf437bc"/>
+	</game>
+	<game name="Magical Pool (Taiwan)">
+		<description>Magical Pool (Taiwan)</description>
+		<release name="Magical Pool (Taiwan)" region="TAI"/>
+		<rom name="Magical Pool (Taiwan).bin" size="2097152" crc="aed4e4f8" md5="17c068084dc1e4ebafc78e2653e0e26a" sha1="6be79db9006c46ea21f5dbe1add755ce2e413796"/>
+	</game>
+	<game name="Monopoly - Adventure in Africa (Taiwan)">
+		<description>Monopoly - Adventure in Africa (Taiwan)</description>
+		<release name="Monopoly - Adventure in Africa (Taiwan)" region="TAI"/>
+		<rom name="Monopoly - Adventure in Africa (Taiwan).bin" size="1048576" crc="dc3b7b84" md5="2f738d44d74f987be4b96b6ee4097e1e" sha1="6dcbd7923203da7892915595d65ee668afbf0339"/>
+	</game>
+	<game name="Sango Fighter (Taiwan)">
+		<description>Sango Fighter (Taiwan)</description>
+		<release name="Sango Fighter (Taiwan)" region="TAI"/>
+		<rom name="Sango Fighter (Taiwan).bin" size="3145728" crc="a4de6dde" md5="45e297d693cd2308f637f68a2389ace4" sha1="f4bed63775130a75eb9c50b32e0cf50d1a7b8f50"/>
+	</game>
+	<game name="Speedy Dragon (Taiwan)">
+		<description>Speedy Dragon (Taiwan)</description>
+		<release name="Speedy Dragon (Taiwan)" region="TAI"/>
+		<rom name="Speedy Dragon (Taiwan).bin" size="2097152" crc="f631383c" md5="16ff1f3d682d582b696d86ad1a128efd" sha1="fbd62b5d287aa82ef27f400ab2a6b3da0308192a"/>
+	</game>
+	<game name="Super Dragon Force (Taiwan)">
+		<description>Super Dragon Force (Taiwan)</description>
+		<release name="Super Dragon Force (Taiwan)" region="TAI"/>
+		<rom name="08002 (Taiwan).bin" size="1048576" crc="fc79f05f" md5="927f0738d3ebe5f0d9267d05bf96b1da" sha1="7ce2e23ea3fd25764935708be4d47bf1a9843938"/>
+		<rom name="16007 (Taiwan).bin" size="2097152" crc="56c1c3fb" md5="7e7e1321ad9e4f3e1a512ab4fe3abb0c" sha1="249e2ad6d8d40ecd31eda5a1bd5e5d0f47174a27"/>
+	</game>
+	<game name="Super Taiwanese Baseball League (Taiwan)">
+		<description>Super Taiwanese Baseball League (Taiwan)</description>
+		<release name="Super Taiwanese Baseball League (Taiwan)" region="TAI"/>
+		<rom name="Super Taiwanese Baseball League (Taiwan).bin" size="2097152" crc="ccf6829b" md5="dc2d01a03d210d2ce937efd6685d6a28" sha1="17a413803d8749fbe9643ca56d703afd64569b9f"/>
+	</game>
+	<game name="The Son of Evil (Taiwan)">
+		<description>The Son of Evil (Taiwan)</description>
+		<release name="The Son of Evil (Taiwan)" region="TAI"/>
+		<rom name="The Son of Evil (Taiwan).bin" size="2097152" crc="9f6119a7" md5="517316018ed64cd43e225f1dd074eaf2" sha1="67ae9e7f99e1c3054ea54d53dbbba7792ef45134"/>
+	</game>
+</datafile>

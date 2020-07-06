@@ -1,0 +1,1770 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Atari - ST (Parent-Clone)</name>
+		<description>Atari - ST (Parent-Clone)</description>
+		<version>20180807-230245</version>
+		<date>20180807-230245</date>
+		<author></author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="10th Frame (Europe)">
+		<description>10th Frame (Europe)</description>
+		<rom name="10th Frame (Europe).ipf" size="468252" crc="d866745b" md5="0907fb3ce64f88bb3aac0cd8e3f87adc" sha1="011c930e119495a760beabf9edba16b3291a201e"/>
+	</game>
+	<game name="500cc Grand Prix (Europe)">
+		<description>500cc Grand Prix (Europe)</description>
+		<rom name="500cc Grand Prix (Europe).ipf" size="471664" crc="bf9eac7a" md5="04d1aac5810299666d511a3aa1ad87c6" sha1="365b28bd7fff6d4599c23af7a1c3d2f29a919c2e"/>
+	</game>
+	<game name="5th Gear (Europe)">
+		<description>5th Gear (Europe)</description>
+		<rom name="5th Gear (Europe).ipf" size="520242" crc="61e3ea6d" md5="ca33a08cd46422ceec64a5600e2056dc" sha1="998216d5d304bbb67ddb23b3981403c9b97a3b8f"/>
+	</game>
+	<game name="Academy - Tau Ceti II (Europe)">
+		<description>Academy - Tau Ceti II (Europe)</description>
+		<rom name="Academy - Tau Ceti II (Europe).ipf" size="468252" crc="381d824d" md5="c7665fe0c14a2caa74b394ad687df31d" sha1="4583ee64dba9d72d3969044982d1cf23765ccb0a"/>
+	</game>
+	<game name="Action Fighter (Europe)">
+		<description>Action Fighter (Europe)</description>
+		<rom name="Action Fighter (Europe).ipf" size="468252" crc="4de0b420" md5="fdcf1e6792013d8a569c050ba8b0be27" sha1="5322b37521fbddea1977a83921af4ccd44dc390d"/>
+	</game>
+	<game name="Action Service (Europe)">
+		<description>Action Service (Europe)</description>
+		<rom name="Action Service (Europe).ipf" size="521027" crc="c066dd76" md5="2b6329f86f5d8e74a7786ef0c83ecf9b" sha1="b49e9eec355ef12069a66e0ecf0ec541554a450b"/>
+	</game>
+	<game name="Addictaball (Europe)">
+		<description>Addictaball (Europe)</description>
+		<rom name="Addictaball (Europe).ipf" size="468252" crc="d12b34d0" md5="383b530ba4d75d2197f02d0091af7029" sha1="256c9206e99c7a8e8083fe0ec0c0bd22fd9755d9"/>
+	</game>
+	<game name="Adidas Championship Tie Break (Europe)">
+		<description>Adidas Championship Tie Break (Europe)</description>
+		<rom name="Adidas Championship Tie Break (Europe).ipf" size="512061" crc="d479f726" md5="f1fa24f684619b25306cdc1c2751a500" sha1="e7c1f393c0e63703ffae10b60be00a070a3f4fa8"/>
+	</game>
+	<game name="Advanced Dungeons &amp; Dragons - Heroes of the Lance - A DragonLance Action Game (Europe)">
+		<description>Advanced Dungeons &amp; Dragons - Heroes of the Lance - A DragonLance Action Game (Europe)</description>
+		<rom name="Advanced Dungeons &amp; Dragons - Heroes of the Lance - A DragonLance Action Game (Europe) (Disk 1).ipf" size="518252" crc="39fcd937" md5="b6c920ca1b3e7516e397e78ccd5c40e8" sha1="4a51636512db9cf873d97a2e034984e77f4b9d41"/>
+		<rom name="Advanced Dungeons &amp; Dragons - Heroes of the Lance - A DragonLance Action Game (Europe) (Disk 2).ipf" size="518252" crc="a24dbf0d" md5="40304579f4da20203e72d317fbc6ece3" sha1="5b8bf3fcc1ba64c81165074a9cf7004fa541604f"/>
+		<rom name="Advanced Dungeons &amp; Dragons - Heroes of the Lance - A DragonLance Action Game (Europe) (Disk 3).ipf" size="518252" crc="97a5a85f" md5="48027453a84d784f02f79c4a0d722891" sha1="b612c27696a21175937d87492080fe58b988da4b"/>
+	</game>
+	<game name="Advanced Fruit Machine Simulator (Europe)">
+		<description>Advanced Fruit Machine Simulator (Europe)</description>
+		<rom name="Advanced Fruit Machine Simulator (Europe).ipf" size="520242" crc="5194583f" md5="9f9dec10a96c0bd5c72786841e8ebaa1" sha1="15c62d409a7159a0ef382e05eca2932f71c19e98"/>
+	</game>
+	<game name="Advanced Rugby Simulator (Europe)">
+		<description>Advanced Rugby Simulator (Europe)</description>
+		<rom name="Advanced Rugby Simulator (Europe).ipf" size="517627" crc="8bb377e4" md5="ed504c657955fbe6cc7565335dcc390e" sha1="991fa6d717a4780ed2a0071eaa598e7ff5e02d87"/>
+	</game>
+	<game name="Adventures of Robin Hood, The (Europe) (En,Fr,De,It)">
+		<description>Adventures of Robin Hood, The (Europe) (En,Fr,De,It)</description>
+		<rom name="Adventures of Robin Hood, The (Europe) (En,Fr,De,It).ipf" size="918252" crc="266ae29a" md5="f2739c782e057ee3046cde8f5891e072" sha1="b00d85c37decb71d4511b5e3e1b86b1b65d3010f"/>
+	</game>
+	<game name="Afterburner (Europe)">
+		<description>Afterburner (Europe)</description>
+		<rom name="Afterburner (Europe) (Disk A).ipf" size="939974" crc="0d5c8b14" md5="e9689310a3f1c6489303ae20428d3ff9" sha1="001f3a2863ca580dd86b93ee941e487ad38dc3ff"/>
+		<rom name="Afterburner (Europe) (Disk B).ipf" size="520252" crc="2eff90b6" md5="8260c847cd51ed15f61ace9efcd7d4a6" sha1="15fbd34d94ae34ac8c99a304d8f8a2a3aa008db7"/>
+	</game>
+	<game name="Alien World (Europe)">
+		<description>Alien World (Europe)</description>
+		<rom name="Alien World (Europe).ipf" size="930177" crc="5df7f24f" md5="30f8feed8efccffe2b24a4adb744add9" sha1="ea4c8384d730d3c30b5b4366f2c8e81c38647f8b"/>
+	</game>
+	<game name="Alternate Reality - The City (Europe) (v3.0)">
+		<description>Alternate Reality - The City (Europe) (v3.0)</description>
+		<rom name="Alternate Reality - The City (Europe) (v3.0).ipf" size="468252" crc="946b71d3" md5="2749a6a116764b1b55f4e3b8f492fddb" sha1="aa7272a47814f95d8d146d4bee0572c7062697df"/>
+	</game>
+	<game name="Anarchy (Europe)">
+		<description>Anarchy (Europe)</description>
+		<rom name="Anarchy (Europe).ipf" size="830127" crc="2383838c" md5="d8f97814cdda441fa1077913140df823" sha1="9752df7e558bc63a11ce1ee636baec50dc385dc5"/>
+	</game>
+	<game name="Another World (Europe)">
+		<description>Another World (Europe)</description>
+		<rom name="Another World (Europe) (Disk A).ipf" size="918252" crc="c488e5d2" md5="6f363037bb5e090fc901a6637879ed6a" sha1="2a7ea841314d2543954ed272b408738539d35b2f"/>
+		<rom name="Another World (Europe) (Disk B).ipf" size="918252" crc="a5675a82" md5="7ede1f41cd67f838314a66374ad8f1af" sha1="dd8e1f16b4c0e8654961481ffcb45888abf5ba47"/>
+	</game>
+	<game name="Apprentice (Europe)">
+		<description>Apprentice (Europe)</description>
+		<rom name="Apprentice (Europe).ipf" size="1018252" crc="a89c8fe2" md5="324aa78a88b1e33e343998d58359d4a7" sha1="6db663c1c7bbcb4eaed2aa855daf3d68de68e5c4"/>
+	</game>
+	<game name="Archipelagos (Europe)">
+		<description>Archipelagos (Europe)</description>
+		<rom name="Archipelagos (Europe).ipf" size="517627" crc="d2f671de" md5="454ef981838bbd877a04296ebc57730e" sha1="9cf425deba18ef912cf277227f2fa4a9480a4dc3"/>
+	</game>
+	<game name="Arcticfox (Europe)">
+		<description>Arcticfox (Europe)</description>
+		<rom name="Arcticfox (Europe).ipf" size="469246" crc="4c15f718" md5="89b341fe42843ac19a5bd91266b90521" sha1="97c8ff01349161d15bc79616132f2d49eaccf843"/>
+	</game>
+	<game name="Arkanoid + Rampage (Europe) (Summer Pack)">
+		<description>Arkanoid + Rampage (Europe) (Summer Pack)</description>
+		<rom name="Arkanoid + Rampage (Europe) (Summer Pack).ipf" size="1018253" crc="eaedc69b" md5="" sha1=""/>
+	</game>
+	<game name="Artificial Dreams (Europe)">
+		<description>Artificial Dreams (Europe)</description>
+		<rom name="Artificial Dreams (Europe).ipf" size="518254" crc="919fd6ee" md5="f6df6fc0445de05d99f2abc1a01eeedd" sha1="b34210360a336dad82094a26f361dfccda4c4d3f"/>
+	</game>
+	<game name="Atax (Europe)">
+		<description>Atax (Europe)</description>
+		<rom name="Atax (Europe).ipf" size="518252" crc="45c9c841" md5="d26f513d5e557514034970d027d19f5c" sha1="3be4f157c07891e20909e9a5c3e3a2d4ee1712c3"/>
+	</game>
+	<game name="Atomix (Europe)">
+		<description>Atomix (Europe)</description>
+		<rom name="Atomix (Europe).ipf" size="522812" crc="c9e3437c" md5="189a8f8f4ad2ee5aee5431de851d8a48" sha1="5ed73e1a75d508c5a92d63ad657ad8bd6313781f"/>
+	</game>
+	<game name="Backgammon Royale (Europe) (En,Fr,De) (v2.50 4 Jan 91)">
+		<description>Backgammon Royale (Europe) (En,Fr,De) (v2.50 4 Jan 91)</description>
+		<rom name="Backgammon Royale (Europe) (En,Fr,De) (v2.50 4 Jan 91).ipf" size="468252" crc="3f1c40a2" md5="082ab6a8747efc80cc82cf4b84f4fbc2" sha1="aecc70389395a35dae32dace15196c0f39c9d171"/>
+	</game>
+	<game name="Bad Dudes vs. Dragon Ninja (Europe)">
+		<description>Bad Dudes vs. Dragon Ninja (Europe)</description>
+		<rom name="Bad Dudes vs. Dragon Ninja (Europe).ipf" size="1021810" crc="68639ca1" md5="" sha1=""/>
+	</game>
+	<game name="Balance of Power - The 1990 Edition (Europe)">
+		<description>Balance of Power - The 1990 Edition (Europe)</description>
+		<rom name="Balance of Power - The 1990 Edition (Europe).ipf" size="927372" crc="144e8ce2" md5="7b8f1ad358ef629e7108c0e180258fbd" sha1="b757bd1956c2dad4aeebabd363aac15754f43fb7"/>
+	</game>
+	<game name="Ballistix (Europe)">
+		<description>Ballistix (Europe)</description>
+		<rom name="Ballistix (Europe).ipf" size="517627" crc="a3be4e27" md5="4db6685bf36ae4a6956469e65e9e511e" sha1="1ba4df50a837cfd9563332115c31e306aceb8c53"/>
+	</game>
+	<game name="Barbarian - The Ultimate Warrior (Europe)">
+		<description>Barbarian - The Ultimate Warrior (Europe)</description>
+		<rom name="Barbarian - The Ultimate Warrior (Europe).ipf" size="468877" crc="95f647ed" md5="a2c0c7b66dae3a800084898b7a856644" sha1="eb04c214363dd13dd3e96ac8968f961de1ec000e"/>
+	</game>
+	<game name="Battle Chess (Europe)">
+		<description>Battle Chess (Europe)</description>
+		<rom name="Battle Chess (Europe) (Animation Disk).ipf" size="518252" crc="e061cbf4" md5="a05b60760cd158fd7335510791692729" sha1="5f067484e9d29ee8e727bd98b409e798605c8211"/>
+		<rom name="Battle Chess (Europe) (StartUp Disk).ipf" size="518252" crc="92996e4d" md5="994f14fa81eb95eb570a0d8910cd0866" sha1="338ff1b456fba8598d73d97b51dc966c85e53d65"/>
+	</game>
+	<game name="Battle Probe (Europe)">
+		<description>Battle Probe (Europe)</description>
+		<rom name="Battle Probe (Europe).ipf" size="518252" crc="0298b567" md5="bd97ede70f7c23faa9a6a82c546079c6" sha1="83ba2d8f81454eae99144a1bc7cb7227b9b8cf12"/>
+	</game>
+	<game name="Battlehawks 1942 (Europe) (v1.0 3.1.89)">
+		<description>Battlehawks 1942 (Europe) (v1.0 3.1.89)</description>
+		<rom name="Battlehawks 1942 (Europe) (v1.0 3.1.89) (Disk 1).ipf" size="468252" crc="8da94a8a" md5="8391185b9a4a026cd4620f7056a12799" sha1="b2898f6a86dc105ca474d77f0f6a8af0681544bd"/>
+		<rom name="Battlehawks 1942 (Europe) (v1.0 3.1.89) (Disk 2).ipf" size="468252" crc="946c16ff" md5="bedf2959754c53c5604995b02e6e1257" sha1="bf8e15305ce2bad6aa3db0df50b7d3d45248b9c1"/>
+	</game>
+	<game name="Battleships (Europe)">
+		<description>Battleships (Europe)</description>
+		<rom name="Battleships (Europe).ipf" size="428942" crc="54ac63d6" md5="" sha1=""/>
+	</game>
+	<game name="Beach Volley (Europe)">
+		<description>Beach Volley (Europe)</description>
+		<rom name="Beach Volley (Europe) (Disk 1).ipf" size="520242" crc="7ac39a4f" md5="024d3e30c0d0dc52706084dc6a828dc4" sha1="cf96c8340e0f58d1877e164c02a6a71d36f01522"/>
+		<rom name="Beach Volley (Europe) (Disk 2).ipf" size="520242" crc="3a4b4821" md5="de37ee6cb3dc9a23a3934d666e5a8928" sha1="1db7e182abf69879f48523f8368b215e252e5ee5"/>
+	</game>
+	<game name="Beastlord (Europe)">
+		<description>Beastlord (Europe)</description>
+		<rom name="Beastlord (Europe) (Disk 1).ipf" size="1016196" crc="f9f84b83" md5="ed07d8ba5b60de05cd6396c319885940" sha1="b915c95d986a00e91033712dd4b61ee7716356cf"/>
+		<rom name="Beastlord (Europe) (Disk 2).ipf" size="1016196" crc="a371fafd" md5="8e0bce308bb0d6b36636c9caeb5a76b6" sha1="96c85354157713eff0fc55e47ff94a99691984a4"/>
+	</game>
+	<game name="Better Dead Than Alien (Europe)">
+		<description>Better Dead Than Alien (Europe)</description>
+		<rom name="Better Dead Than Alien (Europe).ipf" size="468954" crc="e0d92129" md5="" sha1=""/>
+	</game>
+	<game name="Beyond the Ice Palace (Europe)">
+		<description>Beyond the Ice Palace (Europe)</description>
+		<rom name="Beyond the Ice Palace (Europe).ipf" size="518254" crc="d6f3964f" md5="3342345bc179592aa097a87d74c2bb2e" sha1="efb6688ecd655c0070ad5a869aba6aa1bad0e336"/>
+	</game>
+	<game name="Billiards Simulator (Europe) (En,Fr,De)">
+		<description>Billiards Simulator (Europe) (En,Fr,De)</description>
+		<rom name="Billiards Simulator (Europe) (En,Fr,De).ipf" size="468252" crc="e55df9cb" md5="" sha1=""/>
+	</game>
+	<game name="Billiards Simulator II (Europe)">
+		<description>Billiards Simulator II (Europe)</description>
+		<rom name="Billiards Simulator II (Europe).ipf" size="918252" crc="a61bbac1" md5="" sha1=""/>
+	</game>
+	<game name="Black Sect (France)">
+		<description>Black Sect (France)</description>
+		<rom name="Black Sect (France) (Disk 1).ipf" size="963601" crc="fa9a1fdb" md5="" sha1=""/>
+		<rom name="Black Sect (France) (Disk 2).ipf" size="962396" crc="201a2e87" md5="" sha1=""/>
+		<rom name="Black Sect (France) (Disk 3).ipf" size="962396" crc="63c58296" md5="" sha1=""/>
+	</game>
+	<game name="Black Tiger (Europe) (Compilation - Les Chevaliers)">
+		<description>Black Tiger (Europe) (Compilation - Les Chevaliers)</description>
+		<rom name="Black Tiger (Europe) (Compilation - Les Chevaliers).ipf" size="1010945" crc="ac0c4cdf" md5="a6964654fe551731daf87d15ebbdfa3f" sha1="f6752873b7decd89eb31e0b8658e7c259cdbd429"/>
+	</game>
+	<game name="Blasteroids (Europe)">
+		<description>Blasteroids (Europe)</description>
+		<rom name="Blasteroids (Europe) (Disk 1).ipf" size="556258" crc="c3ed000e" md5="21a150540878c054befe0e935df39dd8" sha1="798e20c0417a74ea7f7ca0c2ed7bef3b53773c6d"/>
+		<rom name="Blasteroids (Europe) (Disk 2).ipf" size="518252" crc="414cff4c" md5="bc279cd895329a34d77ff937faffc1f5" sha1="ef9fdd20685a731927fa6db70dc7ec70b3ffaafd"/>
+	</game>
+	<game name="Blazing Thunder (Europe)">
+		<description>Blazing Thunder (Europe)</description>
+		<rom name="Blazing Thunder (Europe).ipf" size="848162" crc="d2e24d3b" md5="456e287893004c2083e3c8bebb7438ca" sha1="9f1c81fa8ee6eb2c069f7ce5f5489b9354a2eae8"/>
+	</game>
+	<game name="Blockout (Europe)">
+		<description>Blockout (Europe)</description>
+		<rom name="Blockout (Europe).ipf" size="468252" crc="1f437363" md5="e0e3beeccdbae7c1fc9d6250516debf8" sha1="46d0b2dbfa45d730f90f419f611ce43ff3807e9e"/>
+	</game>
+	<game name="Blood Money (Europe) (Budget - Sizzlers)">
+		<description>Blood Money (Europe) (Budget - Sizzlers)</description>
+		<rom name="Blood Money (Europe) (Budget - Sizzlers) (Disk 1).ipf" size="517627" crc="bd492808" md5="a7a54765f9d0f1ca08c8c38cb544cddb" sha1="afb31d83e5266ec2e9a263e1f851a3a14843b27f"/>
+		<rom name="Blood Money (Europe) (Budget - Sizzlers) (Disk 2).ipf" size="487002" crc="02d3cf47" md5="c2309aa6a705740e4675db888184da39" sha1="675b4cb67ef93eb8776eb57e92dc9b02b7bcd21e"/>
+	</game>
+	<game name="Bloodwych (Europe) (Data Disk - Volume 1)">
+		<description>Bloodwych (Europe) (Data Disk - Volume 1)</description>
+		<rom name="Bloodwych (Europe) (Data Disk - Volume 1).ipf" size="520247" crc="8856ef24" md5="" sha1=""/>
+	</game>
+	<game name="Blues Brothers, The (Europe)">
+		<description>Blues Brothers, The (Europe)</description>
+		<rom name="Blues Brothers, The (Europe).ipf" size="521914" crc="edc0f2bb" md5="965618bec08379e85dbb39061722f7e3" sha1="80e32887bf33a21c7a2b1b3a732f8fd072f2e922"/>
+	</game>
+	<game name="BMX Simulator (Europe)">
+		<description>BMX Simulator (Europe)</description>
+		<rom name="BMX Simulator (Europe).ipf" size="517195" crc="1c1ef32a" md5="62419e840f47aa43ed49c9b5563da997" sha1="a98536453124c1fcd59d2af479b58d4a94a5c312"/>
+	</game>
+	<game name="Bob Winner (Europe)">
+		<description>Bob Winner (Europe)</description>
+		<rom name="Bob Winner (Europe).ipf" size="486734" crc="5bede1bc" md5="618fdf628605395a98f14f7e36fb6ab9" sha1="04b26fdfbbab28de0afb65528391af7cd2f7b3ee"/>
+	</game>
+	<game name="Bomb Jack (Europe) (Budget - Encore)">
+		<description>Bomb Jack (Europe) (Budget - Encore)</description>
+		<rom name="Bomb Jack (Europe) (Budget - Encore).ipf" size="518254" crc="817937b1" md5="836adacf379617da134821f08df8eec8" sha1="ff51804b7d84036f94a1d18dd46befffd50bbc3b"/>
+	</game>
+	<game name="Bridge Master (Europe)">
+		<description>Bridge Master (Europe)</description>
+		<rom name="Bridge Master (Europe).ipf" size="467820" crc="ea0174bb" md5="42ac9d353f5160954320fc0901444874" sha1="691caf4b464aa05e4954857da96089a00af8f0e9"/>
+	</game>
+	<game name="Bridge Player 2000 with Tutor (Europe)">
+		<description>Bridge Player 2000 with Tutor (Europe)</description>
+		<rom name="Bridge Player 2000 with Tutor (Europe).ipf" size="468252" crc="77b7b1b7" md5="480afe636bf07a507ee79b7ba637289a" sha1="d51fcb431af891772d122ad4ea7311317dd25611"/>
+	</game>
+	<game name="Bubble Ghost (Europe) (American Dreams)">
+		<description>Bubble Ghost (Europe) (American Dreams)</description>
+		<rom name="Bubble Ghost (Europe) (American Dreams).ipf" size="471664" crc="7b5ae2e8" md5="" sha1=""/>
+	</game>
+	<game name="Bumpy (Europe)">
+		<description>Bumpy (Europe)</description>
+		<rom name="Bumpy (Europe).ipf" size="521109" crc="124b77b8" md5="d5b3c4c718f8c4593843953cae5b9ae2" sha1="910d0099f08db3c4dc1877a8e5ff925d7666b1b9"/>
+	</game>
+	<game name="Burger Man (Europe)">
+		<description>Burger Man (Europe)</description>
+		<rom name="Burger Man (Europe).ipf" size="627858" crc="6f665589" md5="e42be61ca0339b16bc8e3a9b63a2a034" sha1="b9f8c1f44fbed8d9132bc8ea06fef358be1a2a07"/>
+	</game>
+	<game name="Captain Blood (Europe)">
+		<description>Captain Blood (Europe)</description>
+		<rom name="Captain Blood (Europe) (Disk 1).ipf" size="471232" crc="21b83ee2" md5="5ceb0f89b7cf0e934c0a679896854484" sha1="8500b6072b87aed8d1274ed09c0131b90ba40acf"/>
+		<rom name="Captain Blood (Europe) (Disk 2).ipf" size="471232" crc="d7a70b6d" md5="a3bcb85574b7317f73f7ec9628168913" sha1="4315e2222e06fa3c4d09cefc53bd4e0321fede81"/>
+	</game>
+	<game name="Captain Fizz Meets the Blaster-Trons (Europe) (En,Fr,De)">
+		<description>Captain Fizz Meets the Blaster-Trons (Europe) (En,Fr,De)</description>
+		<rom name="Captain Fizz Meets the Blaster-Trons (Europe) (En,Fr,De).ipf" size="517627" crc="11d1421c" md5="90812ddc9e28c099252d13ffcb6d2388" sha1="d182416684e0082a031ece194bbb42e90296bfeb"/>
+	</game>
+	<game name="Carrier Command (Europe) (En,Fr,De)">
+		<description>Carrier Command (Europe) (En,Fr,De)</description>
+		<rom name="Carrier Command (Europe) (En,Fr,De).ipf" size="1018252" crc="a4c09db8" md5="58c96f19c6f81d38e0e8c1b108cfbab0" sha1="200e85a3362a08e589acc034888dd9a285b94656"/>
+	</game>
+	<game name="Cartoon Capers (Europe)">
+		<description>Cartoon Capers (Europe)</description>
+		<rom name="Cartoon Capers (Europe) (Disk 1).ipf" size="1030752" crc="df42b229" md5="fd67e2c0984170f9d4a7ad2d79d6af11" sha1="782efbe096c42aa6b86e3a1e1fe8516fd595ed5a"/>
+		<rom name="Cartoon Capers (Europe) (Disk 2).ipf" size="518252" crc="692f5a1f" md5="d418c64108704e47ff0c55292d2e6a6f" sha1="89467c3ee1d87788fd9cee7f967e185370da08ef"/>
+	</game>
+	<game name="Catch 23 (Europe)">
+		<description>Catch 23 (Europe)</description>
+		<rom name="Catch 23 (Europe).ipf" size="512002" crc="75c10f22" md5="b7a7d8ac8d0595a54c8416483197052c" sha1="9d57b61f82bf75114f789c287083ea3563399cc9"/>
+	</game>
+	<game name="Champion of the Raj (Europe)">
+		<description>Champion of the Raj (Europe)</description>
+		<rom name="Champion of the Raj (Europe) (Disk 1).ipf" size="918252" crc="68252e21" md5="" sha1=""/>
+		<rom name="Champion of the Raj (Europe) (Disk 2).ipf" size="918252" crc="ee0cb7a3" md5="" sha1=""/>
+	</game>
+	<game name="Championship Baseball (Europe)">
+		<description>Championship Baseball (Europe)</description>
+		<rom name="Championship Baseball (Europe).ipf" size="468808" crc="20153397" md5="5759a02b7999eec973a443e54931e93e" sha1="a503f17056d7d4778c5917b06af711ee33f6f395"/>
+	</game>
+	<game name="Championship Cricket (Europe)">
+		<description>Championship Cricket (Europe)</description>
+		<rom name="Championship Cricket (Europe).ipf" size="468252" crc="b861d4d1" md5="dd759e900a038f2dd2bcef45856bccfa" sha1="8ca3de589e689142cb3f66f4b5742a5bc4855355"/>
+	</game>
+	<game name="Championship Water-Skiing (Europe)">
+		<description>Championship Water-Skiing (Europe)</description>
+		<rom name="Championship Water-Skiing (Europe).ipf" size="468252" crc="81806dd2" md5="" sha1=""/>
+	</game>
+	<game name="Championship Wrestling (Europe)">
+		<description>Championship Wrestling (Europe)</description>
+		<rom name="Championship Wrestling (Europe).ipf" size="518615" crc="f3ff3775" md5="e3fd8a58810e7bb8a4b97b275a40e2cc" sha1="f664eac6d793aa156f5a2952d9c62ab1cb486a29"/>
+	</game>
+	<game name="Chase (Europe)">
+		<description>Chase (Europe)</description>
+		<rom name="Chase (Europe).ipf" size="468252" crc="ae3ab247" md5="7d2a4833a508124240d83737963514ef" sha1="931a84d2eb20fc9d410032497d97844a514fbde3"/>
+	</game>
+	<game name="Chase H.Q. (Europe)">
+		<description>Chase H.Q. (Europe)</description>
+		<rom name="Chase H.Q. (Europe).ipf" size="520242" crc="f95ee17a" md5="10578deec5c081691f0fd0afe5235226" sha1="ce4d71db6789b07b35297d4e22284ff8a7350424"/>
+	</game>
+	<game name="Chess Player 2150 (Europe) (Compilation - TenStar Pack)">
+		<description>Chess Player 2150 (Europe) (Compilation - TenStar Pack)</description>
+		<rom name="Chess Player 2150 (Europe) (Compilation - TenStar Pack).ipf" size="468252" crc="a3da4220" md5="49da16f87f26c3a6f9f1577b1f16f6d0" sha1="1d4bb34a8deda9577a1ad1df56d576783efc8a8c"/>
+	</game>
+	<game name="Chess Player 2150 (Europe)">
+		<description>Chess Player 2150 (Europe)</description>
+		<rom name="Chess Player 2150 (Europe).ipf" size="468252" crc="7f2a5755" md5="d85798ae7b74b8dbf967725102660a28" sha1="e391d32fa692a6c1209639897702fe4559e82314"/>
+	</game>
+	<game name="Chess Simulator (Europe) (En,Fr)">
+		<description>Chess Simulator (Europe) (En,Fr)</description>
+		<rom name="Chess Simulator (Europe) (En,Fr).ipf" size="918252" crc="91f09736" md5="3d0fc83415ecdd50dc25bcf83a57e9e0" sha1="9fdfe5d714586eb70d8b5936f671227de502620f"/>
+	</game>
+	<game name="Chessmaster 2000, The (Europe)">
+		<description>Chessmaster 2000, The (Europe)</description>
+		<rom name="Chessmaster 2000, The (Europe) (Games Disk).ipf" size="468252" crc="eccf742f" md5="c85e23f473c0ee5127786a0a9b7caef3" sha1="9148ee62183e73e3e2fbd079fb2fd38110c03c72"/>
+		<rom name="Chessmaster 2000, The (Europe).ipf" size="468877" crc="0e515780" md5="6813e57b7f8d7769786561896754ad1d" sha1="f37c5e84e4343eaea78067082105e86db71ca1ce"/>
+	</game>
+	<game name="Chicago 30's (Europe)">
+		<description>Chicago 30's (Europe)</description>
+		<rom name="Chicago 30's (Europe).ipf" size="468252" crc="48f61002" md5="2f7810b93d3a5fc11b47c6532aa4bcb1" sha1="f21d800bda5ba013ff2793f09da0f423baedf5db"/>
+	</game>
+	<game name="Chip's Challenge (Europe)">
+		<description>Chip's Challenge (Europe)</description>
+		<rom name="Chip's Challenge (Europe).ipf" size="517195" crc="76561c0c" md5="20226881026a9ff746101a9ffe0ea68f" sha1="a75d1bd89997eff25cb1f04645c05f1b5f63505f"/>
+	</game>
+	<game name="Chopper X + Warlock (Europe) (Summer Pack)">
+		<description>Chopper X + Warlock (Europe) (Summer Pack)</description>
+		<rom name="Chopper X + Warlock (Europe) (Summer Pack).ipf" size="918252" crc="e35c22d4" md5="" sha1=""/>
+	</game>
+	<game name="Chrono Quest II (Europe) (Dual Sided)">
+		<description>Chrono Quest II (Europe) (Dual Sided)</description>
+		<rom name="Chrono Quest II (Europe) (Dual Sided) (Disk 1).ipf" size="918252" crc="5bfe7489" md5="cd188a6ccceb8148eb3167149eedc287" sha1="402e2b66616a48a51018c3c2b8d89a4c1bc6642c"/>
+		<rom name="Chrono Quest II (Europe) (Dual Sided) (Disk 2).ipf" size="918252" crc="415e69d3" md5="219d59378a1c29971f80428950d45da0" sha1="636734ced65b6d3f4708eb53b8e26a63266d998d"/>
+		<rom name="Chrono Quest II (Europe) (Dual Sided) (Disk 3).ipf" size="1018252" crc="fb239020" md5="97c0b67d081f43128ffba60a6e03eb27" sha1="1ed6d5c7b7fae7866a7d6f931fdb5c37b7440001"/>
+	</game>
+	<game name="Chuckie Egg (Europe)">
+		<description>Chuckie Egg (Europe)</description>
+		<rom name="Chuckie Egg (Europe).ipf" size="468252" crc="ac75f2fa" md5="e55c76c88047e91debfabc290beb022e" sha1="cd8637b24fff0da0c72f2b5d89609e2410cab9d8"/>
+	</game>
+	<game name="Chuckie Egg II (Europe)">
+		<description>Chuckie Egg II (Europe)</description>
+		<rom name="Chuckie Egg II (Europe).ipf" size="468252" crc="ce0f05aa" md5="fa338779837d8e0d1690f66fae1a8e06" sha1="080b1a79a14c5d87b1b4a306d89d6035fbd22941"/>
+	</game>
+	<game name="Clever and Smart (Europe)">
+		<description>Clever and Smart (Europe)</description>
+		<rom name="Clever and Smart (Europe).ipf" size="469481" crc="d24df979" md5="021da10d7a4eb0bb7e1f07f0d1dcf91d" sha1="70f46b74c7ce404909e58fb04048973fa01e2f34"/>
+	</game>
+	<game name="Cloud Kingdoms (Europe)">
+		<description>Cloud Kingdoms (Europe)</description>
+		<rom name="Cloud Kingdoms (Europe).ipf" size="520242" crc="243b0ec8" md5="d5990c5d3cfc97bfce76b96d6ac626ef" sha1="4dfedc0fc04895a3298bc84bdaf1101aa26625e8"/>
+	</game>
+	<game name="Conquests of Camelot - The Search for the Grail (Europe) (v1.019)">
+		<description>Conquests of Camelot - The Search for the Grail (Europe) (v1.019)</description>
+		<rom name="Conquests of Camelot - The Search for the Grail (Europe) (v1.019) (Disk 1).ipf" size="918252" crc="0769e262" md5="0a69b9ddad31afd825691a33d4927967" sha1="3c55788f87ef3d50318f783860e5fa1c8b6c3df0"/>
+		<rom name="Conquests of Camelot - The Search for the Grail (Europe) (v1.019) (Disk 2).ipf" size="918252" crc="b4dc0f47" md5="2b4f2a32a9ae513683fb2d0cd8c11e19" sha1="110c1940a8390ddf74c11fe1187662ce4f2c9bf2"/>
+		<rom name="Conquests of Camelot - The Search for the Grail (Europe) (v1.019) (Disk 3).ipf" size="918252" crc="5d50534f" md5="4932e28c92a2c44a58ce3515dbb9467e" sha1="3669a8886282e2f0728e7488291c3e3f268d7844"/>
+		<rom name="Conquests of Camelot - The Search for the Grail (Europe) (v1.019) (Disk 4).ipf" size="918252" crc="ce890c56" md5="cfd4ad0176bb534816968a19623b11f7" sha1="8f9401912d330dd8651d4b91c11324d4de8ba1a6"/>
+	</game>
+	<game name="Continental Circus (Europe)">
+		<description>Continental Circus (Europe)</description>
+		<rom name="Continental Circus (Europe) (Disk 1).ipf" size="517627" crc="e0220682" md5="69754dd61759d42da1fa3d5732653a88" sha1="9d2f045fd1e0b4abe837050be22f1e6ba265c354"/>
+		<rom name="Continental Circus (Europe) (Disk 2).ipf" size="517627" crc="3a16a48f" md5="f196d8fd9cde1c2369f86c3dc8027757" sha1="75db0a292eca775e6a143fe738be3b7c68af1ea5"/>
+	</game>
+	<game name="Corruption (Europe) (v1.9)">
+		<description>Corruption (Europe) (v1.9)</description>
+		<rom name="Corruption (Europe) (v1.9).ipf" size="472992" crc="479f85aa" md5="4ec6d7e291341242eb37f341ebf2dcda" sha1="6e13d65cc896c4087ca7b47466f12066d342af02"/>
+	</game>
+	<game name="Crack Down (Europe) (Budget - Kixx)">
+		<description>Crack Down (Europe) (Budget - Kixx)</description>
+		<rom name="Crack Down (Europe) (Budget - Kixx).ipf" size="1107413" crc="9d27dda5" md5="8093673fff2774ffd7e2bdd47b61cfe4" sha1="91752b32d4c93391ad707a030e1305bd110850b2"/>
+	</game>
+	<game name="Cricket Captain (Europe) (v1.5 1991)">
+		<description>Cricket Captain (Europe) (v1.5 1991)</description>
+		<rom name="Cricket Captain (Europe) (v1.5 1991).ipf" size="518252" crc="afb091dd" md5="74cbf8437416e4df3325e8254a244f9c" sha1="fad79781d9a9e6848c059eb35a2c068c5df14a3f"/>
+	</game>
+	<game name="Crystal Castles (Europe)">
+		<description>Crystal Castles (Europe)</description>
+		<rom name="Crystal Castles (Europe).ipf" size="468252" crc="b3fdc6b5" md5="92cd08122ce381037cd322174df93d60" sha1="001562942440750c6be41ad2644301703ff5666e"/>
+	</game>
+	<game name="Cyberball (Europe)">
+		<description>Cyberball (Europe)</description>
+		<rom name="Cyberball (Europe) (Disk 1).ipf" size="520242" crc="6c9674d8" md5="9e09d292a406c63bbd65f2fad90d16e7" sha1="cc7d8f5b20df483f98f690f9ff534afec81743ba"/>
+		<rom name="Cyberball (Europe) (Disk 2).ipf" size="518252" crc="3789ff91" md5="0a92ab1d7937d39c58bc8892374d2512" sha1="b4580b64ca61c07f1159e04a102ea638e613eaf9"/>
+	</game>
+	<game name="Cybercon III (Europe) (4.6.91)">
+		<description>Cybercon III (Europe) (4.6.91)</description>
+		<rom name="Cybercon III (Europe) (4.6.91).ipf" size="518252" crc="6e5122a9" md5="993e7fe9967cce25bbbe4f7cbe27b89a" sha1="05e0cdc691f5358581d90816e3a2aead283b66b8"/>
+	</game>
+	<game name="Dames Simulator (France)">
+		<description>Dames Simulator (France)</description>
+		<rom name="Dames Simulator (France).ipf" size="471664" crc="f9cb88e4" md5="99c5b36a7806511f6ce44390a1fe9c6c" sha1="c586cae6010a4bfbdf32845606cc8ebab0ee9617"/>
+	</game>
+	<game name="Darius+ (Europe)">
+		<description>Darius+ (Europe)</description>
+		<rom name="Darius+ (Europe) (Disk 1).ipf" size="520242" crc="ea61b191" md5="fd03a8bf803258f22513514eb88cc506" sha1="82fc90af1c1735eb290e05bbd98a94d8327ab2ab"/>
+		<rom name="Darius+ (Europe) (Disk 2).ipf" size="518252" crc="6d7c5ff3" md5="8b09dcc3bdc9013d69c792040ba418fd" sha1="46ddfb0a89e64cf55d84f385058a6ade1cf29478"/>
+	</game>
+	<game name="Day of the Viper (Europe)">
+		<description>Day of the Viper (Europe)</description>
+		<rom name="Day of the Viper (Europe) (Disk 1).ipf" size="518252" crc="b8c71f9f" md5="e5d443eeb84aa65f92631d45c14a2a7f" sha1="d2093d19e4c5610d8a9f563aec70682aa6d51b1e"/>
+		<rom name="Day of the Viper (Europe) (Disk 2).ipf" size="518252" crc="22073bc6" md5="2a01fcd6ccba6ea3282735a4adfbe54e" sha1="5e24999628c8d24ab59817523d4f9d78c8d2a39b"/>
+	</game>
+	<game name="Deja Vu - A Nightmare Comes True! (Europe)">
+		<description>Deja Vu - A Nightmare Comes True! (Europe)</description>
+		<rom name="Deja Vu - A Nightmare Comes True! (Europe) (Disk 1).ipf" size="468337" crc="5ff6e90a" md5="472f473b8e9fa4f3cd37a4ac3d8fc751" sha1="2c759e4d137490eec8670b01f4b117e7546594d5"/>
+		<rom name="Deja Vu - A Nightmare Comes True! (Europe) (Disk 2).ipf" size="468252" crc="9bc3f029" md5="8f767d2e4ac16ae0d47542e59b900d95" sha1="6db0c129ced88b76dcba6dee7184e03ee04a7b82"/>
+	</game>
+	<game name="Deliverance (Europe)">
+		<description>Deliverance (Europe)</description>
+		<rom name="Deliverance (Europe) (Disk 1).ipf" size="1018252" crc="b909ad7a" md5="16cc76618d292feff2d25c6dbdca4906" sha1="76884f2ccf1a4ddedbe23374802c784d63d4e1fd"/>
+		<rom name="Deliverance (Europe) (Disk 2).ipf" size="1018252" crc="90e37c76" md5="814adf30c001ec1fe1697855facca09f" sha1="7c4c04aefd011bc998db30a332002626e4c83033"/>
+	</game>
+	<game name="Demon Blue (Europe)">
+		<description>Demon Blue (Europe)</description>
+		<rom name="Demon Blue (Europe).ipf" size="468252" crc="f1d37025" md5="414711cf2918f2467b00a693dc99cbac" sha1="a390cc5ad5c5a26972705756ba2e52b371762093"/>
+	</game>
+	<game name="Demon's Tomb - The Awakening (Europe)">
+		<description>Demon's Tomb - The Awakening (Europe)</description>
+		<rom name="Demon's Tomb - The Awakening (Europe) (Disk 1).ipf" size="517627" crc="cdff0874" md5="" sha1=""/>
+		<rom name="Demon's Tomb - The Awakening (Europe) (Disk 2).ipf" size="468252" crc="8ce27b61" md5="" sha1=""/>
+	</game>
+	<game name="Demoniak (Europe) (v1.0)">
+		<description>Demoniak (Europe) (v1.0)</description>
+		<rom name="Demoniak (Europe) (v1.0).ipf" size="918252" crc="b66460b1" md5="89b6f4a21417a564f34707b56cf7ca01" sha1="f9c71b55650d08e8d09a4ccf383d35c218a0aa21"/>
+	</game>
+	<game name="Dick Tracy (Europe) (En,Fr,De,Es,It)">
+		<description>Dick Tracy (Europe) (En,Fr,De,Es,It)</description>
+		<rom name="Dick Tracy (Europe) (En,Fr,De,Es,It) (Disk A).ipf" size="521914" crc="b02524fd" md5="fef23edddef145d83ab78c9fd0903659" sha1="c620c7e995ad9f4e1d3b636f43a1161b031c941a"/>
+		<rom name="Dick Tracy (Europe) (En,Fr,De,Es,It) (Disk B).ipf" size="518252" crc="48fbca9e" md5="3133c36e7199abf19dc2b86d06c59940" sha1="42c7a132610366bfafb41964e2c9f97a0068232f"/>
+	</game>
+	<game name="Disc (Europe) (Budget - Action Sixteen)">
+		<description>Disc (Europe) (Budget - Action Sixteen)</description>
+		<rom name="Disc (Europe) (Budget - Action Sixteen).ipf" size="1014859" crc="ab7ffc6b" md5="e977c26734b17ce867811b079a0fb330" sha1="d29a4835ba85d55778fded6b59cee7d5c3552afc"/>
+	</game>
+	<game name="Dizzy Dice (Europe) (Budget - Smash 16)">
+		<description>Dizzy Dice (Europe) (Budget - Smash 16)</description>
+		<rom name="Dizzy Dice (Europe) (Budget - Smash 16).ipf" size="518252" crc="34a1d807" md5="cf6f677c4ad7f393843e53f4cfea60ef" sha1="8a9dcec0065a8a4ed8ec03ce6f974acb4d9d25b1"/>
+	</game>
+	<game name="Double Dragon (Europe) (Compilation - Magnum 4)">
+		<description>Double Dragon (Europe) (Compilation - Magnum 4)</description>
+		<rom name="Double Dragon (Europe) (Compilation - Magnum 4) (Disk 1).ipf" size="517195" crc="6527a8d3" md5="bfbb7a8f95c7e8570e42d527d4742e39" sha1="c8e374850ad918a6859a7464f16100377972e58b"/>
+		<rom name="Double Dragon (Europe) (Compilation - Magnum 4) (Disk 2).ipf" size="517195" crc="c1ebe2ca" md5="8ea2302d7878278fcdb7704640b6bb73" sha1="06c4d138d62d0a74bc77c4b4495d735c6fd2cd53"/>
+	</game>
+	<game name="Double Dragon II - The Revenge (Europe) (v1.2) (Budget - 16 Blitz)">
+		<description>Double Dragon II - The Revenge (Europe) (v1.2) (Budget - 16 Blitz)</description>
+		<rom name="Double Dragon II - The Revenge (Europe) (v1.2) (Budget - 16 Blitz) (Disk 1).ipf" size="1017627" crc="3d3168a6" md5="e1ed5569a7457c61395ddd21c2ac3aa8" sha1="76a4365aa9e0f86a3f65489b7e7edf28bf2aa3fb"/>
+		<rom name="Double Dragon II - The Revenge (Europe) (v1.2) (Budget - 16 Blitz) (Disk 2).ipf" size="517627" crc="37cc6451" md5="5928dec4c857c83dd106d5245eccb60a" sha1="696bb3f9c945ab6f103c76603e7dccbcc1cc424f"/>
+	</game>
+	<game name="Dragon Spirit (Europe)">
+		<description>Dragon Spirit (Europe)</description>
+		<rom name="Dragon Spirit (Europe) (Disk 1).ipf" size="520242" crc="456940a5" md5="6139fef5eb74247da48cfbe4a4ff6bd4" sha1="0a68160f44d4565f5380a503deab9a77213b5ac5"/>
+		<rom name="Dragon Spirit (Europe) (Disk 2).ipf" size="518252" crc="150f235e" md5="c66a3b491e423d7dff851073ca23fd20" sha1="5b1dcd00495f933cccbd0de180cd123f43b53749"/>
+	</game>
+	<game name="Drakkhen (Europe) (v1.1)">
+		<description>Drakkhen (Europe) (v1.1)</description>
+		<rom name="Drakkhen (Europe) (v1.1) (Disk 1).ipf" size="916039" crc="2bfc80d2" md5="d13b3afb88456d6a1f343257a139fd9e" sha1="c003db10f5eac58ac1eed1fa7c3dfebd94221637"/>
+		<rom name="Drakkhen (Europe) (v1.1) (Disk 2).ipf" size="918252" crc="c7c2fdd2" md5="eca74207c54f207eb5c7b6cda763e380" sha1="5c0c24859f6b644f4c07f16ab91a1c96fd3b7bd5"/>
+		<rom name="Drakkhen (Europe) (v1.1) (Disk 3).ipf" size="468252" crc="be27d4c4" md5="39c69abbaca6b9d4580282bc79c245bc" sha1="29721b32cdc407dc37df6cf8ea3e88b3e61f22dc"/>
+	</game>
+	<game name="Driller (Europe) (En,Fr,De,It)">
+		<description>Driller (Europe) (En,Fr,De,It)</description>
+		<rom name="Driller (Europe) (En,Fr,De,It).ipf" size="918252" crc="acbe8cc3" md5="23b5087bb19aef4e0e1c3296e5778c35" sha1="51a2e73f07d981b6a3ac75df9a16cb2b4d39f322"/>
+	</game>
+	<game name="Dynamite Dux (Europe) (Fists of Fury)">
+		<description>Dynamite Dux (Europe) (Fists of Fury)</description>
+		<rom name="Dynamite Dux (Europe) (Fists of Fury).ipf" size="556972" crc="7d686fa9" md5="" sha1=""/>
+	</game>
+	<game name="Dynasty Wars (Europe) (Compilation - Les Chevaliers)">
+		<description>Dynasty Wars (Europe) (Compilation - Les Chevaliers)</description>
+		<rom name="Dynasty Wars (Europe) (Compilation - Les Chevaliers).ipf" size="1010945" crc="d263dcd9" md5="b649b7c481ce19b217cd376b001b95b7" sha1="91910e0ad7eb7e589be557a579b7d326a31f8788"/>
+	</game>
+	<game name="Dyter-07 (Europe)">
+		<description>Dyter-07 (Europe)</description>
+		<rom name="Dyter-07 (Europe) (Disk 1).ipf" size="575127" crc="21c28407" md5="" sha1=""/>
+		<rom name="Dyter-07 (Europe) (Disk 2).ipf" size="575127" crc="20c2c812" md5="" sha1=""/>
+	</game>
+	<game name="East vs. West Berlin 1948 (Europe)">
+		<description>East vs. West Berlin 1948 (Europe)</description>
+		<rom name="East vs. West Berlin 1948 (Europe) (Disk 1).ipf" size="518252" crc="1cfe15a0" md5="df0c6e811a7ad025cbf7f1249e080d07" sha1="ac090eb750035531fab06ead25dad1d4d0fa576a"/>
+		<rom name="East vs. West Berlin 1948 (Europe) (Disk 2).ipf" size="518252" crc="9da3c5f1" md5="16ca35441f714413b7216c962dd22f00" sha1="a7e97cd7a6860e1e65d92ad36024f826b4a3442d"/>
+	</game>
+	<game name="Elemental (Europe) (En,Fr,De)">
+		<description>Elemental (Europe) (En,Fr,De)</description>
+		<rom name="Elemental (Europe) (En,Fr,De).ipf" size="521039" crc="bbda28a7" md5="75e199c8c9ab3bbb5765b134a61f5314" sha1="f37c23bd0f7cf07d47a866381e5437abb61527c2"/>
+	</game>
+	<game name="Elf (Europe) (MicroValue)">
+		<description>Elf (Europe) (MicroValue)</description>
+		<rom name="Elf (Europe) (MicroValue).ipf" size="517627" crc="93197887" md5="4e4a0f49290789572d3690b7334a26b3" sha1="e1885ab604fefffdd4b8e3c59f7b203847ebe415"/>
+	</game>
+	<game name="Elite (Europe)">
+		<description>Elite (Europe)</description>
+		<rom name="Elite (Europe).ipf" size="468252" crc="acd85762" md5="23a6b20283dd0eccb9d9be71087dfd60" sha1="ca756d5ab4df383e7ac1fd108ead3bea28c03578"/>
+	</game>
+	<game name="Enterprise (Europe)">
+		<description>Enterprise (Europe)</description>
+		<rom name="Enterprise (Europe).ipf" size="468252" crc="e4eacdf7" md5="6f8bd8360a3a7a33a36d31f4e974c95f" sha1="fc75d0177800f9c9b13d886dab5e661cc2a03ee6"/>
+	</game>
+	<game name="Erik (Europe)">
+		<description>Erik (Europe)</description>
+		<rom name="Erik (Europe).ipf" size="562652" crc="004f5576" md5="806423b31552c01a12c4e76e26e52581" sha1="df50e0bbc03e9dfc071f767fdbd4a184e349b840"/>
+	</game>
+	<game name="ESWAT (Europe)">
+		<description>ESWAT (Europe)</description>
+		<rom name="ESWAT (Europe) (Disk 1).ipf" size="1011377" crc="4d0a0996" md5="" sha1=""/>
+		<rom name="ESWAT (Europe) (Disk 2).ipf" size="1011377" crc="d232722a" md5="" sha1=""/>
+	</game>
+	<game name="Exolon (Europe)">
+		<description>Exolon (Europe)</description>
+		<rom name="Exolon (Europe).ipf" size="520242" crc="f5e1e276" md5="19137ffdc2f4bf0969d99f9ef70dd81a" sha1="a28b71d9792bfb35f756e9253f46c1554670c010"/>
+	</game>
+	<game name="Eye of Horus (Europe)">
+		<description>Eye of Horus (Europe)</description>
+		<rom name="Eye of Horus (Europe).ipf" size="517627" crc="e166e8a4" md5="d6f79731e623c8c7b983bb42dc10e96f" sha1="9656690bf558939cd62941f3906d30ab93f01630"/>
+	</game>
+	<game name="F-15 Strike Eagle (Europe) (v703.01)">
+		<description>F-15 Strike Eagle (Europe) (v703.01)</description>
+		<rom name="F-15 Strike Eagle (Europe) (v703.01).ipf" size="468954" crc="f17bd150" md5="" sha1=""/>
+	</game>
+	<game name="F-19 Stealth Fighter (Europe) (v1.02)">
+		<description>F-19 Stealth Fighter (Europe) (v1.02)</description>
+		<rom name="F-19 Stealth Fighter (Europe) (v1.02) (Disk A).ipf" size="1018252" crc="cdaf4ce4" md5="852e652bf46d6d061510d44a20dea305" sha1="95af9be68b3e86ce62ce08505921c61f5b7161ec"/>
+		<rom name="F-19 Stealth Fighter (Europe) (v1.02) (Disk B).ipf" size="518252" crc="563e0b5d" md5="29ac7e7a59240be020b59b62ec974a0b" sha1="c08bdfc7ade7c2137ae8f2bd500fc127f68a2ce3"/>
+		<rom name="F-19 Stealth Fighter (Europe) (v1.02) (Disk C).ipf" size="518252" crc="cb78569c" md5="20413ffbdf8446a0e8c7c379584a3503" sha1="f30b6f6d7de8a78b9ef77df93312af29756e45fb"/>
+	</game>
+	<game name="Face-Off Ice Hockey (Europe) (En,Fr,De,Es,It)">
+		<description>Face-Off Ice Hockey (Europe) (En,Fr,De,Es,It)</description>
+		<rom name="Face-Off Ice Hockey (Europe) (En,Fr,De,Es,It).ipf" size="1017627" crc="23c5a571" md5="435b7ce740ba15892b5e06961578233c" sha1="8a35355973c6014b872c01e733adc1c24ab5edf6"/>
+	</game>
+	<game name="Fire and Brimstone (Europe)">
+		<description>Fire and Brimstone (Europe)</description>
+		<rom name="Fire and Brimstone (Europe) (Disk A).ipf" size="517627" crc="320a0e39" md5="" sha1=""/>
+		<rom name="Fire and Brimstone (Europe) (Disk B).ipf" size="518252" crc="aa3eeb78" md5="" sha1=""/>
+	</game>
+	<game name="Fire and Forget (Europe)">
+		<description>Fire and Forget (Europe)</description>
+		<rom name="Fire and Forget (Europe).ipf" size="521039" crc="82240691" md5="" sha1=""/>
+	</game>
+	<game name="Fire and Forget II - The Death Convoy (Europe)">
+		<description>Fire and Forget II - The Death Convoy (Europe)</description>
+		<rom name="Fire and Forget II - The Death Convoy (Europe).ipf" size="521914" crc="6cb31e61" md5="b4579ec879e6e5dbb01c83d7a8d1a72f" sha1="a6ebdeb913d3f6ec67699c2893e8621da1af14c7"/>
+	</game>
+	<game name="Flimbo's Quest (Europe)">
+		<description>Flimbo's Quest (Europe)</description>
+		<rom name="Flimbo's Quest (Europe).ipf" size="1026092" crc="7117917a" md5="cba4179609059e4ad6913a4731abbf21" sha1="91f44c8a7bfc0d46724771f7ad44678688e739b2"/>
+	</game>
+	<game name="Football Manager (Europe)">
+		<description>Football Manager (Europe)</description>
+		<rom name="Football Manager (Europe).ipf" size="468254" crc="134a3ff8" md5="" sha1=""/>
+	</game>
+	<game name="Football Manager 2 (Europe)">
+		<description>Football Manager 2 (Europe)</description>
+		<rom name="Football Manager 2 (Europe).ipf" size="518254" crc="08363b8c" md5="7692732be29d5835eced88182809dd2c" sha1="54c09068d7d6f0a355d54adf0644c61efc3cb602"/>
+	</game>
+	<game name="Foundation's Waste (Europe) (Coverdisk - The One - Issue 22) (Amiga + ST)">
+		<description>Foundation's Waste (Europe) (Coverdisk - The One - Issue 22) (Amiga + ST)</description>
+		<rom name="Foundation's Waste (Europe) (Coverdisk - The One - Issue 22) (Amiga + ST).ipf" size="1034145" crc="8cc8484f" md5="78bbaa86ebc564a62f0ca08d8e55297d" sha1="c51cc0cf5005fa6f422383e7f84a00f6bac5915c"/>
+	</game>
+	<game name="Foundation's Waste (Europe) (Budget - Klassix)">
+		<description>Foundation's Waste (Europe) (Budget - Klassix)</description>
+		<rom name="Foundation's Waste (Europe) (Budget - Klassix).ipf" size="562172" crc="1c4935e3" md5="7f25080281aa309234fe7f014473c2aa" sha1="0da037c8e8a1784d0afa7f4b8a0cd191ec1bae7a"/>
+	</game>
+	<game name="Full Metal Planete (Europe)">
+		<description>Full Metal Planete (Europe)</description>
+		<rom name="Full Metal Planete (Europe).ipf" size="915607" crc="cda1bf50" md5="a5d44cdb8884c1976901b76cddf77cd5" sha1="f4eca005f4459e2016e48b6cd15523843d330d2a"/>
+	</game>
+	<game name="Future Basketball (Europe)">
+		<description>Future Basketball (Europe)</description>
+		<rom name="Future Basketball (Europe).ipf" size="1022242" crc="52b04291" md5="be85e992d576ad0f1a95de6ae89adc0e" sha1="b5096b59ca5bc1cda170932a80321f81f42b139d"/>
+	</game>
+	<game name="Future Wars - Time Travellers (Europe)">
+		<description>Future Wars - Time Travellers (Europe)</description>
+		<rom name="Future Wars - Time Travellers (Europe) (Disk 1).ipf" size="978252" crc="6f61c2fb" md5="bd14662d54dd9c7a59be978a1fbe81f5" sha1="e93900c57c6798bd86e6c0cdd41c0e97b5206412"/>
+		<rom name="Future Wars - Time Travellers (Europe) (Disk 2).ipf" size="973212" crc="fb037ef8" md5="01353f620b208058107270f702796c78" sha1="ab9c5483fa5d38e282423c9274e539ba290f4ef1"/>
+		<rom name="Future Wars - Time Travellers (Europe) (Disk 3).ipf" size="978252" crc="05e3600f" md5="b62480fbef1475aa4a2a70affdb0ef3e" sha1="5e18adb57870a4edd11a132a012e7c8c72c93df3"/>
+	</game>
+	<game name="Galaxy Force II (Europe)">
+		<description>Galaxy Force II (Europe)</description>
+		<rom name="Galaxy Force II (Europe) (Disk A).ipf" size="520242" crc="ba065e10" md5="2ccd0789d114fb54c45de2d0bc9a4b86" sha1="c8d5a812b693c82be989a1677bae1545cb585731"/>
+		<rom name="Galaxy Force II (Europe) (Disk B).ipf" size="520242" crc="86b551a9" md5="eef28349693818b1fd8b4b5205ef12a1" sha1="295c60fad88020b6cbc4871f2ab98a56539710b7"/>
+	</game>
+	<game name="Game Over II (Europe)">
+		<description>Game Over II (Europe)</description>
+		<rom name="Game Over II (Europe).ipf" size="468252" crc="a56489c4" md5="b209aa33147c528fa01e3d1cbef06e5d" sha1="9fd4eb2dfa35ac27dc08f6c44a14791e95f0c4d1"/>
+	</game>
+	<game name="Gazza's Super Soccer (Europe) (En,Fr,It,Gd)">
+		<description>Gazza's Super Soccer (Europe) (En,Fr,It,Gd)</description>
+		<rom name="Gazza's Super Soccer (Europe) (En,Fr,It,Gd).ipf" size="520242" crc="1395f810" md5="1282ac34c162264b367636280ad7ca16" sha1="d9d2706e09dc547b4f3f8a10d6b441eeb835f837"/>
+	</game>
+	<game name="Gemini Wing (Europe)">
+		<description>Gemini Wing (Europe)</description>
+		<rom name="Gemini Wing (Europe) (Disk 1).ipf" size="517627" crc="11e27e40" md5="b23c331181b8c200905aef0b6247ee60" sha1="4a7ebb61e0f86f6b2e832a4e83e2e40a0fbb76fb"/>
+		<rom name="Gemini Wing (Europe) (Disk 2).ipf" size="468252" crc="2ab50f0c" md5="5beabefd2f8000e5775d5d0c1610fc97" sha1="4e23619d81a22f37923a827c1499edbf449cd520"/>
+	</game>
+	<game name="Get Dexter (Europe) (En,Fr,De,Es)">
+		<description>Get Dexter (Europe) (En,Fr,De,Es)</description>
+		<rom name="Get Dexter (Europe) (En,Fr,De,Es).ipf" size="468252" crc="be17f03a" md5="552361934672e7c4e4a56b01651b1ef1" sha1="1425bea8d03f2253fccb689ea34848a26e17083b"/>
+	</game>
+	<game name="GFL Championship Football (Europe)">
+		<description>GFL Championship Football (Europe)</description>
+		<rom name="GFL Championship Football (Europe).ipf" size="468808" crc="da4f2ce4" md5="8352067b63cd9605f1627a7911a70d5a" sha1="6fe6569173eac9c4fec578c1a4d87961cafcfba3"/>
+	</game>
+	<game name="Ghosts'n Goblins (Europe) (Compilation - Finale)">
+		<description>Ghosts'n Goblins (Europe) (Compilation - Finale)</description>
+		<rom name="Ghosts'n Goblins (Europe) (Compilation - Finale).ipf" size="1022242" crc="c569ce88" md5="44f26104486390ab97ea2f25e21c5d61" sha1="0008dffe8d909a6ef1d6bc11bb5cd51e1b9cbf6a"/>
+	</game>
+	<game name="Ghouls 'n' Ghosts (Europe) (Compilation - Les Chevaliers)">
+		<description>Ghouls 'n' Ghosts (Europe) (Compilation - Les Chevaliers)</description>
+		<rom name="Ghouls 'n' Ghosts (Europe) (Compilation - Les Chevaliers) (Disk 1).ipf" size="467820" crc="1411f18e" md5="c43936cbd6e1b09a74743bb98f25f1da" sha1="db958f37ad39fee617234c17b402a44859939138"/>
+		<rom name="Ghouls 'n' Ghosts (Europe) (Compilation - Les Chevaliers) (Disk 2).ipf" size="467820" crc="610b63db" md5="bd4c612b4f04757767abc38495984445" sha1="eee2cca489d6eee05a868c128a93277530abed7a"/>
+	</game>
+	<game name="Go-Moku + Renju (Europe)">
+		<description>Go-Moku + Renju (Europe)</description>
+		<rom name="Go-Moku + Renju (Europe).ipf" size="468252" crc="15130dbc" md5="1f241a3567197d9cfc5c812fa4c0bc56" sha1="564bf033b47c583586fe8bc7a80ae31ef7e5f28a"/>
+	</game>
+	<game name="Goofy's Railway Express (Europe) (En,Fr,De,Es,It)">
+		<description>Goofy's Railway Express (Europe) (En,Fr,De,Es,It)</description>
+		<rom name="Goofy's Railway Express (Europe) (En,Fr,De,Es,It).ipf" size="518252" crc="b232592f" md5="1d688517e449e08d35fb81caa8868111" sha1="5b8da2b90b283468b39902e3a981321f66737581"/>
+	</game>
+	<game name="Gravity (Europe)">
+		<description>Gravity (Europe)</description>
+		<rom name="Gravity (Europe) (Disk 1).ipf" size="1022252" crc="0781e784" md5="b84f1f15c86591beb1bcc9c402ecb555" sha1="05db6ea6eaa05de372e29e11cecae814dee9b373"/>
+		<rom name="Gravity (Europe) (Disk 2).ipf" size="473292" crc="1561c03b" md5="c7b7a43918f75002c2b26d8d651806bb" sha1="5062ed885dbd8c6707d5a4d8eeed3514c25b23ea"/>
+	</game>
+	<game name="Growth (Europe)">
+		<description>Growth (Europe)</description>
+		<rom name="Growth (Europe).ipf" size="518252" crc="eeb70ac4" md5="ec03eb568355fffa33eab4c109728f19" sha1="184146571f4d141311838b670620e5bb58895d6e"/>
+	</game>
+	<game name="Guardian Angel (Europe)">
+		<description>Guardian Angel (Europe)</description>
+		<rom name="Guardian Angel (Europe).ipf" size="520242" crc="10d281ce" md5="80b46506b0a4034e5d1b8804fbfa3dd8" sha1="06e6c754d29967e940885bdb9692392f62c1501e"/>
+	</game>
+	<game name="Guild of Thieves, The (Europe) (v1.0)">
+		<description>Guild of Thieves, The (Europe) (v1.0)</description>
+		<rom name="Guild of Thieves, The (Europe) (v1.0).ipf" size="472560" crc="e23d02d4" md5="fea7860abdb0f6bc5e03955836184697" sha1="22aa02b8f4ec650113d1084e94f314158e8ab85f"/>
+	</game>
+	<game name="Hacker II - The Doomsday Papers (Europe)">
+		<description>Hacker II - The Doomsday Papers (Europe)</description>
+		<rom name="Hacker II - The Doomsday Papers (Europe).ipf" size="468954" crc="b7c73077" md5="e40bd2e8a9b6682b29927e7d2ff74e10" sha1="5695b9a86850f3e5b310c78685b87083390009a3"/>
+	</game>
+	<game name="Hammerfist (Europe)">
+		<description>Hammerfist (Europe)</description>
+		<rom name="Hammerfist (Europe).ipf" size="520242" crc="5697bf95" md5="0ba7aad200481f26e2bfd27ae4a0ff6b" sha1="96cdb163a785ed752ab36a2010d49c6bac9a5373"/>
+	</game>
+	<game name="Hard Nova (Europe)">
+		<description>Hard Nova (Europe)</description>
+		<rom name="Hard Nova (Europe) (Earth Disk).ipf" size="1018252" crc="8fda212c" md5="523871bc99f6aeac5e063d32ff733786" sha1="2734753da4cd73c332cf0d003c71464feaf8aeb4"/>
+		<rom name="Hard Nova (Europe) (Install Disk).ipf" size="1018252" crc="b71e7a4c" md5="a551408cfb89f7c6b5bfb3c291b4d3c7" sha1="1035b16f952990f6240a0a01aab75e2e5169736a"/>
+	</game>
+	<game name="HardBall! (Europe) (Compilation - Accolade All Time Favourites)">
+		<description>HardBall! (Europe) (Compilation - Accolade All Time Favourites)</description>
+		<rom name="HardBall! (Europe) (Compilation - Accolade All Time Favourites).ipf" size="469240" crc="9d654a14" md5="dcd3045ceac5204b5e8bfd70527d2f4a" sha1="d3b6c7dc9f90b0c47851d752e78168fdb8cb60a1"/>
+	</game>
+	<game name="Harley-Davidson - The Road to Sturgis (Europe)">
+		<description>Harley-Davidson - The Road to Sturgis (Europe)</description>
+		<rom name="Harley-Davidson - The Road to Sturgis (Europe) (Disk 1).ipf" size="518252" crc="c230cfa7" md5="446ebc68ffac3e1ca355c893fd9b7195" sha1="4a98c84c745601cf24a720de4f8872080913efde"/>
+		<rom name="Harley-Davidson - The Road to Sturgis (Europe) (Disk 2).ipf" size="518252" crc="d440e665" md5="b62b973e85dd261d9a8317162cad3fd7" sha1="21dbb886ec29cfc675667b7c8f479352d01b6a52"/>
+	</game>
+	<game name="Hellraider (Europe)">
+		<description>Hellraider (Europe)</description>
+		<rom name="Hellraider (Europe).ipf" size="1018252" crc="1d05bbb1" md5="f518aeae8d515349189c601d87472b73" sha1="33ba1b904f3f9d8b58f0657fcab1f2f3e5ede675"/>
+	</game>
+	<game name="Hi-Tec Hanna-Barbera Cartoon Character Collection, The (Europe)">
+		<description>Hi-Tec Hanna-Barbera Cartoon Character Collection, The (Europe)</description>
+		<rom name="Hi-Tec Hanna-Barbera Cartoon Character Collection, The (Europe).ipf" size="711762" crc="a290a478" md5="1cf842c7b9563175e870e79f9b3ffc20" sha1="3416160e0d78e9d57c19ced5ce53981da5656b93"/>
+	</game>
+	<game name="Hill Street Blues (Europe) (En,Fr,De,Es,It) (v1.11 26.3.1991) (Budget - Buzz)">
+		<description>Hill Street Blues (Europe) (En,Fr,De,Es,It) (v1.11 26.3.1991) (Budget - Buzz)</description>
+		<rom name="Hill Street Blues (Europe) (En,Fr,De,Es,It) (v1.11 26.3.1991) (Budget - Buzz).ipf" size="517627" crc="bae8eb8f" md5="4ac69744c9fb6c09b22d4b52cc06f052" sha1="aab8e7f8ebf1b47e3c28ac5286b6df5b1f7f4fa4"/>
+	</game>
+	<game name="Hostages (Europe)">
+		<description>Hostages (Europe)</description>
+		<rom name="Hostages (Europe) (Disk 1).ipf" size="518243" crc="c791c3d5" md5="65f9f1c3c185f0f9929e6054767da8f0" sha1="a0bff29b3b111ff031a2183cec4b8c6f809fe212"/>
+		<rom name="Hostages (Europe) (Disk 2).ipf" size="518243" crc="63d40194" md5="65fef46735bfdc9b5f013871230dbaa0" sha1="1478edcb715b00f8253975fad0220d89974e8877"/>
+	</game>
+	<game name="Hostages (Europe) (American Dreams)">
+		<description>Hostages (Europe) (American Dreams)</description>
+		<rom name="Hostages (Europe) (American Dreams).ipf" size="918264" crc="44d1579e" md5="" sha1=""/>
+	</game>
+	<game name="Hotshot (Europe)">
+		<description>Hotshot (Europe)</description>
+		<rom name="Hotshot (Europe).ipf" size="467822" crc="8f1e98bb" md5="50b40ed0160fc0fce7d0b5d15166b8f3" sha1="eaebfe4f66473025e0ca1637547fcf0a5747d61f"/>
+	</game>
+	<game name="Hound of Shadow, The (Europe)">
+		<description>Hound of Shadow, The (Europe)</description>
+		<rom name="Hound of Shadow, The (Europe) (Disk A - Character Generation Disk).ipf" size="518252" crc="96a61552" md5="79ea9838ed8a23120c7eae7c3a49dcd3" sha1="cf5530f7464a0faa5bf0a4b502046c23af408d1a"/>
+		<rom name="Hound of Shadow, The (Europe) (Disk B - Scenario Disk).ipf" size="468252" crc="2a4a4ab7" md5="58e7aa7f10fbe36bb384ce575d6f7bee" sha1="c828759288af87ce20b9ea45df1333d7608b9948"/>
+		<rom name="Hound of Shadow, The (Europe) (Disk C - Data Disk).ipf" size="518252" crc="a076b61f" md5="5e5946c4a6d092e94fa3c6357302b49e" sha1="706cbb0b3598b9c0bf7ccc4e456253ef5efbfd41"/>
+	</game>
+	<game name="Hunter Killer (Europe) (v1.01) (Budget - 16 Blitz)">
+		<description>Hunter Killer (Europe) (v1.01) (Budget - 16 Blitz)</description>
+		<rom name="Hunter Killer (Europe) (v1.01) (Budget - 16 Blitz).ipf" size="918252" crc="ab7def25" md5="40351eabb13511cf7d4cb02c9d8092ad" sha1="309a2c3233cd3a3e2c277a9d673e4d20e2c23d17"/>
+	</game>
+	<game name="Hyperbowl (Europe)">
+		<description>Hyperbowl (Europe)</description>
+		<rom name="Hyperbowl (Europe).ipf" size="517627" crc="374a9589" md5="68db711cf5e50fa1d19a39cf17cea879" sha1="7ff1ea21cf1953079abaac21eecb3eea51efe5c0"/>
+	</game>
+	<game name="I, Ball (Europe)">
+		<description>I, Ball (Europe)</description>
+		<rom name="I, Ball (Europe).ipf" size="518254" crc="0a1fc72f" md5="fe74a227df475cba3d76c8beaf52446e" sha1="9ab201a633323ca5ee79905ddd6db577db85b496"/>
+	</game>
+	<game name="Ice Hockey aka Face Off (Europe)">
+		<description>Ice Hockey aka Face Off (Europe)</description>
+		<rom name="Ice Hockey aka Face Off (Europe).ipf" size="517627" crc="d459dfca" md5="67711caa435a4ee8e7fc74e31ac976c5" sha1="5552cd3c140657511689725bba31ed9ac3b8c534"/>
+	</game>
+	<game name="Impact (Europe)">
+		<description>Impact (Europe)</description>
+		<rom name="Impact (Europe).ipf" size="468954" crc="faf985e4" md5="" sha1=""/>
+	</game>
+	<game name="Indiana Jones and the Temple of Doom (USA)">
+		<description>Indiana Jones and the Temple of Doom (USA)</description>
+		<rom name="Indiana Jones and the Temple of Doom (USA).ipf" size="518615" crc="f1ef6832" md5="6b5f082f50f24f445adcdb1cbafa7255" sha1="9a55a3f7a87d6a9aa947787a9bac75a8e93447e2"/>
+	</game>
+	<game name="International Karate (Europe)">
+		<description>International Karate (Europe)</description>
+		<rom name="International Karate (Europe) (Disk A).ipf" size="468954" crc="e4ae6581" md5="" sha1=""/>
+		<rom name="International Karate (Europe) (Disk B).ipf" size="468954" crc="24ca9228" md5="" sha1=""/>
+	</game>
+	<game name="International Karate (Europe) (Summer Pack)">
+		<description>International Karate (Europe) (Summer Pack)</description>
+		<rom name="International Karate (Europe) (Summer Pack) (Disk A).ipf" size="468252" crc="4c1c237f" md5="" sha1=""/>
+		<rom name="International Karate (Europe) (Summer Pack) (Disk B).ipf" size="468252" crc="721ecc6c" md5="" sha1=""/>
+	</game>
+	<game name="International Ninja Rabbits (Europe)">
+		<description>International Ninja Rabbits (Europe)</description>
+		<rom name="International Ninja Rabbits (Europe).ipf" size="517195" crc="ea4f6222" md5="44c04151392ba839d28b81b6ce12c555" sha1="bb83f01888f7b3aaca2d970f5ed8ce7c2d61875d"/>
+	</game>
+	<game name="International Truck Racing (Europe)">
+		<description>International Truck Racing (Europe)</description>
+		<rom name="International Truck Racing (Europe).ipf" size="1018252" crc="fc377e1e" md5="a337a5a2921e9ff0c26a92a57d408fe0" sha1="7207409265332dbdb31805878cfe46c90e13e968"/>
+	</game>
+	<game name="Interphase (Europe)">
+		<description>Interphase (Europe)</description>
+		<rom name="Interphase (Europe).ipf" size="520242" crc="dfff1304" md5="d9a2ce630f3abbc96bb2111aa1b2bda9" sha1="a90a650723abfbfdeed13aac22101fa2f6a56915"/>
+	</game>
+	<game name="Italy 1990 (Europe) (Compilation - The Lineker Collection)">
+		<description>Italy 1990 (Europe) (Compilation - The Lineker Collection)</description>
+		<rom name="Italy 1990 (Europe) (Compilation - The Lineker Collection).ipf" size="1011377" crc="61f64a85" md5="c3bf5047f94434e741f9015db912da25" sha1="b38bb59164358eb8364e8a28d4d8229d7c32725e"/>
+	</game>
+	<game name="Ivanhoe (Europe)">
+		<description>Ivanhoe (Europe)</description>
+		<rom name="Ivanhoe (Europe) (Disk 1).ipf" size="1022242" crc="85395e61" md5="6f32ed5d20eed4afc4ae11ca526bfa28" sha1="3bc3fcf447e8fd5a0afab1bed18c6696322c7a94"/>
+		<rom name="Ivanhoe (Europe) (Disk 2).ipf" size="520242" crc="0f24f086" md5="17e1512acd2cb2eb72e313baae58240c" sha1="e5e17d124f76d2741e35c11fff299c6233253b06"/>
+	</game>
+	<game name="James Pond - Underwater Agent (Europe)">
+		<description>James Pond - Underwater Agent (Europe)</description>
+		<rom name="James Pond - Underwater Agent (Europe).ipf" size="1017627" crc="1dc744f0" md5="62d4a289df0b600f4bdc0e0a1c6df472" sha1="b41fb5563f6f1d24f2a20ef07d29e405bc3a8860"/>
+	</game>
+	<game name="James Pond II - Codename RoboCod (Europe)">
+		<description>James Pond II - Codename RoboCod (Europe)</description>
+		<rom name="James Pond II - Codename RoboCod (Europe).ipf" size="1011377" crc="81a35719" md5="a6b91be93105d903e0634b69c2be86bc" sha1="9c07c5ac2b6136a4fcb257546795e5c81939a4b8"/>
+	</game>
+	<game name="Jaws (Europe)">
+		<description>Jaws (Europe)</description>
+		<rom name="Jaws (Europe).ipf" size="1018252" crc="90adc2f5" md5="" sha1=""/>
+	</game>
+	<game name="Jewels of Darkness (Europe)">
+		<description>Jewels of Darkness (Europe)</description>
+		<rom name="Jewels of Darkness (Europe).ipf" size="467820" crc="7e9839db" md5="1c5f93322bea50fbf9bfb511ad51dd58" sha1="3068cce142264a581cf040b5d878a3aa19d29f89"/>
+	</game>
+	<game name="John Barnes European Football (Europe) (En,Fr,De,Es,It)">
+		<description>John Barnes European Football (Europe) (En,Fr,De,Es,It)</description>
+		<rom name="John Barnes European Football (Europe) (En,Fr,De,Es,It).ipf" size="517627" crc="34b80359" md5="" sha1=""/>
+	</game>
+	<game name="Jump Jet (Europe)">
+		<description>Jump Jet (Europe)</description>
+		<rom name="Jump Jet (Europe).ipf" size="518252" crc="bdccf3ed" md5="" sha1=""/>
+	</game>
+	<game name="Jungle Boy (Europe)">
+		<description>Jungle Boy (Europe)</description>
+		<rom name="Jungle Boy (Europe).ipf" size="673866" crc="0e5fe4c1" md5="" sha1=""/>
+	</game>
+	<game name="Kelly X (Europe)">
+		<description>Kelly X (Europe)</description>
+		<rom name="Kelly X (Europe).ipf" size="517627" crc="f1a2fee5" md5="" sha1=""/>
+	</game>
+	<game name="Kick Off 2 (Europe) (v1.4e)">
+		<description>Kick Off 2 (Europe) (v1.4e)</description>
+		<rom name="Kick Off 2 (Europe) (v1.4e).ipf" size="569370" crc="4cc10f6d" md5="bb14232cfdd5302c9a2017ee3d224451" sha1="7182022240cd7a6b56f02fe37b8cdd26fa1836c6"/>
+	</game>
+	<game name="Kick Off 2 - Return to Europe (Europe) (v2.1e)">
+		<description>Kick Off 2 - Return to Europe (Europe) (v2.1e)</description>
+		<rom name="Kick Off 2 - Return to Europe (Europe) (v2.1e).ipf" size="1018722" crc="b14d2140" md5="e361772aadae25fd96f8673e82d04b47" sha1="64c21cb535770caaa86fdf3a57a4753a35e9833d"/>
+	</game>
+	<game name="Kick Off 2 - The Final Whistle (Europe) (v2.1e)">
+		<description>Kick Off 2 - The Final Whistle (Europe) (v2.1e)</description>
+		<rom name="Kick Off 2 - The Final Whistle (Europe) (v2.1e).ipf" size="1018722" crc="ef51c120" md5="f1d73d156b32a6e6af0a8d54a04b6b75" sha1="be2989b691e945569e41c409cfb148a4c8812ae1"/>
+	</game>
+	<game name="Kick Off 2 - Winning Tactics (Europe)">
+		<description>Kick Off 2 - Winning Tactics (Europe)</description>
+		<rom name="Kick Off 2 - Winning Tactics (Europe).ipf" size="1018722" crc="7330c891" md5="d19232bf51b8b7fca6b55821631f8abe" sha1="da909c688c711bbb0e8f6f990b54a6fe752b9380"/>
+	</game>
+	<game name="Kid Gloves (Europe) (Budget - GBH)">
+		<description>Kid Gloves (Europe) (Budget - GBH)</description>
+		<rom name="Kid Gloves (Europe) (Budget - GBH).ipf" size="517627" crc="b4c37ac1" md5="" sha1=""/>
+	</game>
+	<game name="Killing Cloud, The (Europe) (En,Fr,De)">
+		<description>Killing Cloud, The (Europe) (En,Fr,De)</description>
+		<rom name="Killing Cloud, The (Europe) (En,Fr,De) (Disk A).ipf" size="918252" crc="a65d58dd" md5="088986dca8e6d24ec45159b79cdb1a29" sha1="bc8f742c8643ba84000cfcdefe7b6303eb89ed69"/>
+		<rom name="Killing Cloud, The (Europe) (En,Fr,De) (Disk B).ipf" size="918252" crc="c0e702a8" md5="8665c6976af8f3bfbd89c1f8e31bc7ee" sha1="50c4066626bc7a30e429675928a346c2045be62f"/>
+	</game>
+	<game name="King's Quest III - To Heir is Human (Europe) (v1.02 11.18.86)">
+		<description>King's Quest III - To Heir is Human (Europe) (v1.02 11.18.86)</description>
+		<rom name="King's Quest III - To Heir is Human (Europe) (v1.02 11.18.86) (Disk 1).ipf" size="462195" crc="a51082bc" md5="0d109d62ae5fefa75c8c0ca5186d8cf3" sha1="319da503466dfdf178320e595d1efbd15027a7d3"/>
+		<rom name="King's Quest III - To Heir is Human (Europe) (v1.02 11.18.86) (Disk 2).ipf" size="462195" crc="687fe7da" md5="96430f80ebbcd2271dd381e595a8a107" sha1="a22201508b8781c12f0b9d479247e12c6ecea57c"/>
+		<rom name="King's Quest III - To Heir is Human (Europe) (v1.02 11.18.86) (Disk 3).ipf" size="462195" crc="c28052a6" md5="ae67728412b1dfb030190edbcaca4272" sha1="8265e0353bfc57a468684dcff83ddbf6147fde99"/>
+	</game>
+	<game name="Klax (Europe)">
+		<description>Klax (Europe)</description>
+		<rom name="Klax (Europe).ipf" size="1022242" crc="fd4fb012" md5="2219ae4b8c36ecca077170691df20c04" sha1="021aa27199cc30f7737b02fc471fbf14bf1a3541"/>
+	</game>
+	<game name="Laser Squad (Europe)">
+		<description>Laser Squad (Europe)</description>
+		<rom name="Laser Squad (Europe).ipf" size="517627" crc="7f458cd8" md5="1c1843c39ca6b42784b2d36ff9997dc9" sha1="3c1feff969345c21bda71681d64263f4af82bdea"/>
+	</game>
+	<game name="Last Ninja 3 (Europe) (Budget - Kixx)">
+		<description>Last Ninja 3 (Europe) (Budget - Kixx)</description>
+		<rom name="Last Ninja 3 (Europe) (Budget - Kixx) (Disk 1).ipf" size="1025660" crc="65a6e699" md5="2a2652649be00c9fc0f37a52ea302d5c" sha1="45323a4e1cf55a2b7e8ec9228cc2fb32992dca9e"/>
+		<rom name="Last Ninja 3 (Europe) (Budget - Kixx) (Disk 2).ipf" size="1025660" crc="cfa3d6d2" md5="62dd38f782486bcab9050f1f00302049" sha1="7864b3bfd3c09865c7b7f7bfa83b4bd9990219d4"/>
+	</game>
+	<game name="Leader Board (Europe)">
+		<description>Leader Board (Europe)</description>
+		<rom name="Leader Board (Europe).ipf" size="468252" crc="e30dcfb2" md5="30ba7d54be41fd07425c375b31b06b49" sha1="9485340898b0196e4bf77f78ce425c577817e2be"/>
+	</game>
+	<game name="Leader Board Tournament (Europe) (Compilation - Leader Board Birdie)">
+		<description>Leader Board Tournament (Europe) (Compilation - Leader Board Birdie)</description>
+		<rom name="Leader Board Tournament (Europe) (Compilation - Leader Board Birdie) (Disk 2).ipf" size="468252" crc="0caa8be5" md5="8d3fd4a51f28d2a7f07766d495e254cc" sha1="99d6bc3b456a4e1f7488f31a98286ab96e4f674d"/>
+	</game>
+	<game name="Leisure Suit Larry in - The Land of the Lounge Lizards (Europe) (v1.04 6.18.87)">
+		<description>Leisure Suit Larry in - The Land of the Lounge Lizards (Europe) (v1.04 6.18.87)</description>
+		<rom name="Leisure Suit Larry in - The Land of the Lounge Lizards (Europe) (v1.04 6.18.87) (Disk 1).ipf" size="462195" crc="ba699e27" md5="8ee385e5e21e41b741fe17ffb7df4b26" sha1="feeb4dbb6da4ddb39d8949f0d413b58a02bc1510"/>
+		<rom name="Leisure Suit Larry in - The Land of the Lounge Lizards (Europe) (v1.04 6.18.87) (Disk 2).ipf" size="467820" crc="788f6758" md5="21e92cb50f248e531152789a7703ce9c" sha1="cf108c4fb0d32f1a31518fd12078d126f6d17a3c"/>
+	</game>
+	<game name="Lethal Xcess - Wings of Death II (Europe) (Amiga + ST)">
+		<description>Lethal Xcess - Wings of Death II (Europe) (Amiga + ST)</description>
+		<rom name="Lethal Xcess - Wings of Death II (Europe) (Amiga + ST) (Disk A).ipf" size="1004597" crc="33cc029d" md5="d7b4325aa96fc4078c0b6b807036612f" sha1="54a268710716f3510918cd8767d9d248798c4ed0"/>
+		<rom name="Lethal Xcess - Wings of Death II (Europe) (Amiga + ST) (Disk B).ipf" size="1008380" crc="7c53b994" md5="0c2d7cfc0b10dce50ead3b1fe7ec6000" sha1="8b8cefdb0dbd7e4a515c95235526ed909fe499c7"/>
+	</game>
+	<game name="Leviathan + Rana Rama (Europe) (Summer Pack)">
+		<description>Leviathan + Rana Rama (Europe) (Summer Pack)</description>
+		<rom name="Leviathan + Rana Rama (Europe) (Summer Pack).ipf" size="918252" crc="e61cba5e" md5="" sha1=""/>
+	</game>
+	<game name="Light Corridor, The (Europe)">
+		<description>Light Corridor, The (Europe)</description>
+		<rom name="Light Corridor, The (Europe).ipf" size="471664" crc="f4c91add" md5="9867fc33e1b1532fb797c072a66248b6" sha1="785cf66c33f5fa0202954d24b95d604a12b821a1"/>
+	</game>
+	<game name="Lock-On (USA)">
+		<description>Lock-On (USA)</description>
+		<rom name="Lock-On (USA) (Data Disk).ipf" size="468252" crc="c7467884" md5="" sha1=""/>
+		<rom name="Lock-On (USA).ipf" size="469240" crc="81582cef" md5="" sha1=""/>
+	</game>
+	<game name="Locomotion (Europe) (Byte Back)">
+		<description>Locomotion (Europe) (Byte Back)</description>
+		<rom name="Locomotion (Europe) (Byte Back).ipf" size="518252" crc="e85b531e" md5="de034f15e41da916a49e32cbea100e40" sha1="19be92dc4c84293d88ced646a6b4befeb1e7045f"/>
+	</game>
+	<game name="Logical (Europe)">
+		<description>Logical (Europe)</description>
+		<rom name="Logical (Europe).ipf" size="518252" crc="ef80321e" md5="446e530abdbd662c1940baff6a22d599" sha1="66776e6f33fc7cceffee706fe4fccfce60fb47c0"/>
+	</game>
+	<game name="Lure of the Temptress (France) (17.6.1992)">
+		<description>Lure of the Temptress (France) (17.6.1992)</description>
+		<rom name="Lure of the Temptress (France) (17.6.1992) (Boot Disk).ipf" size="917820" crc="4ff7c491" md5="7125f6e9dae01b2cf5cba718bdcb47bc" sha1="f78d53fba9e93c5344b455c2384496cc16b74e96"/>
+		<rom name="Lure of the Temptress (France) (17.6.1992) (Disk A).ipf" size="917820" crc="4803ebf7" md5="8410274f01ac4aaaf9fe87f9142e46c2" sha1="fd11e96297fa2112f387ba829f73b49ac7f8da68"/>
+		<rom name="Lure of the Temptress (France) (17.6.1992) (Disk B).ipf" size="917820" crc="ab3a5029" md5="e49cb7279fd8b8125b9603a10ea325a1" sha1="d6f37329d148d27ee74c64d4e39bc98f2af591ca"/>
+		<rom name="Lure of the Temptress (France) (17.6.1992) (Disk C).ipf" size="917820" crc="0dde23f5" md5="dc1ba59bb6f1aa38252fcdd1b0300fc8" sha1="006cb14b59fde4a35180fade8c7ff6e4efc9cfc8"/>
+	</game>
+	<game name="Lurking Horror, The (Europe) (r203)">
+		<description>Lurking Horror, The (Europe) (r203)</description>
+		<rom name="Lurking Horror, The (Europe) (r203).ipf" size="468252" crc="810fd34b" md5="b94d51e97620152138e25d7c792a6b3f" sha1="5b64bb062db9bc31feefb2770e283d59e7b4e7ef"/>
+	</game>
+	<game name="Mach 3 (Europe)">
+		<description>Mach 3 (Europe)</description>
+		<rom name="Mach 3 (Europe) (Disk A).ipf" size="468252" crc="6f7f65b1" md5="caf1785ec662ff1d10613548908536d8" sha1="eb6abe32b462c7dda970137333b82f4c1578aed4"/>
+		<rom name="Mach 3 (Europe) (Disk B).ipf" size="471664" crc="f00af809" md5="aa93b02e20959fe2eb90dbf937b856c8" sha1="2f6857a65826b9f35f1ea715fa5dd96a77699020"/>
+	</game>
+	<game name="Mafdet and the Book of the Dead (Europe)">
+		<description>Mafdet and the Book of the Dead (Europe)</description>
+		<rom name="Mafdet and the Book of the Dead (Europe).ipf" size="518252" crc="2760d237" md5="aabbebf70c9a0dba6c23c3c9355b8702" sha1="ddf1280e0c97dc698e19dfb67ffa823edd4018c2"/>
+	</game>
+	<game name="Manchester United - The Official Computer Game (Europe) (En,Fr,De,Es,It,Sv)">
+		<description>Manchester United - The Official Computer Game (Europe) (En,Fr,De,Es,It,Sv)</description>
+		<rom name="Manchester United - The Official Computer Game (Europe) (En,Fr,De,Es,It,Sv) (Disk 1).ipf" size="1017627" crc="dbcf1ad6" md5="9246467c27dd3d672572a9b9e7ec1282" sha1="8272efb5036e0e7f6f0c8d6f9742512e2607e633"/>
+		<rom name="Manchester United - The Official Computer Game (Europe) (En,Fr,De,Es,It,Sv) (Disk 2).ipf" size="518252" crc="7af2b6f1" md5="368cbb38c7fc67e9b89fc4bbab193937" sha1="c0020a1a77382cc9d35a4145e654bb30e1fe9587"/>
+	</game>
+	<game name="Manhattan Dealers (Europe)">
+		<description>Manhattan Dealers (Europe)</description>
+		<rom name="Manhattan Dealers (Europe) (Disk A).ipf" size="518255" crc="960ccce2" md5="44e7b97c615ead9db082e538945de8b0" sha1="4a77c5532fe8f7f23554eb68842caf3dbbd44145"/>
+		<rom name="Manhattan Dealers (Europe) (Disk B).ipf" size="518252" crc="3c4cfaee" md5="1c1a4ffcafe83357e6ea8385d7fb69c1" sha1="d31ffbb1d18228561a1db2a54e7e12c919e13deb"/>
+	</game>
+	<game name="Manoir de Mortevielle, Le (France)">
+		<description>Manoir de Mortevielle, Le (France)</description>
+		<rom name="Manoir de Mortevielle, Le (France) (Disk 1).ipf" size="467820" crc="6cc703af" md5="dada793bb0127db2055f4fc306a82478" sha1="e9dab1580f71b9916f027f125910d6120fa4342e"/>
+		<rom name="Manoir de Mortevielle, Le (France) (Disk 2).ipf" size="471232" crc="559d3c83" md5="da4ab596f0d72d602f1ba716a7c8b823" sha1="fa26914c2588b9da0d3daac34e1aa25247ee973c"/>
+	</game>
+	<game name="Marble Madness (Europe) (Summer Pack)">
+		<description>Marble Madness (Europe) (Summer Pack)</description>
+		<rom name="Marble Madness (Europe) (Summer Pack).ipf" size="919246" crc="b9501a85" md5="" sha1=""/>
+	</game>
+	<game name="Matrix Marauders (Europe)">
+		<description>Matrix Marauders (Europe)</description>
+		<rom name="Matrix Marauders (Europe).ipf" size="522604" crc="b1034c7d" md5="d11fd72b7b4e9b235ee089427b2a9e78" sha1="361299b42c1414b0643f328284314b2be38523de"/>
+	</game>
+	<game name="Maupiti Island (France)">
+		<description>Maupiti Island (France)</description>
+		<rom name="Maupiti Island (France) (Disk 1).ipf" size="956798" crc="fa605b58" md5="" sha1=""/>
+		<rom name="Maupiti Island (France) (Disk 2).ipf" size="962658" crc="cf8dfe97" md5="" sha1=""/>
+	</game>
+	<game name="Mayday Squad Heroes (Europe)">
+		<description>Mayday Squad Heroes (Europe)</description>
+		<rom name="Mayday Squad Heroes (Europe) (Disk 1).ipf" size="517627" crc="10edb2fd" md5="" sha1=""/>
+		<rom name="Mayday Squad Heroes (Europe) (Disk 2).ipf" size="1018252" crc="6b9bde69" md5="" sha1=""/>
+	</game>
+	<game name="Mean 18 (Europe) (Compilation - Accolade All Time Favourites)">
+		<description>Mean 18 (Europe) (Compilation - Accolade All Time Favourites)</description>
+		<rom name="Mean 18 (Europe) (Compilation - Accolade All Time Favourites) (Famous Courses Disk - Volume I).ipf" size="468252" crc="509f1ea3" md5="e0c55fe0ff971342d417a8a888b1a51e" sha1="5b5346fa658d909cad7a377c5846e000eba271e6"/>
+		<rom name="Mean 18 (Europe) (Compilation - Accolade All Time Favourites) (Famous Courses Disk - Volume II).ipf" size="468252" crc="515e3b9f" md5="68e3826f83118dea9d0275458cf30828" sha1="4aae2d4d2c1073da8ffa9f47ef6ee9507f4f0a6b"/>
+		<rom name="Mean 18 (Europe) (Compilation - Accolade All Time Favourites) (Program Disk).ipf" size="469240" crc="33565a50" md5="8c0a5275f8314abac2f838addce5d466" sha1="a365d46f75c032e13128b726155e2a7e8fd3453f"/>
+	</game>
+	<game name="Mega Twins (Europe)">
+		<description>Mega Twins (Europe)</description>
+		<rom name="Mega Twins (Europe) (Disk 1).ipf" size="1010945" crc="761faeed" md5="b46e8ad8eef4d42e355365e83ad8a5cc" sha1="2c8140aceec92a3b70cb7eb2aa377421be67f687"/>
+		<rom name="Mega Twins (Europe) (Disk 2).ipf" size="1017820" crc="bd95d263" md5="9bb17ba865bb2393f417bbf2bc0e287e" sha1="21aca72ac1317ab7348f9274a6f800f5db0fdf0f"/>
+	</game>
+	<game name="Mercenary - Escape from Targ &amp; The Second City (Europe) (Compilation - Premier Collection II)">
+		<description>Mercenary - Escape from Targ &amp; The Second City (Europe) (Compilation - Premier Collection II)</description>
+		<rom name="Mercenary - Escape from Targ &amp; The Second City (Europe) (Compilation - Premier Collection II).ipf" size="468252" crc="7a448e10" md5="3dd11cb4abd61df99a7cbd0b08bb99d1" sha1="4538fb322a8faf2a7a95c7dae5da565083a8a8e8"/>
+	</game>
+	<game name="Metro-Cross (Europe)">
+		<description>Metro-Cross (Europe)</description>
+		<rom name="Metro-Cross (Europe).ipf" size="527932" crc="cd252332" md5="77b8386d554a2ff6fd4305a612562b07" sha1="7a296cb6301a0e087da4c1ee8b01e3976606dac9"/>
+	</game>
+	<game name="Mindwheel (Europe)">
+		<description>Mindwheel (Europe)</description>
+		<rom name="Mindwheel (Europe).ipf" size="468252" crc="7c99fce7" md5="0b9de6dcb1de23099ffda7b56ba33bc3" sha1="6e5f7a529b67839061d4ed3399cb9d66f6a234cf"/>
+	</game>
+	<game name="Missing - One Droid (Europe)">
+		<description>Missing - One Droid (Europe)</description>
+		<rom name="Missing - One Droid (Europe).ipf" size="243252" crc="a4cf2e54" md5="11af1d7f513493eee733630040b72ed7" sha1="be458a296eb4d3474172fcd008f44af3e7807e3e"/>
+	</game>
+	<game name="Mission Genocide (Europe)">
+		<description>Mission Genocide (Europe)</description>
+		<rom name="Mission Genocide (Europe).ipf" size="517822" crc="060d37dc" md5="ce6684ea8de8667a7e8ea39ad422372c" sha1="e105683beeaa7bbdd06520fcb3923b11def5a4dd"/>
+	</game>
+	<game name="Monster Business (Europe) (Amiga + ST)">
+		<description>Monster Business (Europe) (Amiga + ST)</description>
+		<rom name="Monster Business (Europe) (Amiga + ST).ipf" size="1009109" crc="be6095a0" md5="8a98d2544d42a3bac5dc29df575be591" sha1="c6d0706c363f3fd7f5e40864b49568ac9e157c8b"/>
+	</game>
+	<game name="Mousetrap + Plutos (Europe) (Summer Pack)">
+		<description>Mousetrap + Plutos (Europe) (Summer Pack)</description>
+		<rom name="Mousetrap + Plutos (Europe) (Summer Pack).ipf" size="918252" crc="9b3484e5" md5="" sha1=""/>
+	</game>
+	<game name="Never Mind (Europe)">
+		<description>Never Mind (Europe)</description>
+		<rom name="Never Mind (Europe) (Disk 1).ipf" size="517627" crc="177eeb16" md5="ef0e4f6a862cfb243ba2e9a3a9277a86" sha1="00ff4d36ef12eff72dea285e58eea3cd4a4e72fa"/>
+		<rom name="Never Mind (Europe) (Disk 2).ipf" size="517627" crc="5808b98a" md5="6bd66cd78d33c80b8ba4a9e02ba3d662" sha1="6e1b5bdcbdea244a46e4dc58a3b6b3672ba6083c"/>
+	</game>
+	<game name="Nigel Mansell's World Championship (Europe)">
+		<description>Nigel Mansell's World Championship (Europe)</description>
+		<rom name="Nigel Mansell's World Championship (Europe).ipf" size="918252" crc="0321e01f" md5="e472cc9a2eaa0bce4e8155885488858c" sha1="2d76db1251811591b489ae892173eb28828ff28e"/>
+	</game>
+	<game name="Night Shift (Europe)">
+		<description>Night Shift (Europe)</description>
+		<rom name="Night Shift (Europe) (Disk 1).ipf" size="918252" crc="66a14e52" md5="2c81914154732ad616900a0c436becf5" sha1="555f97987efeea59b2a82696e19a480aeb94f515"/>
+		<rom name="Night Shift (Europe) (Disk 2).ipf" size="918252" crc="52770c02" md5="f260aa3fde1deda8f56132835f0f776a" sha1="7a9525672540556234de031772265e7262b3b66e"/>
+	</game>
+	<game name="Night Walk (Europe)">
+		<description>Night Walk (Europe)</description>
+		<rom name="Night Walk (Europe).ipf" size="517627" crc="bfe03968" md5="0abdb7c21677fb54231d288a32fdbb62" sha1="d3563e282cede1c604208a88f0521aff5f878ea4"/>
+	</game>
+	<game name="Ninja Rabbits (Europe)">
+		<description>Ninja Rabbits (Europe)</description>
+		<rom name="Ninja Rabbits (Europe) (Disk 1).ipf" size="517627" crc="a48eebb2" md5="0a91a7ac112112a83a5b444fd05fe8de" sha1="872e9b3f9a064d016ad89c4469e8129ac08b4e53"/>
+		<rom name="Ninja Rabbits (Europe) (Disk 2).ipf" size="517627" crc="677fd5ad" md5="537b325ae1c5c7a0bf43ae817a5ec97c" sha1="70e1aa09918a8bcd050c164b542561439e8f67ed"/>
+	</game>
+	<game name="Ninja Remix (Europe)">
+		<description>Ninja Remix (Europe)</description>
+		<rom name="Ninja Remix (Europe) (Disk A).ipf" size="1008812" crc="57b4ed30" md5="" sha1=""/>
+		<rom name="Ninja Remix (Europe) (Disk B).ipf" size="1008812" crc="b4a22c47" md5="" sha1=""/>
+		<rom name="Ninja Remix (Europe) (Disk C).ipf" size="1008812" crc="04bc40a4" md5="" sha1=""/>
+	</game>
+	<game name="Nitro Boost Challenge (Europe)">
+		<description>Nitro Boost Challenge (Europe)</description>
+		<rom name="Nitro Boost Challenge (Europe).ipf" size="517627" crc="017b04b1" md5="cd778a1e205617528eb5294e86bac67b" sha1="3452f036b3bdb4d1933717ddde10f7bda072ed03"/>
+	</game>
+	<game name="No Excuses (Europe) (En,Fr,De,It)">
+		<description>No Excuses (Europe) (En,Fr,De,It)</description>
+		<rom name="No Excuses (Europe) (En,Fr,De,It).ipf" size="468252" crc="40cf641e" md5="b2cb49937adcf8dfa10c608be657db26" sha1="b37dedecfc4840a65c7c7969d6b3102db5dbdd67"/>
+	</game>
+	<game name="North and South (Europe) (En,Fr,De,Es,It)">
+		<description>North and South (Europe) (En,Fr,De,Es,It)</description>
+		<rom name="North and South (Europe) (En,Fr,De,Es,It).ipf" size="916039" crc="de3bab95" md5="e5b85e8b5acbaf58f3a4a0082816b7da" sha1="979e8375cda1a2bab00902ae7e3055c137248533"/>
+	</game>
+	<game name="Obliterator (Europe)">
+		<description>Obliterator (Europe)</description>
+		<rom name="Obliterator (Europe) (Disk A).ipf" size="446377" crc="e75b59c8" md5="ce1bca3c4b379b8016c9bb177ceedc50" sha1="ecd181d33e38d98dd8bd014376b5cb900e79680a"/>
+		<rom name="Obliterator (Europe) (Disk B).ipf" size="333252" crc="269eb800" md5="51cdd5adff04a055cdb47daebf702a53" sha1="777184fb895e43a783852e5e68e7f0fa9dd9e8a3"/>
+	</game>
+	<game name="Off Shore Warrior (Europe)">
+		<description>Off Shore Warrior (Europe)</description>
+		<rom name="Off Shore Warrior (Europe).ipf" size="521039" crc="ecf29843" md5="" sha1=""/>
+	</game>
+	<game name="Official Everton F.C. Intelligensia, The (Europe)">
+		<description>Official Everton F.C. Intelligensia, The (Europe)</description>
+		<rom name="Official Everton F.C. Intelligensia, The (Europe).ipf" size="918252" crc="f435f18c" md5="457aed1686aba5319b0836f4625d531c" sha1="d7000e73518f0b07c8f5c229b7b18f073f625b16"/>
+	</game>
+	<game name="Operation Harrier (Europe)">
+		<description>Operation Harrier (Europe)</description>
+		<rom name="Operation Harrier (Europe).ipf" size="1018252" crc="0984b4b8" md5="16f942357073f8e5b7709b81aea9762f" sha1="42726a1a7dad4ca28c84e95f7eac93e8361729ca"/>
+	</game>
+	<game name="Operation Neptune (Europe)">
+		<description>Operation Neptune (Europe)</description>
+		<rom name="Operation Neptune (Europe) (Disk 1).ipf" size="468252" crc="6f35dfc4" md5="" sha1=""/>
+		<rom name="Operation Neptune (Europe) (Disk 2).ipf" size="468252" crc="1576a1b4" md5="" sha1=""/>
+	</game>
+	<game name="Operation Stealth (France)">
+		<description>Operation Stealth (France)</description>
+		<rom name="Operation Stealth (France) (Disk 1).ipf" size="917820" crc="131371cd" md5="976605215cf71225b8e35cc231d7d6cd" sha1="b9707c93b593daff3977a51d9f447ad533c6eee5"/>
+		<rom name="Operation Stealth (France) (Disk 2).ipf" size="917820" crc="b6cbd908" md5="76bc9b1f61880394da6754653e2a1438" sha1="44b2d40c3bfb66ec9adf80be8063a2e9a4d07544"/>
+		<rom name="Operation Stealth (France) (Disk 3).ipf" size="917820" crc="43c10368" md5="46357a3a23330a199734433e8fd89d8f" sha1="ae82ee854995113d5d4c8b1714f3dfa73ed33a2a"/>
+	</game>
+	<game name="Operation Thunderbolt (Europe)">
+		<description>Operation Thunderbolt (Europe)</description>
+		<rom name="Operation Thunderbolt (Europe) (Disk 1).ipf" size="1022242" crc="1b45de73" md5="9b9ecccbdd29768197487e2049db619d" sha1="decf64e666bdd69c673360147d72502e3090e3ed"/>
+		<rom name="Operation Thunderbolt (Europe) (Disk 2).ipf" size="1022242" crc="e5477eef" md5="40ed54805a1303f1a54a997ed301d854" sha1="a0dadde3474494dd3e0036a3d83380df87141620"/>
+		<rom name="Operation Thunderbolt (Europe) (Disk 3).ipf" size="1022242" crc="f5bd3c85" md5="c42234d1a57cc5c890df65436296264c" sha1="f629ababb85e0cd8ffe7cbff93a932c545cfaebf"/>
+	</game>
+	<game name="Orbit 2000 (Europe)">
+		<description>Orbit 2000 (Europe)</description>
+		<rom name="Orbit 2000 (Europe).ipf" size="518252" crc="74879679" md5="7f032bfb4d08da52651d864b443bc278" sha1="8192052f7e8ac1e152cfa0c696866b730e715f62"/>
+	</game>
+	<game name="Oriental Games (Europe)">
+		<description>Oriental Games (Europe)</description>
+		<rom name="Oriental Games (Europe) (Boot Disk A).ipf" size="1018252" crc="db75a97b" md5="d61030fad71a7c34658a774973f8b1c1" sha1="5a2dcb6500af55dea5e5e2ff1ca7e51eba56fcf4"/>
+		<rom name="Oriental Games (Europe) (Games Disk B).ipf" size="518252" crc="955df886" md5="f4083b6929a49d52d8abe2d67bd1848d" sha1="2754df54bb9acbc1fe5b980d00ebb6e37eb55b9a"/>
+	</game>
+	<game name="Outcast (Europe)">
+		<description>Outcast (Europe)</description>
+		<rom name="Outcast (Europe).ipf" size="468252" crc="52444471" md5="4f46575e216e8be51b8cb3a47dca020d" sha1="6e6abbcd1dfffd3c39167b8662ab3fbb8feb3c54"/>
+	</game>
+	<game name="Overlander (Europe)">
+		<description>Overlander (Europe)</description>
+		<rom name="Overlander (Europe).ipf" size="468254" crc="f4548c59" md5="452e77668469f2eb5f84336b9cba5021" sha1="6edbc8b1bd89c8cf60e836cbd690a47966f5cf80"/>
+	</game>
+	<game name="Overlander (Europe) (Compilation - Finale)">
+		<description>Overlander (Europe) (Compilation - Finale)</description>
+		<rom name="Overlander (Europe) (Compilation - Finale).ipf" size="520242" crc="66c2e498" md5="de359b416521bbe579a72a0ec401cddf" sha1="ba0a6f3f48002c254b20e74b38efcffd4353bdce"/>
+	</game>
+	<game name="Oxford Softworks Go Player, The (Europe) (En,Fr,De)">
+		<description>Oxford Softworks Go Player, The (Europe) (En,Fr,De)</description>
+		<rom name="Oxford Softworks Go Player, The (Europe) (En,Fr,De).ipf" size="468252" crc="9190ad7d" md5="6a911b3b13018e2429a1927cbe601546" sha1="4a0a64dce055869706e6468f070da4edb90da404"/>
+	</game>
+	<game name="Pac-Mania (Europe)">
+		<description>Pac-Mania (Europe)</description>
+		<rom name="Pac-Mania (Europe).ipf" size="518252" crc="eaa700c3" md5="a169210fedd07488c6b389eb904f0740" sha1="5e60bc1be307627bc1db8e944d92db184094136c"/>
+	</game>
+	<game name="Pandora (Europe)">
+		<description>Pandora (Europe)</description>
+		<rom name="Pandora (Europe).ipf" size="518254" crc="c13b362f" md5="8b255704b27d735f30924d9c97e4250b" sha1="a425e0c33500ae04352c35f7f9e9af01601b1722"/>
+	</game>
+	<game name="Paperboy (Europe) (Compilation - Finale)">
+		<description>Paperboy (Europe) (Compilation - Finale)</description>
+		<rom name="Paperboy (Europe) (Compilation - Finale).ipf" size="520242" crc="1f431b44" md5="af25fd7d0d6b62e536fcf7dd91ccd434" sha1="c7623602de34ae813958b8b5c840fc8a15bc9488"/>
+	</game>
+	<game name="Passengers on the Wind 2 (Europe)">
+		<description>Passengers on the Wind 2 (Europe)</description>
+		<rom name="Passengers on the Wind 2 (Europe).ipf" size="468258" crc="bec7e827" md5="e95efb58fa2a993053a6882cb4ba578e" sha1="0f234ef8f8400f89807e852a8116bd10bfbcd8e3"/>
+	</game>
+	<game name="Pawn, The (Europe) (v2.1)">
+		<description>Pawn, The (Europe) (v2.1)</description>
+		<rom name="Pawn, The (Europe) (v2.1).ipf" size="472560" crc="5a863ad1" md5="172e9c31a66e50ba6e418cbf71e89320" sha1="9da4b05d4825fdfa6118fae68ccff9f1c881a279"/>
+	</game>
+	<game name="Pengy &amp; Cosmos (Europe) (Quartet Gold)">
+		<description>Pengy &amp; Cosmos (Europe) (Quartet Gold)</description>
+		<rom name="Pengy &amp; Cosmos (Europe) (Quartet Gold).ipf" size="418252" crc="b546453e" md5="" sha1=""/>
+	</game>
+	<game name="Pharaoh III (Europe)">
+		<description>Pharaoh III (Europe)</description>
+		<rom name="Pharaoh III (Europe).ipf" size="518252" crc="40279d1a" md5="282c97edff93136b1c634f39ab5d3570" sha1="c0dd0bfd288bbd484aa5043ee8e1c4df682b0f18"/>
+	</game>
+	<game name="Pictionary - The Game of Quick Draw (Europe)">
+		<description>Pictionary - The Game of Quick Draw (Europe)</description>
+		<rom name="Pictionary - The Game of Quick Draw (Europe).ipf" size="468252" crc="7f06eab5" md5="b57f955cb8a5d6c5e4289cb1ce75fcf9" sha1="f62a9390308a001a07fcdaafbb41f470ca235420"/>
+	</game>
+	<game name="Pipe Mania (Europe)">
+		<description>Pipe Mania (Europe)</description>
+		<rom name="Pipe Mania (Europe).ipf" size="520242" crc="af361872" md5="" sha1=""/>
+	</game>
+	<game name="Pirates of the Barbary Coast (Europe)">
+		<description>Pirates of the Barbary Coast (Europe)</description>
+		<rom name="Pirates of the Barbary Coast (Europe).ipf" size="468252" crc="0dc48ed2" md5="3eb75380643513cdd5e40367f0086e64" sha1="731c51bd3d0500a9ae4e91d94c3107ba3154fab1"/>
+	</game>
+	<game name="Player Manager (Europe) (Compilation - Football Crazy Challenge)">
+		<description>Player Manager (Europe) (Compilation - Football Crazy Challenge)</description>
+		<rom name="Player Manager (Europe) (Compilation - Football Crazy Challenge).ipf" size="519442" crc="938060a7" md5="7045c3eaef3810143fde3a62c040d5fd" sha1="3bef25fdbea9f68a049e5b0586a139ce43a5adf5"/>
+	</game>
+	<game name="Police Quest - In Pursuit of the Death Angel (Europe) (v2.0G 12.3.87)">
+		<description>Police Quest - In Pursuit of the Death Angel (Europe) (v2.0G 12.3.87)</description>
+		<rom name="Police Quest - In Pursuit of the Death Angel (Europe) (v2.0G 12.3.87) (Disk 1).ipf" size="468252" crc="86a631be" md5="a30e74df1009be8c9794e780f58cc6e5" sha1="769d3b223b2dcfba8a753f34e0588d1d7ed573fc"/>
+		<rom name="Police Quest - In Pursuit of the Death Angel (Europe) (v2.0G 12.3.87) (Disk 2).ipf" size="468252" crc="f16d4a27" md5="0d425669494f6963f856d066218d7f1b" sha1="5df35f53937ed2c0837f0376bb92c157e1ca9345"/>
+		<rom name="Police Quest - In Pursuit of the Death Angel (Europe) (v2.0G 12.3.87) (Disk 3).ipf" size="468252" crc="ffddfa40" md5="2b7548999409af82b63d9f2883334b55" sha1="c9759deff7b74807b21b8585e65cd94fab768bd9"/>
+	</game>
+	<game name="Populous - The Promised Lands (Europe) (Amiga + ST) (Addon)">
+		<description>Populous - The Promised Lands (Europe) (Amiga + ST) (Addon)</description>
+		<rom name="Populous - The Promised Lands (Europe) (Amiga + ST) (Addon).ipf" size="1037012" crc="de09f0a3" md5="73f1ca231d950bdb8fb3da42bd11f364" sha1="21301177eb04122183aa716c081e8a4fda35cff8"/>
+	</game>
+	<game name="PowerBoat USA - Offshore Superboat Racing (Europe)">
+		<description>PowerBoat USA - Offshore Superboat Racing (Europe)</description>
+		<rom name="PowerBoat USA - Offshore Superboat Racing (Europe) (Disk 1).ipf" size="468252" crc="c8710917" md5="" sha1=""/>
+		<rom name="PowerBoat USA - Offshore Superboat Racing (Europe) (Disk 2).ipf" size="468252" crc="52cb0707" md5="" sha1=""/>
+	</game>
+	<game name="Powerplay - The Game of the Gods (Europe)">
+		<description>Powerplay - The Game of the Gods (Europe)</description>
+		<rom name="Powerplay - The Game of the Gods (Europe) (Boot Disk).ipf" size="518252" crc="7cfaaefe" md5="" sha1=""/>
+		<rom name="Powerplay - The Game of the Gods (Europe).ipf" size="518252" crc="5cd23993" md5="" sha1=""/>
+	</game>
+	<game name="President is Missing, The (Europe)">
+		<description>President is Missing, The (Europe)</description>
+		<rom name="President is Missing, The (Europe).ipf" size="518252" crc="82fe6664" md5="ca2817a335c5edfd493eae3ee023b5f5" sha1="fb8ac7c4c96860c2e8f43d978d559377e9cce304"/>
+	</game>
+	<game name="Prince (Europe)">
+		<description>Prince (Europe)</description>
+		<rom name="Prince (Europe).ipf" size="1022242" crc="cd245f0f" md5="7365dea1c0e370fcfa85436ef9d1f365" sha1="7718e05befff092806c53de4003e0785d0025822"/>
+	</game>
+	<game name="Prison (Europe) (En,Fr,De,It)">
+		<description>Prison (Europe) (En,Fr,De,It)</description>
+		<rom name="Prison (Europe) (En,Fr,De,It) (Disk 1).ipf" size="517627" crc="00025bcc" md5="c020d377fb0e327007bf5897befd0c8c" sha1="f1420804cdb7119330c24d1c747df08ea8978073"/>
+		<rom name="Prison (Europe) (En,Fr,De,It) (Disk 2).ipf" size="518252" crc="402e8c1e" md5="5332269fdf799bb37b52a59fec60d350" sha1="3ae6968596250b2645d93593e1013b1db93fab97"/>
+	</game>
+	<game name="Pro Tennis Tour (Europe) (Grandstand)">
+		<description>Pro Tennis Tour (Europe) (Grandstand)</description>
+		<rom name="Pro Tennis Tour (Europe) (Grandstand).ipf" size="1095692" crc="33098cc3" md5="" sha1=""/>
+	</game>
+	<game name="Projekt Prometheus (Germany)">
+		<description>Projekt Prometheus (Germany)</description>
+		<rom name="Projekt Prometheus (Germany) (Disk 1 von 2).ipf" size="918252" crc="a3bf9d87" md5="" sha1=""/>
+		<rom name="Projekt Prometheus (Germany) (Disk 2 von 2).ipf" size="918252" crc="70a1dffd" md5="" sha1=""/>
+	</game>
+	<game name="Protector (Europe) (VM)">
+		<description>Protector (Europe) (VM)</description>
+		<rom name="Protector (Europe) (VM).ipf" size="468252" crc="6370c949" md5="" sha1=""/>
+	</game>
+	<game name="Puzznic (Europe)">
+		<description>Puzznic (Europe)</description>
+		<rom name="Puzznic (Europe).ipf" size="1022242" crc="bf30e373" md5="b4649aff27aee5092c738b45aa80674f" sha1="f0d0ea8620bc19e988af26c99fda87cae0372535"/>
+	</game>
+	<game name="Quartz (Europe)">
+		<description>Quartz (Europe)</description>
+		<rom name="Quartz (Europe).ipf" size="562172" crc="707b1264" md5="" sha1=""/>
+	</game>
+	<game name="Quink (USA)">
+		<description>Quink (USA)</description>
+		<rom name="Quink (USA).ipf" size="469240" crc="ba6001ee" md5="84c8181b53477dbfb069d6b4f8cd6ff6" sha1="60f50797be41e19229254c6c7b8960e9e73cb233"/>
+	</game>
+	<game name="Raffles (Europe)">
+		<description>Raffles (Europe)</description>
+		<rom name="Raffles (Europe).ipf" size="918252" crc="ae0dc018" md5="c881dd42113aa75eb613f0ba13f6a6d3" sha1="4a1bd0fd4f61e6f549cb560e46b4ae3bc7da2749"/>
+	</game>
+	<game name="Rally Cross Challenge (Europe)">
+		<description>Rally Cross Challenge (Europe)</description>
+		<rom name="Rally Cross Challenge (Europe).ipf" size="520242" crc="8aba62dc" md5="53b0f6a0975bfead5198ad49616513f9" sha1="1229664b54b4182754d9159f277b2ec4a5eef7d5"/>
+	</game>
+	<game name="Real Ghostbusters, The (Europe)">
+		<description>Real Ghostbusters, The (Europe)</description>
+		<rom name="Real Ghostbusters, The (Europe).ipf" size="557852" crc="f2447ee4" md5="04705950fcf23fa0726aa25b360a89a9" sha1="8cada93ef9663e339d6a028cbd5fced1d0d45e08"/>
+	</game>
+	<game name="Realm of the Trolls (Europe)">
+		<description>Realm of the Trolls (Europe)</description>
+		<rom name="Realm of the Trolls (Europe) (Disk 1).ipf" size="469481" crc="c260d74b" md5="" sha1=""/>
+		<rom name="Realm of the Trolls (Europe) (Disk 2).ipf" size="468252" crc="57a251c2" md5="" sha1=""/>
+	</game>
+	<game name="Rebellion (Europe)">
+		<description>Rebellion (Europe)</description>
+		<rom name="Rebellion (Europe).ipf" size="1018252" crc="d7690eab" md5="" sha1=""/>
+	</game>
+	<game name="Red Heat (Europe)">
+		<description>Red Heat (Europe)</description>
+		<rom name="Red Heat (Europe) (Disk 1).ipf" size="517627" crc="f4003f59" md5="df405416b2009d8f1ad9b40d2f2e14db" sha1="9be95d4c98b5020c1a9864d04f0c4a8ede7ddaf7"/>
+		<rom name="Red Heat (Europe) (Disk 2).ipf" size="517627" crc="612d962a" md5="cf9df0f10dc0519999235d9acc21ec39" sha1="3f2250d72f1196b05a33ff2eb08fc6ef5b6384c8"/>
+	</game>
+	<game name="Red Storm Rising (Europe) (v743.01)">
+		<description>Red Storm Rising (Europe) (v743.01)</description>
+		<rom name="Red Storm Rising (Europe) (v743.01) (Disk A).ipf" size="518616" crc="66ac3e11" md5="601507f381236c5e6a8086ec833be070" sha1="e2bc52fcca5101c65af4ad60ef41e337ea833f0f"/>
+		<rom name="Red Storm Rising (Europe) (v743.01) (Disk B).ipf" size="518252" crc="09ca6acd" md5="aa79dbd35b70de5b8af631056237985f" sha1="7293b8e99b849b2b834fb8fd1487dacbb45a3a6b"/>
+	</game>
+	<game name="Resolution 101 (Europe)">
+		<description>Resolution 101 (Europe)</description>
+		<rom name="Resolution 101 (Europe).ipf" size="519810" crc="c2035bd0" md5="d43ed27a2c64e7b411a392a2735776f7" sha1="640729e6be35556973174ea0cc774dd0af26eec4"/>
+	</game>
+	<game name="Return to Genesis (Europe)">
+		<description>Return to Genesis (Europe)</description>
+		<rom name="Return to Genesis (Europe).ipf" size="466743" crc="d2b49bdd" md5="" sha1=""/>
+	</game>
+	<game name="Revenge II - Revenge of the Mutant Camels II (Europe)">
+		<description>Revenge II - Revenge of the Mutant Camels II (Europe)</description>
+		<rom name="Revenge II - Revenge of the Mutant Camels II (Europe).ipf" size="517627" crc="7f0fe084" md5="ce7c0778281ffc20475787c2893e110f" sha1="4bd9af5151f3e12503621e560f5e259e7e0107bd"/>
+	</game>
+	<game name="Roadwars (Europe)">
+		<description>Roadwars (Europe)</description>
+		<rom name="Roadwars (Europe).ipf" size="517627" crc="48cf06af" md5="26896907bdced20e4a4e0b6a72e445c0" sha1="f8fc1fa34fca68686dd279a7f2b39df6af68f67b"/>
+	</game>
+	<game name="Roadwars + Q Ball (Europe) (Summer Pack)">
+		<description>Roadwars + Q Ball (Europe) (Summer Pack)</description>
+		<rom name="Roadwars + Q Ball (Europe) (Summer Pack).ipf" size="918252" crc="febe22b2" md5="" sha1=""/>
+	</game>
+	<game name="RoboCop (Europe)">
+		<description>RoboCop (Europe)</description>
+		<rom name="RoboCop (Europe) (Disk 1).ipf" size="468252" crc="edf76c34" md5="c52a08e05246d097331fd29649fb7068" sha1="61a1b3c375f512f80160e0e9a84094106743a8b6"/>
+		<rom name="RoboCop (Europe) (Disk 2).ipf" size="517627" crc="695db228" md5="0465d046a10820153fc0fcf0813d4a46" sha1="6fd5c7cb8678e61c236387a3ce5f27f1f234d892"/>
+	</game>
+	<game name="Rock Star Ate My Hamster (Europe)">
+		<description>Rock Star Ate My Hamster (Europe)</description>
+		<rom name="Rock Star Ate My Hamster (Europe).ipf" size="520242" crc="1226738e" md5="598b3160fd07c2853cc0b951e8050c79" sha1="04213fe88c6255d5288aed6293ffb99ca845c575"/>
+	</game>
+	<game name="Rocket Ranger (Europe) (TRIAD Volume 3)">
+		<description>Rocket Ranger (Europe) (TRIAD Volume 3)</description>
+		<rom name="Rocket Ranger (Europe) (TRIAD Volume 3) (Disk 1).ipf" size="468252" crc="e2daff02" md5="" sha1=""/>
+		<rom name="Rocket Ranger (Europe) (TRIAD Volume 3) (Disk 2).ipf" size="468252" crc="b72fcb7a" md5="" sha1=""/>
+		<rom name="Rocket Ranger (Europe) (TRIAD Volume 3) (Disk 3).ipf" size="468252" crc="3ceb67c0" md5="" sha1=""/>
+	</game>
+	<game name="Rody and Mastico II (Europe)">
+		<description>Rody and Mastico II (Europe)</description>
+		<rom name="Rody and Mastico II (Europe).ipf" size="521039" crc="a9461a40" md5="" sha1=""/>
+	</game>
+	<game name="Rody et Mastico III (France)">
+		<description>Rody et Mastico III (France)</description>
+		<rom name="Rody et Mastico III (France).ipf" size="520607" crc="846a8e73" md5="f028a14c9404d22fe1ea9ed722fa76be" sha1="e5440806ab3e9a54ae23dd261365cc1d61d73b60"/>
+	</game>
+	<game name="Rotor (Europe)">
+		<description>Rotor (Europe)</description>
+		<rom name="Rotor (Europe).ipf" size="517627" crc="4cb9efae" md5="5acfc336c6ace581bce573ddb66b22ba" sha1="fce7b61b9d3c3bd3ab4d94fe46c18657ab96bbea"/>
+	</game>
+	<game name="Saint and Greavsie (Europe)">
+		<description>Saint and Greavsie (Europe)</description>
+		<rom name="Saint and Greavsie (Europe).ipf" size="468252" crc="2153e180" md5="" sha1=""/>
+	</game>
+	<game name="Sargon III (Europe)">
+		<description>Sargon III (Europe)</description>
+		<rom name="Sargon III (Europe).ipf" size="465752" crc="778ea9ab" md5="c307708046df347c14896a7500999cf1" sha1="52e1231b236d4c52f08abce13436b28217d4d20e"/>
+	</game>
+	<game name="SAS Combat Simulator (Europe)">
+		<description>SAS Combat Simulator (Europe)</description>
+		<rom name="SAS Combat Simulator (Europe).ipf" size="520242" crc="00afc741" md5="73ec413340f24d4d63c42c3cf8682a97" sha1="b40dfc1c65cfca8624f3331caa38c5542ca2b631"/>
+	</game>
+	<game name="Savage (Europe)">
+		<description>Savage (Europe)</description>
+		<rom name="Savage (Europe) (Disk 1).ipf" size="518252" crc="48e9ae44" md5="" sha1=""/>
+		<rom name="Savage (Europe) (Disk 2).ipf" size="518252" crc="6499d516" md5="" sha1=""/>
+	</game>
+	<game name="Scooby-Doo and Scrappy-Doo (Europe)">
+		<description>Scooby-Doo and Scrappy-Doo (Europe)</description>
+		<rom name="Scooby-Doo and Scrappy-Doo (Europe).ipf" size="745716" crc="f07c7430" md5="" sha1=""/>
+	</game>
+	<game name="Screaming Wings (Europe) (Quartet Gold)">
+		<description>Screaming Wings (Europe) (Quartet Gold)</description>
+		<rom name="Screaming Wings (Europe) (Quartet Gold).ipf" size="518933" crc="e6be35f0" md5="" sha1=""/>
+	</game>
+	<game name="Seconds Out (Europe)">
+		<description>Seconds Out (Europe)</description>
+		<rom name="Seconds Out (Europe) (Data Disk).ipf" size="468252" crc="ac540ac4" md5="" sha1=""/>
+		<rom name="Seconds Out (Europe).ipf" size="468254" crc="c4128c18" md5="" sha1=""/>
+	</game>
+	<game name="Seven Gates of Jambala, The (Europe)">
+		<description>Seven Gates of Jambala, The (Europe)</description>
+		<rom name="Seven Gates of Jambala, The (Europe) (Disk 1).ipf" size="170330" crc="ec1e520e" md5="4484002f36c7cec9150130636b9858c0" sha1="07978e715e4d095890677d363358fecfd46a4079"/>
+		<rom name="Seven Gates of Jambala, The (Europe) (Disk 2).ipf" size="522145" crc="82addda0" md5="bdfd2a3c5bfecbbf430daf9c7bc42b52" sha1="6e2dc4b9c4bb00f4e5bedc5db710099f49c2c4a1"/>
+	</game>
+	<game name="Shadowgate (Europe)">
+		<description>Shadowgate (Europe)</description>
+		<rom name="Shadowgate (Europe) (Disk 1).ipf" size="468337" crc="a6068cc8" md5="c7e4efb91c0de97b16c2b0751a1827e3" sha1="023ca53a43b778c2c420074bf69ecceee2cd283d"/>
+		<rom name="Shadowgate (Europe) (Disk 2).ipf" size="468252" crc="3690e0d4" md5="b33e90a500186d5762b1a31b3a303614" sha1="eeeaeb7fc2ac80bb69dd473d489bd6f339ff0be4"/>
+	</game>
+	<game name="Sherman M4 (Europe)">
+		<description>Sherman M4 (Europe)</description>
+		<rom name="Sherman M4 (Europe) (Disk 1).ipf" size="471466" crc="7484b942" md5="" sha1=""/>
+		<rom name="Sherman M4 (Europe) (Disk 2).ipf" size="468252" crc="f61ab62e" md5="" sha1=""/>
+	</game>
+	<game name="Shinobi (Europe) (Fists of Fury)">
+		<description>Shinobi (Europe) (Fists of Fury)</description>
+		<rom name="Shinobi (Europe) (Fists of Fury) (Disk 1).ipf" size="517627" crc="0cf4d53e" md5="" sha1=""/>
+		<rom name="Shinobi (Europe) (Fists of Fury) (Disk 2).ipf" size="517627" crc="93d1cb75" md5="" sha1=""/>
+	</game>
+	<game name="Shuffleboard &amp; Pool (Europe)">
+		<description>Shuffleboard &amp; Pool (Europe)</description>
+		<rom name="Shuffleboard &amp; Pool (Europe).ipf" size="468252" crc="670e72f3" md5="" sha1=""/>
+	</game>
+	<game name="Shufflepuck Cafe (Europe)">
+		<description>Shufflepuck Cafe (Europe)</description>
+		<rom name="Shufflepuck Cafe (Europe) (Disc 2).ipf" size="468252" crc="79bfb844" md5="" sha1=""/>
+		<rom name="Shufflepuck Cafe (Europe) (Disk 1).ipf" size="919240" crc="89cb5549" md5="" sha1=""/>
+	</game>
+	<game name="SideWinder (Europe)">
+		<description>SideWinder (Europe)</description>
+		<rom name="SideWinder (Europe) (Disk A).ipf" size="517627" crc="9e9fd1a3" md5="2e588641b59413e77590f2ac54e47522" sha1="fb7490f603962a00d305dfd77bda2c895dffaf69"/>
+		<rom name="SideWinder (Europe) (Disk B).ipf" size="517627" crc="16bbcc50" md5="107e1840efe26b052fea1aadaa072ac9" sha1="b4ceb752b6584dbb7e015654134fa66a0db1bdf6"/>
+	</game>
+	<game name="Silent Service - The Submarine Simulation (Europe) (v725.02)">
+		<description>Silent Service - The Submarine Simulation (Europe) (v725.02)</description>
+		<rom name="Silent Service - The Submarine Simulation (Europe) (v725.02).ipf" size="468522" crc="1baee40a" md5="" sha1=""/>
+	</game>
+	<game name="Silkworm (Europe)">
+		<description>Silkworm (Europe)</description>
+		<rom name="Silkworm (Europe).ipf" size="517627" crc="bee632c4" md5="70fdc9a8b96a80245b7b60083ec6c633" sha1="b062f1d048855b8f259fcea2a7e87f0d2d84d46d"/>
+	</game>
+	<game name="Sinbad and the Throne of the Falcon (Europe)">
+		<description>Sinbad and the Throne of the Falcon (Europe)</description>
+		<rom name="Sinbad and the Throne of the Falcon (Europe) (Reel 1).ipf" size="468254" crc="84e27ae5" md5="6a575e636471489ee60c0b4d124493f4" sha1="9eecd49c9c362cdbabd5b345eb6e5bc43c975715"/>
+		<rom name="Sinbad and the Throne of the Falcon (Europe) (Reel 2).ipf" size="468252" crc="5e49f880" md5="ed427ebbffed9cab333bad0ddd41f3a5" sha1="e26ccb4631ab481ac1728acbb66b8fba5073f1a9"/>
+		<rom name="Sinbad and the Throne of the Falcon (Europe) (Reel 3).ipf" size="468252" crc="579fcdce" md5="536f193772c676abda2f770316e4ef63" sha1="8ff68a0fc2f53d00d6987873f223551c059bd936"/>
+	</game>
+	<game name="Skidoo (Europe)">
+		<description>Skidoo (Europe)</description>
+		<rom name="Skidoo (Europe) (Disk 1).ipf" size="473292" crc="7b13afa6" md5="" sha1=""/>
+		<rom name="Skidoo (Europe) (Disk 2).ipf" size="473292" crc="75a7f869" md5="" sha1=""/>
+	</game>
+	<game name="Skrull the Barbarian (Europe) (Budget - Smash 16)">
+		<description>Skrull the Barbarian (Europe) (Budget - Smash 16)</description>
+		<rom name="Skrull the Barbarian (Europe) (Budget - Smash 16) (Disk 1).ipf" size="471664" crc="b6d34de7" md5="" sha1=""/>
+		<rom name="Skrull the Barbarian (Europe) (Budget - Smash 16) (Disk 2).ipf" size="468252" crc="8444981a" md5="" sha1=""/>
+	</game>
+	<game name="Skull-Diggery (Europe)">
+		<description>Skull-Diggery (Europe)</description>
+		<rom name="Skull-Diggery (Europe).ipf" size="395127" crc="7138a6b1" md5="" sha1=""/>
+	</game>
+	<game name="Slap Fight + Enduro Racer (Europe) (Summer Pack)">
+		<description>Slap Fight + Enduro Racer (Europe) (Summer Pack)</description>
+		<rom name="Slap Fight + Enduro Racer (Europe) (Summer Pack).ipf" size="1018254" crc="7b193ad5" md5="" sha1=""/>
+	</game>
+	<game name="Soccer Supremo (Europe)">
+		<description>Soccer Supremo (Europe)</description>
+		<rom name="Soccer Supremo (Europe).ipf" size="468252" crc="48da8731" md5="" sha1=""/>
+	</game>
+	<game name="Sorcerer Lord (Europe)">
+		<description>Sorcerer Lord (Europe)</description>
+		<rom name="Sorcerer Lord (Europe).ipf" size="517627" crc="e693b425" md5="" sha1=""/>
+	</game>
+	<game name="Space Harrier (Europe) (Compilation - Finale)">
+		<description>Space Harrier (Europe) (Compilation - Finale)</description>
+		<rom name="Space Harrier (Europe) (Compilation - Finale).ipf" size="1018252" crc="7b3415e4" md5="2c5cb1f7eb12f8d603e4ccbc4ef07281" sha1="146d50a9635b45783373482a68c14ae7c769c528"/>
+	</game>
+	<game name="Space Harrier (Europe)">
+		<description>Space Harrier (Europe)</description>
+		<rom name="Space Harrier (Europe) (Disk 1).ipf" size="1018252" crc="3fc2438e" md5="5f0b92e1c7ae80bff7e8f73e172c1252" sha1="a0b5c506368d7b51c65dbb1393e392db42047ef7"/>
+		<rom name="Space Harrier (Europe) (Disk 2).ipf" size="1018252" crc="63de23bb" md5="dfbf307dcd9f95aec61bc90a0349df72" sha1="ea88096bcd30c92af9d4b61fb64a8aa542ab7e3d"/>
+	</game>
+	<game name="Space Harrier II (Europe)">
+		<description>Space Harrier II (Europe)</description>
+		<rom name="Space Harrier II (Europe) (Disk 1).ipf" size="1018252" crc="c4ef520d" md5="3e3356ea3ad03225a071aa9ec4d85f71" sha1="0b9fe3d8f172d78ca1f89aaca35857482aed66ab"/>
+		<rom name="Space Harrier II (Europe) (Disk 2).ipf" size="1018252" crc="f02028c8" md5="b6481a85e653fda954b975a337aa627c" sha1="18c4e91a2fb5e2a1b925701504b477e3b8689fdd"/>
+	</game>
+	<game name="Space Racer (Europe)">
+		<description>Space Racer (Europe)</description>
+		<rom name="Space Racer (Europe) (Disc A).ipf" size="521109" crc="de729d9a" md5="" sha1=""/>
+		<rom name="Space Racer (Europe) (Disc B).ipf" size="518252" crc="2fe9f2f2" md5="" sha1=""/>
+	</game>
+	<game name="Spaceport (Europe)">
+		<description>Spaceport (Europe)</description>
+		<rom name="Spaceport (Europe).ipf" size="469481" crc="d1f6ec9e" md5="" sha1=""/>
+	</game>
+	<game name="Speed Buggy (Europe)">
+		<description>Speed Buggy (Europe)</description>
+		<rom name="Speed Buggy (Europe).ipf" size="469240" crc="26415568" md5="" sha1=""/>
+	</game>
+	<game name="Speedball (Europe) (TRIAD Volume 3)">
+		<description>Speedball (Europe) (TRIAD Volume 3)</description>
+		<rom name="Speedball (Europe) (TRIAD Volume 3).ipf" size="520242" crc="c8146e89" md5="" sha1=""/>
+	</game>
+	<game name="Spellbreaker (Europe) (r63)">
+		<description>Spellbreaker (Europe) (r63)</description>
+		<rom name="Spellbreaker (Europe) (r63).ipf" size="468252" crc="bb75c4da" md5="" sha1=""/>
+	</game>
+	<game name="Spherical (Europe)">
+		<description>Spherical (Europe)</description>
+		<rom name="Spherical (Europe) (Disk A).ipf" size="524502" crc="a7f705fc" md5="fa67eec8e2362ff614e6278be895c9a6" sha1="ae674e73163c0f82ca9eb9e37b4ce892349e3775"/>
+		<rom name="Spherical (Europe) (Disk B).ipf" size="569457" crc="c0bbcdc0" md5="865d5397e9f2a6b161b9e1f5153d648f" sha1="749bf3489f92b932ebe6e22af6d3da58bb9fd818"/>
+	</game>
+	<game name="Spidertronic (Europe)">
+		<description>Spidertronic (Europe)</description>
+		<rom name="Spidertronic (Europe).ipf" size="471664" crc="f1e6df96" md5="bc25fef55729af29b801eb61a86bc908" sha1="f52b44f4e27eb1cc76408cafb678812a5fc269df"/>
+	</game>
+	<game name="Spitfire 40 (Europe)">
+		<description>Spitfire 40 (Europe)</description>
+		<rom name="Spitfire 40 (Europe).ipf" size="517627" crc="9fb5f1ba" md5="3f081955191014e2a3fca51a7aea14d0" sha1="b223275e72f0d54ee1fe7f8736fbd53fd9ace4e7"/>
+	</game>
+	<game name="Spitting Image (Europe)">
+		<description>Spitting Image (Europe)</description>
+		<rom name="Spitting Image (Europe).ipf" size="480127" crc="8bfe0283" md5="aae950c1bf7513320c2f31162638a377" sha1="6624dfdd592087ea837d62675307b9d9a46f7bba"/>
+	</game>
+	<game name="ST Protector (Europe) (Paradox)">
+		<description>ST Protector (Europe) (Paradox)</description>
+		<rom name="ST Protector (Europe) (Paradox).ipf" size="468252" crc="662e2955" md5="" sha1=""/>
+	</game>
+	<game name="Star Trek - The Rebel Universe (Europe)">
+		<description>Star Trek - The Rebel Universe (Europe)</description>
+		<rom name="Star Trek - The Rebel Universe (Europe).ipf" size="517852" crc="120c7444" md5="" sha1=""/>
+	</game>
+	<game name="Star Wars - Return of the Jedi (Europe) (Compilation - The Star Wars Trilogy)">
+		<description>Star Wars - Return of the Jedi (Europe) (Compilation - The Star Wars Trilogy)</description>
+		<rom name="Star Wars - Return of the Jedi (Europe) (Compilation - The Star Wars Trilogy).ipf" size="518252" crc="e3ca5fa2" md5="6021537230cc2997d74ef9484c1280c0" sha1="b9afbddd1300154fa65f0b7dedfc0df7c8d8e024"/>
+	</game>
+	<game name="Star Wars - The Empire Strikes Back (Europe) (Compilation - The Star Wars Trilogy)">
+		<description>Star Wars - The Empire Strikes Back (Europe) (Compilation - The Star Wars Trilogy)</description>
+		<rom name="Star Wars - The Empire Strikes Back (Europe) (Compilation - The Star Wars Trilogy).ipf" size="518252" crc="c0c4329f" md5="1dfd281f13377c67e64ac79e9ebd8ae5" sha1="04de6eaf22f5db39485847ba6afd8875b68b1a19"/>
+	</game>
+	<game name="Star Wrek (Europe)">
+		<description>Star Wrek (Europe)</description>
+		<rom name="Star Wrek (Europe).ipf" size="472812" crc="e1cc5280" md5="14e72fdc680b293cc2c17d394ba6b7cf" sha1="0af3a592992cea6701b2e5a13e6958538b3c35f7"/>
+	</game>
+	<game name="Starblaze (Europe)">
+		<description>Starblaze (Europe)</description>
+		<rom name="Starblaze (Europe).ipf" size="517627" crc="feaa81e0" md5="494c7354208d8b618779f76f4f2aa9a3" sha1="f3d054d299e41b8f751a0040f745675519e4873c"/>
+	</game>
+	<game name="StarFlight (Europe)">
+		<description>StarFlight (Europe)</description>
+		<rom name="StarFlight (Europe) (Disk A).ipf" size="468252" crc="503ae67c" md5="432d1b2d7c2d825d38bee685b608d4b5" sha1="076e971f9a23e31c04022b9e51c79cd641670c01"/>
+		<rom name="StarFlight (Europe) (Disk B).ipf" size="468252" crc="9d44d8d5" md5="170ad14caf69e76ad56c2e49decc1cc9" sha1="98a8c13d21f5b6ee4c7a7c9bb613d0df90d43a28"/>
+	</game>
+	<game name="Starglider (Europe)">
+		<description>Starglider (Europe)</description>
+		<rom name="Starglider (Europe).ipf" size="517820" crc="b0472c8c" md5="ac16a80326d54e4b76b9dc79935773f5" sha1="aae5e32c2bbd5c31631d65da238d947d1a749c5c"/>
+	</game>
+	<game name="Starglider 2 (Europe) (En,Fr,De) (Amiga + ST)">
+		<description>Starglider 2 (Europe) (En,Fr,De) (Amiga + ST)</description>
+		<rom name="Starglider 2 (Europe) (En,Fr,De) (Amiga + ST).ipf" size="1019021" crc="ed38c67f" md5="b2d2de4c643859241490c378fdf297d1" sha1="c2cb4b2f517e2f20205577b8ba16331920660160"/>
+	</game>
+	<game name="StarGoose! (Europe)">
+		<description>StarGoose! (Europe)</description>
+		<rom name="StarGoose! (Europe).ipf" size="524094" crc="ed234ac6" md5="" sha1=""/>
+	</game>
+	<game name="Starquake (Europe)">
+		<description>Starquake (Europe)</description>
+		<rom name="Starquake (Europe).ipf" size="468252" crc="cd1aee1b" md5="02d1b3b0007ba249fd3d4622c3961c84" sha1="ddff723f14c56a2591ca5fa74670ceff2499d4c7"/>
+	</game>
+	<game name="StarRay (Europe)">
+		<description>StarRay (Europe)</description>
+		<rom name="StarRay (Europe).ipf" size="862002" crc="6454b0e4" md5="" sha1=""/>
+	</game>
+	<game name="Steel (Europe)">
+		<description>Steel (Europe)</description>
+		<rom name="Steel (Europe).ipf" size="520242" crc="6ac8b3b0" md5="61d1f74b8ba230457a08de28bcd152ad" sha1="3c562fba4b6654ad28835ebeebd7eecbb7e22af2"/>
+	</game>
+	<game name="Stone Age (Europe) (Amiga + ST)">
+		<description>Stone Age (Europe) (Amiga + ST)</description>
+		<rom name="Stone Age (Europe) (Amiga + ST).ipf" size="1008605" crc="47688571" md5="4ea1d7e97116e849c9833e82bf05e6b9" sha1="f01bfca44a627b1b8bbdf52b722aadcc584145d7"/>
+	</game>
+	<game name="Storm Master (Europe)">
+		<description>Storm Master (Europe)</description>
+		<rom name="Storm Master (Europe).ipf" size="1014649" crc="1fc8c46c" md5="86a78b00494837659025fa7455e24b59" sha1="f442bab4751112a0c60ebf3ec68d9d77cc65f796"/>
+	</game>
+	<game name="Street Hockey (Europe)">
+		<description>Street Hockey (Europe)</description>
+		<rom name="Street Hockey (Europe).ipf" size="941007" crc="3fcb247b" md5="" sha1=""/>
+	</game>
+	<game name="Strider (Europe) (Compilation - Les Chevaliers)">
+		<description>Strider (Europe) (Compilation - Les Chevaliers)</description>
+		<rom name="Strider (Europe) (Compilation - Les Chevaliers).ipf" size="1010945" crc="508fbd09" md5="5749dbf59d2a4fc9d95b109a9984e4aa" sha1="1042302ce7a68f39e8a862a66544a61d3c61977f"/>
+	</game>
+	<game name="Strike (Europe)">
+		<description>Strike (Europe)</description>
+		<rom name="Strike (Europe).ipf" size="517627" crc="43013dcd" md5="f9a683c6f23bbed7b25634a8706b1aea" sha1="98836048190c82466f39dbad065d38b0682759ce"/>
+	</game>
+	<game name="Strip Poker - A Sizzling Game of Chance (Europe)">
+		<description>Strip Poker - A Sizzling Game of Chance (Europe)</description>
+		<rom name="Strip Poker - A Sizzling Game of Chance (Europe).ipf" size="468954" crc="f9590ca0" md5="" sha1=""/>
+	</game>
+	<game name="Stryx (Europe)">
+		<description>Stryx (Europe)</description>
+		<rom name="Stryx (Europe) (Disk A).ipf" size="517627" crc="30e13f1d" md5="d59ed74beb286b91ec6ab95bd9594d95" sha1="ecf46d4eb22a937695d36db6f9797d28ec4f7b8b"/>
+		<rom name="Stryx (Europe) (Disk B).ipf" size="517627" crc="24eaf056" md5="4353c78d9282319ac7ac606622619814" sha1="95c1463e2f86f9d95bb4043966e06a0fcacb4e13"/>
+	</game>
+	<game name="Summer Olympiad (Europe)">
+		<description>Summer Olympiad (Europe)</description>
+		<rom name="Summer Olympiad (Europe) (Disk 1).ipf" size="517195" crc="85f59054" md5="" sha1=""/>
+		<rom name="Summer Olympiad (Europe) (Disk 2).ipf" size="517195" crc="b4173ba0" md5="" sha1=""/>
+	</game>
+	<game name="Sundog - Frozen Legacy (Europe)">
+		<description>Sundog - Frozen Legacy (Europe)</description>
+		<rom name="Sundog - Frozen Legacy (Europe).ipf" size="468877" crc="46f0ae7e" md5="0ad024051de9bd891105e3c4ebf4a8fa" sha1="512b89b7bece87df8ffc7c3a3fb6f22496ff69a7"/>
+	</game>
+	<game name="Super Cycle (Europe)">
+		<description>Super Cycle (Europe)</description>
+		<rom name="Super Cycle (Europe).ipf" size="518615" crc="9e5af2a0" md5="" sha1=""/>
+	</game>
+	<game name="Superman - The Man of Steel (Europe)">
+		<description>Superman - The Man of Steel (Europe)</description>
+		<rom name="Superman - The Man of Steel (Europe) (Disk 1).ipf" size="517627" crc="1e8ff3ab" md5="" sha1=""/>
+		<rom name="Superman - The Man of Steel (Europe) (Disk 2).ipf" size="518252" crc="c8d21456" md5="" sha1=""/>
+	</game>
+	<game name="Supernova - Fruit Machine Simulator (Europe)">
+		<description>Supernova - Fruit Machine Simulator (Europe)</description>
+		<rom name="Supernova - Fruit Machine Simulator (Europe).ipf" size="926460" crc="16344174" md5="" sha1=""/>
+	</game>
+	<game name="Swap (Europe) (Budget - Fox Hits)">
+		<description>Swap (Europe) (Budget - Fox Hits)</description>
+		<rom name="Swap (Europe) (Budget - Fox Hits).ipf" size="918252" crc="c1af7fdd" md5="b7999f29beb1e91a9d3483b12acd25b5" sha1="e3e4e972b05d23d9784b495d1fd081bac5e40344"/>
+	</game>
+	<game name="Tai-Pan (Europe)">
+		<description>Tai-Pan (Europe)</description>
+		<rom name="Tai-Pan (Europe).ipf" size="520092" crc="8ce5a8a6" md5="d790ed6609fa9986521b898ddc8381bf" sha1="529a47fc044410f0bd8b8ffa36449146448781fe"/>
+	</game>
+	<game name="Targhan (Europe) (Budget - Action Sixteen)">
+		<description>Targhan (Europe) (Budget - Action Sixteen)</description>
+		<rom name="Targhan (Europe) (Budget - Action Sixteen).ipf" size="1022896" crc="ba0f3b45" md5="" sha1=""/>
+	</game>
+	<game name="Tass Times in Tonetown (Europe)">
+		<description>Tass Times in Tonetown (Europe)</description>
+		<rom name="Tass Times in Tonetown (Europe) (Disk 1).ipf" size="469240" crc="0ff0f9a2" md5="a27111eb01681a1ed901f7da1f8c1a66" sha1="ab72d80f0d826ec6d4e54202a0b602f5c2300a67"/>
+		<rom name="Tass Times in Tonetown (Europe) (Disk 2).ipf" size="468252" crc="61755523" md5="ce75eaae296dd17a3f31a8fcfcceae14" sha1="8786204acae66159f2c14c999629f5d8b8481157"/>
+	</game>
+	<game name="Tau Ceti (Europe)">
+		<description>Tau Ceti (Europe)</description>
+		<rom name="Tau Ceti (Europe).ipf" size="468252" crc="bff7a431" md5="6b156a950f873ecabcc6049c927a30c1" sha1="1d6715f7cd019a0e78da3d0907791cd58f708378"/>
+	</game>
+	<game name="Technocop (Europe)">
+		<description>Technocop (Europe)</description>
+		<rom name="Technocop (Europe) (Disk 1).ipf" size="562172" crc="d3116988" md5="" sha1=""/>
+		<rom name="Technocop (Europe) (Disk 2).ipf" size="562172" crc="fe5d3233" md5="" sha1=""/>
+	</game>
+	<game name="Tennis Cup (Europe) (Budget - Action Sixteen)">
+		<description>Tennis Cup (Europe) (Budget - Action Sixteen)</description>
+		<rom name="Tennis Cup (Europe) (Budget - Action Sixteen).ipf" size="1023233" crc="47e02070" md5="5ef126349d6ff00504af89091546fc24" sha1="c802950995652c2a0b2d330193445d1b8ac78f79"/>
+	</game>
+	<game name="Terramex (Europe)">
+		<description>Terramex (Europe)</description>
+		<rom name="Terramex (Europe) (Disk 1).ipf" size="518252" crc="0c42d259" md5="68b47318ebf1005d3b4ce9e44fdebca5" sha1="08b690e780433288bf41bd66937eee8cc677f0af"/>
+		<rom name="Terramex (Europe) (Disk 2).ipf" size="518252" crc="dd8a2902" md5="f0308c7b01ff7c83038913e4d2c8efe7" sha1="53ca6ac10552da078e9aeb72e19d4da8b22c80c4"/>
+	</game>
+	<game name="Test Drive (Europe) (Compilation - Accolade All Time Favourites)">
+		<description>Test Drive (Europe) (Compilation - Accolade All Time Favourites)</description>
+		<rom name="Test Drive (Europe) (Compilation - Accolade All Time Favourites) (Disk 1).ipf" size="518615" crc="4576bca7" md5="b8979ed86be86fd4f9381fa89c38f0b2" sha1="870248fb519a31efb673ccde625817f5a44716d8"/>
+		<rom name="Test Drive (Europe) (Compilation - Accolade All Time Favourites) (Disk 2).ipf" size="518615" crc="c293654b" md5="f68f1a5b98c938a48a49841285ae9e2a" sha1="eb1defacbc6ee1edc8700b548e4745c4d9c28460"/>
+	</game>
+	<game name="Tetris + Strike Force Harrier (Europe) (Summer Pack)">
+		<description>Tetris + Strike Force Harrier (Europe) (Summer Pack)</description>
+		<rom name="Tetris + Strike Force Harrier (Europe) (Summer Pack).ipf" size="1017627" crc="45fef37c" md5="" sha1=""/>
+	</game>
+	<game name="The Deep (Europe)">
+		<description>The Deep (Europe)</description>
+		<rom name="The Deep (Europe) (Disk 1).ipf" size="944012" crc="94b0deb7" md5="4f1fc119ebef36c2f9296c802564b0ab" sha1="cf6177b716e66ae092e57f6dda3219134be695d2"/>
+		<rom name="The Deep (Europe) (Disk 2).ipf" size="481132" crc="bd61496f" md5="b92a393e70fdc7be529c30d721bfe8ef" sha1="a806be4c264d970a2ea77b6643c19e17df77e1bc"/>
+	</game>
+	<game name="The Immortal (Europe)">
+		<description>The Immortal (Europe)</description>
+		<rom name="The Immortal (Europe) (Boot Disk).ipf" size="918252" crc="d30a006a" md5="cdc545e700c59dfba59572c601fe721c" sha1="6e6aabf329a8f653c266881055fb3f662880b925"/>
+		<rom name="The Immortal (Europe) (Play Disk).ipf" size="918252" crc="ef08f2b4" md5="49ae76a44dcc84c65c4c0503b6144093" sha1="79270ec026ad3f139d0469d9a7410f623f6536ee"/>
+	</game>
+	<game name="The Ninja Warriors (Europe) (Fists of Fury)">
+		<description>The Ninja Warriors (Europe) (Fists of Fury)</description>
+		<rom name="The Ninja Warriors (Europe) (Fists of Fury) (Disk 1).ipf" size="1011377" crc="e50f9472" md5="" sha1=""/>
+		<rom name="The Ninja Warriors (Europe) (Fists of Fury) (Disk 2).ipf" size="1005752" crc="6840c355" md5="" sha1=""/>
+		<rom name="The Ninja Warriors (Europe) (Fists of Fury) (Disk 3).ipf" size="1005752" crc="d7e1f6eb" md5="" sha1=""/>
+	</game>
+	<game name="The Pursuit to Earth (Europe)">
+		<description>The Pursuit to Earth (Europe)</description>
+		<rom name="The Pursuit to Earth (Europe) (Disk 1).ipf" size="524502" crc="11f91612" md5="" sha1=""/>
+		<rom name="The Pursuit to Earth (Europe) (Disk 2).ipf" size="468252" crc="b1be0e28" md5="" sha1=""/>
+	</game>
+	<game name="Theme Park Mystery (Europe)">
+		<description>Theme Park Mystery (Europe)</description>
+		<rom name="Theme Park Mystery (Europe).ipf" size="1021810" crc="adafa9ca" md5="27c9294be4f35bdcc905cc0a30c9d6da" sha1="eed220be58a12d2affc3535417558ed60b360cfa"/>
+	</game>
+	<game name="Thrust (Europe)">
+		<description>Thrust (Europe)</description>
+		<rom name="Thrust (Europe).ipf" size="518254" crc="e2a2f206" md5="b76986a30c093cf22b718a3d7af771d6" sha1="4d89490441faffca7952c0b38701159718b2be4b"/>
+	</game>
+	<game name="Thunder Burner (Europe)">
+		<description>Thunder Burner (Europe)</description>
+		<rom name="Thunder Burner (Europe).ipf" size="1014859" crc="6f8e0512" md5="c033ab6c7d71cc144a0d4bbd514a8f7b" sha1="ce97963bbf852945295c44bb1a3c276b2b9de99b"/>
+	</game>
+	<game name="ThunderCats (Europe) (Budget - Encore)">
+		<description>ThunderCats (Europe) (Budget - Encore)</description>
+		<rom name="ThunderCats (Europe) (Budget - Encore).ipf" size="468254" crc="3ae4ef28" md5="98434202cc5d8c8209564c8a7775b215" sha1="41481fd1d7afd83e8c543b3a8c407150ef0c6d4f"/>
+	</game>
+	<game name="ThunderWing (Europe)">
+		<description>ThunderWing (Europe)</description>
+		<rom name="ThunderWing (Europe).ipf" size="512002" crc="8039ccd0" md5="38847f9421d297ce837f9d6a84b5e3ab" sha1="c05b20e3501a7738164607503759021086389645"/>
+	</game>
+	<game name="Time and Magik (Europe)">
+		<description>Time and Magik (Europe)</description>
+		<rom name="Time and Magik (Europe) (Disk 1).ipf" size="518252" crc="e41bb508" md5="6ee33091afa59ebdfb0b8d69fb972e03" sha1="a876fe2d7b00f45934b6de666da3670dd1135149"/>
+		<rom name="Time and Magik (Europe) (Disk 2).ipf" size="518252" crc="85832646" md5="415aaf3601ff2f1835d525e3b73a7ac7" sha1="748c71c0ebdc5281db6304f397df1e9eb5af6333"/>
+	</game>
+	<game name="Timeblast (Europe)">
+		<description>Timeblast (Europe)</description>
+		<rom name="Timeblast (Europe).ipf" size="468252" crc="d2b9af2b" md5="80d8479f3d7658c31d8b86ef4f6366ab" sha1="868edc2c1aa97138392fd1b06cdbdd0dbf3e3039"/>
+	</game>
+	<game name="Tintin on the Moon (Europe) (En,Fr,De)">
+		<description>Tintin on the Moon (Europe) (En,Fr,De)</description>
+		<rom name="Tintin on the Moon (Europe) (En,Fr,De).ipf" size="918252" crc="46500bf0" md5="383d18bf3487ecbb974db80097eb9f2a" sha1="8cf545d304ac6c9d41cbfe3800d1c20429f58b9f"/>
+	</game>
+	<game name="Toobin' (Europe)">
+		<description>Toobin' (Europe)</description>
+		<rom name="Toobin' (Europe).ipf" size="520242" crc="894947e5" md5="07e3e60f33cb6c18eba9098e57b15b3e" sha1="e11e91bfd4573eed471ed9fa7b8716dbc6413b91"/>
+	</game>
+	<game name="Top Cat Starring in Beverly Hills Cats (Europe)">
+		<description>Top Cat Starring in Beverly Hills Cats (Europe)</description>
+		<rom name="Top Cat Starring in Beverly Hills Cats (Europe).ipf" size="518252" crc="b22c9b87" md5="aa56c9cb6568e2bb20b3544f66cacac9" sha1="f6bee6b766d85c87721ed4a16c0bca602440ead3"/>
+	</game>
+	<game name="Tower of Babel (Europe)">
+		<description>Tower of Babel (Europe)</description>
+		<rom name="Tower of Babel (Europe).ipf" size="520242" crc="dc83d3fb" md5="cdb333a142d30a4e7d7c87364aca12fc" sha1="47e73c3522e53194cfd6ff538e2d0813682e41d5"/>
+	</game>
+	<game name="Trailblazer (Europe)">
+		<description>Trailblazer (Europe)</description>
+		<rom name="Trailblazer (Europe).ipf" size="519292" crc="05edff74" md5="4639e8a62b0fa875ebe4ea40896ccc8d" sha1="bf48ebeec193f9baefdddb5f67282f8754e1bfdc"/>
+	</game>
+	<game name="Trash Heap (Europe)">
+		<description>Trash Heap (Europe)</description>
+		<rom name="Trash Heap (Europe) (Disk 1).ipf" size="468252" crc="5ede6877" md5="4b29ba59aa8f28ee92a5a3f02305f647" sha1="4015625130704d9f3ae59eba70d56b98cb51cd59"/>
+		<rom name="Trash Heap (Europe) (Disk 2).ipf" size="468252" crc="6072083f" md5="a2b7407dcb072eea76b58aefd2197094" sha1="e48b97286d969311a78ffd5163309acbff295e5c"/>
+	</game>
+	<game name="Trauma (Europe)">
+		<description>Trauma (Europe)</description>
+		<rom name="Trauma (Europe) (Disk 1).ipf" size="471664" crc="02e9d19e" md5="2d0cad9ffdc348a99efd975e99b478b4" sha1="bbfae77bc29a8369a2a7ec8d4773544c45d254e0"/>
+		<rom name="Trauma (Europe) (Disk 2).ipf" size="468252" crc="24d09513" md5="fea3d1001e8660747cd4f728a359ba54" sha1="50eb573ab8c1a191a7490b746e29930a4988ecd4"/>
+	</game>
+	<game name="Treble Champions (Europe) (v1.0)">
+		<description>Treble Champions (Europe) (v1.0)</description>
+		<rom name="Treble Champions (Europe) (v1.0).ipf" size="518252" crc="ca67cf86" md5="a9335601bc9d072f37a8fc90bc4d609f" sha1="52481690d88f9f77736ea36251d8334bb3e84465"/>
+	</game>
+	<game name="Trinity (Europe) (r11)">
+		<description>Trinity (Europe) (r11)</description>
+		<rom name="Trinity (Europe) (r11).ipf" size="467820" crc="9d9283ad" md5="3d75950faded525596b5317594e38785" sha1="4aeeb5ff209c7c78b928d2114cc69693c7de42b7"/>
+	</game>
+	<game name="Trivial Pursuit - A New Beginning (Europe)">
+		<description>Trivial Pursuit - A New Beginning (Europe)</description>
+		<rom name="Trivial Pursuit - A New Beginning (Europe).ipf" size="518252" crc="28c85cd1" md5="c1e13677075a95fb57719343ceca7a94" sha1="b7f24d9a884f5812f5b30ef21b146bb0de5cf5f9"/>
+	</game>
+	<game name="Turbo Cup Challenge (Europe) (Budget - Smash 16)">
+		<description>Turbo Cup Challenge (Europe) (Budget - Smash 16)</description>
+		<rom name="Turbo Cup Challenge (Europe) (Budget - Smash 16).ipf" size="916109" crc="2d9459e0" md5="" sha1=""/>
+	</game>
+	<game name="Turbo GT (Europe)">
+		<description>Turbo GT (Europe)</description>
+		<rom name="Turbo GT (Europe).ipf" size="468252" crc="58193517" md5="b21c3bf765c3005e9a0199b0d207cc2e" sha1="6d0711d422ead8bfdb529ffe713a16da82ca2e84"/>
+	</game>
+	<game name="Turbo OutRun (Europe) (Budget - Kixx)">
+		<description>Turbo OutRun (Europe) (Budget - Kixx)</description>
+		<rom name="Turbo OutRun (Europe) (Budget - Kixx).ipf" size="1095692" crc="93ae44b1" md5="2871aa2dded016981080d81741d9569b" sha1="07c058d0eb50f06a5ce682a0ead7146483f888c6"/>
+	</game>
+	<game name="Turrican II - The Final Fight (Europe) (Budget - Kixx)">
+		<description>Turrican II - The Final Fight (Europe) (Budget - Kixx)</description>
+		<rom name="Turrican II - The Final Fight (Europe) (Budget - Kixx).ipf" size="1019827" crc="1c16f12e" md5="f18557040f7370b5c682456e668412ef" sha1="f0b2e01d9ec7dce0a33a14caf63d0dda5705f778"/>
+	</game>
+	<game name="TV Sports Football (Europe)">
+		<description>TV Sports Football (Europe)</description>
+		<rom name="TV Sports Football (Europe).ipf" size="520242" crc="c1630d7a" md5="a6b4309e3ae7b9d8dfb0fa75d4d04f7e" sha1="4fbd579361f68fe20bbc881e53b07873447893b7"/>
+	</game>
+	<game name="Twylyte (Europe)">
+		<description>Twylyte (Europe)</description>
+		<rom name="Twylyte (Europe).ipf" size="518252" crc="af320fb0" md5="faa7a6315012617400a8680b4a900730" sha1="01f07eb08bee89999de4735267cf19ebe46c385e"/>
+	</game>
+	<game name="Typhoon Thompson in Search for the Sea Child (Europe)">
+		<description>Typhoon Thompson in Search for the Sea Child (Europe)</description>
+		<rom name="Typhoon Thompson in Search for the Sea Child (Europe).ipf" size="469240" crc="78101cf7" md5="" sha1=""/>
+	</game>
+	<game name="UMS - The Universal Military Simulator (Europe)">
+		<description>UMS - The Universal Military Simulator (Europe)</description>
+		<rom name="UMS - The Universal Military Simulator (Europe).ipf" size="468252" crc="1afe1220" md5="6c3fb5d24062ad6704434a3b6a48cfdc" sha1="2e28e66236b56578591431eb08a3f486690a6b74"/>
+	</game>
+	<game name="Universe 3 (Europe) (v1.0)">
+		<description>Universe 3 (Europe) (v1.0)</description>
+		<rom name="Universe 3 (Europe) (v1.0) (Data Disk).ipf" size="918252" crc="9191ed09" md5="aba7e42c13edc9045381de3732c90295" sha1="d5480fd0c2b32249d6d82d4a1b967e8498c125db"/>
+		<rom name="Universe 3 (Europe) (v1.0) (Game Disk).ipf" size="918252" crc="b58abf6c" md5="32f6ab2e56d8e00ce3fd5c0d4895cb29" sha1="c21ac500f72528e457a1c0dbb594db2c79ef98d9"/>
+	</game>
+	<game name="Untouchables, The (Europe)">
+		<description>Untouchables, The (Europe)</description>
+		<rom name="Untouchables, The (Europe) (Disk 1).ipf" size="517627" crc="5a75c57a" md5="3d3740fe3915f2296d1297e2b8c73c55" sha1="93de98e2b1e6ddb41ca2c6ab7863d4412ee798cd"/>
+		<rom name="Untouchables, The (Europe) (Disk 2).ipf" size="518252" crc="dbf2471a" md5="bbd47645212aed9896ebdb5dc90365d4" sha1="2c4e942dfa5e5d14de34cb75ffbd219d283b817e"/>
+		<rom name="Untouchables, The (Europe) (Disk 3).ipf" size="518252" crc="78a88d78" md5="cff684e6412e7698fa7df32b7264e0ef" sha1="02fc45c232a2840a2f10f14d7f750941cd07f3b2"/>
+	</game>
+	<game name="Vampire's Empire (Europe)">
+		<description>Vampire's Empire (Europe)</description>
+		<rom name="Vampire's Empire (Europe).ipf" size="469481" crc="316c99e3" md5="" sha1=""/>
+	</game>
+	<game name="Vectorball (Europe)">
+		<description>Vectorball (Europe)</description>
+		<rom name="Vectorball (Europe).ipf" size="517627" crc="08506a17" md5="346abbe3bf266b1aad7a45288383a0f2" sha1="a66f3904ae26eea2d0bae25fb5d6c2fe9c697819"/>
+	</game>
+	<game name="Vindicators (Europe)">
+		<description>Vindicators (Europe)</description>
+		<rom name="Vindicators (Europe) (Disk 1).ipf" size="518252" crc="b4b2e13d" md5="13391e7caaee34eedf500e2e35f3deac" sha1="d0909a0a2ff4b0275fd974d61fb0c26d8e36736e"/>
+		<rom name="Vindicators (Europe) (Disk 2).ipf" size="518252" crc="7b3c62d3" md5="e7d145ecc51e7f456a94129d366f5578" sha1="0de576c14c1d5d806d8f5c11105913a2856ecb50"/>
+	</game>
+	<game name="Virus (Europe)">
+		<description>Virus (Europe)</description>
+		<rom name="Virus (Europe).ipf" size="175752" crc="28ae7efb" md5="bbb3b730fdcc0d4d6f242f7f2520bd95" sha1="108882d71030cfed99ccf6e51d59b29da07c85f3"/>
+	</game>
+	<game name="Wanderer 3D (Europe) (Budget - Encore)">
+		<description>Wanderer 3D (Europe) (Budget - Encore)</description>
+		<rom name="Wanderer 3D (Europe) (Budget - Encore).ipf" size="468254" crc="7eb28e97" md5="c00c3ec157bf91c6d3661e1a30f68a86" sha1="29bbdfd5c88375db134111962fd096342e092dff"/>
+	</game>
+	<game name="Wanted (Europe)">
+		<description>Wanted (Europe)</description>
+		<rom name="Wanted (Europe) (Disk 1).ipf" size="471664" crc="5e92ccb2" md5="abc95d3c573ee7bed5b1db4b4545ffb1" sha1="d4b9b062acefe6ce59ecdac1ac33a7b661770bc6"/>
+		<rom name="Wanted (Europe) (Disk 2).ipf" size="468252" crc="6c4325f7" md5="5f1c881aa6c0527a5a048e4174a9863b" sha1="8b5d36e943b1a91c6686b29a0fee671c80d0c96e"/>
+	</game>
+	<game name="War in Middle Earth (Europe)">
+		<description>War in Middle Earth (Europe)</description>
+		<rom name="War in Middle Earth (Europe) (Disk 1).ipf" size="518252" crc="faedb2c9" md5="af8f06803658600ed1ca736b493bf7f7" sha1="ceafaa35b893940b4cf8c7027134fcca5eaaa924"/>
+		<rom name="War in Middle Earth (Europe) (Disk 2).ipf" size="518252" crc="8a08cec6" md5="a46865ce0b579ba54fce3a4312710276" sha1="54e0832a4e3f25fd4853df4f73477f3cc2006848"/>
+		<rom name="War in Middle Earth (Europe) (Disk 3).ipf" size="518252" crc="ab404366" md5="d3863ff9aaa77972c55506bfe792d2f1" sha1="a7da2854fa95f93e44f224329b3cc501956bf8b4"/>
+	</game>
+	<game name="Warhawk (Europe)">
+		<description>Warhawk (Europe)</description>
+		<rom name="Warhawk (Europe).ipf" size="518254" crc="85d4beef" md5="91e39ab7ee00d44ccc8526be37b32843" sha1="f52b5659cc52461564f8a8081b19a95181b710e2"/>
+	</game>
+	<game name="Warlock (Europe) (The Edge)">
+		<description>Warlock (Europe) (The Edge)</description>
+		<rom name="Warlock (Europe) (The Edge).ipf" size="468252" crc="d2fd5a69" md5="a3b7aa6b7d1af4d8761cbd4d346d3067" sha1="6e1d2626020e409efba790322cdb25f73ca64eb5"/>
+	</game>
+	<game name="Warlock's Quest (Europe) (Budget - Pocket Soft)">
+		<description>Warlock's Quest (Europe) (Budget - Pocket Soft)</description>
+		<rom name="Warlock's Quest (Europe) (Budget - Pocket Soft).ipf" size="471664" crc="c911962e" md5="d4efb5f2f158f77e363dab492dc2452c" sha1="3cb786659a2c53e8a986d5e51561eca5775ae0e3"/>
+	</game>
+	<game name="Where Time Stood Still (Europe) (En,De)">
+		<description>Where Time Stood Still (Europe) (En,De)</description>
+		<rom name="Where Time Stood Still (Europe) (En,De).ipf" size="517002" crc="8829de66" md5="1fa3560cc197e2a511395566b2ded6b8" sha1="bfed208fab0cdfe8c8a5de5ff99003a93ce4b0c2"/>
+	</game>
+	<game name="Whirligig (Europe)">
+		<description>Whirligig (Europe)</description>
+		<rom name="Whirligig (Europe).ipf" size="468252" crc="ce2a4c3d" md5="14b8764527889ad06d8b4e688d10082c" sha1="8daae90f3677674510a5c95bad6cbe1be244214b"/>
+	</game>
+	<game name="Wild Streets (Europe) (Budget - Fox Hits)">
+		<description>Wild Streets (Europe) (Budget - Fox Hits)</description>
+		<rom name="Wild Streets (Europe) (Budget - Fox Hits).ipf" size="1025674" crc="723f49ed" md5="32e8bb23d37ebd9c5f8381030cec0f5f" sha1="c5d7fec78f1e0f630f44a469f554be4e35cad873"/>
+	</game>
+	<game name="Winter Games (Europe)">
+		<description>Winter Games (Europe)</description>
+		<rom name="Winter Games (Europe) (Boot Disk).ipf" size="518615" crc="b7688687" md5="" sha1=""/>
+		<rom name="Winter Games (Europe) (Disk 2).ipf" size="518615" crc="08a6648c" md5="" sha1=""/>
+	</game>
+	<game name="Winter Olympiad 88 (Europe) (Summer Pack)">
+		<description>Winter Olympiad 88 (Europe) (Summer Pack)</description>
+		<rom name="Winter Olympiad 88 (Europe) (Summer Pack).ipf" size="1018254" crc="0ce69ad4" md5="" sha1=""/>
+	</game>
+	<game name="Wonderland (Europe) (v1.27 3.1.1991)">
+		<description>Wonderland (Europe) (v1.27 3.1.1991)</description>
+		<rom name="Wonderland (Europe) (v1.27 3.1.1991) (Disk 1).ipf" size="918252" crc="12a20377" md5="" sha1=""/>
+		<rom name="Wonderland (Europe) (v1.27 3.1.1991) (Disk 2).ipf" size="918252" crc="03846d75" md5="" sha1=""/>
+		<rom name="Wonderland (Europe) (v1.27 3.1.1991) (Disk 3).ipf" size="918252" crc="79afaee1" md5="" sha1=""/>
+		<rom name="Wonderland (Europe) (v1.27 3.1.1991) (Disk 4).ipf" size="918252" crc="aed10450" md5="" sha1=""/>
+	</game>
+	<game name="World Championship Boxing Manager (Europe)">
+		<description>World Championship Boxing Manager (Europe)</description>
+		<rom name="World Championship Boxing Manager (Europe) (Disk 1).ipf" size="518252" crc="e2e0c94c" md5="8dffe9da4d96fea7e6770b22513b3f89" sha1="ce737e5941faaefc43a7d66c3b6bd1ad30ed3e67"/>
+		<rom name="World Championship Boxing Manager (Europe) (Disk 2).ipf" size="518252" crc="5e9b73d5" md5="bea1702dcd80f76193629af7228cfa7d" sha1="66af89e80aa0288be835ae46d161fef4ab93ce51"/>
+	</game>
+	<game name="World Class Leader Board (Europe) (Budget - Klassix)">
+		<description>World Class Leader Board (Europe) (Budget - Klassix)</description>
+		<rom name="World Class Leader Board (Europe) (Budget - Klassix).ipf" size="517627" crc="cc8a9a06" md5="c0480c5ddc1fc37ff1519ccfa1916df7" sha1="97289ac4f0e7a2d083edfeb96f1500dc83bbc5a4"/>
+	</game>
+	<game name="World Class Leader Board + Gazza's Super Soccer + Continental Circus (Europe) (Grandstand)">
+		<description>World Class Leader Board + Gazza's Super Soccer + Continental Circus (Europe) (Grandstand)</description>
+		<rom name="World Class Leader Board + Gazza's Super Soccer + Continental Circus (Europe) (Grandstand).ipf" size="1018252" crc="cf4201af" md5="" sha1=""/>
+	</game>
+	<game name="Wrangler (Europe)">
+		<description>Wrangler (Europe)</description>
+		<rom name="Wrangler (Europe).ipf" size="517627" crc="74bc5a25" md5="564cc0952b4f274df01081875d975185" sha1="a0babad97a71be52b7f48839f8962649d67acda1"/>
+	</game>
+	<game name="X-Out (Europe)">
+		<description>X-Out (Europe)</description>
+		<rom name="X-Out (Europe) (Disk 1).ipf" size="525628" crc="1ebeff5a" md5="1fd85af060f96619ba7b9cc3d12ff119" sha1="4e2606baab7875219576bf76c7794c6c09b2f299"/>
+		<rom name="X-Out (Europe) (Disk 2).ipf" size="518252" crc="dad5c809" md5="44b6deafcc8e3264d7a196e42c84b128" sha1="630ae878c1c03ca8a5af88de724c77e85c7beff0"/>
+	</game>
+	<game name="Xenon (Europe) (Budget - 16 Blitz)">
+		<description>Xenon (Europe) (Budget - 16 Blitz)</description>
+		<rom name="Xenon (Europe) (Budget - 16 Blitz).ipf" size="518252" crc="ecf4be37" md5="d2beef77a5c7af0e17067502398450aa" sha1="f3ac6a228aa620137eba057a591ea05031e68030"/>
+	</game>
+	<game name="Yogi's Big Clean Up (Europe)">
+		<description>Yogi's Big Clean Up (Europe)</description>
+		<rom name="Yogi's Big Clean Up (Europe).ipf" size="799077" crc="5d7e074d" md5="" sha1=""/>
+	</game>
+	<game name="Yogi's Great Escape (Europe)">
+		<description>Yogi's Great Escape (Europe)</description>
+		<rom name="Yogi's Great Escape (Europe).ipf" size="471552" crc="8a32157d" md5="" sha1=""/>
+	</game>
+</datafile>

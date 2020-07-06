@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Nintendo - Kiosk Video Compact Flash</name>
+		<description>Nintendo - Kiosk Video Compact Flash</description>
+		<version>20200522-092354</version>
+		<author>Hiccup</author>
+		<homepage>No-Intro</homepage>
+		<url>http://www.no-intro.org</url>
+	</header>
+	<game name="Wii (USA) (v4)">
+		<description>Wii (USA) (v4)</description>
+		<rom name="Wii (USA) (v4).img" size="1014644736" crc="79AAB06D" md5="D4228A3A3DB32891E0590AF44D62F030" sha1="958392357E93FE006B76B6E8FF2EE86339C2CF9A" status="verified"/>
+	</game>
+	<game name="Wii Fit (USA)">
+		<description>Wii Fit (USA)</description>
+		<rom name="Wii Fit (USA).img" size="1014644736" crc="4F687DBC" md5="F5E55D21A54A8486CFD58E714C73D614" sha1="83CD1A9CB066882394FC4908AF892720D68DA2B5" status="verified"/>
+	</game>
+</datafile>

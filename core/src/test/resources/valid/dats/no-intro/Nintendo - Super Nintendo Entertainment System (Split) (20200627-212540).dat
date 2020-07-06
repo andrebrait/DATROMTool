@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Nintendo - Super Nintendo Entertainment System (Split)</name>
+		<description>Nintendo - Super Nintendo Entertainment System (Split)</description>
+		<version>20200627-212540</version>
+		<author>aci68, alcoatjez, BigFred, Blank, C. V. Reynolds, chillerecke, coraz, DeadSkullzJr, DeriLoko3, einstein95, Fake Shemp, Gefflon, Hiccup, Jack, jimmsu, kazumi213, Money_114, omonim2007, Powerpuff, PPLToast, rarenight, relax, Rifu, SonGoku, Special T, Tauwasser, TeamEurope, Vigi, xuom2</author>
+		<homepage>No-Intro</homepage>
+		<url>http://www.no-intro.org</url>
+	</header>
+	<game name="PowerFest 94 (USA)">
+		<description>PowerFest 94 (USA)</description>
+		<rom name="PowerFest 94 (USA) (Scoring).sfc" size="262144" crc="143A1C2F" md5="245C5BF7767F15EFACBF006B99DA0D84" sha1="523FFC9F3E78F5F26FA003A906B26609DEC33DD6"/>
+		<rom name="PowerFest 94 (USA) (Super Mario Bros. - The Lost Levels).sfc" size="524288" crc="38BE3E18" md5="24271247EB0275FE843F101F6E0FAC24" sha1="072BB7DE400B16A811B9066B5D5813600BE3D9C0"/>
+		<rom name="PowerFest 94 (USA) (Super Mario Kart).sfc" size="524288" crc="9974B593" md5="2E8DC55D0241F01B2265DC6667932B9E" sha1="1C53C806D0DD5BAD4B8B9337C0051DDAA0D3355F"/>
+		<rom name="PowerFest 94 (USA) (Ken Griffey Jr. Presents Major League Ba).sfc" size="1048576" crc="C7B5E8C6" md5="9E36D4E2339B017D805A427E3E04F01B" sha1="092A7146C8204019E1B760FD70E422D32CD11B70"/>
+	</game>
+</datafile>

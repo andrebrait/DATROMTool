@@ -1,0 +1,258 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>GCE - Vectrex (Parent-Clone)</name>
+		<description>GCE - Vectrex (Parent-Clone)</description>
+		<version>20170908-211236</version>
+		<date>20170908-211236</date>
+		<author>BitLooter</author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="[BIOS] GCE Vectrex (World)">
+		<description>[BIOS] GCE Vectrex (World)</description>
+		<release name="[BIOS] GCE Vectrex (World)" region="EUR"/>
+		<release name="[BIOS] GCE Vectrex (World)" region="JPN"/>
+		<release name="[BIOS] GCE Vectrex (World)" region="USA"/>
+		<rom name="[BIOS] GCE Vectrex (World).bin" size="8192" crc="ba13fb57" md5="ab082fa8c8e632dd68589a8c7741388f" sha1="65d07426b520ddd3115d40f255511e0fd2e20ae7"/>
+	</game>
+	<game name="3D Crazy Coaster (USA)">
+		<description>3D Crazy Coaster (USA)</description>
+		<release name="3D Crazy Coaster (USA)" region="USA"/>
+		<rom name="3D Crazy Coaster (USA).vec" size="8192" crc="92709b11" md5="00f768e79d6ebfe9bf920ffec4c5c4f2" sha1="4a833e4869221f832dacb7ef0fb2997c870b7d7f"/>
+	</game>
+	<game name="3D Mine Storm (USA)">
+		<description>3D Mine Storm (USA)</description>
+		<release name="3D Mine Storm (USA)" region="USA"/>
+		<rom name="3D Mine Storm (USA).vec" size="8192" crc="b2313487" md5="1a81fea8ac1c1d46de7b633814130857" sha1="1731e892da8945fe4945b43847d23960c581682a"/>
+	</game>
+	<game name="3D Narrow Escape (USA)">
+		<description>3D Narrow Escape (USA)</description>
+		<release name="3D Narrow Escape (USA)" region="USA"/>
+		<rom name="3D Narrow Escape (USA).vec" size="8192" crc="050bd949" md5="f79c596a0205c5e7c427cdbbb1e16918" sha1="9e5d23cb7ef111394e1804e105b6dd277c062df6"/>
+	</game>
+	<game name="AnimAction - Advanced Animation (USA)">
+		<description>AnimAction - Advanced Animation (USA)</description>
+		<release name="AnimAction - Advanced Animation (USA)" region="USA"/>
+		<rom name="AnimAction - Advanced Animation (USA).vec" size="8192" crc="9f62e167" md5="5e7a5dc59e32f2f63d85ae1f0201113a" sha1="71946be47debae89ad191ac382c2015d6a862072"/>
+	</game>
+	<game name="Armor..Attack (World)">
+		<description>Armor..Attack (World)</description>
+		<release name="Armor..Attack (World)" region="EUR"/>
+		<release name="Armor..Attack (World)" region="JPN"/>
+		<release name="Armor..Attack (World)" region="USA"/>
+		<rom name="Armor..Attack (World).vec" size="4096" crc="b7510971" md5="9657037a461eee919462eb6a01879685" sha1="eb76f860130f8cc87826fa931350467760511213"/>
+	</game>
+	<game name="Art Master (USA)">
+		<description>Art Master (USA)</description>
+		<release name="Art Master (USA)" region="USA"/>
+		<rom name="Art Master (USA).vec" size="4096" crc="c8e2f247" md5="972972f871916a922f20779deed8a708" sha1="8f35bac5e8e0fc4ad7291bbfe5ae6e693272de06"/>
+	</game>
+	<game name="Bedlam (USA, Europe)">
+		<description>Bedlam (USA, Europe)</description>
+		<release name="Bedlam (USA, Europe)" region="EUR"/>
+		<release name="Bedlam (USA, Europe)" region="USA"/>
+		<rom name="Bedlam (USA, Europe).vec" size="4096" crc="a2fa649b" md5="268e75778f282d853d77acf42c6c8734" sha1="3ff3fa4feda6d562dedff2a10cfa8679d8318044"/>
+	</game>
+	<game name="Berzerk (World)">
+		<description>Berzerk (World)</description>
+		<release name="Berzerk (World)" region="EUR"/>
+		<release name="Berzerk (World)" region="JPN"/>
+		<release name="Berzerk (World)" region="USA"/>
+		<rom name="Berzerk (World).vec" size="4096" crc="eafe2455" md5="640ae7bd4538bad11256999db68de5a0" sha1="e4badd494ed548721328ef869d33ad70e3e522c9"/>
+	</game>
+	<game name="Blitz! - Action Football (USA, Europe) (0F11CE0C)">
+		<description>Blitz! - Action Football (USA, Europe) (0F11CE0C)</description>
+		<release name="Blitz! - Action Football (USA, Europe) (0F11CE0C)" region="EUR"/>
+		<release name="Blitz! - Action Football (USA, Europe) (0F11CE0C)" region="USA"/>
+		<rom name="Blitz! - Action Football (USA, Europe) (0F11CE0C).vec" size="8192" crc="0f11ce0c" md5="94f144c31fd4563f9473ed0563463e54" sha1="60893dfada42cf50c94083d45ad5bd14d0c031c8"/>
+	</game>
+	<game name="Blitz! - Action Football (USA, Europe) (881B27C5)" cloneof="Blitz! - Action Football (USA, Europe) (0F11CE0C)">
+		<description>Blitz! - Action Football (USA, Europe) (881B27C5)</description>
+		<rom name="Blitz! - Action Football (USA, Europe) (881B27C5).vec" size="8192" crc="881b27c5" md5="5d74770bb175357812e61ee7ca731270" sha1="aa1aa811c9ce5e19f43b78a6531cdd0e707337bd"/>
+	</game>
+	<game name="Clean Sweep (World)">
+		<description>Clean Sweep (World)</description>
+		<release name="Clean Sweep (World)" region="EUR"/>
+		<release name="Clean Sweep (World)" region="JPN"/>
+		<release name="Clean Sweep (World)" region="USA"/>
+		<rom name="Clean Sweep (World).vec" size="4096" crc="f1b1de78" md5="a376d5648e08f348e5965c058c631c6d" sha1="67f8513958c04e936b135740ed4ec6e6fa1763d5"/>
+	</game>
+	<game name="Cosmic Chasm (World)">
+		<description>Cosmic Chasm (World)</description>
+		<release name="Cosmic Chasm (World)" region="EUR"/>
+		<release name="Cosmic Chasm (World)" region="JPN"/>
+		<release name="Cosmic Chasm (World)" region="USA"/>
+		<rom name="Cosmic Chasm (World).vec" size="4096" crc="6c1afa52" md5="9b61653ed9dafd4cfb7f9d94404259ac" sha1="56a7f277bf09f94461dda542c04c36266d838b86"/>
+	</game>
+	<game name="Dark Tower (USA) (Proto)">
+		<description>Dark Tower (USA) (Proto)</description>
+		<release name="Dark Tower (USA) (Proto)" region="USA"/>
+		<rom name="Dark Tower (USA) (Proto).vec" size="12288" crc="9dcfd5b7" md5="db9929b0ad53c97afda065596806bf86" sha1="dbb0b378aacc2a18dfb476aa99ab00d6ab395205"/>
+	</game>
+	<game name="Engine Analyzer (USA) (Proto)">
+		<description>Engine Analyzer (USA) (Proto)</description>
+		<release name="Engine Analyzer (USA) (Proto)" region="USA"/>
+		<rom name="Engine Analyzer (USA) (Proto).vec" size="4096" crc="fe9a501a" md5="896793a17a32932bcd64c52c77b00d55" sha1="c226d78301dbe40f2194c165f2124d5afa885be4"/>
+	</game>
+	<game name="Fortress of Narzod (USA, Europe)">
+		<description>Fortress of Narzod (USA, Europe)</description>
+		<release name="Fortress of Narzod (USA, Europe)" region="EUR"/>
+		<release name="Fortress of Narzod (USA, Europe)" region="USA"/>
+		<rom name="Fortress of Narzod (USA, Europe).vec" size="8192" crc="13a35c8a" md5="e65b3262e9447a747d93e0ccb1dbb7df" sha1="286e061331289b031de33725a4966c379c1df47f"/>
+	</game>
+	<game name="Heads-Up - Action Soccer (USA)">
+		<description>Heads-Up - Action Soccer (USA)</description>
+		<release name="Heads-Up - Action Soccer (USA)" region="USA"/>
+		<rom name="Heads-Up - Action Soccer (USA).vec" size="8192" crc="e61a7de3" md5="501dd2845432f10e4b9531240f409b8c" sha1="0406c13952fb0bd6adc68298ae163ebc6160484c"/>
+	</game>
+	<game name="HyperChase - Auto Race (World)">
+		<description>HyperChase - Auto Race (World)</description>
+		<release name="HyperChase - Auto Race (World)" region="EUR"/>
+		<release name="HyperChase - Auto Race (World)" region="JPN"/>
+		<release name="HyperChase - Auto Race (World)" region="USA"/>
+		<rom name="HyperChase - Auto Race (World).vec" size="4096" crc="4bb13472" md5="7580926ee22f06fd2ccde4b65184715f" sha1="a246f1d94a5b062b60784787a1d6d499b21c10cd"/>
+	</game>
+	<game name="Mail Plane (USA) (Proto) (DA1AC0DB)">
+		<description>Mail Plane (USA) (Proto) (DA1AC0DB)</description>
+		<release name="Mail Plane (USA) (Proto) (DA1AC0DB)" region="USA"/>
+		<rom name="Mail Plane (USA) (Proto) (DA1AC0DB).vec" size="8192" crc="da1ac0db" md5="e6c821917e168b1e6e27bf2b90ad6cfb" sha1="05f56e708f752ca801f8013c7da9b0db01508ba5"/>
+	</game>
+	<game name="Mail Plane (USA) (Proto) (05838962)" cloneof="Mail Plane (USA) (Proto) (DA1AC0DB)">
+		<description>Mail Plane (USA) (Proto) (05838962)</description>
+		<rom name="Mail Plane (USA) (Proto) (05838962).vec" size="8192" crc="05838962" md5="e0dfc58763716c3b6a89e08f4869396e" sha1="969d5ec7d7aba9ac25e54069149d9586217ab63d"/>
+	</game>
+	<game name="Melody Master - Music Composition and Entertainment (USA)">
+		<description>Melody Master - Music Composition and Entertainment (USA)</description>
+		<release name="Melody Master - Music Composition and Entertainment (USA)" region="USA"/>
+		<rom name="Melody Master - Music Composition and Entertainment (USA).vec" size="8192" crc="afefa29c" md5="80e72d7e1bb06fd5d5a24c93f1b61f14" sha1="58aecc7fb1d26a22b09e9a13d845e4ed12e2449d"/>
+	</game>
+	<game name="Mine Storm (World)">
+		<description>Mine Storm (World)</description>
+		<release name="Mine Storm (World)" region="EUR"/>
+		<release name="Mine Storm (World)" region="JPN"/>
+		<rom name="Mine Storm (World).vec" size="4096" crc="6d509566" md5="ee19e350be0af2a509a202b057488dc8" sha1="5f00ed35f189357b4a16a190520166371ca57906"/>
+	</game>
+	<game name="Mine Storm II (USA) (Rev 2)" cloneof="Mine Storm (World)">
+		<description>Mine Storm II (USA) (Rev 2)</description>
+		<release name="Mine Storm II (USA) (Rev 2)" region="USA"/>
+		<rom name="Mine Storm II (USA) (Rev 2).vec" size="4096" crc="f5b3b374" md5="126fecbf4fb09fdb5a3c9af92abaed7c" sha1="1fdcc6e54ae5177bc9cdc79ce616ae3401e5c229"/>
+	</game>
+	<game name="Mr. Boston Clean Sweep (Europe)">
+		<description>Mr. Boston Clean Sweep (Europe)</description>
+		<rom name="Mr. Boston Clean Sweep (Europe).vec" size="8192" crc="bd4da4c2" md5="1c95cf8fcd2c98db747208ade464a44f" sha1="299841a116e59399af4e74ccae23ddfc078e007b"/>
+	</game>
+	<game name="Pitcher's Duel (USA) (Proto)">
+		<description>Pitcher's Duel (USA) (Proto)</description>
+		<release name="Pitcher's Duel (USA) (Proto)" region="USA"/>
+		<rom name="Pitcher's Duel (USA) (Proto).vec" size="8192" crc="c25f2e0e" md5="e7bf7de16b01419a819826cce3dc25ee" sha1="f6f26beb20bb364761a9466ff4087c7b9713d048"/>
+	</game>
+	<game name="Polar Rescue (USA)">
+		<description>Polar Rescue (USA)</description>
+		<release name="Polar Rescue (USA)" region="USA"/>
+		<rom name="Polar Rescue (USA).vec" size="8192" crc="a7471784" md5="5c1c413e51aa282015807dc60213fd3d" sha1="87248dcd3db51c1ebf3f8e07e21ec021eec0b9be"/>
+	</game>
+	<game name="Polar Rescue (USA) (Beta)" cloneof="Polar Rescue (USA)">
+		<description>Polar Rescue (USA) (Beta)</description>
+		<rom name="Polar Rescue (USA) (Beta).vec" size="8192" crc="ad844645" md5="f599da79b5c324c2a11c117d256a64c0" sha1="b7bd8c8003c60535e1e776758f5c289aa9a77e81"/>
+	</game>
+	<game name="Pole Position (USA) (A00ED3D6)">
+		<description>Pole Position (USA) (A00ED3D6)</description>
+		<release name="Pole Position (USA) (A00ED3D6)" region="USA"/>
+		<rom name="Pole Position (USA) (A00ED3D6).vec" size="8192" crc="a00ed3d6" md5="f94173910549038d4d8f329413a5aa54" sha1="8454d472435e7a6a4ca5fe129162480ca6e84b87"/>
+	</game>
+	<game name="Pole Position (USA) (C10F37D8)" cloneof="Pole Position (USA) (A00ED3D6)">
+		<description>Pole Position (USA) (C10F37D8)</description>
+		<rom name="Pole Position (USA) (C10F37D8).vec" size="8192" crc="c10f37d8" md5="f85c521f445c82bf200b5b85b9b1cd60" sha1="9f5b0b5e6caf6d887d3637ace70ad6a6258b999d"/>
+	</game>
+	<game name="RA+A Spectrum I+ Stress Tester (USA) (Proto)">
+		<description>RA+A Spectrum I+ Stress Tester (USA) (Proto)</description>
+		<release name="RA+A Spectrum I+ Stress Tester (USA) (Proto)" region="USA"/>
+		<rom name="RA+A Spectrum I+ Stress Tester (USA) (Proto).vec" size="32768" crc="20af7f3f" md5="4bb04a738c216e98cc07ed28f6cd4db8" sha1="7ce85db8dd32687ad7629631ae113820371faf7c"/>
+	</game>
+	<game name="Rip Off (World)">
+		<description>Rip Off (World)</description>
+		<release name="Rip Off (World)" region="EUR"/>
+		<release name="Rip Off (World)" region="JPN"/>
+		<release name="Rip Off (World)" region="USA"/>
+		<rom name="Rip Off (World).vec" size="4096" crc="34a98132" md5="808e0501990bd01882c102df00f20064" sha1="22f7a490f6f7aaa31e892b03a85178af211f62e3"/>
+	</game>
+	<game name="Scramble (USA, Europe)">
+		<description>Scramble (USA, Europe)</description>
+		<release name="Scramble (USA, Europe)" region="EUR"/>
+		<release name="Scramble (USA, Europe)" region="USA"/>
+		<rom name="Scramble (USA, Europe).vec" size="4096" crc="707c8ffe" md5="95370908561a782edf138df41ccb8f18" sha1="38e38b5c60466146d4648f8929b5ce3a08dcbe0d"/>
+	</game>
+	<game name="Sledge 3D (USA) (Sample)">
+		<description>Sledge 3D (USA) (Sample)</description>
+		<release name="Sledge 3D (USA) (Sample)" region="USA"/>
+		<rom name="Sledge 3D (USA) (Sample).vec" size="3671" crc="863b89e8" md5="cf6c01b0212e3b2191a97139cf1f427a" sha1="526b347bc02a47c8bda326b1f6da50284127f038"/>
+	</game>
+	<game name="Solar Quest (World)">
+		<description>Solar Quest (World)</description>
+		<release name="Solar Quest (World)" region="EUR"/>
+		<release name="Solar Quest (World)" region="JPN"/>
+		<release name="Solar Quest (World)" region="USA"/>
+		<rom name="Solar Quest (World).vec" size="4096" crc="5c4611c8" md5="11a9bd419cf094de8caa8a44d76b69ab" sha1="38072dc491d5c729c06f4c50bc310d361e0ff62a"/>
+	</game>
+	<game name="Space Wars (World)">
+		<description>Space Wars (World)</description>
+		<release name="Space Wars (World)" region="EUR"/>
+		<release name="Space Wars (World)" region="JPN"/>
+		<release name="Space Wars (World)" region="USA"/>
+		<rom name="Space Wars (World).vec" size="4096" crc="a3be5aff" md5="2decdf9f55df7fb99761b2fe51425e40" sha1="0c229dd12a55044681585f7fdabd37dbc1243b59"/>
+	</game>
+	<game name="Spike (USA, Europe)">
+		<description>Spike (USA, Europe)</description>
+		<release name="Spike (USA, Europe)" region="EUR"/>
+		<release name="Spike (USA, Europe)" region="USA"/>
+		<rom name="Spike (USA, Europe).vec" size="8192" crc="62a61843" md5="5a90ab748f7b220edaf8c1d67e0bfe89" sha1="8bba6705e6f69f55ab6d105eac2fd5b0c0d16d9f"/>
+	</game>
+	<game name="Spin ball (USA)">
+		<description>Spin ball (USA)</description>
+		<release name="Spin ball (USA)" region="USA"/>
+		<rom name="Spin ball (USA).vec" size="8192" crc="02f41733" md5="ecc143f87a702af7a1786b58a78ace01" sha1="2e8285061530ccadfa2d8d11c374ae244449ebfa"/>
+	</game>
+	<game name="Star Castle (USA)">
+		<description>Star Castle (USA)</description>
+		<release name="Star Castle (USA)" region="USA"/>
+		<rom name="Star Castle (USA).vec" size="4096" crc="c9039623" md5="1224c9beae22ee7354e4220c46237696" sha1="c9b79f1ba30dcbce5a068b606a97775cf863fe0a"/>
+	</game>
+	<game name="Star Ship (Europe)">
+		<description>Star Ship (Europe)</description>
+		<release name="Star Ship (Europe)" region="EUR"/>
+		<rom name="Star Ship (Europe).vec" size="4096" crc="7967a8cb" md5="47cefe6f77dbafb4475a64fe89da02c0" sha1="d182eac5a54ffc642fcbe4a495c7c09f87b43585"/>
+	</game>
+	<game name="Star Trek - The Motion Picture (USA)" cloneof="Star Ship (Europe)">
+		<description>Star Trek - The Motion Picture (USA)</description>
+		<release name="Star Trek - The Motion Picture (USA)" region="USA"/>
+		<rom name="Star Trek - The Motion Picture (USA).vec" size="4096" crc="3768d8c3" md5="0b67a6339e9c1d8385e8fdfc48f447bc" sha1="3a2ee61316fb316d9e9efdf5ee405e813475b466"/>
+	</game>
+	<game name="StarHawk (World)">
+		<description>StarHawk (World)</description>
+		<release name="StarHawk (World)" region="EUR"/>
+		<release name="StarHawk (World)" region="JPN"/>
+		<release name="StarHawk (World)" region="USA"/>
+		<rom name="StarHawk (World).vec" size="4096" crc="4de1f06b" md5="add42c10019e88f47dd98791f8de3148" sha1="d6b388b3951e34971c1b00c7fdf8dd00ad52df09"/>
+	</game>
+	<game name="Test Cartridge (USA) (Rev 4) (Proto)">
+		<description>Test Cartridge (USA) (Rev 4) (Proto)</description>
+		<release name="Test Cartridge (USA) (Rev 4) (Proto)" region="USA"/>
+		<rom name="Test Cartridge (USA) (Rev 4) (Proto).vec" size="4096" crc="7297e815" md5="8d66945eb9826d91ce27e07b2f8854f9" sha1="e3418055f1e79a2300572c557e71bf2ce8badbfa"/>
+	</game>
+	<game name="Tour De France (USA) (Proto)">
+		<description>Tour De France (USA) (Proto)</description>
+		<release name="Tour De France (USA) (Proto)" region="USA"/>
+		<rom name="Tour De France (USA) (Proto).vec" size="8192" crc="bb4791f1" md5="8ce9091361e0884bcd60409fc3301edc" sha1="4f461b0b51c82433e70130eac5494f26239b4453"/>
+	</game>
+	<game name="WebWarp (Europe)">
+		<description>WebWarp (Europe)</description>
+		<release name="WebWarp (Europe)" region="EUR"/>
+		<rom name="WebWarp (Europe).vec" size="8192" crc="521107c3" md5="a3e0f44454d4100b18493f1bd2485d8b" sha1="9681dc5d38a31cb0d0c6c3bd0fc76bfdde531cce"/>
+	</game>
+	<game name="WebWars (USA)" cloneof="WebWarp (Europe)">
+		<description>WebWars (USA)</description>
+		<release name="WebWars (USA)" region="USA"/>
+		<rom name="WebWars (USA).vec" size="8192" crc="2ee20103" md5="a398c18b4ce87929471b559b2bc7e79f" sha1="08e2df9f7769c16a4d730adf8d659f8ea4be7f9d"/>
+	</game>
+</datafile>

@@ -1,0 +1,634 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Bandai - WonderSwan (Parent-Clone)</name>
+		<description>Bandai - WonderSwan (Parent-Clone)</description>
+		<version>20200427-065439</version>
+		<date>20200427-065439</date>
+		<author>BitLooter</author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="[BIOS] WonderSwan Boot ROM (Japan) (En)">
+		<description>[BIOS] WonderSwan Boot ROM (Japan) (En)</description>
+		<release name="[BIOS] WonderSwan Boot ROM (Japan) (En)" region="JPN"/>
+		<rom name="[BIOS] WonderSwan Boot ROM (Japan) (En).ws" size="4096" crc="7f35f890" md5="54b915694731cc22e07d3fb8a00ee2db" sha1="4015bcacea76bb0b5bbdb13c5358f7e1abb986a1"/>
+	</game>
+	<game name="Anchorz Field (Japan)">
+		<description>Anchorz Field (Japan)</description>
+		<release name="Anchorz Field (Japan)" region="JPN"/>
+		<rom name="Anchorz Field (Japan).ws" size="1048576" crc="425eb893" md5="7528a5de5924896d152920b1eaf8fd5d" sha1="06447c248afce04c4f4a1c3b5f7a4ab6f383c94b" status="verified"/>
+	</game>
+	<game name="Armored Unit (Japan)">
+		<description>Armored Unit (Japan)</description>
+		<release name="Armored Unit (Japan)" region="JPN"/>
+		<rom name="Armored Unit (Japan).ws" size="1048576" crc="04366d92" md5="9587c46e7a2d4d8c2e5ddc971b7325fd" sha1="1578669c1fcf59ab5f5e603c6a65121d7ae209b1" status="verified"/>
+	</game>
+	<game name="Bakusou Dekotora Densetsu for WonderSwan (Japan)">
+		<description>Bakusou Dekotora Densetsu for WonderSwan (Japan)</description>
+		<release name="Bakusou Dekotora Densetsu for WonderSwan (Japan)" region="JPN"/>
+		<rom name="Bakusou Dekotora Densetsu for WonderSwan (Japan).ws" size="2097152" crc="392dd813" md5="c53a5d8c189a23b16c444c4e8ef581af" sha1="821bb81917445b63ac663c706ab4ce27de28543f" status="verified"/>
+	</game>
+	<game name="beat mania for WonderSwan (Japan)">
+		<description>beat mania for WonderSwan (Japan)</description>
+		<release name="beat mania for WonderSwan (Japan)" region="JPN"/>
+		<rom name="beat mania for WonderSwan (Japan).ws" size="16777216" crc="324622c9" md5="b814e71eb1d079466a9535566d605280" sha1="544e76133fa53fc0ae5e00e3465b9cf634f14fd0" status="verified"/>
+	</game>
+	<game name="Buffers Evolution (Japan)">
+		<description>Buffers Evolution (Japan)</description>
+		<release name="Buffers Evolution (Japan)" region="JPN"/>
+		<rom name="Buffers Evolution (Japan).ws" size="4194304" crc="b25a0635" md5="9b15b2236cae605f7bc3bea3859fdd36" sha1="35eea568f756bacf533bb9aaad7e3239ba00e411" status="verified"/>
+	</game>
+	<game name="Cardcaptor Sakura - Sakura to Fushigi na Clow Card (Japan)">
+		<description>Cardcaptor Sakura - Sakura to Fushigi na Clow Card (Japan)</description>
+		<release name="Cardcaptor Sakura - Sakura to Fushigi na Clow Card (Japan)" region="JPN"/>
+		<rom name="Cardcaptor Sakura - Sakura to Fushigi na Clow Card (Japan).ws" size="2097152" crc="7f3a14c0" md5="bb9f130931b2b7d1f646f44d1667ad63" sha1="39e9a897b681b2c326b052827d7c534f22290286" status="verified"/>
+	</game>
+	<game name="Chaos Gear - Michibikareshi Mono (Japan)">
+		<description>Chaos Gear - Michibikareshi Mono (Japan)</description>
+		<release name="Chaos Gear - Michibikareshi Mono (Japan)" region="JPN"/>
+		<rom name="Chaos Gear - Michibikareshi Mono (Japan).ws" size="2097152" crc="27b3cc18" md5="f647a51827915109d1bc6a05c076eda4" sha1="e212bba4fac51bbfcf440966da0e67b1686dcfc5" status="verified"/>
+	</game>
+	<game name="Chocobo no Fushigi na Dungeon for WonderSwan (Japan) (Rev 3)">
+		<description>Chocobo no Fushigi na Dungeon for WonderSwan (Japan) (Rev 3)</description>
+		<release name="Chocobo no Fushigi na Dungeon for WonderSwan (Japan) (Rev 3)" region="JPN"/>
+		<rom name="Chocobo no Fushigi na Dungeon for WonderSwan (Japan) (Rev 3).ws" size="2097152" crc="aa53971d" md5="03b416e7326a34c9546e8336f7d50bf2" sha1="f7a65e95a8e97f35ec2419897ad96af1e1d49676" status="verified"/>
+	</game>
+	<game name="Chocobo no Fushigi na Dungeon for WonderSwan (Japan) (Rev 2)" cloneof="Chocobo no Fushigi na Dungeon for WonderSwan (Japan) (Rev 3)">
+		<description>Chocobo no Fushigi na Dungeon for WonderSwan (Japan) (Rev 2)</description>
+		<rom name="Chocobo no Fushigi na Dungeon for WonderSwan (Japan) (Rev 2).ws" size="2097152" crc="ccaa4853" md5="edbc77ab0d585447d927318a6eb66c9b" sha1="3b62fd2841602f1077270848ab7a3aad58712ee9" status="verified"/>
+	</game>
+	<game name="Chocobo no Fushigi na Dungeon for WonderSwan (Japan) (Rev 1)" cloneof="Chocobo no Fushigi na Dungeon for WonderSwan (Japan) (Rev 3)">
+		<description>Chocobo no Fushigi na Dungeon for WonderSwan (Japan) (Rev 1)</description>
+		<rom name="Chocobo no Fushigi na Dungeon for WonderSwan (Japan) (Rev 1).ws" size="2097152" crc="a607a350" md5="6d7d60c65e5a5cc92f83a62c434577b5" sha1="a8c4f423429a8683cfebd05370ea122613349033" status="verified"/>
+	</game>
+	<game name="Chou Aniki - Otoko no Tamafuda (Japan) (Rev 4)">
+		<description>Chou Aniki - Otoko no Tamafuda (Japan) (Rev 4)</description>
+		<release name="Chou Aniki - Otoko no Tamafuda (Japan) (Rev 4)" region="JPN"/>
+		<rom name="Chou Aniki - Otoko no Tamafuda (Japan) (Rev 4).ws" size="1048576" crc="7fff2520" md5="24fd819c4f4866d7c5c340d0273acbf9" sha1="eb538b82c5516fae8ce38778e41fb118aa5c830f" status="verified"/>
+	</game>
+	<game name="Chou Denki Card Battle - Youfu Makai (Japan) (Rev 3)">
+		<description>Chou Denki Card Battle - Youfu Makai (Japan) (Rev 3)</description>
+		<release name="Chou Denki Card Battle - Youfu Makai (Japan) (Rev 3)" region="JPN"/>
+		<rom name="Chou Denki Card Battle - Youfu Makai (Japan) (Rev 3).ws" size="2097152" crc="56e2c069" md5="5432d188664bc4e5dae0fc859580cda1" sha1="c4436a59fd830ba6af2d63462f71e1ab1cfa3212" status="verified"/>
+	</game>
+	<game name="Clock Tower for WonderSwan (Japan) (Rev 1)">
+		<description>Clock Tower for WonderSwan (Japan) (Rev 1)</description>
+		<release name="Clock Tower for WonderSwan (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Clock Tower for WonderSwan (Japan) (Rev 1).ws" size="4194304" crc="4e8909d1" md5="8f0ba3401662a40e8da5ebcfe7b85e81" sha1="db9b3308336b59aeff7bd173d687953a37739381" status="verified"/>
+	</game>
+	<game name="Crazy Climber (Japan)">
+		<description>Crazy Climber (Japan)</description>
+		<release name="Crazy Climber (Japan)" region="JPN"/>
+		<rom name="Crazy Climber (Japan).ws" size="1048576" crc="0cb57376" md5="0ed3a08a3a9858f65d1487889645dc55" sha1="a88882426bf435416616191902a26b2b066f2491" status="verified"/>
+	</game>
+	<game name="D's Garage 21 Koubo Game - Tane o Maku Tori (Japan)">
+		<description>D's Garage 21 Koubo Game - Tane o Maku Tori (Japan)</description>
+		<release name="D's Garage 21 Koubo Game - Tane o Maku Tori (Japan)" region="JPN"/>
+		<rom name="D's Garage 21 Koubo Game - Tane o Maku Tori (Japan).ws" size="1048576" crc="b1caec06" md5="e39e90944a683b9d4a996a53804826f0" sha1="83e190af2e25fbb3e93b1d5835c52fe6f1d279ce" status="verified"/>
+	</game>
+	<game name="Densha de Go! (Japan) (Rev 1)">
+		<description>Densha de Go! (Japan) (Rev 1)</description>
+		<release name="Densha de Go! (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Densha de Go! (Japan) (Rev 1).ws" size="4194304" crc="b62e5dd0" md5="7b2180e38b4720ce711768a73c33c9df" sha1="d3da0ae529c6f78162682141154a95879f288ca7" status="verified"/>
+	</game>
+	<game name="Densha de Go! 2 (Japan)">
+		<description>Densha de Go! 2 (Japan)</description>
+		<release name="Densha de Go! 2 (Japan)" region="JPN"/>
+		<rom name="Densha de Go! 2 (Japan).ws" size="4194304" crc="af9d8f42" md5="eec79ad5bb634a90b9d020415046e921" sha1="c07f776ac4374b648d1a49efd9d6fcd0db2ac1fa" status="verified"/>
+	</game>
+	<game name="Digimon Adventure - Anode Tamer (Japan) (Rev 1)">
+		<description>Digimon Adventure - Anode Tamer (Japan) (Rev 1)</description>
+		<release name="Digimon Adventure - Anode Tamer (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Digimon Adventure - Anode Tamer (Japan) (Rev 1).ws" size="2097152" crc="6e9dd148" md5="ba249ee5c5ccb1512e0fb6af200a361a" sha1="9db54826c2887dea07aac774bd15e092596e37af" status="verified"/>
+	</game>
+	<game name="Digimon Adventure - Anode Tamer (Japan)" cloneof="Digimon Adventure - Anode Tamer (Japan) (Rev 1)">
+		<description>Digimon Adventure - Anode Tamer (Japan)</description>
+		<rom name="Digimon Adventure - Anode Tamer (Japan).ws" size="2097152" crc="fc6946f0" md5="db33df2754fb51ce740006cf9176049f" sha1="c49bd00c95bca49a183d59f85e81815efb1a2fb9" status="verified"/>
+	</game>
+	<game name="Digimon Adventure - Cathode Tamer (Japan)">
+		<description>Digimon Adventure - Cathode Tamer (Japan)</description>
+		<release name="Digimon Adventure - Cathode Tamer (Japan)" region="JPN"/>
+		<rom name="Digimon Adventure - Cathode Tamer (Japan).ws" size="2097152" crc="42ad238b" md5="10f50d5b44a7b8b1f308c1bea8263823" sha1="0b54cc1d350ab92c42ce8214784389b994562bf6" status="verified"/>
+	</game>
+	<game name="Digimon Adventure 02 - Tag Tamers (Japan) (Rev 1)">
+		<description>Digimon Adventure 02 - Tag Tamers (Japan) (Rev 1)</description>
+		<release name="Digimon Adventure 02 - Tag Tamers (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Digimon Adventure 02 - Tag Tamers (Japan) (Rev 1).ws" size="2097152" crc="6ededaf8" md5="2cb264ba76b88452d7576992f2b90dbf" sha1="44a5502b70ea75926b87377e3f634c8093bc574a" status="verified"/>
+	</game>
+	<game name="Digimon Adventure 02 - Tag Tamers (Japan)" cloneof="Digimon Adventure 02 - Tag Tamers (Japan) (Rev 1)">
+		<description>Digimon Adventure 02 - Tag Tamers (Japan)</description>
+		<rom name="Digimon Adventure 02 - Tag Tamers (Japan).ws" size="2097152" crc="56ce1bc5" md5="0ae28388d68fb56bee38cc96faf37f90" sha1="521754084afc6321ae329421b9d2ab0f0cac8c70" status="verified"/>
+	</game>
+	<game name="Digital Monster - Ver. WonderSwan (Japan) (Rev 1)">
+		<description>Digital Monster - Ver. WonderSwan (Japan) (Rev 1)</description>
+		<release name="Digital Monster - Ver. WonderSwan (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Digital Monster - Ver. WonderSwan (Japan) (Rev 1).ws" size="2097152" crc="ab59de2e" md5="deb2c37baea996386b2af10bdd0ca3b1" sha1="ecea24db6e65254ab4d6e312de0eb951c7df716f" status="verified"/>
+	</game>
+	<game name="Digimon - Ver. WonderSwan (Hong Kong)" cloneof="Digital Monster - Ver. WonderSwan (Japan) (Rev 1)">
+		<description>Digimon - Ver. WonderSwan (Hong Kong)</description>
+		<release name="Digimon - Ver. WonderSwan (Hong Kong)" region="HK"/>
+		<rom name="Digimon - Ver. WonderSwan (Hong Kong).ws" size="2097152" crc="94ea6ffc" md5="d5f7fbf06c57aa50f08c14e64d2e02a2" sha1="5cc59ec1687fe83ec5fb048d3dfc37849747df34" status="verified"/>
+	</game>
+	<game name="Digital Partner (Japan)">
+		<description>Digital Partner (Japan)</description>
+		<release name="Digital Partner (Japan)" region="JPN"/>
+		<rom name="Digital Partner (Japan).ws" size="2097152" crc="b5e675ae" md5="768b8f5722f0b07be4e8ac356e90acf2" sha1="c622f6742ca3f0129fc12dce0a1c17d292388ffb" status="verified"/>
+	</game>
+	<game name="Dokodemo Hamster (Japan)">
+		<description>Dokodemo Hamster (Japan)</description>
+		<release name="Dokodemo Hamster (Japan)" region="JPN"/>
+		<rom name="Dokodemo Hamster (Japan).ws" size="1048576" crc="89e7d950" md5="da17db6b7f491510e4b284996ff0eebf" sha1="3d5a1ed77e721908eb1145aaedef17c0ee6355ae" status="verified"/>
+	</game>
+	<game name="Engacho! for WonderSwan (Japan)">
+		<description>Engacho! for WonderSwan (Japan)</description>
+		<release name="Engacho! for WonderSwan (Japan)" region="JPN"/>
+		<rom name="Engacho! for WonderSwan (Japan).ws" size="1048576" crc="4e467626" md5="3584e4a63a6ae9fa546722a349f88573" sha1="f79451034b6d844f0e10c825306bbc26f26a5466" status="verified"/>
+	</game>
+	<game name="Fever - Sankyo Koushiki Pachinko Simulation for WonderSwan (Japan)">
+		<description>Fever - Sankyo Koushiki Pachinko Simulation for WonderSwan (Japan)</description>
+		<release name="Fever - Sankyo Koushiki Pachinko Simulation for WonderSwan (Japan)" region="JPN"/>
+		<rom name="Fever - Sankyo Koushiki Pachinko Simulation for WonderSwan (Japan).ws" size="2097152" crc="8922dd0b" md5="ae2e0e9da1f25119cb4ad24a821446ba" sha1="f26b0215c49e04cb8ef6f031b627dff6a49d2015" status="verified"/>
+	</game>
+	<game name="Final Lap 2000 (Japan)">
+		<description>Final Lap 2000 (Japan)</description>
+		<release name="Final Lap 2000 (Japan)" region="JPN"/>
+		<rom name="Final Lap 2000 (Japan).ws" size="1048576" crc="ce2f1a1d" md5="a466797b353d610f43a0f030cec721c1" sha1="cfcb14be6d2f1dbffdfcefb8c8d83b4f39bc102b" status="verified"/>
+	</game>
+	<game name="Fire Pro Wrestling for WonderSwan (Japan) (Rev 5)">
+		<description>Fire Pro Wrestling for WonderSwan (Japan) (Rev 5)</description>
+		<release name="Fire Pro Wrestling for WonderSwan (Japan) (Rev 5)" region="JPN"/>
+		<rom name="Fire Pro Wrestling for WonderSwan (Japan) (Rev 5).ws" size="4194304" crc="f246a68e" md5="dd9be38cd66ffd3b526d3388c6b99b8e" sha1="fbb745b016cc710ff6f82ec3091a181415d8de61" status="verified"/>
+	</game>
+	<game name="Fishing Freaks - Bass Rise for WonderSwan (Japan)">
+		<description>Fishing Freaks - Bass Rise for WonderSwan (Japan)</description>
+		<release name="Fishing Freaks - Bass Rise for WonderSwan (Japan)" region="JPN"/>
+		<rom name="Fishing Freaks - Bass Rise for WonderSwan (Japan).ws" size="1048576" crc="a1fb16fc" md5="eb3f161ea3db4ebd759c9b1346032d4f" sha1="f8f077da30f227f3793e97c7f1d656559f08b9d4" status="verified"/>
+	</game>
+	<game name="From TV Animation One Piece - Mezase Kaizoku Ou! (Japan)">
+		<description>From TV Animation One Piece - Mezase Kaizoku Ou! (Japan)</description>
+		<release name="From TV Animation One Piece - Mezase Kaizoku Ou! (Japan)" region="JPN"/>
+		<rom name="From TV Animation One Piece - Mezase Kaizoku Ou! (Japan).ws" size="1048576" crc="f2e362b8" md5="fe30867e698c071f6be94cce24b095ee" sha1="99c831c27c478064e3d3fa8f9f089cc28f0e946f" status="verified"/>
+	</game>
+	<game name="Ganso Jajamaru-kun (Japan)">
+		<description>Ganso Jajamaru-kun (Japan)</description>
+		<release name="Ganso Jajamaru-kun (Japan)" region="JPN"/>
+		<rom name="Ganso Jajamaru-kun (Japan).ws" size="524288" crc="a193458c" md5="6f09fc64352ba0051e724c4ae58402f4" sha1="cbf6455e89b20a000b6121e5c485be1a20d1f726" status="verified"/>
+	</game>
+	<game name="Glocal Hexcite (Japan)">
+		<description>Glocal Hexcite (Japan)</description>
+		<release name="Glocal Hexcite (Japan)" region="JPN"/>
+		<rom name="Glocal Hexcite (Japan).ws" size="1048576" crc="4aed3911" md5="21744e51668ab1fca63e5b2a204c194d" sha1="837528b9d95e309f7b1e8c4ffd46ca3e2b68a5a3" status="verified"/>
+	</game>
+	<game name="Gomoku Narabe &amp; Reversi - Touryuumon (Japan)">
+		<description>Gomoku Narabe &amp; Reversi - Touryuumon (Japan)</description>
+		<release name="Gomoku Narabe &amp; Reversi - Touryuumon (Japan)" region="JPN"/>
+		<rom name="Gomoku Narabe &amp; Reversi - Touryuumon (Japan).ws" size="1048576" crc="a9f11523" md5="3ab76903152993aeee1118818bfad8f7" sha1="0931ddec058eefb32a68a1752716ed2ba68b78bf" status="verified"/>
+	</game>
+	<game name="Goraku Ou Tango! (Japan) (Rev 2)">
+		<description>Goraku Ou Tango! (Japan) (Rev 2)</description>
+		<release name="Goraku Ou Tango! (Japan) (Rev 2)" region="JPN"/>
+		<rom name="Goraku Ou Tango! (Japan) (Rev 2).ws" size="1048576" crc="00137e86" md5="1adacf9cb5aa3eb5839a9e2c94933348" sha1="af3fe9da3f5ee0f5a7b06b0440223db88fcb3bf2" status="verified"/>
+	</game>
+	<game name="GunPey (Japan)">
+		<description>GunPey (Japan)</description>
+		<release name="GunPey (Japan)" region="JPN"/>
+		<rom name="GunPey (Japan).ws" size="1048576" crc="a1656bbb" md5="816c81b156146be62a45edd7d7d49fc6" sha1="ee4b777f029bac9561e60c19407d08360e733822" status="verified"/>
+	</game>
+	<game name="Hanafuda Shiyouyo (Japan)">
+		<description>Hanafuda Shiyouyo (Japan)</description>
+		<release name="Hanafuda Shiyouyo (Japan)" region="JPN"/>
+		<rom name="Hanafuda Shiyouyo (Japan).ws" size="1048576" crc="4b22270d" md5="2e26e037cb01f70a6454a61c2955e8b1" sha1="1eda3327eb9b5a5844a95ac789f71b669f4cb6a7" status="verified"/>
+	</game>
+	<game name="Harobots (Japan) (Rev 1)">
+		<description>Harobots (Japan) (Rev 1)</description>
+		<release name="Harobots (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Harobots (Japan) (Rev 1).ws" size="2097152" crc="f75ce82c" md5="b9020cfae65fe791bd52723cbff31707" sha1="ecbaf210f92c75a55df9dff4777ea364596ae0c9" status="verified"/>
+	</game>
+	<game name="Harobots (Japan)" cloneof="Harobots (Japan) (Rev 1)">
+		<description>Harobots (Japan)</description>
+		<rom name="Harobots (Japan).ws" size="2097152" crc="aa525c04" md5="0eb951b486fe25f37371835be81eed75" sha1="1f42c5694a798de8ff3c68f63dfc7395be1669a5" status="verified"/>
+	</game>
+	<game name="Hunter X Hunter - Ishi o Tsugu Mono (Japan) (Rev 2)">
+		<description>Hunter X Hunter - Ishi o Tsugu Mono (Japan) (Rev 2)</description>
+		<release name="Hunter X Hunter - Ishi o Tsugu Mono (Japan) (Rev 2)" region="JPN"/>
+		<rom name="Hunter X Hunter - Ishi o Tsugu Mono (Japan) (Rev 2).ws" size="4194304" crc="70aa800e" md5="fd2165de8c6bb617166f6bb34447e70d" sha1="57b4278fc5812f52413ca65f45225922d4f2ec3d" status="verified"/>
+	</game>
+	<game name="Hunter X Hunter - Ishi o Tsugu Mono (Japan) (Rev 1)" cloneof="Hunter X Hunter - Ishi o Tsugu Mono (Japan) (Rev 2)">
+		<description>Hunter X Hunter - Ishi o Tsugu Mono (Japan) (Rev 1)</description>
+		<rom name="Hunter X Hunter - Ishi o Tsugu Mono (Japan) (Rev 1).ws" size="4194304" crc="bd6fc68a" md5="cc9d1519e1aba4a0f48f2052af031671" sha1="43d985b31848e1ae58d07231da80ee7aa8d3f686" status="verified"/>
+	</game>
+	<game name="Kakutou Ryouri Densetsu Bistro Recipe - Wonder Battle Hen (Japan)">
+		<description>Kakutou Ryouri Densetsu Bistro Recipe - Wonder Battle Hen (Japan)</description>
+		<release name="Kakutou Ryouri Densetsu Bistro Recipe - Wonder Battle Hen (Japan)" region="JPN"/>
+		<rom name="Kakutou Ryouri Densetsu Bistro Recipe - Wonder Battle Hen (Japan).ws" size="1048576" crc="4d103236" md5="8be5abfaef7ad77d14f92f10b2460098" sha1="b40fbc7b72921c9ac31330831c0f77e4133ec7d6" status="verified"/>
+	</game>
+	<game name="Kaze no Klonoa - Moonlight Museum (Japan)">
+		<description>Kaze no Klonoa - Moonlight Museum (Japan)</description>
+		<release name="Kaze no Klonoa - Moonlight Museum (Japan)" region="JPN"/>
+		<rom name="Kaze no Klonoa - Moonlight Museum (Japan).ws" size="1048576" crc="80c6ef12" md5="5e907dd88b3cfb2855a18fb1bf689860" sha1="207a3ceb9a09eabca6e455deeb7035e7e04c9795" status="verified"/>
+	</game>
+	<game name="Keiba Yosou Shien Soft - Yosou Shinkaron (Japan)">
+		<description>Keiba Yosou Shien Soft - Yosou Shinkaron (Japan)</description>
+		<release name="Keiba Yosou Shien Soft - Yosou Shinkaron (Japan)" region="JPN"/>
+		<rom name="Keiba Yosou Shien Soft - Yosou Shinkaron (Japan).ws" size="1048576" crc="517f962e" md5="840be356bd48676bd4e39f1e3d54c3b3" sha1="12d26522665cb8ecb3178bc242d984deae438e5c" status="verified"/>
+	</game>
+	<game name="Kiss Yori... - Seaside Serenade (Japan) (Rev 2)">
+		<description>Kiss Yori... - Seaside Serenade (Japan) (Rev 2)</description>
+		<release name="Kiss Yori... - Seaside Serenade (Japan) (Rev 2)" region="JPN"/>
+		<rom name="Kiss Yori... - Seaside Serenade (Japan) (Rev 2).ws" size="2097152" crc="3b4c60c6" md5="611d42816a979ece34dd8221d3023c9c" sha1="9ef89b6fe68c5a06d34344e8c783ec24114ad959" status="verified"/>
+	</game>
+	<game name="Kosodate Quiz - Dokodemo My Angel (Japan)">
+		<description>Kosodate Quiz - Dokodemo My Angel (Japan)</description>
+		<release name="Kosodate Quiz - Dokodemo My Angel (Japan)" region="JPN"/>
+		<rom name="Kosodate Quiz - Dokodemo My Angel (Japan).ws" size="2097152" crc="4c48624c" md5="a5e1cf7e43e991592890d916369bcf88" sha1="52b154a3e36d01357649a9f7f614139ce6cc46b8" status="verified"/>
+	</game>
+	<game name="Kyousouba Ikusei Simulation - Keiba (Japan) (Rev 1)">
+		<description>Kyousouba Ikusei Simulation - Keiba (Japan) (Rev 1)</description>
+		<release name="Kyousouba Ikusei Simulation - Keiba (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Kyousouba Ikusei Simulation - Keiba (Japan) (Rev 1).ws" size="1048576" crc="ecfbcb1d" md5="442e0025aeda0ad8df502696aa97c499" sha1="a309a430fbbed6c42f41d8ccaf4aba82e96d6a7b" status="verified"/>
+	</game>
+	<game name="Langrisser Millennium WS - The Last Century (Japan) (Rev 1)">
+		<description>Langrisser Millennium WS - The Last Century (Japan) (Rev 1)</description>
+		<release name="Langrisser Millennium WS - The Last Century (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Langrisser Millennium WS - The Last Century (Japan) (Rev 1).ws" size="1048576" crc="9e0854e2" md5="0e4369d3f611377433272b3563325ca2" sha1="9fdf3f5821f2a4488139525fe49e87b23de4571f" status="verified"/>
+	</game>
+	<game name="Last Stand (Japan)">
+		<description>Last Stand (Japan)</description>
+		<release name="Last Stand (Japan)" region="JPN"/>
+		<rom name="Last Stand (Japan).ws" size="2097152" crc="cccaf8a1" md5="cf7ee109aa551fdebaadd5bfbe344fd7" sha1="d524da01f2bfad92c2fa080950229955a3030ef2" status="verified"/>
+	</game>
+	<game name="Lode Runner for WonderSwan (Japan)">
+		<description>Lode Runner for WonderSwan (Japan)</description>
+		<release name="Lode Runner for WonderSwan (Japan)" region="JPN"/>
+		<rom name="Lode Runner for WonderSwan (Japan).ws" size="1048576" crc="21279e82" md5="c7445937d6fbc462256bd2ebcdbf3c25" sha1="847f51592f181aa68061900700149b86cdba651b" status="verified"/>
+	</game>
+	<game name="Macross - True Love Song (Japan)">
+		<description>Macross - True Love Song (Japan)</description>
+		<release name="Macross - True Love Song (Japan)" region="JPN"/>
+		<rom name="Macross - True Love Song (Japan).ws" size="4194304" crc="62d419cd" md5="694042e6f8eaa2423693c0a9bba8aef0" sha1="211e051db3fd4d7ae1ea143e043f87cfbcec5f1c" status="verified"/>
+	</game>
+	<game name="Magical Drop for WonderSwan (Japan)">
+		<description>Magical Drop for WonderSwan (Japan)</description>
+		<release name="Magical Drop for WonderSwan (Japan)" region="JPN"/>
+		<rom name="Magical Drop for WonderSwan (Japan).ws" size="1048576" crc="637ada93" md5="f98cbebf4a06794aa74636e7a6285ace" sha1="a25944969068ee495254f94c2c48dfffcb66ce8d" status="verified"/>
+	</game>
+	<game name="Mahjong Touryuumon (Japan) (Rev 3)">
+		<description>Mahjong Touryuumon (Japan) (Rev 3)</description>
+		<release name="Mahjong Touryuumon (Japan) (Rev 3)" region="JPN"/>
+		<rom name="Mahjong Touryuumon (Japan) (Rev 3).ws" size="1048576" crc="e7e7fd4c" md5="7edd59281ec08fdb2daaf45e58085e7e" sha1="281079b22cb213ee4dda5c304b5b5be028130929" status="verified"/>
+	</game>
+	<game name="Mahjong Touryuumon (Japan) (Rev 1)" cloneof="Mahjong Touryuumon (Japan) (Rev 3)">
+		<description>Mahjong Touryuumon (Japan) (Rev 1)</description>
+		<rom name="Mahjong Touryuumon (Japan) (Rev 1).ws" size="1048576" crc="c2ed122e" md5="60ad41d50a0b9dd55b0161b1853b824c" sha1="748ca335d39515a6650352449972684be749052a" status="verified"/>
+	</game>
+	<game name="Makaimura for WonderSwan (Japan)">
+		<description>Makaimura for WonderSwan (Japan)</description>
+		<release name="Makaimura for WonderSwan (Japan)" region="JPN"/>
+		<rom name="Makaimura for WonderSwan (Japan).ws" size="2097152" crc="00b31fbb" md5="f06beaff2703728baa8dddc0ddeb7094" sha1="5eaeab859e5f647fac354dad285a311387ea126b" status="verified"/>
+	</game>
+	<game name="Medarot Perfect Edition - Kabuto Version (Japan)">
+		<description>Medarot Perfect Edition - Kabuto Version (Japan)</description>
+		<release name="Medarot Perfect Edition - Kabuto Version (Japan)" region="JPN"/>
+		<rom name="Medarot Perfect Edition - Kabuto Version (Japan).ws" size="1048576" crc="12fb8b28" md5="893ac7863337a65c919780b41bc52406" sha1="509e5748e5efdfb56093c78ae886153dd1838215" status="verified"/>
+	</game>
+	<game name="Medarot Perfect Edition - Kuwagata Version (Japan)">
+		<description>Medarot Perfect Edition - Kuwagata Version (Japan)</description>
+		<release name="Medarot Perfect Edition - Kuwagata Version (Japan)" region="JPN"/>
+		<rom name="Medarot Perfect Edition - Kuwagata Version (Japan).ws" size="1048576" crc="2b40745d" md5="d8a29d331e9ba86609c75a4aedf9c269" sha1="315061e4739e947175d6ad7f006498cd61a33f8c" status="verified"/>
+	</game>
+	<game name="Meitantei Conan - Majutsushi no Chousenjou! (Japan)">
+		<description>Meitantei Conan - Majutsushi no Chousenjou! (Japan)</description>
+		<release name="Meitantei Conan - Majutsushi no Chousenjou! (Japan)" region="JPN"/>
+		<rom name="Meitantei Conan - Majutsushi no Chousenjou! (Japan).ws" size="1048576" crc="92fbf7fb" md5="98e88544d8b7df359e37bf2c17dd0641" sha1="8f3f97be31f3bd0e6922ab7795aa6f04bc5cfe2a" status="verified"/>
+	</game>
+	<game name="Meitantei Conan - Nishi no Meitantei Saidai no Kiki! (Japan)">
+		<description>Meitantei Conan - Nishi no Meitantei Saidai no Kiki! (Japan)</description>
+		<release name="Meitantei Conan - Nishi no Meitantei Saidai no Kiki! (Japan)" region="JPN"/>
+		<rom name="Meitantei Conan - Nishi no Meitantei Saidai no Kiki! (Japan).ws" size="2097152" crc="e226863b" md5="1990a2c04395b08df6181f6c8be2a953" sha1="e5684789e81f9d739010db575022a12a448b5509" status="verified"/>
+	</game>
+	<game name="Metakomi Theraphy - Nee Kiite! (Japan)">
+		<description>Metakomi Theraphy - Nee Kiite! (Japan)</description>
+		<release name="Metakomi Theraphy - Nee Kiite! (Japan)" region="JPN"/>
+		<rom name="Metakomi Theraphy - Nee Kiite! (Japan).ws" size="2097152" crc="a3ead689" md5="a9c86af9db3743595186274b65c93f90" sha1="dc94e17a942acfdc1eb0c38d91bf72460a4bb8f9" status="verified"/>
+	</game>
+	<game name="Mingle Magnet (Japan) (En,Ja) (Rev 1)">
+		<description>Mingle Magnet (Japan) (En,Ja) (Rev 1)</description>
+		<release name="Mingle Magnet (Japan) (En,Ja) (Rev 1)" region="JPN"/>
+		<rom name="Mingle Magnet (Japan) (En,Ja) (Rev 1).ws" size="524288" crc="9baac7bb" md5="555bee0c37a0726d8e8646a290de137f" sha1="c7230ef709f6ceaef9a220541c8cdc05c0cd549f" status="verified"/>
+	</game>
+	<game name="Mobile Suit Gundam MSVS (Japan)">
+		<description>Mobile Suit Gundam MSVS (Japan)</description>
+		<release name="Mobile Suit Gundam MSVS (Japan)" region="JPN"/>
+		<rom name="Mobile Suit Gundam MSVS (Japan).ws" size="2097152" crc="53b9fef8" md5="3ad90f3b8fdb3f2f5a7769e42ebc0792" sha1="2688ca67ac31ce3d5c3523b0e11cad55e70fa257" status="verified"/>
+	</game>
+	<game name="MobileWonderGate (Japan) (Rev 1)">
+		<description>MobileWonderGate (Japan) (Rev 1)</description>
+		<release name="MobileWonderGate (Japan) (Rev 1)" region="JPN"/>
+		<rom name="MobileWonderGate (Japan) (Rev 1).ws" size="2097152" crc="80de367d" md5="b1b20bb24be3767ab5bfcfca54b51c54" sha1="92d4a6ff6f2b1152d8935025f38f910155e5d709" status="verified"/>
+	</game>
+	<game name="Moero!! Pro Yakyuu Rookies (Japan)">
+		<description>Moero!! Pro Yakyuu Rookies (Japan)</description>
+		<release name="Moero!! Pro Yakyuu Rookies (Japan)" region="JPN"/>
+		<rom name="Moero!! Pro Yakyuu Rookies (Japan).ws" size="1048576" crc="eb995e86" md5="ff73a924c6e7d5190be8a9c749b4c9fd" sha1="e88e659cc04fc08a04b8c881f62fe086c5cdab06" status="verified"/>
+	</game>
+	<game name="Morita Shougi for WonderSwan (Japan)">
+		<description>Morita Shougi for WonderSwan (Japan)</description>
+		<release name="Morita Shougi for WonderSwan (Japan)" region="JPN"/>
+		<rom name="Morita Shougi for WonderSwan (Japan).ws" size="1048576" crc="d675c265" md5="9472518275eaf9f3dedca8b59e2fa97f" sha1="3ce41c90cfc1d53a89ade2c88e0b16cdc92c0268" status="verified"/>
+	</game>
+	<game name="Nazo Ou Pocket (Japan)">
+		<description>Nazo Ou Pocket (Japan)</description>
+		<release name="Nazo Ou Pocket (Japan)" region="JPN"/>
+		<rom name="Nazo Ou Pocket (Japan).ws" size="1048576" crc="4ed8820c" md5="5e06ad2f0c65d68a124542ddfffdff37" sha1="b358c65bae818c4b3de6bf668d16c311534036c2" status="verified"/>
+	</game>
+	<game name="Neon Genesis Evangelion - Shito Ikusei (Japan)">
+		<description>Neon Genesis Evangelion - Shito Ikusei (Japan)</description>
+		<release name="Neon Genesis Evangelion - Shito Ikusei (Japan)" region="JPN"/>
+		<rom name="Neon Genesis Evangelion - Shito Ikusei (Japan).ws" size="2097152" crc="bf8d9212" md5="0215c4b8a395f6fcf8f5b07605eae08b" sha1="ae31488cee1c91f383efbe3083b4abec092dda36" status="verified"/>
+	</game>
+	<game name="Nice On (Japan) (Rev 1)">
+		<description>Nice On (Japan) (Rev 1)</description>
+		<release name="Nice On (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Nice On (Japan) (Rev 1).ws" size="1048576" crc="b5dbcf12" md5="4b33b1f24f05300c1504f1d9b92d4361" sha1="6a479ee45e69cd3d6cc6cdda5a60eff3077953b0" status="verified"/>
+	</game>
+	<game name="Nihon Pro Mahjong Renmei Kounin - Tetsuman (Japan) (Rev 2)">
+		<description>Nihon Pro Mahjong Renmei Kounin - Tetsuman (Japan) (Rev 2)</description>
+		<release name="Nihon Pro Mahjong Renmei Kounin - Tetsuman (Japan) (Rev 2)" region="JPN"/>
+		<rom name="Nihon Pro Mahjong Renmei Kounin - Tetsuman (Japan) (Rev 2).ws" size="1048576" crc="44b3e67c" md5="4aa43895710a9fa5a96b9cd1da46348f" sha1="4eefc5a51008c2ab33e8d04064ec9bdcbc03d036" status="verified"/>
+	</game>
+	<game name="Nobunaga no Yabou for WonderSwan (Japan)">
+		<description>Nobunaga no Yabou for WonderSwan (Japan)</description>
+		<release name="Nobunaga no Yabou for WonderSwan (Japan)" region="JPN"/>
+		<rom name="Nobunaga no Yabou for WonderSwan (Japan).ws" size="1048576" crc="04531734" md5="d8bb5304f1a68a07e0aca535555171d5" sha1="785ebb7528f5268e1a1fc10dffbe95ccf6d39560" status="verified"/>
+	</game>
+	<game name="Ou-chan no Oekaki Logic (Japan)">
+		<description>Ou-chan no Oekaki Logic (Japan)</description>
+		<release name="Ou-chan no Oekaki Logic (Japan)" region="JPN"/>
+		<rom name="Ou-chan no Oekaki Logic (Japan).ws" size="524288" crc="631bd97a" md5="5e92e316ce0998edbec00b31a6f2e112" sha1="0f73d3112b1184f74e728cf1252ffbee6a146fa6" status="verified"/>
+	</game>
+	<game name="Pocket Fighter (Japan)">
+		<description>Pocket Fighter (Japan)</description>
+		<release name="Pocket Fighter (Japan)" region="JPN"/>
+		<rom name="Pocket Fighter (Japan).ws" size="2097152" crc="35361250" md5="e79dddc7db77ad96c52b0b7690f8c1b1" sha1="fb8d0f4e58a4192989ec71eb6e392d182aaa3eec" status="verified"/>
+	</game>
+	<game name="Pro Mahjong Kiwame for WonderSwan (Japan) (Rev 1)">
+		<description>Pro Mahjong Kiwame for WonderSwan (Japan) (Rev 1)</description>
+		<release name="Pro Mahjong Kiwame for WonderSwan (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Pro Mahjong Kiwame for WonderSwan (Japan) (Rev 1).ws" size="1048576" crc="90f7e6d6" md5="a2e4f77f749fb0a95db697903d42e718" sha1="32013a7a745a3aa2fd63cc9427c5e1f2635655ed" status="verified"/>
+	</game>
+	<game name="Puyo Puyo Tsuu (Japan)">
+		<description>Puyo Puyo Tsuu (Japan)</description>
+		<release name="Puyo Puyo Tsuu (Japan)" region="JPN"/>
+		<rom name="Puyo Puyo Tsuu (Japan).ws" size="1048576" crc="5a41a7ba" md5="e5394d336231c99e9c93f1f41e80a401" sha1="d72c1221c2ce3e281a0ee288a3d079aa8e1b714b" status="verified"/>
+	</game>
+	<game name="Puzzle Bobble (Japan)">
+		<description>Puzzle Bobble (Japan)</description>
+		<release name="Puzzle Bobble (Japan)" region="JPN"/>
+		<rom name="Puzzle Bobble (Japan).ws" size="1048576" crc="f504cd84" md5="cf5e9f022baadd1ed9b0a9e88b503e95" sha1="fdb8e9f37a4b097350b7c5b1b8ee381ca51dc0b6" status="verified"/>
+	</game>
+	<game name="Rainbow Islands - Putty's Party (Japan)">
+		<description>Rainbow Islands - Putty's Party (Japan)</description>
+		<release name="Rainbow Islands - Putty's Party (Japan)" region="JPN"/>
+		<rom name="Rainbow Islands - Putty's Party (Japan).ws" size="2097152" crc="8f8608ad" md5="854bd4105d726bf7e76fef8393d6ead0" sha1="759deb79a3fc3befed705d7264e4b88adbadacc7" status="verified"/>
+	</game>
+	<game name="Ring Infinity (Japan)">
+		<description>Ring Infinity (Japan)</description>
+		<release name="Ring Infinity (Japan)" region="JPN"/>
+		<rom name="Ring Infinity (Japan).ws" size="4194304" crc="14adbd4b" md5="ffee38c08b4e76cf68420f2e22973284" sha1="9896d93c97381dc06b6f044de6c9bd112ca0c94b" status="verified"/>
+	</game>
+	<game name="Robot Works (Japan)">
+		<description>Robot Works (Japan)</description>
+		<release name="Robot Works (Japan)" region="JPN"/>
+		<rom name="Robot Works (Japan).ws" size="1048576" crc="6adf0e32" md5="6ca5dff7d8a86279591fbb14324e7c3d" sha1="4d4d4a3fde6b1dbbc8f008fbd035fb59624dfba7" status="verified"/>
+	</game>
+	<game name="Robot Works (Hong Kong) (En,Ja) (Rev 1)" cloneof="Robot Works (Japan)">
+		<description>Robot Works (Hong Kong) (En,Ja) (Rev 1)</description>
+		<release name="Robot Works (Hong Kong) (En,Ja) (Rev 1)" region="HK"/>
+		<rom name="Robot Works (Hong Kong) (En,Ja) (Rev 1).ws" size="1048576" crc="be6be690" md5="dbaff79d3a241fba6af06cf5b7c935b8" sha1="2117ed92e8cb4ae61868535f1d4d16851b480890" status="verified"/>
+	</game>
+	<game name="Rockman &amp; Forte - Mirai Kara no Chousensha (Japan)">
+		<description>Rockman &amp; Forte - Mirai Kara no Chousensha (Japan)</description>
+		<release name="Rockman &amp; Forte - Mirai Kara no Chousensha (Japan)" region="JPN"/>
+		<rom name="Rockman &amp; Forte - Mirai Kara no Chousensha (Japan).ws" size="2097152" crc="cd206a9e" md5="523004d48e9d606e1557c2c57af6790b" sha1="9f8829aa8ea523e8370cbb2acd2acce056bb7958" status="verified"/>
+	</game>
+	<game name="Sangokushi for WonderSwan (Japan)">
+		<description>Sangokushi for WonderSwan (Japan)</description>
+		<release name="Sangokushi for WonderSwan (Japan)" region="JPN"/>
+		<rom name="Sangokushi for WonderSwan (Japan).ws" size="524288" crc="e385ee88" md5="9434714e17547ebf3a67baf63c8a6d04" sha1="d064b94f31b15564c9a3dbd3a68690244ea043ac" status="verified"/>
+	</game>
+	<game name="Sangokushi II for WonderSwan (Japan)">
+		<description>Sangokushi II for WonderSwan (Japan)</description>
+		<release name="Sangokushi II for WonderSwan (Japan)" region="JPN"/>
+		<rom name="Sangokushi II for WonderSwan (Japan).ws" size="1048576" crc="440b2630" md5="263e4218454f7350839ec257441bed85" sha1="3e7492478059d142a6a41b40219eba0c688a8e3f" status="verified"/>
+	</game>
+	<game name="SD Gundam - Emotional Jam (Japan) (Rev 3)">
+		<description>SD Gundam - Emotional Jam (Japan) (Rev 3)</description>
+		<release name="SD Gundam - Emotional Jam (Japan) (Rev 3)" region="JPN"/>
+		<rom name="SD Gundam - Emotional Jam (Japan) (Rev 3).ws" size="2097152" crc="ae83f873" md5="6620592b79b06d1857b449508fe1d557" sha1="ae54a1f8916a2d37a1e0c82c5a9b5d8fe0eeae51" status="verified"/>
+	</game>
+	<game name="SD Gundam - Emotional Jam (Japan) (Rev 2)" cloneof="SD Gundam - Emotional Jam (Japan) (Rev 3)">
+		<description>SD Gundam - Emotional Jam (Japan) (Rev 2)</description>
+		<rom name="SD Gundam - Emotional Jam (Japan) (Rev 2).ws" size="2097152" crc="adfc3048" md5="c38ac44ef65779506dabd0f6db59748c" sha1="b3b4cf8e996c2a1fb149074725dc4b07922b3133" status="verified"/>
+	</game>
+	<game name="SD Gundam G Generation - Gather Beat (Japan)">
+		<description>SD Gundam G Generation - Gather Beat (Japan)</description>
+		<release name="SD Gundam G Generation - Gather Beat (Japan)" region="JPN"/>
+		<rom name="SD Gundam G Generation - Gather Beat (Japan).ws" size="4194304" crc="e4eb3ab1" md5="39a4626ba187933297b3155180147778" sha1="5e5db8b066e1b41c5c12a2d4ffa97b73ed6c3f03" status="verified"/>
+	</game>
+	<game name="SD Gundam Gashapon Senki - Episode 1 (Japan) (8 MBit)">
+		<description>SD Gundam Gashapon Senki - Episode 1 (Japan) (8 MBit)</description>
+		<release name="SD Gundam Gashapon Senki - Episode 1 (Japan) (8 MBit)" region="JPN"/>
+		<rom name="SD Gundam Gashapon Senki - Episode 1 (Japan) (8 MBit).ws" size="1048576" crc="21eb4c59" md5="aff7a473a087e38a1a1a7d5f71ffc426" sha1="e6899de5b53f73c8978e3330dca0f2daaf95f140" status="verified"/>
+	</game>
+	<game name="SD Gundam Gashapon Senki - Episode 1 (Japan) (16 MBit)" cloneof="SD Gundam Gashapon Senki - Episode 1 (Japan) (8 MBit)">
+		<description>SD Gundam Gashapon Senki - Episode 1 (Japan) (16 MBit)</description>
+		<rom name="SD Gundam Gashapon Senki - Episode 1 (Japan) (16 MBit).ws" size="2097152" crc="2ec1e9c8" md5="c30a3facebc27ac58c359dedca66cce1" sha1="80eff574c75c2168fd0991c0efd16f9a9cadc24c" status="verified"/>
+	</game>
+	<game name="Senkaiden - TV Animation Senkaiden Houshin Engi Yori (Japan)">
+		<description>Senkaiden - TV Animation Senkaiden Houshin Engi Yori (Japan)</description>
+		<release name="Senkaiden - TV Animation Senkaiden Houshin Engi Yori (Japan)" region="JPN"/>
+		<rom name="Senkaiden - TV Animation Senkaiden Houshin Engi Yori (Japan).ws" size="2097152" crc="07a3dd46" md5="0230c5ed802e72a9c6bb690e262a302b" sha1="fc8b0b9b7efeac54812e7ae54153b7ae0cb9c12f" status="verified"/>
+	</game>
+	<game name="Sennou Millennium (Japan)">
+		<description>Sennou Millennium (Japan)</description>
+		<release name="Sennou Millennium (Japan)" region="JPN"/>
+		<rom name="Sennou Millennium (Japan).ws" size="1048576" crc="301436ac" md5="e12db3065b59e51bae7bf86053dd5782" sha1="708288e70b3186f6c0ef07acaef1b50fe6b7ab22" status="verified"/>
+	</game>
+	<game name="Shanghai Pocket (Japan)">
+		<description>Shanghai Pocket (Japan)</description>
+		<release name="Shanghai Pocket (Japan)" region="JPN"/>
+		<rom name="Shanghai Pocket (Japan).ws" size="524288" crc="1c489351" md5="37772a59d2fc13b07ba6260b3c4299da" sha1="d64b9b2d567d1cea5960f64e5bdf83d4514446da" status="verified"/>
+	</game>
+	<game name="Shin Nihon Pro Wrestling - Toukon Retsuden (Japan) (Rev 1)">
+		<description>Shin Nihon Pro Wrestling - Toukon Retsuden (Japan) (Rev 1)</description>
+		<release name="Shin Nihon Pro Wrestling - Toukon Retsuden (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Shin Nihon Pro Wrestling - Toukon Retsuden (Japan) (Rev 1).ws" size="1048576" crc="5b76f901" md5="91896b3ee0975f58a8cf322a59da85f2" sha1="7324c5939b8b64858c96bd9726f5b5c483a11e22" status="verified"/>
+	</game>
+	<game name="Shougi Touryuumon (Japan)">
+		<description>Shougi Touryuumon (Japan)</description>
+		<release name="Shougi Touryuumon (Japan)" region="JPN"/>
+		<rom name="Shougi Touryuumon (Japan).ws" size="1048576" crc="3ad194eb" md5="f95259c0c48527db0f8a63cb3e9b0527" sha1="0bc88b0affa97225e22c531306e9930ddb8f8905" status="verified"/>
+	</game>
+	<game name="Side Pocket for WonderSwan (Japan)">
+		<description>Side Pocket for WonderSwan (Japan)</description>
+		<release name="Side Pocket for WonderSwan (Japan)" region="JPN"/>
+		<rom name="Side Pocket for WonderSwan (Japan).ws" size="1048576" crc="8655269e" md5="496100bcd73fbfa39e473c6ddee190b2" sha1="4a756dab81e0101475dc2e5494270f3df7dac1e6" status="verified"/>
+	</game>
+	<game name="Slither Link (Japan)">
+		<description>Slither Link (Japan)</description>
+		<release name="Slither Link (Japan)" region="JPN"/>
+		<rom name="Slither Link (Japan).ws" size="1048576" crc="352a570d" md5="d422d16a28390d395f4c0878c555e52c" sha1="9a087b0e6031e7e5e6d133ac82fecb8faa30816a" status="verified"/>
+	</game>
+	<game name="Soccer Yarou! - Challenge the World (Japan)">
+		<description>Soccer Yarou! - Challenge the World (Japan)</description>
+		<release name="Soccer Yarou! - Challenge the World (Japan)" region="JPN"/>
+		<rom name="Soccer Yarou! - Challenge the World (Japan).ws" size="1048576" crc="1263da65" md5="5d0ef57b85182dcbe630edda46064cfb" sha1="435f207cce79ad6ac5b564e8a37e0d4395bd3739" status="verified"/>
+	</game>
+	<game name="Sotsugyou for WonderSwan (Japan) (Rev 1)">
+		<description>Sotsugyou for WonderSwan (Japan) (Rev 1)</description>
+		<release name="Sotsugyou for WonderSwan (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Sotsugyou for WonderSwan (Japan) (Rev 1).ws" size="2097152" crc="f016dfe1" md5="2030ae7ddc9f47307165859d75026f13" sha1="e461762566d529d1b103f119da50353902d180d7" status="verified"/>
+	</game>
+	<game name="Space Invaders (Japan)">
+		<description>Space Invaders (Japan)</description>
+		<release name="Space Invaders (Japan)" region="JPN"/>
+		<rom name="Space Invaders (Japan).ws" size="1048576" crc="8d83014f" md5="5558b39b21cc90b0b2f0a4358c043eec" sha1="54dd6e3fe81a8a384a0ffdd7a39211a5de9174c7" status="verified"/>
+	</game>
+	<game name="Super Robot Taisen Compact (Japan) (Rev 2)">
+		<description>Super Robot Taisen Compact (Japan) (Rev 2)</description>
+		<release name="Super Robot Taisen Compact (Japan) (Rev 2)" region="JPN"/>
+		<rom name="Super Robot Taisen Compact (Japan) (Rev 2).ws" size="2097152" crc="7021d54f" md5="bd6d4cb18dbd098a797d6c09fad23ccd" sha1="e93d58ab5819992e54223f5d1c4d5aeb6983d6a3" status="verified"/>
+	</game>
+	<game name="Super Robot Taisen Compact (Japan)" cloneof="Super Robot Taisen Compact (Japan) (Rev 2)">
+		<description>Super Robot Taisen Compact (Japan)</description>
+		<rom name="Super Robot Taisen Compact (Japan).ws" size="2097152" crc="8a8c5aa8" md5="4f678ef6dd98bd4c0ebad56271528857" sha1="a957111681951eb6a971a6b4f75bca7f89b29628" status="verified"/>
+	</game>
+	<game name="Super Robot Taisen Compact (Japan) (Rev 1)" cloneof="Super Robot Taisen Compact (Japan) (Rev 2)">
+		<description>Super Robot Taisen Compact (Japan) (Rev 1)</description>
+		<rom name="Super Robot Taisen Compact (Japan) (Rev 1).ws" size="2097152" crc="7572e478" md5="5c4c57fbc68c5248cace4cb325236a83" sha1="c4a21084bff1f2a63784fe7d11e046f305ad310a" status="verified"/>
+	</game>
+	<game name="Super Robot Taisen Compact 2 - Dai-1-bu - Chijou Gekidou Hen (Japan)">
+		<description>Super Robot Taisen Compact 2 - Dai-1-bu - Chijou Gekidou Hen (Japan)</description>
+		<release name="Super Robot Taisen Compact 2 - Dai-1-bu - Chijou Gekidou Hen (Japan)" region="JPN"/>
+		<rom name="Super Robot Taisen Compact 2 - Dai-1-bu - Chijou Gekidou Hen (Japan).ws" size="4194304" crc="782877bc" md5="af355adec937a9db1d447980bf85aa2e" sha1="e6911e5bb0a742ba299e05b20ee81f2faa4854a5" status="verified"/>
+	</game>
+	<game name="Super Robot Taisen Compact 2 - Dai-2-bu - Uchuu Gekishin Hen (Japan) (Rev 4)">
+		<description>Super Robot Taisen Compact 2 - Dai-2-bu - Uchuu Gekishin Hen (Japan) (Rev 4)</description>
+		<release name="Super Robot Taisen Compact 2 - Dai-2-bu - Uchuu Gekishin Hen (Japan) (Rev 4)" region="JPN"/>
+		<rom name="Super Robot Taisen Compact 2 - Dai-2-bu - Uchuu Gekishin Hen (Japan) (Rev 4).ws" size="4194304" crc="ecbb46de" md5="bb1cf0d7237d7ae2c8aac562fc62906d" sha1="6014ac0b8978e710f26c9cc41180cdf788584743" status="verified"/>
+	</game>
+	<game name="Super Robot Taisen Compact 2 - Dai-3-bu - Ginga Kessen Hen (Japan) (Rev 2)">
+		<description>Super Robot Taisen Compact 2 - Dai-3-bu - Ginga Kessen Hen (Japan) (Rev 2)</description>
+		<release name="Super Robot Taisen Compact 2 - Dai-3-bu - Ginga Kessen Hen (Japan) (Rev 2)" region="JPN"/>
+		<rom name="Super Robot Taisen Compact 2 - Dai-3-bu - Ginga Kessen Hen (Japan) (Rev 2).ws" size="4194304" crc="0b0f8981" md5="44f63dcb11c916df900a128a6f2e3839" sha1="d24d8cea57c5c487e877eaa523eefb0dd184556d" status="verified"/>
+	</game>
+	<game name="Taikyoku Igo - Heisei Kiin (Japan)">
+		<description>Taikyoku Igo - Heisei Kiin (Japan)</description>
+		<release name="Taikyoku Igo - Heisei Kiin (Japan)" region="JPN"/>
+		<rom name="Taikyoku Igo - Heisei Kiin (Japan).ws" size="1048576" crc="50b7a742" md5="e7620cdff223bf81ddac14b862b5465c" sha1="be4559d6f48d7cb9550c8776f877c5c9cda0efa1" status="verified"/>
+	</game>
+	<game name="Tanjou Debut for WonderSwan (Japan) (Rev 1)">
+		<description>Tanjou Debut for WonderSwan (Japan) (Rev 1)</description>
+		<release name="Tanjou Debut for WonderSwan (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Tanjou Debut for WonderSwan (Japan) (Rev 1).ws" size="2097152" crc="8b74f59a" md5="c80ab865bc9a93e946354f41815e93c4" sha1="2f35d250b8ddeb98ca3a2704a4ad85713f4c71b0" status="verified"/>
+	</game>
+	<game name="Tare Panda no GunPey (Japan)">
+		<description>Tare Panda no GunPey (Japan)</description>
+		<release name="Tare Panda no GunPey (Japan)" region="JPN"/>
+		<rom name="Tare Panda no GunPey (Japan).ws" size="1048576" crc="a5643aa3" md5="c21571f057d05bb01db2ece8517b121d" sha1="9622c65c939f05a9dfae288919ec5bd15c348f14" status="verified"/>
+	</game>
+	<game name="Tekken Card Challenge (Japan)">
+		<description>Tekken Card Challenge (Japan)</description>
+		<release name="Tekken Card Challenge (Japan)" region="JPN"/>
+		<rom name="Tekken Card Challenge (Japan).ws" size="1048576" crc="e7c608e5" md5="1e8bca5c31f62a9dd1121884351a2885" sha1="96a9ce5e56dc0c9648027ad4454e6f35e88d9a07" status="verified"/>
+	</game>
+	<game name="Terrors (Japan)">
+		<description>Terrors (Japan)</description>
+		<release name="Terrors (Japan)" region="JPN"/>
+		<rom name="Terrors (Japan).ws" size="4194304" crc="ef5b6b82" md5="b03441b7b71af24450da7f06b4aac718" sha1="7148d750f12b5da9a0efd99f5a5a7ccadecbdf60" status="verified"/>
+	</game>
+	<game name="Tetsujin 28 Gou (Japan)">
+		<description>Tetsujin 28 Gou (Japan)</description>
+		<release name="Tetsujin 28 Gou (Japan)" region="JPN"/>
+		<rom name="Tetsujin 28 Gou (Japan).ws" size="4194304" crc="6f304dca" md5="8b8ea655dbea4a3152b300126556404c" sha1="65c4c6aaa36328bba5d56419af59af5d3420ed78" status="verified"/>
+	</game>
+	<game name="Time Bokan Series - Bokan Densetsu - Buta mo Odaterya Doronboo (Japan)">
+		<description>Time Bokan Series - Bokan Densetsu - Buta mo Odaterya Doronboo (Japan)</description>
+		<release name="Time Bokan Series - Bokan Densetsu - Buta mo Odaterya Doronboo (Japan)" region="JPN"/>
+		<rom name="Time Bokan Series - Bokan Densetsu - Buta mo Odaterya Doronboo (Japan).ws" size="1048576" crc="7da6acb9" md5="9a41ed23b82a090ec4508d3725e19f9b" sha1="ad77d2e8429d5ed926d514d926050086f4edbeee" status="verified"/>
+	</game>
+	<game name="Tokyo Majin Gakuen - Fuju Houroku (Japan)">
+		<description>Tokyo Majin Gakuen - Fuju Houroku (Japan)</description>
+		<release name="Tokyo Majin Gakuen - Fuju Houroku (Japan)" region="JPN"/>
+		<rom name="Tokyo Majin Gakuen - Fuju Houroku (Japan).ws" size="8388608" crc="91117d1b" md5="a002e1af08611506555e9a2fe559eddc" sha1="866c67737a4fbb5f09a0b13bbdb89397bcab1f55" status="verified"/>
+	</game>
+	<game name="Trump Collection - Bottom-Up Teki Trump Seikatsu (Japan) (Rev 1)">
+		<description>Trump Collection - Bottom-Up Teki Trump Seikatsu (Japan) (Rev 1)</description>
+		<release name="Trump Collection - Bottom-Up Teki Trump Seikatsu (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Trump Collection - Bottom-Up Teki Trump Seikatsu (Japan) (Rev 1).ws" size="1048576" crc="c283ec5f" md5="c1c2fc60d813556480226d45d62121a1" sha1="9313e6d7090e91cca0304dc450b2f2f87329ae7a" status="verified"/>
+	</game>
+	<game name="Trump Collection 2 - Bottom-Up Teki Sekaiisshuu no Tabi (Japan) (Rev 1)">
+		<description>Trump Collection 2 - Bottom-Up Teki Sekaiisshuu no Tabi (Japan) (Rev 1)</description>
+		<release name="Trump Collection 2 - Bottom-Up Teki Sekaiisshuu no Tabi (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Trump Collection 2 - Bottom-Up Teki Sekaiisshuu no Tabi (Japan) (Rev 1).ws" size="1048576" crc="64aaf392" md5="523da6fd9e07e6e1d1bee62be04d7b1e" sha1="b25ff8fc79168e439ba913a2cea6195094be9ac2" status="verified"/>
+	</game>
+	<game name="Turntablist - DJ Battle (Japan)">
+		<description>Turntablist - DJ Battle (Japan)</description>
+		<release name="Turntablist - DJ Battle (Japan)" region="JPN"/>
+		<rom name="Turntablist - DJ Battle (Japan).ws" size="4194304" crc="0d5171f0" md5="144b29a9997c016fb4b2bb05e3965cfe" sha1="858f1f57b5522a1701cc8a0abae43cec948e26a6" status="verified"/>
+	</game>
+	<game name="Umizuri ni Ikou! (Japan)">
+		<description>Umizuri ni Ikou! (Japan)</description>
+		<release name="Umizuri ni Ikou! (Japan)" region="JPN"/>
+		<rom name="Umizuri ni Ikou! (Japan).ws" size="524288" crc="86b56511" md5="bce82b55b44a7d9b8eeb06cdcc884968" sha1="4f739292d11a45490851eaf40c0a7081824ad75a" status="verified"/>
+	</game>
+	<game name="Uzumaki - Denshi Kaiki Hen (Japan) (Rev 4)">
+		<description>Uzumaki - Denshi Kaiki Hen (Japan) (Rev 4)</description>
+		<release name="Uzumaki - Denshi Kaiki Hen (Japan) (Rev 4)" region="JPN"/>
+		<rom name="Uzumaki - Denshi Kaiki Hen (Japan) (Rev 4).ws" size="2097152" crc="812020ef" md5="eacb689de3482cf6e6da8befc7da65b2" sha1="4c8166e0632bdb8c098d586a7b1522ed7b63b5f7" status="verified"/>
+	</game>
+	<game name="Uzumaki - Noroi Simulation (Japan)">
+		<description>Uzumaki - Noroi Simulation (Japan)</description>
+		<release name="Uzumaki - Noroi Simulation (Japan)" region="JPN"/>
+		<rom name="Uzumaki - Noroi Simulation (Japan).ws" size="2097152" crc="ca3f0b00" md5="c329cc51abf1f9f85c33ca28d5a26f0c" sha1="38f708a4c0c4fcec0cf4d6ce051d1ff76466d617" status="verified"/>
+	</game>
+	<game name="Vaitz Blade (Japan) (Rev 1)">
+		<description>Vaitz Blade (Japan) (Rev 1)</description>
+		<release name="Vaitz Blade (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Vaitz Blade (Japan) (Rev 1).ws" size="4194304" crc="8fc9e145" md5="49a2932821583fa7d3ed07312b47ab32" sha1="cfb877f0988920c8fe4da5cdd7583197799df621" status="verified"/>
+	</game>
+	<game name="Wasabi Produce - Street Dancer (Japan)">
+		<description>Wasabi Produce - Street Dancer (Japan)</description>
+		<release name="Wasabi Produce - Street Dancer (Japan)" region="JPN"/>
+		<rom name="Wasabi Produce - Street Dancer (Japan).ws" size="4194304" crc="1860b655" md5="da0eb7a02b6a5250047eef22deba5c39" sha1="672cfc0e4547b2721d11b67476391b6e6cca81ae" status="verified"/>
+	</game>
+	<game name="Wonder Stadium (Japan)">
+		<description>Wonder Stadium (Japan)</description>
+		<release name="Wonder Stadium (Japan)" region="JPN"/>
+		<rom name="Wonder Stadium (Japan).ws" size="1048576" crc="23bc0309" md5="56c33436c90f652e02092d064287b5ce" sha1="cb9454a8277bb2a7d5a6e3b4ddc84194fcbb1231" status="verified"/>
+	</game>
+	<game name="Wonder Stadium '99 (Japan)">
+		<description>Wonder Stadium '99 (Japan)</description>
+		<release name="Wonder Stadium '99 (Japan)" region="JPN"/>
+		<rom name="Wonder Stadium '99 (Japan).ws" size="1048576" crc="e252919d" md5="cbd1f30650653d8ac845915bc2aea608" sha1="bb138765346d9f4d77615444d090b1328a59818a" status="verified"/>
+	</game>
+	<game name="WonderSwan Handy Sonar (Japan) (Rev 2)">
+		<description>WonderSwan Handy Sonar (Japan) (Rev 2)</description>
+		<release name="WonderSwan Handy Sonar (Japan) (Rev 2)" region="JPN"/>
+		<rom name="WonderSwan Handy Sonar (Japan) (Rev 2).ws" size="1048576" crc="d4188811" md5="74562136e58960870694c8b6bc913cd2" sha1="a1691ef96097c409b56c77f1d4c731fbfb3f386b" status="verified"/>
+	</game>
+	<game name="WonderSwan Handy Sonar (Japan) (Rev 1)" cloneof="WonderSwan Handy Sonar (Japan) (Rev 2)">
+		<description>WonderSwan Handy Sonar (Japan) (Rev 1)</description>
+		<rom name="WonderSwan Handy Sonar (Japan) (Rev 1).ws" size="1048576" crc="2ab9852d" md5="5db558122eabe25b930d57c8e5fb05d8" sha1="70d65a936ee1dfc2b89c543312c205285d955efb" status="verified"/>
+	</game>
+	<game name="WonderWitch (Japan) (FreyaOS 1.2.0) (Program)">
+		<description>WonderWitch (Japan) (FreyaOS 1.2.0) (Program)</description>
+		<release name="WonderWitch (Japan) (FreyaOS 1.2.0) (Program)" region="JPN"/>
+		<rom name="WonderWitch (Japan) (FreyaOS 1.2.0) (Program).ws" size="524288" crc="8e5e9633" md5="5670b16583073b43dc1b486ebee87660" sha1="d9dd280972ec45e56de98f3d425533dd49713caf" status="verified"/>
+	</game>
+	<game name="WonderWitch (Japan) (FreyaOS 1.1.5) (Program)" cloneof="WonderWitch (Japan) (FreyaOS 1.2.0) (Program)">
+		<description>WonderWitch (Japan) (FreyaOS 1.1.5) (Program)</description>
+		<rom name="WonderWitch (Japan) (FreyaOS 1.1.5) (Program).ws" size="524288" crc="45ba7287" md5="dcc8ea5ccb5815f41692467775789770" sha1="905cca29fd6188b2c6237b1fb71e89d7b6a1f842" status="verified"/>
+	</game>
+</datafile>

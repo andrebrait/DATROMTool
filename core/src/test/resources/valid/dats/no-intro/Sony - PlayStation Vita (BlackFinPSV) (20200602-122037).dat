@@ -1,0 +1,342 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Sony - PlayStation Vita (BlackFinPSV)</name>
+		<description>Sony - PlayStation Vita (BlackFinPSV)</description>
+		<version>20200602-122037</version>
+		<author>Densetsu, diego-rbb, foxe, Gefflon, jimmsu, SonGoku, Whovian9369, xuom2</author>
+		<homepage>No-Intro</homepage>
+		<url>http://www.no-intro.org</url>
+	</header>
+	<game name="Army Corps of Hell (USA)">
+		<description>Army Corps of Hell (USA)</description>
+		<game_id>PCSE00006</game_id>
+		<rom name="Army Corps of Hell (USA).psv" size="1958739968" crc="4A0D2041" md5="718C7F48077C5526B74CBE35686B08FD" sha1="D8030FDAB5F6A8E89E978418CA372D8F4C48F444" serial="PCSE-00006"/>
+	</game>
+	<game name="Ben 10 - Galactic Racing (USA) (En,Fr)">
+		<description>Ben 10 - Galactic Racing (USA) (En,Fr)</description>
+		<game_id>PCSE00024</game_id>
+		<rom name="Ben 10 - Galactic Racing (USA) (En,Fr).psv" size="1958739968" crc="F1B94560" md5="BBD2059B2D60B7618AFED98E7ECB7EEB" sha1="215818B9996AF07BD2869AA2D20A96240EC2FE34" serial="PCSE-00024"/>
+	</game>
+	<game name="BlazBlue - Continuum Shift - EXTEND (USA)">
+		<description>BlazBlue - Continuum Shift - EXTEND (USA)</description>
+		<game_id>PCSE00018</game_id>
+		<rom name="BlazBlue - Continuum Shift - EXTEND (USA).psv" size="3959422976" crc="6A015873" md5="513F2499A0A2282D05524A3B859C7ABE" sha1="DABE37A9FB3543DF99264909918D598E00E78EFC" serial="PCSE-00018"/>
+	</game>
+	<game name="Child of Light (USA)">
+		<description>Child of Light (USA)</description>
+		<game_id>PCSE00480</game_id>
+		<rom name="Child of Light (USA).psv" size="1958739968" crc="DB57EBA1" md5="BFAD6168C0AD1EEC28904377DE642703" sha1="6D4EA19286621652D8530728DEFB34E55B5E40C0" serial="PCSE-00480"/>
+	</game>
+	<game name="Code - Realize - Guardian of Rebirth (USA)">
+		<description>Code - Realize - Guardian of Rebirth (USA)</description>
+		<game_id>PCSE00763</game_id>
+		<rom name="Code - Realize - Guardian of Rebirth (USA).psv" size="3959422976" crc="29087CDB" md5="40D1E0F9312E865E87686CF5992D141A" sha1="0013861EDF720615677083E4EC4B9B9AB0D83512" serial="PCSE-00763"/>
+	</game>
+	<game name="Dead or Alive 5 Plus (USA)">
+		<description>Dead or Alive 5 Plus (USA)</description>
+		<game_id>PCSE00235</game_id>
+		<rom name="Dead or Alive 5 Plus (USA).psv" size="3959422976" crc="8F1E0F40" md5="3631CC5D75755F2A425DBE2095CB75A8" sha1="F4E4866FBBAD3CE169A25E4BE2150C66B257AFDD" serial="PCSE-00235"/>
+	</game>
+	<game name="Disgaea 4 - A Promise Revisited (USA) (En,Ja)">
+		<description>Disgaea 4 - A Promise Revisited (USA) (En,Ja)</description>
+		<game_id>PCSE00360</game_id>
+		<rom name="Disgaea 4 - A Promise Revisited (USA) (En,Ja).psv" size="3959422976" crc="375F478D" md5="3B749B516C47D9B3FADB72BA0BFDB7DA" sha1="3EEF8ECE2AFBC48F0A986EAA7BEDBE3309BB1A35" serial="PCSE-00360"/>
+	</game>
+	<game name="Dungeon Hunter - Alliance (Europe) (En,Fr,De,Es,It,Nl)">
+		<description>Dungeon Hunter - Alliance (Europe) (En,Fr,De,Es,It,Nl)</description>
+		<game_id>PCSB00041</game_id>
+		<rom name="Dungeon Hunter - Alliance (Europe) (En,Fr,De,Es,It,Nl).psv" size="1958739968" crc="ADE3D4B3" md5="D3D359735DF8DF5E083168F1D079188E" sha1="511F4C8010E6055DD1B5D098677DE69D2B63A8F3" serial="PCSB-00041"/>
+	</game>
+	<game name="Dynasty Warriors Next (USA)">
+		<description>Dynasty Warriors Next (USA)</description>
+		<game_id>PCSE00014</game_id>
+		<rom name="Dynasty Warriors Next (USA).psv" size="1958739968" crc="A1A112BF" md5="81EAD9E996CDA6C8732A7F61D911E342" sha1="C5E398C18FBEB4CDFA86F2EF13CB13906C7FD8E1" serial="PCSE-00014"/>
+	</game>
+	<game name="Everybody's Golf (Europe) (En,Fr,De,It)">
+		<description>Everybody's Golf (Europe) (En,Fr,De,It)</description>
+		<game_id>PCSF00006</game_id>
+		<rom name="Everybody's Golf (Europe) (En,Fr,De,It).psv" size="1958739968" crc="2C2E083D" md5="24AB58BC4A9D5D80599CE50DC085D388" sha1="10807B01587A2133DF14F086E44A3A6EC3D255A3" serial="PCSF-00006"/>
+	</game>
+	<game name="F1 2011 (USA)">
+		<description>F1 2011 (USA)</description>
+		<game_id>PCSE00002</game_id>
+		<rom name="F1 2011 (USA).psv" size="1958739968" crc="5B935DF2" md5="2F2AAC83F0E399B8ADE5FB2B5DB3B634" sha1="6202C7064A801145BC4A042EFB7448E9683E0278" serial="PCSE-00002"/>
+	</game>
+	<game name="FIFA Football (Germany)">
+		<description>FIFA Football (Germany)</description>
+		<game_id>PCSB00053</game_id>
+		<rom name="FIFA Football (Germany).psv" size="3959422976" crc="70B37DC5" md5="3C88B5E4B82B15D877A1631FA0B4962B" sha1="AC848B568CCACE8E53570B1C398727A143B8A084" serial="PCSB-00053"/>
+	</game>
+	<game name="FIFA Soccer (USA)">
+		<description>FIFA Soccer (USA)</description>
+		<game_id>PCSE00013</game_id>
+		<rom name="FIFA Soccer (USA).psv" size="3959422976" crc="44A79116" md5="B369553CD1DF30F6F502851AE8A3AE9B" sha1="53878A285C9ED72D8163741B6301FEAB040C9216" serial="PCSE-00013"/>
+	</game>
+	<game name="FIFA Soccer 13 (USA)">
+		<description>FIFA Soccer 13 (USA)</description>
+		<game_id>PCSE00093</game_id>
+		<rom name="FIFA Soccer 13 (USA).psv" size="3959422976" crc="AAA4199E" md5="C6466C6E0DC6B948B0E87C1710E2CF37" sha1="55AA94921EE7EBFC4808DE0BB79394983BAA57CD" serial="PCSE-00093"/>
+	</game>
+	<game name="Freedom Wars (USA)">
+		<description>Freedom Wars (USA)</description>
+		<game_id>PCSA00147</game_id>
+		<rom name="Freedom Wars (USA).psv" size="3959422976" crc="641585EF" md5="5178426850DBF5B4BC8D2B0A6BF150C4" sha1="F04E169225C0E9651B3649F9CC8EF2871A7630EB" serial="PCSA-00147"/>
+	</game>
+	<game name="Gravity Rush (USA)">
+		<description>Gravity Rush (USA)</description>
+		<game_id>PCSA00011</game_id>
+		<rom name="Gravity Rush (USA).psv" size="1958739968" crc="B78987A4" md5="D44C850F957039DCDDD610F8813C2FF9" sha1="1DA36BE9EA8E9BEFDFFA3409B151603F77FEC4DC" serial="PCSA-00011"/>
+	</game>
+	<game name="Hot Shots Golf - World Invitational (USA)">
+		<description>Hot Shots Golf - World Invitational (USA)</description>
+		<game_id>PCSA00009</game_id>
+		<rom name="Hot Shots Golf - World Invitational (USA).psv" size="1958739968" crc="7A33D931" md5="1A1334EC1E9B8A876C7C36FA56D3DA0C" sha1="FDBA09831E9F9A2485C95BC173C6852D2F664C05" serial="PCSA-00009"/>
+	</game>
+	<game name="Invizimals - The Alliance (Europe)">
+		<description>Invizimals - The Alliance (Europe)</description>
+		<game_id>PCSF00164</game_id>
+		<rom name="Invizimals - The Alliance (Europe).psv" size="1958739968" crc="D343F05C" md5="DF4EFCFA67A973E351C286EB6E05A935" sha1="89826A9E5275E642D597A63C4092699EC355B777" serial="PCSF-00164"/>
+	</game>
+	<game name="Invizimals - The Resistance (Europe)">
+		<description>Invizimals - The Resistance (Europe)</description>
+		<game_id>PCSF00510</game_id>
+		<rom name="Invizimals - The Resistance (Europe).psv" size="1958739968" crc="12376A61" md5="4EFB6EE7C9950FD2F1FA1B51CE046580" sha1="85512B25D384CD5E6FDF89262E11E7A0A928FA46" serial="PCSF-00510"/>
+	</game>
+	<game name="Killzone - Mercenary (USA)">
+		<description>Killzone - Mercenary (USA)</description>
+		<game_id>PSCA00107</game_id>
+		<rom name="Killzone - Mercenary (USA).psv" size="3959422976" crc="23A94C6E" md5="B639431D230525DF82EB6BB0AC3C6D90" sha1="B3CC79AB955F0BA47EC170BFC74EE795AE4099F9" serial="PSCA-00107"/>
+	</game>
+	<game name="LEGO - The Hobbit (Europe) (En,Fr,De,Es,It,Nl,Da,Pl,Ru)">
+		<description>LEGO - The Hobbit (Europe) (En,Fr,De,Es,It,Nl,Da,Pl,Ru)</description>
+		<game_id>PCSB00503</game_id>
+		<rom name="LEGO - The Hobbit (Europe) (En,Fr,De,Es,It,Nl,Da,Pl,Ru).psv" size="1958739968" crc="47A09A4F" md5="E3F4A17A59C0649A294410B453D8C949" sha1="BAD8CB615FE964202FB050BA98EAADEE12D746DE" serial="PCSB-00503"/>
+	</game>
+	<game name="LEGO Batman 2 - DC Super Heroes (Europe)">
+		<description>LEGO Batman 2 - DC Super Heroes (Europe)</description>
+		<game_id>PCSB00133</game_id>
+		<rom name="LEGO Batman 2 - DC Super Heroes (Europe).psv" size="1958739968" crc="33D4A884" md5="972D11B78B09D4C7A7BA6AFD68137172" sha1="081149C3EBEE2828909EA5FCD51BA78747BC988E" serial="PCSB-00133"/>
+	</game>
+	<game name="LEGO Batman 2 - DC Super Heroes (USA) (En,Fr,Es)">
+		<description>LEGO Batman 2 - DC Super Heroes (USA) (En,Fr,Es)</description>
+		<game_id>PCSE00061</game_id>
+		<rom name="LEGO Batman 2 - DC Super Heroes (USA) (En,Fr,Es).psv" size="1958739968" crc="92F6BDC8" md5="17CF5D59C0B187C86328186DF68CAC84" sha1="D6544FB2057D9095F1936EADAB9B54CA05A4FBB0" serial="PCSE-00061"/>
+	</game>
+	<game name="LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es)">
+		<description>LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es)</description>
+		<game_id>PCSE00057</game_id>
+		<rom name="LEGO Harry Potter - Years 5-7 (USA) (En,Fr,Es).psv" size="1958739968" crc="92129B28" md5="0773B2A291A852FCB2E2F081D8C12E8B" sha1="7E0BBE357728440E20EA8A4660C3A9E6DED2C5F1" serial="PCSE-00057"/>
+	</game>
+	<game name="LEGO Legends of Chima - Laval's Journey (USA) (En,Fr,Es,Pt)">
+		<description>LEGO Legends of Chima - Laval's Journey (USA) (En,Fr,Es,Pt)</description>
+		<game_id>PCSE00237</game_id>
+		<rom name="LEGO Legends of Chima - Laval's Journey (USA) (En,Fr,Es,Pt).psv" size="1958739968" crc="2C270311" md5="359E289723DD1C800B6874152AE1E4D2" sha1="21BD793752DF5328DBA8D037BA05FACF0121E628" serial="PCSE-00237"/>
+	</game>
+	<game name="LEGO Movie Videogame, The (Europe)">
+		<description>LEGO Movie Videogame, The (Europe)</description>
+		<game_id>PCSB00553</game_id>
+		<rom name="LEGO Movie Videogame, The (Europe).psv" size="1958739968" crc="50E54169" md5="D39E045FEC2765C58422D3DE71E33012" sha1="9722C2581477648FFB5EDA6425A78AAEA13BE664" serial="PCSB-00553"/>
+	</game>
+	<game name="LEGO The Lord of the Rings (USA) (En,Fr,Es,Pt)">
+		<description>LEGO The Lord of the Rings (USA) (En,Fr,Es,Pt)</description>
+		<game_id>PCSE00067</game_id>
+		<rom name="LEGO The Lord of the Rings (USA) (En,Fr,Es,Pt).psv" size="3959422976" crc="69122CBF" md5="DD0E4CDE06A70FB02057E66AE764B4C0" sha1="B34FD85D679D9702DB5E039D4E5DF23BDF3232C9" serial="PCSE-00067"/>
+	</game>
+	<game name="Little Deviants (Europe) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl,Ru)">
+		<description>Little Deviants (Europe) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl,Ru)</description>
+		<game_id>PCSF00017</game_id>
+		<rom name="Little Deviants (Europe) (En,Fr,De,Es,It,Nl,Pt,Sv,No,Da,Fi,Pl,Ru).psv" size="1958739968" crc="87A271F7" md5="D938E258C07F4946316763E03D4A7D37" sha1="24F4CEBFCFC731DCE5AC5DE6E214FB5B59F61D2F" serial="PCSF-00017"/>
+	</game>
+	<game name="Little Deviants (USA)">
+		<description>Little Deviants (USA)</description>
+		<game_id>PCSA00010</game_id>
+		<rom name="Little Deviants (USA).psv" size="1958739968" crc="5C7D9BA6" md5="71293BA43249E1C7D2E30B6034DEC19C" sha1="C55FAF389460E3BBF735BC1907FDA69AFE5BC1D8" serial="PCSA-00010"/>
+	</game>
+	<game name="LittleBigPlanet PS Vita (USA)">
+		<description>LittleBigPlanet PS Vita (USA)</description>
+		<game_id>PCSA00017</game_id>
+		<rom name="LittleBigPlanet PS Vita (USA).psv" size="1958739968" crc="C463642A" md5="705695A3B193E971D353375F29903C67" sha1="01E1BD510569065EF438341E9D255ECD42215EC8" serial="PCSA-00017"/>
+	</game>
+	<game name="LittleBigPlanet PS Vita (Europe)">
+		<description>LittleBigPlanet PS Vita (Europe)</description>
+		<game_id>PCSF00021</game_id>
+		<rom name="LittleBigPlanet PS Vita (Europe).psv" size="1958739968" crc="4F24073D" md5="A661E38764E6CB873CB88CDC0B70A29E" sha1="305ECFAC840F6493C69BBEC9EBCAF6EA4FB10911" serial="PCSF-00021"/>
+	</game>
+	<game name="Lumines - Electronic Symphony (Europe)">
+		<description>Lumines - Electronic Symphony (Europe)</description>
+		<game_id>PCSB00061</game_id>
+		<rom name="Lumines - Electronic Symphony (Europe).psv" size="1958739968" crc="7DFCE565" md5="B064C08B1FEDCD4EA9753AEE58432540" sha1="B6A6651D9147139B1DF6960419FF4DCFF60E5C7A" serial="PCSB-00061"/>
+	</game>
+	<game name="Lumines - Electronic Symphony (USA)">
+		<description>Lumines - Electronic Symphony (USA)</description>
+		<game_id>PCSE00009</game_id>
+		<rom name="Lumines - Electronic Symphony (USA).psv" size="1958739968" crc="B171868E" md5="F420E7ADF6DE6AA67AC35E43EF694897" sha1="5CA378E1DF0F1DFB3577ADE5D1F4BAD000433749" serial="PCSE-00009"/>
+	</game>
+	<game name="Metal Gear Solid HD Collection (USA)">
+		<description>Metal Gear Solid HD Collection (USA)</description>
+		<game_id>PCSE00020</game_id>
+		<rom name="Metal Gear Solid HD Collection (USA).psv" size="3959422976" crc="29DB9E6F" md5="D2A0625FE553CF968079FA6FE9C1A767" sha1="61AB84CC9BE05AFF042BCD2F2C4DE3831CCFF2E3" serial="PCSE-00020"/>
+	</game>
+	<game name="Michael Jackson - The Experience HD (Europe)">
+		<description>Michael Jackson - The Experience HD (Europe)</description>
+		<game_id>PCSB00071</game_id>
+		<rom name="Michael Jackson - The Experience HD (Europe).psv" size="1958739968" crc="63A56B5A" md5="9AEE1C9BD5B8D703B217A5D83316704B" sha1="9C3627E7CC798E7F38D03ACCBBD2491354D2B61E" serial="PCSB-00071"/>
+	</game>
+	<game name="MLB 12 - The Show (USA)">
+		<description>MLB 12 - The Show (USA)</description>
+		<game_id>PCSA00002</game_id>
+		<rom name="MLB 12 - The Show (USA).psv" size="3959422976" crc="87A9E236" md5="F1AD96CF854CCBD1EA8DBB39B42F28B6" sha1="D0B694A8552783BC8E1D3439357B90A4C6D087AC" serial="PCSA-00002"/>
+	</game>
+	<game name="MLB 13 - The Show (USA) (En,Fr)">
+		<description>MLB 13 - The Show (USA) (En,Fr)</description>
+		<game_id>PCSA00065</game_id>
+		<rom name="MLB 13 - The Show (USA) (En,Fr).psv" size="3959422976" crc="511EC563" md5="60BC42E8B290793120AE913743A0EEB3" sha1="FEF2F17690D436BF1094C295C306E01BBA7BF8DD" serial="PCSA-00065"/>
+	</game>
+	<game name="MLB 14 - The Show (USA)">
+		<description>MLB 14 - The Show (USA)</description>
+		<game_id>PCSA00115</game_id>
+		<rom name="MLB 14 - The Show (USA).psv" size="3959422976" crc="4D12DC9D" md5="7C95FB0848327F00E9998B1C8681407B" sha1="7C193E1F5B72903B79444E9681D335AF3F7B31AD" serial="PCSA-00115"/>
+	</game>
+	<game name="ModNation Racers - Road Trip (Europe) (En,Fr,De,Es,It,Ru)">
+		<description>ModNation Racers - Road Trip (Europe) (En,Fr,De,Es,It,Ru)</description>
+		<game_id>PCSF00002</game_id>
+		<rom name="ModNation Racers - Road Trip (Europe) (En,Fr,De,Es,It,Ru).psv" size="1958739968" crc="0D8E27D9" md5="638DD9847332006BA143D021FBE5875C" sha1="C3E46B6576A03047A34B12279C726667200B9842" serial="PCSF-00002"/>
+	</game>
+	<game name="ModNation Racers - Road Trip (USA)">
+		<description>ModNation Racers - Road Trip (USA)</description>
+		<game_id>PCSA00001</game_id>
+		<rom name="ModNation Racers - Road Trip (USA).psv" size="1958739968" crc="30012298" md5="84748D97341671BA9D878EEB45925F82" sha1="ABEE06E164C48E1D290BD6C049CF999ACCF02DE9" serial="PCSA-00001"/>
+	</game>
+	<game name="Mortal Kombat (USA)">
+		<description>Mortal Kombat (USA)</description>
+		<game_id>PCSE00023</game_id>
+		<rom name="Mortal Kombat (USA).psv" size="3959422976" crc="F8554EEF" md5="22C91650CF9D8B2AAFBAE0B82D737B81" sha1="A13C87328F121D996611F1DCAF7B374C988A9B86" serial="PCSE-00023"/>
+	</game>
+	<game name="Muppets Movie, The - Adventures (Europe) (En,Fr,De,Es,It,Nl,Pt,El)">
+		<description>Muppets Movie, The - Adventures (Europe) (En,Fr,De,Es,It,Nl,Pt,El)</description>
+		<game_id>PCSF00558</game_id>
+		<rom name="Muppets Movie, The - Adventures (Europe) (En,Fr,De,Es,It,Nl,Pt,El).psv" size="1958739968" crc="6A0A6920" md5="C7BF67510A31DD786B7C526D8E986C2A" sha1="BAC87C417E3D62A70DB8BA1F7EE4DC0BB9829280" serial="PCSF-00558"/>
+	</game>
+	<game name="Ninja Gaiden Sigma (USA)">
+		<description>Ninja Gaiden Sigma (USA)</description>
+		<game_id>PCSE00021</game_id>
+		<rom name="Ninja Gaiden Sigma (USA).psv" size="3959422976" crc="E9BA3F5A" md5="C7A45CE7E32B395DFF062FAEDCE0ECA6" sha1="3E1492D649CB5BD99A5D35A8A93270C9A2EAF2BB" serial="PCSE-00021"/>
+	</game>
+	<game name="Persona 4 Golden (USA)">
+		<description>Persona 4 Golden (USA)</description>
+		<game_id>PCSE00120</game_id>
+		<rom name="Persona 4 Golden (USA).psv" size="3959422976" crc="DED1D42E" md5="54CEE404CA0A83379035BF6BBB06FCDB" sha1="C55CBAEF33745BB4E7060952C8B3C8A243D2AC29" status="verified" serial="PCSE-00120"/>
+	</game>
+	<game name="Ragnarok Odyssey (USA)">
+		<description>Ragnarok Odyssey (USA)</description>
+		<game_id>PCSE00119</game_id>
+		<rom name="Ragnarok Odyssey (USA).psv" size="1958739968" crc="6563446B" md5="1558EC0DF1616B83C911ED8C61FBE6D3" sha1="DBB9C56BBBC265B0987E7F90BA01F2EFAA736BA9" serial="PCSE-00119"/>
+	</game>
+	<game name="Rayman Legends (USA)">
+		<description>Rayman Legends (USA)</description>
+		<game_id>PCSE00277</game_id>
+		<rom name="Rayman Legends (USA).psv" size="1958739968" crc="4F8F70EB" md5="5BE5B3C2AECB00ADDAAF0E9B9C59485C" sha1="5F8727D78672355096A7ABD4EAB009AE52E0896A" serial="PCSE-00277"/>
+	</game>
+	<game name="Rayman Origins (USA)">
+		<description>Rayman Origins (USA)</description>
+		<game_id>PCSE00052</game_id>
+		<rom name="Rayman Origins (USA).psv" size="1958739968" crc="7CA97920" md5="44ACEDAE64021ECA88B7FDCEE8D5D439" sha1="09E67E3086A7D0E1753E2758C9436083D744C5B0" serial="PCSE-00052"/>
+	</game>
+	<game name="Reality Fighters (Europe)">
+		<description>Reality Fighters (Europe)</description>
+		<game_id>PCSF00022</game_id>
+		<rom name="Reality Fighters (Europe).psv" size="1958739968" crc="CB7C16E7" md5="0C122683318D577975453CCAEF3A6371" sha1="A4E0F47BC79FAE717BFAAB6B4C5B28ACB66B1F6F" serial="PCSF-00022"/>
+	</game>
+	<game name="Reality Fighters (USA)">
+		<description>Reality Fighters (USA)</description>
+		<game_id>PCSA00012</game_id>
+		<rom name="Reality Fighters (USA).psv" size="1958739968" crc="429FB2CA" md5="DC2F4898B9153637DBEA77D6595CA6BD" sha1="C51021218F431D34806D00CA19A16628A9E60D10" serial="PCSA-00012"/>
+	</game>
+	<game name="Resistance - Burning Skies (USA)">
+		<description>Resistance - Burning Skies (USA)</description>
+		<game_id>PCSA00008</game_id>
+		<rom name="Resistance - Burning Skies (USA).psv" size="3959422976" crc="346CA1C2" md5="C35C202635CE01853986986CDF7BAB29" sha1="FBB96F788479A36B0C4482D93B3E2E1FBDD43E88" serial="PCSA-00008"/>
+	</game>
+	<game name="Resistance - Burning Skies (Europe) (Fr,De,It)">
+		<description>Resistance - Burning Skies (Europe) (Fr,De,It)</description>
+		<game_id>PCSF00140</game_id>
+		<rom name="Resistance - Burning Skies (Europe) (Fr,De,It).psv" size="3959422976" crc="0BBB0585" md5="8DDA26B3E1495D378D44D8F980A48860" sha1="8EF27BF414B1D6DD236A7D6FCD818A2A947529F1" serial="PCSF-00140"/>
+	</game>
+	<game name="Sly Cooper - Thieves in Time (USA)">
+		<description>Sly Cooper - Thieves in Time (USA)</description>
+		<game_id>PCSA00068</game_id>
+		<rom name="Sly Cooper - Thieves in Time (USA).psv" size="3959422976" crc="24763018" md5="AC9052DA774C1F8F64CD337D0217DB2A" sha1="A14AFBDE567FED4BB461F23AE897EBFFCB71D1FA" serial="PCSA-00068"/>
+	</game>
+	<game name="Smart as... (USA)">
+		<description>Smart as... (USA)</description>
+		<game_id>PCSA00079</game_id>
+		<rom name="Smart as... (USA).psv" size="1958739968" crc="B1C1E684" md5="921FD62CC192B62CCA3D10D09B5925DE" sha1="F105667C369C54C2C08A919368A5E6218D1AF294" serial="PCSA-00079"/>
+	</game>
+	<game name="Soul Sacrifice (USA)">
+		<description>Soul Sacrifice (USA)</description>
+		<game_id>PCSA00092</game_id>
+		<rom name="Soul Sacrifice (USA).psv" size="3959422976" crc="E0D69CD1" md5="4458F6477E6E905EEE29088B8CDF05F4" sha1="7C790D6A1AABA7BB4DC50F4142B9D562EBCE9F88" serial="PCSA-00092"/>
+	</game>
+	<game name="Super Monkey Ball - Banana Splitz (USA)">
+		<description>Super Monkey Ball - Banana Splitz (USA)</description>
+		<game_id>PCSE00017</game_id>
+		<rom name="Super Monkey Ball - Banana Splitz (USA).psv" size="1958739968" crc="AA1C443C" md5="3CEB5E3C33B142911E60618E361D430C" sha1="10062000DF95509BAE633F632006595C7064865C" serial="PCSE-00017"/>
+	</game>
+	<game name="Tearaway (Europe) (En,Fr,De,Es,It)">
+		<description>Tearaway (Europe) (En,Fr,De,Es,It)</description>
+		<game_id>PCSF00214</game_id>
+		<rom name="Tearaway (Europe) (En,Fr,De,Es,It).psv" size="1958739968" crc="F20BD447" md5="54576ED80D04CADB77F6B90B53438401" sha1="3C989A611FE63AEF11172649B3A817E62465B8E8" serial="PCSF-00214"/>
+	</game>
+	<game name="Tetris Ultimate (Europe) (En,Fr,De,Es,It,Ru)">
+		<description>Tetris Ultimate (Europe) (En,Fr,De,Es,It,Ru)</description>
+		<game_id>PCSB00642</game_id>
+		<rom name="Tetris Ultimate (Europe) (En,Fr,De,Es,It,Ru).psv" size="3959422976" crc="29E1BDE9" md5="F3204145CC58C5E736F3D5F11861C808" sha1="34539AF3DD466566E33094DF73A4990CB4EF48FD" serial="PCSB-00642"/>
+	</game>
+	<game name="Touch My Katamari (USA)">
+		<description>Touch My Katamari (USA)</description>
+		<game_id>PCSE00016</game_id>
+		<rom name="Touch My Katamari (USA).psv" size="1958739968" crc="6752E3BF" md5="9C9F72A8E780147017923021A8E24A25" sha1="CA8539FED72B0921702C7400043284026B727633" serial="PCSE-00016"/>
+	</game>
+	<game name="Toukiden - Kiwami (USA)">
+		<description>Toukiden - Kiwami (USA)</description>
+		<game_id>PCSE00467</game_id>
+		<rom name="Toukiden - Kiwami (USA).psv" size="3959422976" crc="5F74FD16" md5="598572A5FBE3F170B6FF5A6D3D359FCB" sha1="DCDA99881B82D161287B38833F87D5379A0825B0" serial="PCSE-00467"/>
+	</game>
+	<game name="Uncharted - Golden Abyss (USA)">
+		<description>Uncharted - Golden Abyss (USA)</description>
+		<game_id>PCSA00029</game_id>
+		<rom name="Uncharted - Golden Abyss (USA).psv" size="3959422976" crc="CDA65C62" md5="648AB7700281450AA21E508796BA3B53" sha1="83F38DD6CA25934C486ADB6F0FFFE76B195F4E81" serial="PCSA-00029"/>
+	</game>
+	<game name="Unit 13 (USA) (En,Fr,Es,Pt)">
+		<description>Unit 13 (USA) (En,Fr,Es,Pt)</description>
+		<game_id>PCSA00014</game_id>
+		<rom name="Unit 13 (USA) (En,Fr,Es,Pt).psv" size="1958739968" crc="BA2AF5F3" md5="F62C98069F509AC3A481B091000FAEB1" sha1="6C266D00D5181ADA29E65C2A6C8A888A883460D1" serial="PCSA-00014"/>
+	</game>
+	<game name="Virtua Tennis 4 - World Tour Edition (USA) (En,Fr,Es)">
+		<description>Virtua Tennis 4 - World Tour Edition (USA) (En,Fr,Es)</description>
+		<game_id>PCSE00003</game_id>
+		<rom name="Virtua Tennis 4 - World Tour Edition (USA) (En,Fr,Es).psv" size="1958739968" crc="090A09DD" md5="949E371181F042919844B004F95B7053" sha1="9D2CAEF740DC6316C2693AF4CE1260D5B563B11C" serial="PCSE-00003"/>
+	</game>
+	<game name="WipEout 2048 (USA)">
+		<description>WipEout 2048 (USA)</description>
+		<game_id>PCSA00015</game_id>
+		<rom name="WipEout 2048 (USA).psv" size="1958739968" crc="EF91472B" md5="660D84832BAFF46F15C67FB9F9FBF7F0" sha1="32124E952707EB0BA4233231E0035E1200455FEA" serial="PCSA-00015"/>
+	</game>
+	<game name="WipEout 2048 (Europe)">
+		<description>WipEout 2048 (Europe)</description>
+		<game_id>PCSF00007</game_id>
+		<rom name="WipEout 2048 (Europe).psv" size="1958739968" crc="227A1E25" md5="726D777711B1B1B0755DA2CC18083D13" sha1="2B0B8C4FB567CECBB65AE8DD9D6F8F37BAEDF5C5" serial="PCSF-00007"/>
+	</game>
+	<game name="Ys - Memories of Celceta (USA)">
+		<description>Ys - Memories of Celceta (USA)</description>
+		<game_id>PCSE00245</game_id>
+		<rom name="Ys - Memories of Celceta (USA).psv" size="1958739968" crc="F4DCB184" md5="225EA11B6B9C52405D3275DB7C1224F3" sha1="465698E5C3C2061F5EADF5944CA3A68C97C2636B" serial="PCSE-00245"/>
+	</game>
+	<game name="Zero Escape - Virtue's Last Reward (USA)">
+		<description>Zero Escape - Virtue's Last Reward (USA)</description>
+		<game_id>PCSE00085</game_id>
+		<rom name="Zero Escape - Virtue's Last Reward (USA).psv" size="1958739968" crc="736AC18F" md5="84028F32C64A6173F5E5B3C9CB4637AE" sha1="71CAFD5A92ED8DB53C5C61F0EA2DE0FC893250F2" serial="PCSE-00085"/>
+	</game>
+</datafile>

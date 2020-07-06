@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Toshiba - Visicom</name>
+		<description>Toshiba - Visicom</description>
+		<version>20200202-120958</version>
+		<author>relax</author>
+		<homepage>No-Intro</homepage>
+		<url>http://www.no-intro.org</url>
+	</header>
+	<game name="[BIOS] Toshiba Visicom (Japan)">
+		<description>[BIOS] Toshiba Visicom (Japan)</description>
+		<rom name="[BIOS] Toshiba Visicom (Japan).bin" size="2048" crc="23D22074" md5="AEEC6FE3934481E20EB7DB6D5FF56A54" sha1="A0A8BE23F70621A2BD8010B1134E8A0019075BF1" status="verified"/>
+	</game>
+	<game name="Gambler I (Japan) (En)">
+		<description>Gambler I (Japan) (En)</description>
+		<game_id>CAS-140</game_id>
+		<rom name="Gambler I (Japan) (En).rom" size="2048" crc="565BE7C2" md5="EE7E9B2DDC0F5360B51BD663A78F5FCF" sha1="561FB51DB880E3A668231FDDD4C4A10D1A981C80" status="verified"/>
+	</game>
+	<game name="Gambler II (Japan)">
+		<description>Gambler II (Japan)</description>
+		<game_id>CAS-141</game_id>
+		<rom name="Gambler II (Japan).rom" size="2048" crc="9DA5C845" md5="2F29654B1656FBB462A8223100E2C6CC" sha1="438D9FC67DE1EF408718B4737C0D0FD48844DACB" status="verified"/>
+	</game>
+	<game name="Sansuu Drill (Japan)">
+		<description>Sansuu Drill (Japan)</description>
+		<game_id>CAS-110</game_id>
+		<rom name="Sansuu Drill (Japan).rom" size="2048" crc="009CFAA2" md5="F6EFFAA00D1BE8C35574E17B4AAABB89" sha1="FB567B904DED23A1C9256B39565B8A2BC3E35736" status="verified"/>
+	</game>
+	<game name="Space Command (Japan)">
+		<description>Space Command (Japan)</description>
+		<game_id>CAS-160</game_id>
+		<rom name="Space Command (Japan).rom" size="2048" crc="566DCC8A" md5="3B8369EB489E961929CA302230A0A0D1" sha1="B5E0313B7D4AACD9444C1987C51EAABA88FDC6BB" status="verified"/>
+	</game>
+	<game name="Sports Fan (Japan) (En)">
+		<description>Sports Fan (Japan) (En)</description>
+		<game_id>CAS-130</game_id>
+		<rom name="Sports Fan (Japan) (En).rom" size="2048" crc="1F218F46" md5="69BA44CE797ABDC837D1CE180802143E" sha1="AF9C7E707CBA98BEA30B0C9E886652F2FEDCB284" status="verified"/>
+	</game>
+</datafile>

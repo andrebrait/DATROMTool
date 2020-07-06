@@ -1,0 +1,1224 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Sega - SG-1000 (Parent-Clone)</name>
+		<description>Sega - SG-1000 (Parent-Clone)</description>
+		<version>20200217-185318</version>
+		<date>20200217-185318</date>
+		<author>alexian</author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="[BIOS] Othello Multivision (Japan)">
+		<description>[BIOS] Othello Multivision (Japan)</description>
+		<release name="[BIOS] Othello Multivision (Japan)" region="JPN"/>
+		<rom name="[BIOS] Othello Multivision (Japan).sg" size="16384" crc="c5a67b95" md5="cba9c69675bb921aa07050fd2a2dbecb" sha1="6d7c64dd60dee4a33061d3d3a7c2ed190d895cdb" status="verified"/>
+	</game>
+	<game name="007 James Bond (Japan) (Othello Multivision)">
+		<description>007 James Bond (Japan) (Othello Multivision)</description>
+		<release name="007 James Bond (Japan) (Othello Multivision)" region="JPN"/>
+		<rom name="007 James Bond (Japan) (Othello Multivision).sg" size="16384" crc="90160849" md5="b2ac0c7755e0d6ba0a737861ee190a53" sha1="88d8c1f56f06ec76be285c29f41322a748f7c4db" status="verified"/>
+	</game>
+	<game name="007 James Bond (Taiwan) (Othello Multivision)" cloneof="007 James Bond (Japan) (Othello Multivision)">
+		<description>007 James Bond (Taiwan) (Othello Multivision)</description>
+		<release name="007 James Bond (Taiwan) (Othello Multivision)" region="TAI"/>
+		<rom name="007 James Bond (Taiwan) (Othello Multivision).sg" size="16384" crc="76d6c64d" md5="019ccca4d5ca138719497c510dea926b" sha1="f0b594fa0d371b31bc517afec8e28d4917193f0e" status="verified"/>
+	</game>
+	<game name="007 James Bond (Japan) (Alt 1) (Othello Multivision)" cloneof="007 James Bond (Japan) (Othello Multivision)">
+		<description>007 James Bond (Japan) (Alt 1) (Othello Multivision)</description>
+		<rom name="007 James Bond (Japan) (Alt 1) (Othello Multivision).sg" size="40960" crc="a8b5b57f" md5="deaa6e9f7bef3a7af55c6e899967bf79" sha1="c4c947a00155412c4e8b492e19ac229cc61fb401" status="verified"/>
+	</game>
+	<game name="Bank Panic (Japan)">
+		<description>Bank Panic (Japan)</description>
+		<release name="Bank Panic (Japan)" region="JPN"/>
+		<rom name="Bank Panic (Japan).sg" size="32768" crc="d8a87095" md5="47cd2d0bbcb879302f83f2f7058f49d4" sha1="8e1dc4d79c5bc45fc6112969ea9a2c68b3c86666" status="verified"/>
+	</game>
+	<game name="Bank Panic (Taiwan)" cloneof="Bank Panic (Japan)">
+		<description>Bank Panic (Taiwan)</description>
+		<release name="Bank Panic (Taiwan)" region="TAI"/>
+		<rom name="Bank Panic (Taiwan).sg" size="32768" crc="bd43fde4" md5="11a5694d472766fed9c6eb1e09a851bf" sha1="18f7ab9fe95aeacceab36297cdf9374dc7e3233f" status="verified"/>
+	</game>
+	<game name="BASIC Level II (Japan) (SC-3000) (Program)">
+		<description>BASIC Level II (Japan) (SC-3000) (Program)</description>
+		<release name="BASIC Level II (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="BASIC Level II (Japan) (SC-3000) (Program).sc" size="32768" crc="f691f9c7" md5="28dd0578a6e3e3e64f8e4168b3a62e7e" sha1="1fa9f4ec347681d7909415b6d06179e44b0fcd5e" status="verified"/>
+	</game>
+	<game name="BASIC Level III (Europe, Australia) (SC-3000) (Program)">
+		<description>BASIC Level III (Europe, Australia) (SC-3000) (Program)</description>
+		<release name="BASIC Level III (Europe, Australia) (SC-3000) (Program)" region="AUS"/>
+		<release name="BASIC Level III (Europe, Australia) (SC-3000) (Program)" region="EUR"/>
+		<rom name="BASIC Level III (Europe, Australia) (SC-3000) (Program).sc" size="32768" crc="5d9f11ca" md5="fda6619ba96bf00b849192f5e7460622" sha1="a43aef367857a681decea52377c2e7a992c2ac68" status="verified"/>
+	</game>
+	<game name="BASIC Level III (Japan) (SC-3000) (Program)" cloneof="BASIC Level III (Europe, Australia) (SC-3000) (Program)">
+		<description>BASIC Level III (Japan) (SC-3000) (Program)</description>
+		<release name="BASIC Level III (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="BASIC Level III (Japan) (SC-3000) (Program).sc" size="32768" crc="a46e3c73" md5="a992690a81e1e8a20388aed9c31cf3fc" sha1="b1a8585a9afff962e8fd0e79b3305199da4e4562" status="verified"/>
+	</game>
+	<game name="Black Onyx, The (Japan)">
+		<description>Black Onyx, The (Japan)</description>
+		<release name="Black Onyx, The (Japan)" region="JPN"/>
+		<rom name="Black Onyx, The (Japan).sg" size="32768" crc="26ecd094" md5="d2b0524a2cf5754c0fa1c900e9ecb06b" sha1="7ecb9ac646346900046a61ff0242d6c90a812eda" status="verified"/>
+	</game>
+	<game name="Bomb Jack (Japan, Australia)">
+		<description>Bomb Jack (Japan, Australia)</description>
+		<release name="Bomb Jack (Japan, Australia)" region="AUS"/>
+		<release name="Bomb Jack (Japan, Australia)" region="JPN"/>
+		<rom name="Bomb Jack (Japan, Australia).sg" size="32768" crc="ea0f2691" md5="0bf5b6959fc1b58d8e37f9647f47a0b3" sha1="7859b9ee5614c595cb57a832ef7a8f1ab473b45b" status="verified"/>
+	</game>
+	<game name="Bomb Jack (Taiwan) (English Logo)" cloneof="Bomb Jack (Japan, Australia)">
+		<description>Bomb Jack (Taiwan) (English Logo)</description>
+		<release name="Bomb Jack (Taiwan) (English Logo)" region="TAI"/>
+		<rom name="Bomb Jack (Taiwan) (English Logo).sg" size="32768" crc="cda3a335" md5="8db486c33c7d688bd5c0e9a81dee2d29" sha1="8d7b786283e5b42e34432ecf1b3744eae00575de" status="verified"/>
+	</game>
+	<game name="Bomb Jack (Taiwan) (Chinese Logo)" cloneof="Bomb Jack (Japan, Australia)">
+		<description>Bomb Jack (Taiwan) (Chinese Logo)</description>
+		<rom name="Bomb Jack (Taiwan) (Chinese Logo).sg" size="32768" crc="deb213fe" md5="a50378abe2636c5c47966b74a14dd127" sha1="ac94ddc1839dcd2ade443da0e8667e643b11f3e7" status="verified"/>
+	</game>
+	<game name="Bomb Jack (Korea) (English Logo) (Unl)" cloneof="Bomb Jack (Japan, Australia)">
+		<description>Bomb Jack (Korea) (English Logo) (Unl)</description>
+		<release name="Bomb Jack (Korea) (English Logo) (Unl)" region="KOR"/>
+		<rom name="Bomb Jack (Korea) (English Logo) (Unl).sg" size="32768" crc="0c69d837" md5="20545caa00c6a8512ccd767e4911575a" sha1="835d0ea1c0cf1723ae95ba60ea0a929780ebaf71" status="verified"/>
+	</game>
+	<game name="Bomb Jack (Korea) (Korean Logo) (Unl)" cloneof="Bomb Jack (Japan, Australia)">
+		<description>Bomb Jack (Korea) (Korean Logo) (Unl)</description>
+		<rom name="Bomb Jack (Korea) (Korean Logo) (Unl).sg" size="32768" crc="b0c7b310" md5="9cdd1462ddeaef610d15dba01bd926f0" sha1="b6b36a0280344214bdb8d9184244e21e9fb7371f" status="verified"/>
+	</game>
+	<game name="Bomberman Special (Taiwan) (English Logo) (Unl)">
+		<description>Bomberman Special (Taiwan) (English Logo) (Unl)</description>
+		<release name="Bomberman Special (Taiwan) (English Logo) (Unl)" region="TAI"/>
+		<rom name="Bomberman Special (Taiwan) (English Logo) (Unl).sg" size="49152" crc="69fc1494" md5="25044d56bc18ad8b66a726c2f9d0b26b" sha1="d1d56bcd996df94458f5901dc537a5e30021256b" status="verified"/>
+	</game>
+	<game name="Bomberman Special (Taiwan) (Chinese Logo) (Unl)" cloneof="Bomberman Special (Taiwan) (English Logo) (Unl)">
+		<description>Bomberman Special (Taiwan) (Chinese Logo) (Unl)</description>
+		<rom name="Bomberman Special (Taiwan) (Chinese Logo) (Unl).sg" size="49152" crc="ce5648c3" md5="cd87c1a8cd8bc137673a7fb057e2142e" sha1="455838571dd8287d491431e03269b0ccd292c8b8" status="verified"/>
+	</game>
+	<game name="Borderline (Japan, Europe, Australia, New Zealand)">
+		<description>Borderline (Japan, Europe, Australia, New Zealand)</description>
+		<release name="Borderline (Japan, Europe, Australia, New Zealand)" region="AUS"/>
+		<release name="Borderline (Japan, Europe, Australia, New Zealand)" region="EUR"/>
+		<release name="Borderline (Japan, Europe, Australia, New Zealand)" region="JPN"/>
+		<rom name="Borderline (Japan, Europe, Australia, New Zealand).sg" size="16384" crc="0b4bca74" md5="25c742e43bc9f1329f3f26502fefb10a" sha1="b967340fa91d960f86548f15e6d25a8e7e2c5043" status="verified"/>
+	</game>
+	<game name="Cabbage Patch Kids (Taiwan)">
+		<description>Cabbage Patch Kids (Taiwan)</description>
+		<release name="Cabbage Patch Kids (Taiwan)" region="TAI"/>
+		<rom name="Cabbage Patch Kids (Taiwan).sg" size="32768" crc="9d91ab78" md5="1c2c5851deb0e9142b5ff19e8dcd8442" sha1="5c011f37f4fcbaa72167293a9917bb6af0e30b55" status="verified"/>
+	</game>
+	<game name="Castle, The (Taiwan) (Unl) (Pirate)">
+		<description>Castle, The (Taiwan) (Unl) (Pirate)</description>
+		<release name="Castle, The (Taiwan) (Unl) (Pirate)" region="TAI"/>
+		<rom name="Castle, The (Taiwan) (Unl) (Pirate).sg" size="49152" crc="2e366ccf" md5="a85ec287bb4151875446c245750fb8c0" sha1="5a81d5103487695cabd811aabd9e71f48b9e7996" status="verified"/>
+	</game>
+	<game name="Castle, The (Japan)">
+		<description>Castle, The (Japan)</description>
+		<release name="Castle, The (Japan)" region="JPN"/>
+		<rom name="Castle, The (Japan).sg" size="32768" crc="092f29d6" md5="d047c10d6b27cf34ccb66340a089523a" sha1="2681786bffccf58b59410c331865d30a4d027087" status="verified"/>
+	</game>
+	<game name="Chack'n Pop (Japan)">
+		<description>Chack'n Pop (Japan)</description>
+		<release name="Chack'n Pop (Japan)" region="JPN"/>
+		<rom name="Chack'n Pop (Japan).sg" size="32768" crc="d37bda49" md5="286ba24b335a1600dfc611a0a9fe7875" sha1="08b5c1135f9678465ece6a886c948ce091637372" status="verified"/>
+	</game>
+	<game name="Chack'n Pop (Taiwan)" cloneof="Chack'n Pop (Japan)">
+		<description>Chack'n Pop (Taiwan)</description>
+		<release name="Chack'n Pop (Taiwan)" region="TAI"/>
+		<rom name="Chack'n Pop (Taiwan).sg" size="32768" crc="d81a72ce" md5="64c1a50fb9f0293d7143d53579e2e62f" sha1="75855a3148a57b102c15a436e7e4ffd1ab4808c3" status="verified"/>
+	</game>
+	<game name="Challenge Derby (Japan) (Rev 1) (Othello Multivision)">
+		<description>Challenge Derby (Japan) (Rev 1) (Othello Multivision)</description>
+		<release name="Challenge Derby (Japan) (Rev 1) (Othello Multivision)" region="JPN"/>
+		<rom name="Challenge Derby (Japan) (Rev 1) (Othello Multivision).sg" size="16384" crc="c91551da" md5="e8698b111a3548088932fd4528316a1d" sha1="47239898cc2ad5c4aeae1815dc54de6f87a8aa35" status="verified"/>
+	</game>
+	<game name="Challenge Derby (Japan) (Othello Multivision)" cloneof="Challenge Derby (Japan) (Rev 1) (Othello Multivision)">
+		<description>Challenge Derby (Japan) (Othello Multivision)</description>
+		<rom name="Challenge Derby (Japan) (Othello Multivision).sg" size="40960" crc="c5f014dc" md5="5fac8915a1c8a84bdfcdbe4611f4652d" sha1="8a5e6c9b10c9a99c1eaaee48374d1fede5966340" status="verified"/>
+	</game>
+	<game name="Challenge Derby (Japan) (Rev 1) (Alt 1) (Othello Multivision)" cloneof="Challenge Derby (Japan) (Rev 1) (Othello Multivision)">
+		<description>Challenge Derby (Japan) (Rev 1) (Alt 1) (Othello Multivision)</description>
+		<rom name="Challenge Derby (Japan) (Rev 1) (Alt 1) (Othello Multivision).sg" size="40960" crc="02bc891f" md5="c992629aced299a29d65026178a582d8" sha1="6c0ffd66695e8bd4bc503c40ee49834c3f95082b" status="verified"/>
+	</game>
+	<game name="Champion Baseball (Japan, Australia, New Zealand)">
+		<description>Champion Baseball (Japan, Australia, New Zealand)</description>
+		<release name="Champion Baseball (Japan, Australia, New Zealand)" region="AUS"/>
+		<release name="Champion Baseball (Japan, Australia, New Zealand)" region="JPN"/>
+		<rom name="Champion Baseball (Japan, Australia, New Zealand).sg" size="40960" crc="c0c16fa7" md5="308e337a863bb9fa952426ef99180aa7" sha1="85e5c2f354b9110e5f7c7dfcc7ab9814598b7956" status="verified"/>
+	</game>
+	<game name="Champion Baseball (Taiwan)" cloneof="Champion Baseball (Japan, Australia, New Zealand)">
+		<description>Champion Baseball (Taiwan)</description>
+		<release name="Champion Baseball (Taiwan)" region="TAI"/>
+		<rom name="Champion Baseball (Taiwan).sg" size="16384" crc="677e6878" md5="ec2d21452b4cbb6b302e9319fdab7e39" sha1="b674ea2ea50f45b20c60d9dec5bf2e88e2b1cba5" status="verified"/>
+	</game>
+	<game name="Champion Baseball (Japan)" cloneof="Champion Baseball (Japan, Australia, New Zealand)">
+		<description>Champion Baseball (Japan)</description>
+		<rom name="Champion Baseball (Japan).sg" size="16384" crc="5970a12b" md5="f70d4bcf91d3ad9313f9800f35b49536" sha1="737b9478c4ce6df2afcd36f78011019f5d669226" status="verified"/>
+	</game>
+	<game name="Champion Billiards (Japan)">
+		<description>Champion Billiards (Japan)</description>
+		<release name="Champion Billiards (Japan)" region="JPN"/>
+		<rom name="Champion Billiards (Japan).sg" size="32768" crc="62b21e31" md5="71c32b1cf1e85d217421068ac8ccc655" sha1="f517e6a6123643a5e7e5fff6b413139afa412d8e" status="verified"/>
+	</game>
+	<game name="Champion Billiards (Taiwan)" cloneof="Champion Billiards (Japan)">
+		<description>Champion Billiards (Taiwan)</description>
+		<release name="Champion Billiards (Taiwan)" region="TAI"/>
+		<rom name="Champion Billiards (Taiwan).sg" size="32768" crc="56d85bd4" md5="256a6d4bd6dbbe7aa99de513eac6ba2f" sha1="37dc5e7b3ebc3a3b0480b16d27bc394d57aac697" status="verified"/>
+	</game>
+	<game name="Champion Boxing (Japan) (Rev 1)">
+		<description>Champion Boxing (Japan) (Rev 1)</description>
+		<release name="Champion Boxing (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Champion Boxing (Japan) (Rev 1).sg" size="32768" crc="f8b2ac1d" md5="7527098abb9df1db29ba9f495b06998a" sha1="7a7ace132090f11bac4f4aec58bcbf6a2a1c6168" status="verified"/>
+	</game>
+	<game name="Champion Boxing (Taiwan)" cloneof="Champion Boxing (Japan) (Rev 1)">
+		<description>Champion Boxing (Taiwan)</description>
+		<release name="Champion Boxing (Taiwan)" region="TAI"/>
+		<rom name="Champion Boxing (Taiwan).sg" size="32768" crc="15d2ce33" md5="3e346c6137cab263643e42411f64a74d" sha1="e55396be42c6cfbf47ff43d3e8faee1dc8fad807" status="verified"/>
+	</game>
+	<game name="Champion Boxing (Japan, New Zealand)" cloneof="Champion Boxing (Japan) (Rev 1)">
+		<description>Champion Boxing (Japan, New Zealand)</description>
+		<rom name="Champion Boxing (Japan, New Zealand).sg" size="32768" crc="26f947d1" md5="3f54756fd73c3fbe33b56d7954d12f31" sha1="8cd55ee1efcab917087b80629ca18b4629edc15d" status="verified"/>
+	</game>
+	<game name="Champion Golf (Japan, Europe, Australia, New Zealand)">
+		<description>Champion Golf (Japan, Europe, Australia, New Zealand)</description>
+		<release name="Champion Golf (Japan, Europe, Australia, New Zealand)" region="AUS"/>
+		<release name="Champion Golf (Japan, Europe, Australia, New Zealand)" region="EUR"/>
+		<rom name="Champion Golf (Japan, Europe, Australia, New Zealand).sg" size="32768" crc="868419b5" md5="1d87490269964239b64244fcabd18fe1" sha1="05deb000f24b7d8625c6e9332dcc91416ed3258f" status="verified"/>
+	</game>
+	<game name="Champion Golf (Japan) (Rev 1)" cloneof="Champion Golf (Japan, Europe, Australia, New Zealand)">
+		<description>Champion Golf (Japan) (Rev 1)</description>
+		<release name="Champion Golf (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Champion Golf (Japan) (Rev 1).sg" size="32768" crc="5a904122" md5="3c01bb2a4414989378c252f45a4e5050" sha1="f58f14581919c431ac85da72fd1a39bbe1da5e66" status="verified"/>
+	</game>
+	<game name="Champion Golf (Korea) (Unl)" cloneof="Champion Golf (Japan, Europe, Australia, New Zealand)">
+		<description>Champion Golf (Korea) (Unl)</description>
+		<release name="Champion Golf (Korea) (Unl)" region="KOR"/>
+		<rom name="Champion Golf (Korea) (Unl).sg" size="32768" crc="35af42ad" md5="6a865bf09faab7fabacb95eb70e3fc9d" sha1="40ac48ef0ba23653d1763cd04774b00abc49f9a4" status="verified"/>
+	</game>
+	<game name="Champion Ice Hockey (Japan)">
+		<description>Champion Ice Hockey (Japan)</description>
+		<release name="Champion Ice Hockey (Japan)" region="JPN"/>
+		<rom name="Champion Ice Hockey (Japan).sg" size="32768" crc="bdc05652" md5="b3af58c60e62bb85522ddc29096cef60" sha1="ff6440fc7e5c5faa0b9868d5cb5110d1d8635284" status="verified"/>
+	</game>
+	<game name="Champion Ice Hockey (Taiwan)" cloneof="Champion Ice Hockey (Japan)">
+		<description>Champion Ice Hockey (Taiwan)</description>
+		<release name="Champion Ice Hockey (Taiwan)" region="TAI"/>
+		<rom name="Champion Ice Hockey (Taiwan).sg" size="32768" crc="c6e5192f" md5="1b4badba14b7cca71f159f1ce9fba29e" sha1="a316058604eb47b547986fec8ef18c6017694746" status="verified"/>
+	</game>
+	<game name="Champion Ice Hockey (Korea) (Unl)" cloneof="Champion Ice Hockey (Japan)">
+		<description>Champion Ice Hockey (Korea) (Unl)</description>
+		<release name="Champion Ice Hockey (Korea) (Unl)" region="KOR"/>
+		<rom name="Champion Ice Hockey (Korea) (Unl).sg" size="32768" crc="ec0b862c" md5="ac3dd2d12e2bdfc7804cb2ef2c213162" sha1="3efbef93040fffbecb8e1d00b8470ac92f002c9b" status="verified"/>
+	</game>
+	<game name="Champion Kendou (Japan)">
+		<description>Champion Kendou (Japan)</description>
+		<release name="Champion Kendou (Japan)" region="JPN"/>
+		<rom name="Champion Kendou (Japan).sg" size="32768" crc="10cdebce" md5="ed6e4e8e081b56be488f57abcb51a7e5" sha1="8565fc398d0206100da785d10e008f7f6a3c225e" status="verified"/>
+	</game>
+	<game name="Champion Kendou (Taiwan)" cloneof="Champion Kendou (Japan)">
+		<description>Champion Kendou (Taiwan)</description>
+		<release name="Champion Kendou (Taiwan)" region="TAI"/>
+		<rom name="Champion Kendou (Taiwan).sg" size="32768" crc="a5f61363" md5="c19ccd8e05e8230d91a8d2c8430d23bc" sha1="621cf09649e9244714fa01652b066cd1a477279e" status="verified"/>
+	</game>
+	<game name="Champion Pro Wrestling (Japan)">
+		<description>Champion Pro Wrestling (Japan)</description>
+		<release name="Champion Pro Wrestling (Japan)" region="JPN"/>
+		<rom name="Champion Pro Wrestling (Japan).sg" size="32768" crc="372fe6bc" md5="da9a4589303370e8a751c16b2cbfa628" sha1="3bdb1e9d8b1a04d8fcc242c47be790c427a75403" status="verified"/>
+	</game>
+	<game name="Champion Soccer (Japan, Europe)">
+		<description>Champion Soccer (Japan, Europe)</description>
+		<release name="Champion Soccer (Japan, Europe)" region="EUR"/>
+		<release name="Champion Soccer (Japan, Europe)" region="JPN"/>
+		<rom name="Champion Soccer (Japan, Europe).sg" size="16384" crc="6f39719e" md5="810064687e1614b6a7fb985b82806d31" sha1="0b3cf82f020ac9249ea52766ffbad41515d0b8b4" status="verified"/>
+	</game>
+	<game name="Champion Soccer (Taiwan)" cloneof="Champion Soccer (Japan, Europe)">
+		<description>Champion Soccer (Taiwan)</description>
+		<release name="Champion Soccer (Taiwan)" region="TAI"/>
+		<rom name="Champion Soccer (Taiwan).sg" size="16384" crc="269c1aee" md5="f29b59c3588e3b952e1ad79c1e1dc8a0" sha1="ad2a72dff1959e3e148c48962ab382897bc06627" status="verified"/>
+	</game>
+	<game name="Champion Tennis (Japan, Europe, Australia, New Zealand)">
+		<description>Champion Tennis (Japan, Europe, Australia, New Zealand)</description>
+		<release name="Champion Tennis (Japan, Europe, Australia, New Zealand)" region="AUS"/>
+		<release name="Champion Tennis (Japan, Europe, Australia, New Zealand)" region="EUR"/>
+		<release name="Champion Tennis (Japan, Europe, Australia, New Zealand)" region="JPN"/>
+		<rom name="Champion Tennis (Japan, Europe, Australia, New Zealand).sg" size="8192" crc="7c663316" md5="79e8f456fae5d3719731e960c9b4c612" sha1="8b90300dcabc2cf8d58ee4800dce3084b739886b" status="verified"/>
+	</game>
+	<game name="Championship Lode Runner (Japan, Australia)">
+		<description>Championship Lode Runner (Japan, Australia)</description>
+		<release name="Championship Lode Runner (Japan, Australia)" region="AUS"/>
+		<release name="Championship Lode Runner (Japan, Australia)" region="JPN"/>
+		<rom name="Championship Lode Runner (Japan, Australia).sg" size="32768" crc="11db4b1d" md5="f49d9ea611ccb9289994774406f20d06" sha1="a0dad095489da2bdf8ec03f1acc83f809db2371f" status="verified"/>
+	</game>
+	<game name="Championship Lode Runner (Taiwan)" cloneof="Championship Lode Runner (Japan, Australia)">
+		<description>Championship Lode Runner (Taiwan)</description>
+		<release name="Championship Lode Runner (Taiwan)" region="TAI"/>
+		<rom name="Championship Lode Runner (Taiwan).sg" size="32768" crc="ec95ebcb" md5="9b1cc0bdbdf3aeffc655a965dec4aa94" sha1="321e2c97645dd9af3e52c66b5db06304250d1bf2" status="verified"/>
+	</game>
+	<game name="Choplifter (Japan, Australia)">
+		<description>Choplifter (Japan, Australia)</description>
+		<release name="Choplifter (Japan, Australia)" region="AUS"/>
+		<release name="Choplifter (Japan, Australia)" region="JPN"/>
+		<rom name="Choplifter (Japan, Australia).sg" size="32768" crc="732b7180" md5="ee557c7811f03c44965a56b80801a3b9" sha1="e0828517fdc9a5537fda39dbc49942494eb3196d" status="verified"/>
+	</game>
+	<game name="Choplifter (Japan, Australia) (Beta)" cloneof="Choplifter (Japan, Australia)">
+		<description>Choplifter (Japan, Australia) (Beta)</description>
+		<rom name="Choplifter (Japan, Australia) (Beta).sg" size="32768" crc="ff435469" md5="0500fe7f7cbda7a9ec19be1094aa67dd" sha1="da92459e64ed6cc0ce93b03a60fad049e13a505f" status="verified"/>
+	</game>
+	<game name="Choplifter (Korea) (Unl)" cloneof="Choplifter (Japan, Australia)">
+		<description>Choplifter (Korea) (Unl)</description>
+		<release name="Choplifter (Korea) (Unl)" region="KOR"/>
+		<rom name="Choplifter (Korea) (Unl).sg" size="32768" crc="954d8f26" md5="1ef268192df49e92d1f074e1bc3200dd" sha1="ef746a242ffd4d624ea378b6d9f20a6bc206f859" status="verified"/>
+	</game>
+	<game name="Choplifter (Taiwan) (No Logo)" cloneof="Choplifter (Japan, Australia)">
+		<description>Choplifter (Taiwan) (No Logo)</description>
+		<rom name="Choplifter (Taiwan) (No Logo).sg" size="32768" crc="825e1aae" md5="3427ae928bce91b314e62be92dbf8446" sha1="daf36c050b0e507d2f2470050299a648716c9158" status="verified"/>
+	</game>
+	<game name="Choplifter (Taiwan) (Chinese Logo)" cloneof="Choplifter (Japan, Australia)">
+		<description>Choplifter (Taiwan) (Chinese Logo)</description>
+		<rom name="Choplifter (Taiwan) (Chinese Logo).sg" size="32768" crc="746a8d86" md5="ab4105fd66e149e2bfbd5e5566e6aa76" sha1="af6c40febe02fe2b424ea99e666cf3f451eb5a1f" status="verified"/>
+	</game>
+	<game name="Choplifter (Taiwan) (English Logo)" cloneof="Choplifter (Japan, Australia)">
+		<description>Choplifter (Taiwan) (English Logo)</description>
+		<release name="Choplifter (Taiwan) (English Logo)" region="TAI"/>
+		<rom name="Choplifter (Taiwan) (English Logo).sg" size="32768" crc="7c603987" md5="dac1f7d97039682793378fdba7ee2d8e" sha1="61d1afe62b2be0da26d8a185828387063dd4b06e" status="verified"/>
+	</game>
+	<game name="Chuugaku Hisshuu Eibunpou - Chuugaku 1-Nen (Japan) (SC-3000) (Program)">
+		<description>Chuugaku Hisshuu Eibunpou - Chuugaku 1-Nen (Japan) (SC-3000) (Program)</description>
+		<release name="Chuugaku Hisshuu Eibunpou - Chuugaku 1-Nen (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Chuugaku Hisshuu Eibunpou - Chuugaku 1-Nen (Japan) (SC-3000) (Program).sc" size="8192" crc="345c8bc8" md5="9c83442fcefbef11bad9d6e35363be0c" sha1="eaab51616a87fd29f0383a8b3ea365971bceb56b" status="verified"/>
+	</game>
+	<game name="Chuugaku Hisshuu Eibunpou - Chuugaku 2-Nen (Japan) (SC-3000) (Program)">
+		<description>Chuugaku Hisshuu Eibunpou - Chuugaku 2-Nen (Japan) (SC-3000) (Program)</description>
+		<release name="Chuugaku Hisshuu Eibunpou - Chuugaku 2-Nen (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Chuugaku Hisshuu Eibunpou - Chuugaku 2-Nen (Japan) (SC-3000) (Program).sc" size="8192" crc="d4c473b2" md5="800431864400c33ac40a1f1b88c1afb9" sha1="efe8a2852344f094806039019314ebe9c49e53f9" status="verified"/>
+	</game>
+	<game name="Chuugaku Hisshuu Eisakubun - Chuugaku 1-Nen (Japan) (SC-3000) (Program)">
+		<description>Chuugaku Hisshuu Eisakubun - Chuugaku 1-Nen (Japan) (SC-3000) (Program)</description>
+		<release name="Chuugaku Hisshuu Eisakubun - Chuugaku 1-Nen (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Chuugaku Hisshuu Eisakubun - Chuugaku 1-Nen (Japan) (SC-3000) (Program).sc" size="16384" crc="9bafd9e9" md5="772e1bace3a92c45aa266ba407b3a0b3" sha1="0081205a3e2fa9322a348ab8a096c282bbbbcc21" status="verified"/>
+	</game>
+	<game name="Chuugaku Hisshuu Eisakubun - Chuugaku 1-Nen (Japan) (Alt 1) (SC-3000) (Program)" cloneof="Chuugaku Hisshuu Eisakubun - Chuugaku 1-Nen (Japan) (SC-3000) (Program)">
+		<description>Chuugaku Hisshuu Eisakubun - Chuugaku 1-Nen (Japan) (Alt 1) (SC-3000) (Program)</description>
+		<rom name="Chuugaku Hisshuu Eisakubun - Chuugaku 1-Nen (Japan) (Alt 1) (SC-3000) (Program).sc" size="40960" crc="975106b6" md5="b8c0c4c3c05699374d7707688e0fdfb1" sha1="ebc8544bf8a36840a639bb7a2698f984429f4762" status="verified"/>
+	</game>
+	<game name="Chuugaku Hisshuu Eisakubun - Chuugaku 2-Nen (Japan) (SC-3000) (Program)">
+		<description>Chuugaku Hisshuu Eisakubun - Chuugaku 2-Nen (Japan) (SC-3000) (Program)</description>
+		<release name="Chuugaku Hisshuu Eisakubun - Chuugaku 2-Nen (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Chuugaku Hisshuu Eisakubun - Chuugaku 2-Nen (Japan) (SC-3000) (Program).sc" size="16384" crc="581dce41" md5="1041cb5d0498a469ff7355888e1fa91d" sha1="058f3efd1ae2a0dde4ee2b327a2faea663354411" status="verified"/>
+	</game>
+	<game name="Chuugaku Hisshuu Eisakubun - Chuugaku 2-Nen (Japan) (Alt 1) (SC-3000) (Program)" cloneof="Chuugaku Hisshuu Eisakubun - Chuugaku 2-Nen (Japan) (SC-3000) (Program)">
+		<description>Chuugaku Hisshuu Eisakubun - Chuugaku 2-Nen (Japan) (Alt 1) (SC-3000) (Program)</description>
+		<rom name="Chuugaku Hisshuu Eisakubun - Chuugaku 2-Nen (Japan) (Alt 1) (SC-3000) (Program).sc" size="40960" crc="3657b285" md5="b23a6d9bafe9b2883119a943778a0503" sha1="312ce1b510a90a96bca63d028e96ed732ab6a043" status="verified"/>
+	</game>
+	<game name="Chuugaku Hisshuu Eitango - Chuugaku 1-Nen (Japan) (SC-3000) (Program)">
+		<description>Chuugaku Hisshuu Eitango - Chuugaku 1-Nen (Japan) (SC-3000) (Program)</description>
+		<release name="Chuugaku Hisshuu Eitango - Chuugaku 1-Nen (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Chuugaku Hisshuu Eitango - Chuugaku 1-Nen (Japan) (SC-3000) (Program).sc" size="16384" crc="6ccb297a" md5="ef11524a58bb18415856d625a0ebeb9a" sha1="63cf03f62516d4228a023fff496f2ffa6581d3dc" status="verified"/>
+	</game>
+	<game name="Chuugaku Hisshuu Eitango - Chuugaku 2-Nen (Japan) (SC-3000) (Program)">
+		<description>Chuugaku Hisshuu Eitango - Chuugaku 2-Nen (Japan) (SC-3000) (Program)</description>
+		<release name="Chuugaku Hisshuu Eitango - Chuugaku 2-Nen (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Chuugaku Hisshuu Eitango - Chuugaku 2-Nen (Japan) (SC-3000) (Program).sc" size="16384" crc="8507216b" md5="7b5c610ed285ef4e1c62521df9533806" sha1="931b404c809b39a68cdc4b74ad905a008d46143d" status="verified"/>
+	</game>
+	<game name="Chuugaku Hisshuu Eitango - Chuugaku 2-Nen (Japan) (Alt 1) (SC-3000) (Program)" cloneof="Chuugaku Hisshuu Eitango - Chuugaku 2-Nen (Japan) (SC-3000) (Program)">
+		<description>Chuugaku Hisshuu Eitango - Chuugaku 2-Nen (Japan) (Alt 1) (SC-3000) (Program)</description>
+		<rom name="Chuugaku Hisshuu Eitango - Chuugaku 2-Nen (Japan) (Alt 1) (SC-3000) (Program).sc" size="40960" crc="4f599483" md5="477da1d7693a05b7a62100663cced631" sha1="09515ce5c8b598020f4c6b97540a7020abb6f596" status="verified"/>
+	</game>
+	<game name="Circus Charlie (Taiwan)">
+		<description>Circus Charlie (Taiwan)</description>
+		<release name="Circus Charlie (Taiwan)" region="TAI"/>
+		<rom name="Circus Charlie (Taiwan).sg" size="32768" crc="3404fce4" md5="46b1f9c6693ed7d1d0c5a6d72872398a" sha1="67ec5859d293d9236d21b71e63580b6a53b90244" status="verified"/>
+	</game>
+	<game name="Circus Charlie (Korea) (Unl)" cloneof="Circus Charlie (Taiwan)">
+		<description>Circus Charlie (Korea) (Unl)</description>
+		<release name="Circus Charlie (Korea) (Unl)" region="KOR"/>
+		<rom name="Circus Charlie (Korea) (Unl).sg" size="32768" crc="7f7f009d" md5="05940e2d44f81e163dab4a5a6f29645e" sha1="34899ad454a56826d53028bef8fed7f5d2c6a78a" status="verified"/>
+	</game>
+	<game name="Complete Arcade Pack Collection, The (New Zealand) (SF-7000)">
+		<description>Complete Arcade Pack Collection, The (New Zealand) (SF-7000)</description>
+		<rom name="Complete Arcade Pack Collection, The (New Zealand) (SF-7000).sf" size="163840" crc="ad19c0a0" md5="94bc20eabd0674e4f7b30762359c66c1" sha1="e12dd5f93df9f536ce4e6f7c445467358c31145a" status="verified"/>
+	</game>
+	<game name="Congo Bongo (Japan, Europe, Australia, New Zealand) (Rev 1)">
+		<description>Congo Bongo (Japan, Europe, Australia, New Zealand) (Rev 1)</description>
+		<release name="Congo Bongo (Japan, Europe, Australia, New Zealand) (Rev 1)" region="AUS"/>
+		<release name="Congo Bongo (Japan, Europe, Australia, New Zealand) (Rev 1)" region="EUR"/>
+		<release name="Congo Bongo (Japan, Europe, Australia, New Zealand) (Rev 1)" region="JPN"/>
+		<rom name="Congo Bongo (Japan, Europe, Australia, New Zealand) (Rev 1).sg" size="24576" crc="5a24c7cf" md5="5f4d3c629e37e83794233b3cffc4cc0e" sha1="47aba6a295e5695db4c3aaa1dea8ad8ac961b5f9" status="verified"/>
+	</game>
+	<game name="Congo Bongo (Japan)" cloneof="Congo Bongo (Japan, Europe, Australia, New Zealand) (Rev 1)">
+		<description>Congo Bongo (Japan)</description>
+		<rom name="Congo Bongo (Japan).sg" size="24576" crc="5eb48a20" md5="35aa60be1827402f86065e226888fb44" sha1="9e153c7822a36230e85e9ac0ddc53d6fee810089" status="verified"/>
+	</game>
+	<game name="Congo Bongo (Japan) (Rev 1) (Alt 1)" cloneof="Congo Bongo (Japan, Europe, Australia, New Zealand) (Rev 1)">
+		<description>Congo Bongo (Japan) (Rev 1) (Alt 1)</description>
+		<rom name="Congo Bongo (Japan) (Rev 1) (Alt 1).sg" size="40960" crc="f1506565" md5="a0620fb61aa7d023ca52c5eee559832f" sha1="4ea22b9a655c4cfe13500beb97e84da451752148" status="verified"/>
+	</game>
+	<game name="Congo Bongo (Taiwan) (Rev 1)" cloneof="Congo Bongo (Japan, Europe, Australia, New Zealand) (Rev 1)">
+		<description>Congo Bongo (Taiwan) (Rev 1)</description>
+		<release name="Congo Bongo (Taiwan) (Rev 1)" region="TAI"/>
+		<rom name="Congo Bongo (Taiwan) (Rev 1).sg" size="24576" crc="f7eb94c5" md5="499fe90988a60a6325465606695e7754" sha1="3fe3272374135e8b5e849bdcd12812a90bb9901c" status="verified"/>
+	</game>
+	<game name="C_So! (Japan)">
+		<description>C_So! (Japan)</description>
+		<release name="C_So! (Japan)" region="JPN"/>
+		<rom name="C_So! (Japan).sg" size="32768" crc="be7ed0eb" md5="d87daad7de33105d703b613052ccc2dd" sha1="d45a230b3cbf2d2dcfe7b94691fc7f1a5d747625" status="verified"/>
+	</game>
+	<game name="C_So! (Taiwan)" cloneof="C_So! (Japan)">
+		<description>C_So! (Taiwan)</description>
+		<release name="C_So! (Taiwan)" region="TAI"/>
+		<rom name="C_So! (Taiwan).sg" size="32768" crc="82c4e3e5" md5="25ac91afc22f7a09ff4543af653cd281" sha1="7101c42289815d7e0d04b523f8f0e833f2f089b3" status="verified"/>
+	</game>
+	<game name="Disk BASIC (Japan) (Rev 1) (SF-7000) (Program)">
+		<description>Disk BASIC (Japan) (Rev 1) (SF-7000) (Program)</description>
+		<release name="Disk BASIC (Japan) (Rev 1) (SF-7000) (Program)" region="JPN"/>
+		<rom name="Disk BASIC (Japan) (Rev 1) (SF-7000) (Program).sf" size="163840" crc="7f51ef65" md5="8de8d82ed983f76a93a478cc7b15104e" sha1="037c3d09b3d9e898a79514c3885bf6e42d28dd4e"/>
+	</game>
+	<game name="Disk BASIC (Japan) (SF-7000) (Program)" cloneof="Disk BASIC (Japan) (Rev 1) (SF-7000) (Program)">
+		<description>Disk BASIC (Japan) (SF-7000) (Program)</description>
+		<rom name="Disk BASIC (Japan) (SF-7000) (Program).sf" size="163840" crc="50a2a040" md5="ef06fb2c00e669ff959db4965a06f8b4" sha1="1e3c0651757d304ba1184e43f1cb1ce1ca3be22e" status="verified"/>
+	</game>
+	<game name="Disk BASIC &amp; Yeno Demo (Japan) (SF-7000) (Program)" cloneof="Disk BASIC (Japan) (Rev 1) (SF-7000) (Program)">
+		<description>Disk BASIC &amp; Yeno Demo (Japan) (SF-7000) (Program)</description>
+		<rom name="Disk BASIC &amp; Yeno Demo (Japan) (SF-7000) (Program).sf" size="163840" crc="ffdbcd97" md5="b8791c6979086cf01a808008b4df0b08" sha1="c7c55da3c2f0fa90895f8b2802bad2606ff16578" status="verified"/>
+	</game>
+	<game name="Doki Doki Penguin Land (Japan)">
+		<description>Doki Doki Penguin Land (Japan)</description>
+		<release name="Doki Doki Penguin Land (Japan)" region="JPN"/>
+		<rom name="Doki Doki Penguin Land (Japan).sg" size="32768" crc="346556b9" md5="79f15598828e697e75c65130262d8d94" sha1="f49c43b1f9a0b19ef5f30d9bf2b222af7aeb9fbf" status="verified"/>
+	</game>
+	<game name="Doki Doki Penguin Land (Taiwan)" cloneof="Doki Doki Penguin Land (Japan)">
+		<description>Doki Doki Penguin Land (Taiwan)</description>
+		<release name="Doki Doki Penguin Land (Taiwan)" region="TAI"/>
+		<rom name="Doki Doki Penguin Land (Taiwan).sg" size="32768" crc="fdc095bc" md5="c9412b2aa1de5070734297573dba7132" sha1="176e2d2648b20e6fac823021697138803ef38b27" status="verified"/>
+	</game>
+	<game name="Dragon Wang (Japan) (Rev 1)">
+		<description>Dragon Wang (Japan) (Rev 1)</description>
+		<release name="Dragon Wang (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Dragon Wang (Japan) (Rev 1).sg" size="32768" crc="99c3de21" md5="64d3cc8117292f6d5af8e1aad95bcb90" sha1="43807c9f634b8cf85aa5c3b2459885eedbb99955" status="verified"/>
+	</game>
+	<game name="Dragon Wang (Japan)" cloneof="Dragon Wang (Japan) (Rev 1)">
+		<description>Dragon Wang (Japan)</description>
+		<rom name="Dragon Wang (Japan).sg" size="32768" crc="60f30138" md5="0528eed7e7ae46ec8298098f1a22d18f" sha1="78f26d0a1d4f08a6378700b81ab38fc7c0f6bdc0" status="verified"/>
+	</game>
+	<game name="Dragon Wang (Taiwan) (English Logo)" cloneof="Dragon Wang (Japan) (Rev 1)">
+		<description>Dragon Wang (Taiwan) (English Logo)</description>
+		<release name="Dragon Wang (Taiwan) (English Logo)" region="TAI"/>
+		<rom name="Dragon Wang (Taiwan) (English Logo).sg" size="32768" crc="6f94e5c0" md5="0dc1cde8eea986eee30c038f18a996d7" sha1="b2a3c886677ba3926cb56a1a781e7926852499c7" status="verified"/>
+	</game>
+	<game name="Dragon Wang (Taiwan) (Chinese Logo)" cloneof="Dragon Wang (Japan) (Rev 1)">
+		<description>Dragon Wang (Taiwan) (Chinese Logo)</description>
+		<rom name="Dragon Wang (Taiwan) (Chinese Logo).sg" size="32768" crc="7c7d4397" md5="ea0c028dabd39961eb2db8f2f17c107d" sha1="57ade81eaa044d69621741d8c5f5c5e8650f6c2b" status="verified"/>
+	</game>
+	<game name="Drol (Japan, Australia)">
+		<description>Drol (Japan, Australia)</description>
+		<release name="Drol (Japan, Australia)" region="AUS"/>
+		<release name="Drol (Japan, Australia)" region="JPN"/>
+		<rom name="Drol (Japan, Australia).sg" size="32768" crc="288940cb" md5="8eb2ab42d2bc3f3568e85cba2b46a251" sha1="607b2b9a946eaaebb938800bd3b1df7d9342388c" status="verified"/>
+	</game>
+	<game name="Drol (Taiwan)" cloneof="Drol (Japan, Australia)">
+		<description>Drol (Taiwan)</description>
+		<release name="Drol (Taiwan)" region="TAI"/>
+		<rom name="Drol (Taiwan).sg" size="32768" crc="b7fc033d" md5="0423892eefd3d09a7102651f8980cc39" sha1="8bb117df0a86508cf3fc139bd070c0aa8c6487dd" status="verified"/>
+	</game>
+	<game name="Drol (Korea) (Unl)" cloneof="Drol (Japan, Australia)">
+		<description>Drol (Korea) (Unl)</description>
+		<release name="Drol (Korea) (Unl)" region="KOR"/>
+		<rom name="Drol (Korea) (Unl).sg" size="32768" crc="1d7c53bb" md5="0facbc1668dedbcb579d08df4e232699" sha1="37baf9aac77436b4939c80d6a575e23a7d5cd76d" status="verified"/>
+	</game>
+	<game name="Electronic Salesman (Japan) (Proto) (SC-3000) (Program)">
+		<description>Electronic Salesman (Japan) (Proto) (SC-3000) (Program)</description>
+		<release name="Electronic Salesman (Japan) (Proto) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Electronic Salesman (Japan) (Proto) (SC-3000) (Program).sc" size="32768" crc="ea7fc2d5" md5="11e642419b3e345db99d2fac07467386" sha1="edb9c6eb389df4165e81658a21c0a8b18a0457d4" status="verified"/>
+	</game>
+	<game name="Elevator Action (Japan)">
+		<description>Elevator Action (Japan)</description>
+		<release name="Elevator Action (Japan)" region="JPN"/>
+		<rom name="Elevator Action (Japan).sg" size="32768" crc="5af8f69d" md5="23c751fe6bb8bd4f8c0cd9b0d39adecd" sha1="f72b3e44309e7c2e447c46928ce795453102f717" status="verified"/>
+	</game>
+	<game name="Elevator Action (Taiwan)" cloneof="Elevator Action (Japan)">
+		<description>Elevator Action (Taiwan)</description>
+		<release name="Elevator Action (Taiwan)" region="TAI"/>
+		<rom name="Elevator Action (Taiwan).sg" size="32768" crc="6846e36d" md5="3787826f22b244b48933f177306706b0" sha1="0c419fdd769371f97c66030c51b21c786b89a105" status="verified"/>
+	</game>
+	<game name="Exerion (Japan, Europe, Australia, New Zealand)">
+		<description>Exerion (Japan, Europe, Australia, New Zealand)</description>
+		<release name="Exerion (Japan, Europe, Australia, New Zealand)" region="AUS"/>
+		<release name="Exerion (Japan, Europe, Australia, New Zealand)" region="EUR"/>
+		<release name="Exerion (Japan, Europe, Australia, New Zealand)" region="JPN"/>
+		<rom name="Exerion (Japan, Europe, Australia, New Zealand).sg" size="16384" crc="a2c45b61" md5="7f0ae039dd072d825ebfd2d3bf02a2a0" sha1="839e19487b96d02222ff397b047cbc6a0fbc08ff" status="verified"/>
+	</game>
+	<game name="Exerion (Taiwan)" cloneof="Exerion (Japan, Europe, Australia, New Zealand)">
+		<description>Exerion (Taiwan)</description>
+		<release name="Exerion (Taiwan)" region="TAI"/>
+		<rom name="Exerion (Taiwan).sg" size="16384" crc="b5c84a32" md5="c8519ef63183e8398dde0bd3e7e2641e" sha1="75555c1a05a14401e4136bffb9fb52f88a17ecfc" status="verified"/>
+	</game>
+	<game name="Exerion (Korea) (Unl)" cloneof="Exerion (Japan, Europe, Australia, New Zealand)">
+		<description>Exerion (Korea) (Unl)</description>
+		<release name="Exerion (Korea) (Unl)" region="KOR"/>
+		<rom name="Exerion (Korea) (Unl).sg" size="32768" crc="fc628d0d" md5="eb3f8f679f32e6bcc4489280df7be7f3" sha1="3f569c9d95bc83896bc44dba7c469356961d659c" status="verified"/>
+	</game>
+	<game name="Flicky (Japan) (Rev 1)">
+		<description>Flicky (Japan) (Rev 1)</description>
+		<release name="Flicky (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Flicky (Japan) (Rev 1).sg" size="32768" crc="26d2862c" md5="0bb6d2a43b340f56366edabd7e21fed4" sha1="51947fc0ae2bc3442b0fee2cccf2344b7a94a167" status="verified"/>
+	</game>
+	<game name="Flicky (Taiwan) (Rev 1)" cloneof="Flicky (Japan) (Rev 1)">
+		<description>Flicky (Taiwan) (Rev 1)</description>
+		<release name="Flicky (Taiwan) (Rev 1)" region="TAI"/>
+		<rom name="Flicky (Taiwan) (Rev 1).sg" size="32768" crc="cd0666a7" md5="5d4c4c65e668196a3d0eadcd260a0bf6" sha1="a04ce8c70eddfac0adbf9489c0abbaaae613037c" status="verified"/>
+	</game>
+	<game name="Flicky (Japan, New Zealand)" cloneof="Flicky (Japan) (Rev 1)">
+		<description>Flicky (Japan, New Zealand)</description>
+		<rom name="Flicky (Japan, New Zealand).sg" size="32768" crc="bd24d27b" md5="b52e308e1c0005bc1dba2ba900ad44d0" sha1="39a91b5ad6b139ca5d8ac60b78520210e84944bd" status="verified"/>
+	</game>
+	<game name="Girl's Garden (Japan, Australia)">
+		<description>Girl's Garden (Japan, Australia)</description>
+		<release name="Girl's Garden (Japan, Australia)" region="AUS"/>
+		<release name="Girl's Garden (Japan, Australia)" region="JPN"/>
+		<rom name="Girl's Garden (Japan, Australia).sg" size="32768" crc="1898f274" md5="ac95c0655360f667e3ad705e2eb7367a" sha1="0e08786587fb76909b3f9806ba1f5d57ea17728c" status="verified"/>
+	</game>
+	<game name="Girl's Garden (Taiwan)" cloneof="Girl's Garden (Japan, Australia)">
+		<description>Girl's Garden (Taiwan)</description>
+		<release name="Girl's Garden (Taiwan)" region="TAI"/>
+		<rom name="Girl's Garden (Taiwan).sg" size="32768" crc="b9635ac4" md5="83065f5045611f3d6d7b67382357dcc6" sha1="94089be091af476c5628225e0262396faa5394f1" status="verified"/>
+	</game>
+	<game name="Golgo 13 (Japan)">
+		<description>Golgo 13 (Japan)</description>
+		<release name="Golgo 13 (Japan)" region="JPN"/>
+		<rom name="Golgo 13 (Japan).sg" size="32768" crc="0d159ed0" md5="cb25a12e86c729f6a51ba3dea91c1547" sha1="bf27536c6ae71b333da8b362479da0a838d0715e" status="verified"/>
+	</game>
+	<game name="GP World (Japan) (Rev 1)">
+		<description>GP World (Japan) (Rev 1)</description>
+		<release name="GP World (Japan) (Rev 1)" region="JPN"/>
+		<rom name="GP World (Japan) (Rev 1).sg" size="32768" crc="191ffe0a" md5="19707d73ce1a664cba608e9c72e334c2" sha1="37aa4812d37445c9e86bc4e02f056fb50d19dc6a" status="verified"/>
+	</game>
+	<game name="GP World (Japan)" cloneof="GP World (Japan) (Rev 1)">
+		<description>GP World (Japan)</description>
+		<rom name="GP World (Japan).sg" size="32768" crc="942adf84" md5="4d9cc3764321b668d1fc238e19794312" sha1="40ae9c24c61188c6f02eba1b83109c5c4d86e64b" status="verified"/>
+	</game>
+	<game name="GP World (Taiwan)" cloneof="GP World (Japan) (Rev 1)">
+		<description>GP World (Taiwan)</description>
+		<release name="GP World (Taiwan)" region="TAI"/>
+		<rom name="GP World (Taiwan).sg" size="32768" crc="f19f7548" md5="5a533ddf9c0c72c57376ea151ece1c03" sha1="11773e7eb2dca727ea293b5aa50ed8094df29f41" status="verified"/>
+	</game>
+	<game name="Gulkave (Japan)">
+		<description>Gulkave (Japan)</description>
+		<release name="Gulkave (Japan)" region="JPN"/>
+		<rom name="Gulkave (Japan).sg" size="32768" crc="15a754a3" md5="43c23a134aec3ab424405780ff729d54" sha1="3fb197d16b25bc128a2866c4b78b0535ab8dc412" status="verified"/>
+	</game>
+	<game name="Gulkave (Korea) (Unl)" cloneof="Gulkave (Japan)">
+		<description>Gulkave (Korea) (Unl)</description>
+		<release name="Gulkave (Korea) (Unl)" region="KOR"/>
+		<rom name="Gulkave (Korea) (Unl).sg" size="32768" crc="ddcb708b" md5="33902566e0070ef7c53f2afa97ec9968" sha1="deabfe970bb450e51909c181430e7de2bd1b1a9e" status="verified"/>
+	</game>
+	<game name="Guzzler (Japan) (Othello Multivision)">
+		<description>Guzzler (Japan) (Othello Multivision)</description>
+		<release name="Guzzler (Japan) (Othello Multivision)" region="JPN"/>
+		<rom name="Guzzler (Japan) (Othello Multivision).sg" size="8192" crc="61fa9ea0" md5="f3f1042745e96e29bfdf920d031b8cd5" sha1="d42b2c5f1da4e0fbd29fcea91bfc092ae46da4b8" status="verified"/>
+	</game>
+	<game name="Guzzler (Taiwan) (Othello Multivision)" cloneof="Guzzler (Japan) (Othello Multivision)">
+		<description>Guzzler (Taiwan) (Othello Multivision)</description>
+		<release name="Guzzler (Taiwan) (Othello Multivision)" region="TAI"/>
+		<rom name="Guzzler (Taiwan) (Othello Multivision).sg" size="8192" crc="eb808158" md5="36548be02803aa49fe0e918626e240c1" sha1="5c51f9846fb8220ab7dd6db5d6911cf4e985bfe9" status="verified"/>
+	</game>
+	<game name="H.E.R.O. (Japan)">
+		<description>H.E.R.O. (Japan)</description>
+		<release name="H.E.R.O. (Japan)" region="JPN"/>
+		<rom name="H.E.R.O. (Japan).sg" size="32768" crc="4587de6e" md5="d10f38c614113cb34bbf4a19b487e1fb" sha1="19acb69b7b64da5083349d8bc40a47beacc88c41" status="verified"/>
+	</game>
+	<game name="H.E.R.O. (Taiwan) (Chinese Logo)" cloneof="H.E.R.O. (Japan)">
+		<description>H.E.R.O. (Taiwan) (Chinese Logo)</description>
+		<rom name="H.E.R.O. (Taiwan) (Chinese Logo).sg" size="32768" crc="83958998" md5="6136e2e6dda483cb311c72843c2ee5cd" sha1="3b2d3dfe948a734c3d18b504c89c61b7b1f3d81b" status="verified"/>
+	</game>
+	<game name="H.E.R.O. (Taiwan) (English Logo)" cloneof="H.E.R.O. (Japan)">
+		<description>H.E.R.O. (Taiwan) (English Logo)</description>
+		<release name="H.E.R.O. (Taiwan) (English Logo)" region="TAI"/>
+		<rom name="H.E.R.O. (Taiwan) (English Logo).sg" size="32768" crc="96f09c6d" md5="89be9de818fa13dca0ececd6575af06a" sha1="82b530feef7c011361e21b62d2c359c626ab8a9c" status="verified"/>
+	</game>
+	<game name="Hang-On II (Japan, Australia)">
+		<description>Hang-On II (Japan, Australia)</description>
+		<release name="Hang-On II (Japan, Australia)" region="AUS"/>
+		<release name="Hang-On II (Japan, Australia)" region="JPN"/>
+		<rom name="Hang-On II (Japan, Australia).sg" size="32768" crc="9be3c6bd" md5="314c865decbe6f578d9bfa23f27a08e6" sha1="e636e889d4e81c024ee7dae8943c2b8d9d4a5414" status="verified"/>
+	</game>
+	<game name="Hang-On II (Taiwan) (Chinese Logo)" cloneof="Hang-On II (Japan, Australia)">
+		<description>Hang-On II (Taiwan) (Chinese Logo)</description>
+		<rom name="Hang-On II (Taiwan) (Chinese Logo).sg" size="32768" crc="e98a111e" md5="21b077d68d38be01837d534b0c1be2e9" sha1="154669944d899faa1db1cea3fecce9eb162eb3fd" status="verified"/>
+	</game>
+	<game name="Hang-On II (Taiwan) (English Logo)" cloneof="Hang-On II (Japan, Australia)">
+		<description>Hang-On II (Taiwan) (English Logo)</description>
+		<release name="Hang-On II (Taiwan) (English Logo)" region="TAI"/>
+		<rom name="Hang-On II (Taiwan) (English Logo).sg" size="32768" crc="cabd451b" md5="ebe4433a6250abd81be69f15b41c566c" sha1="1e25fc699baa715710f3f6375dbcb107bfc044f5" status="verified"/>
+	</game>
+	<game name="Home BASIC (Japan) (SC-3000) (Program)">
+		<description>Home BASIC (Japan) (SC-3000) (Program)</description>
+		<release name="Home BASIC (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Home BASIC (Japan) (SC-3000) (Program).sc" size="32768" crc="78a37cbc" md5="cb724ebeaec9619281a906671c98a952" sha1="f1e1e7e9687cf4f9f498779a44134c2d70bb8d4b" status="verified"/>
+	</game>
+	<game name="Home Mahjong (Japan) (Rev 1)">
+		<description>Home Mahjong (Japan) (Rev 1)</description>
+		<release name="Home Mahjong (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Home Mahjong (Japan) (Rev 1).sg" size="49152" crc="e7e0f0e3" md5="33c4b489f61086c10e9f713519ddc7bc" sha1="ac38a279f24e132acf6ac9fd27b53d1b939d2e7e" status="verified"/>
+	</game>
+	<game name="Home Mahjong (Taiwan)" cloneof="Home Mahjong (Japan) (Rev 1)">
+		<description>Home Mahjong (Taiwan)</description>
+		<release name="Home Mahjong (Taiwan)" region="TAI"/>
+		<rom name="Home Mahjong (Taiwan).sg" size="49152" crc="0583a9fa" md5="8fab99c3cc9a7a98d8873eaf215a5fa0" sha1="db98d7461e88cef8160089c44fcd432388e3c9df" status="verified"/>
+	</game>
+	<game name="Home Mahjong (Japan)" cloneof="Home Mahjong (Japan) (Rev 1)">
+		<description>Home Mahjong (Japan)</description>
+		<rom name="Home Mahjong (Japan).sg" size="49152" crc="c9d1ae7d" md5="d7322428a4fb49ac593f80f30d3c7bd3" sha1="0202c0d86c4b793c58af021edfb3c077ae3169a5" status="verified"/>
+	</game>
+	<game name="Hustle Chumy (Japan)">
+		<description>Hustle Chumy (Japan)</description>
+		<release name="Hustle Chumy (Japan)" region="JPN"/>
+		<rom name="Hustle Chumy (Japan).sg" size="16384" crc="a627d440" md5="8be690d357a99abd26ebb5378e9c0153" sha1="1f1bad94b2d869c10a2373ca40d4076d227cc302" status="verified"/>
+	</game>
+	<game name="Hustle Chumy (Taiwan)" cloneof="Hustle Chumy (Japan)">
+		<description>Hustle Chumy (Taiwan)</description>
+		<release name="Hustle Chumy (Taiwan)" region="TAI"/>
+		<rom name="Hustle Chumy (Taiwan).sg" size="16384" crc="c4ed1fd9" md5="c06fa11763d119620f6a908516c1e8ad" sha1="e7800d107ef0a7773eea2d482b5db9d866ba74f9" status="verified"/>
+	</game>
+	<game name="Hyper Sports (Japan)">
+		<description>Hyper Sports (Japan)</description>
+		<release name="Hyper Sports (Japan)" region="JPN"/>
+		<rom name="Hyper Sports (Japan).sg" size="32768" crc="ba09a0fd" md5="d8e6d89d520c91a9ea219291b55284bb" sha1="8a13ee297f861f436b9529a5e2193cb697baa56f" status="verified"/>
+	</game>
+	<game name="Hyper Sports (Taiwan)" cloneof="Hyper Sports (Japan)">
+		<description>Hyper Sports (Taiwan)</description>
+		<release name="Hyper Sports (Taiwan)" region="TAI"/>
+		<rom name="Hyper Sports (Taiwan).sg" size="32768" crc="87619ac2" md5="f72f3def79ffd82fe2224f4732b2b994" sha1="bf4218aebc07aa7179cc52853a55436db985b81e" status="verified"/>
+	</game>
+	<game name="Hyper Sports (Korea) (Unl)" cloneof="Hyper Sports (Japan)">
+		<description>Hyper Sports (Korea) (Unl)</description>
+		<release name="Hyper Sports (Korea) (Unl)" region="KOR"/>
+		<rom name="Hyper Sports (Korea) (Unl).sg" size="32768" crc="3157ef9c" md5="c40aecc0fc766bb26c76b6855bbe4fad" sha1="43d67e8c386012d0694f09a2fe31a46d32d39f17" status="verified"/>
+	</game>
+	<game name="Hyper Sports 2 (Taiwan)">
+		<description>Hyper Sports 2 (Taiwan)</description>
+		<release name="Hyper Sports 2 (Taiwan)" region="TAI"/>
+		<rom name="Hyper Sports 2 (Taiwan).sg" size="32768" crc="b0234e12" md5="e329ee584187d4b156e26faf3ef1a960" sha1="33072bafc25b83577886e91a75d0b6439a80374c" status="verified"/>
+	</game>
+	<game name="Kagaku (Gensokigou Master) (Japan) (SC-3000) (Program)">
+		<description>Kagaku (Gensokigou Master) (Japan) (SC-3000) (Program)</description>
+		<release name="Kagaku (Gensokigou Master) (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Kagaku (Gensokigou Master) (Japan) (SC-3000) (Program).sc" size="8192" crc="f9c81fe1" md5="4eac394fb2f19fecca410c6136a6ef00" sha1="6b35016742db0a06947c679f41b8130c28d2de7d" status="verified"/>
+	</game>
+	<game name="Kamikaze (France) (SF-7000)">
+		<description>Kamikaze (France) (SF-7000)</description>
+		<release name="Kamikaze (France) (SF-7000)" region="FRA"/>
+		<rom name="Kamikaze (France) (SF-7000).sf" size="163840" crc="7654e077" md5="91b5846daac5dffc5f1b72c0378e98d7" sha1="8995356ea9dcca2fbbbf33dc730e391b29b138a4" status="verified"/>
+	</game>
+	<game name="King's Valley (Taiwan)">
+		<description>King's Valley (Taiwan)</description>
+		<release name="King's Valley (Taiwan)" region="TAI"/>
+		<rom name="King's Valley (Taiwan).sg" size="32768" crc="223397a1" md5="ff28e684eb3952ae3f7cf3e3d1c507ef" sha1="922d23895c12707b2fc382ea5cb769c5cb9b5755" status="verified"/>
+	</game>
+	<game name="Knightmare (Taiwan)">
+		<description>Knightmare (Taiwan)</description>
+		<release name="Knightmare (Taiwan)" region="TAI"/>
+		<rom name="Knightmare (Taiwan).sg" size="49152" crc="281d2888" md5="e0321cd713ec1b48ff88f7df13e3ce28" sha1="babdb6b109b20e81c28cd892c2042723e9cbff49" status="verified"/>
+	</game>
+	<game name="Legend of Kage, The (Taiwan)">
+		<description>Legend of Kage, The (Taiwan)</description>
+		<release name="Legend of Kage, The (Taiwan)" region="TAI"/>
+		<rom name="Legend of Kage, The (Taiwan).sg" size="49152" crc="2e7166d5" md5="cfc8e61f51388609421ffe87539cad44" sha1="902dbb122bf0efc76604a876c3fae51c074bdc6a" status="verified"/>
+	</game>
+	<game name="LinkWord (Japan) (Proto) (SC3000) (Program)">
+		<description>LinkWord (Japan) (Proto) (SC3000) (Program)</description>
+		<release name="LinkWord (Japan) (Proto) (SC3000) (Program)" region="JPN"/>
+		<rom name="LinkWord (Japan) (Proto) (SC3000) (Program).sg" size="32768" crc="d5e919c1" md5="5e38ab4ebb38195ba852ba7ed12750a4" sha1="c81c783fb806b3626ece75bf4456038a8a9e7075" status="verified"/>
+	</game>
+	<game name="Lode Runner (Japan, Europe, Australia)">
+		<description>Lode Runner (Japan, Europe, Australia)</description>
+		<release name="Lode Runner (Japan, Europe, Australia)" region="AUS"/>
+		<release name="Lode Runner (Japan, Europe, Australia)" region="EUR"/>
+		<release name="Lode Runner (Japan, Europe, Australia)" region="JPN"/>
+		<rom name="Lode Runner (Japan, Europe, Australia).sg" size="32768" crc="00ed3970" md5="4b4f02eb3cf7d5f9dcd1311d72e6d742" sha1="f14f216edfda7dfd113f5cb32375a27be8a6409d" status="verified"/>
+	</game>
+	<game name="Lode Runner (Taiwan)" cloneof="Lode Runner (Japan, Europe, Australia)">
+		<description>Lode Runner (Taiwan)</description>
+		<release name="Lode Runner (Taiwan)" region="TAI"/>
+		<rom name="Lode Runner (Taiwan).sg" size="32768" crc="d953bdb7" md5="2bea9ee88e177a13d7961017dd4f6120" sha1="fb226a489e5a47eb0182a067fa1031ec944ab455" status="verified"/>
+	</game>
+	<game name="Lode Runner (Korea) (Unl)" cloneof="Lode Runner (Japan, Europe, Australia)">
+		<description>Lode Runner (Korea) (Unl)</description>
+		<release name="Lode Runner (Korea) (Unl)" region="KOR"/>
+		<rom name="Lode Runner (Korea) (Unl).sg" size="32768" crc="e68bc7d6" md5="5146c83814c930be839f123dcd3b591d" sha1="23f22b407df4ae8d7931051eb229efd862bea5f7" status="verified"/>
+	</game>
+	<game name="Magical Kid Wiz (Taiwan)">
+		<description>Magical Kid Wiz (Taiwan)</description>
+		<release name="Magical Kid Wiz (Taiwan)" region="TAI"/>
+		<rom name="Magical Kid Wiz (Taiwan).sg" size="49152" crc="ffc4ee3f" md5="c12474e0a2556adb2478bc4d99faba51" sha1="fd24b501046cf811b04386129be0362a1eabf6b3" status="verified"/>
+	</game>
+	<game name="Magical Tree (Taiwan)">
+		<description>Magical Tree (Taiwan)</description>
+		<release name="Magical Tree (Taiwan)" region="TAI"/>
+		<rom name="Magical Tree (Taiwan).sg" size="32768" crc="b3a8291a" md5="014f702585a68399afe55ea63ba0f7de" sha1="2aecbc9429060ee3adfc865369f67f53408a5881" status="verified"/>
+	</game>
+	<game name="Mahjong (Japan) (Rev 1)">
+		<description>Mahjong (Japan) (Rev 1)</description>
+		<release name="Mahjong (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Mahjong (Japan) (Rev 1).sg" size="24576" crc="1c137cab" md5="1dbb5c85962c2110ffe35ec536f96329" sha1="81015cea7e5ff08bd7d20953a702d47efdb8c11c" status="verified"/>
+	</game>
+	<game name="Mahjong (Taiwan) (Rev 1)" cloneof="Mahjong (Japan) (Rev 1)">
+		<description>Mahjong (Taiwan) (Rev 1)</description>
+		<release name="Mahjong (Taiwan) (Rev 1)" region="TAI"/>
+		<rom name="Mahjong (Taiwan) (Rev 1).sg" size="24576" crc="bc823a89" md5="bb8da563cb6a38611b736c4973b56e1e" sha1="bd5130d36fc0ad008abfc524bb0c37290e7d0189" status="verified"/>
+	</game>
+	<game name="Mahjong (Japan)" cloneof="Mahjong (Japan) (Rev 1)">
+		<description>Mahjong (Japan)</description>
+		<rom name="Mahjong (Japan).sg" size="24576" crc="6d909857" md5="d9da8a32bd3b18881dfa2b469c85944e" sha1="2e6810c0c0c02c0fdda6fcaeae835cf94ab9bcba" status="verified"/>
+	</game>
+	<game name="Monaco GP (Japan, Europe) (Rev 2)">
+		<description>Monaco GP (Japan, Europe) (Rev 2)</description>
+		<release name="Monaco GP (Japan, Europe) (Rev 2)" region="EUR"/>
+		<release name="Monaco GP (Japan, Europe) (Rev 2)" region="JPN"/>
+		<rom name="Monaco GP (Japan, Europe) (Rev 2).sg" size="32768" crc="02e5d66a" md5="cda3731948a50bb396b380f7fc82ec12" sha1="694228631d09ed06c8850fd164c6d99b12ff173d" status="verified"/>
+	</game>
+	<game name="Monaco GP (Japan) (Rev 1)" cloneof="Monaco GP (Japan, Europe) (Rev 2)">
+		<description>Monaco GP (Japan) (Rev 1)</description>
+		<rom name="Monaco GP (Japan) (Rev 1).sg" size="32768" crc="da2d57f3" md5="74121fd6f1024ee3d3f5d1db29956d7d" sha1="4ca8182b8f7c798d7222295978e2556ff115b848" status="verified"/>
+	</game>
+	<game name="Monaco GP (Japan, Europe, Australia, New Zealand)" cloneof="Monaco GP (Japan, Europe) (Rev 2)">
+		<description>Monaco GP (Japan, Europe, Australia, New Zealand)</description>
+		<release name="Monaco GP (Japan, Europe, Australia, New Zealand)" region="AUS"/>
+		<rom name="Monaco GP (Japan, Europe, Australia, New Zealand).sg" size="40960" crc="8572d73a" md5="943bca1e51476b646f19c17a9d9ab42c" sha1="bea768b27c09bec805f0c70545d2f1435e3a3ddf" status="verified"/>
+	</game>
+	<game name="Monaco GP (Taiwan) (Rev 1)" cloneof="Monaco GP (Japan, Europe) (Rev 2)">
+		<description>Monaco GP (Taiwan) (Rev 1)</description>
+		<release name="Monaco GP (Taiwan) (Rev 1)" region="TAI"/>
+		<rom name="Monaco GP (Taiwan) (Rev 1).sg" size="32768" crc="01cda679" md5="d7ab64f92c3d146565e4f9d771fec7c9" sha1="464ec3c9acfefd0ad244a43033985e88798905f9" status="verified"/>
+	</game>
+	<game name="Music (Europe, Australia, New Zealand) (SC-3000) (Program)">
+		<description>Music (Europe, Australia, New Zealand) (SC-3000) (Program)</description>
+		<release name="Music (Europe, Australia, New Zealand) (SC-3000) (Program)" region="AUS"/>
+		<release name="Music (Europe, Australia, New Zealand) (SC-3000) (Program)" region="EUR"/>
+		<rom name="Music (Europe, Australia, New Zealand) (SC-3000) (Program).sc" size="32768" crc="622010e1" md5="a6114c163b4fd8b954ab6afc99466ac0" sha1="61f40e4b7576d4d55322f3d6eef2038aa784336e" status="verified"/>
+	</game>
+	<game name="Music (Japan) (SC-3000) (Program)" cloneof="Music (Europe, Australia, New Zealand) (SC-3000) (Program)">
+		<description>Music (Japan) (SC-3000) (Program)</description>
+		<release name="Music (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Music (Japan) (SC-3000) (Program).sc" size="32768" crc="2ec28526" md5="832b5ec426da0d70c0bcd58a79ed8ae2" sha1="a2137e818242e8b361d5d5677797034c55fb1a2d" status="verified"/>
+	</game>
+	<game name="N-Sub (Japan, Europe, Australia, New Zealand, Taiwan)">
+		<description>N-Sub (Japan, Europe, Australia, New Zealand, Taiwan)</description>
+		<release name="N-Sub (Japan, Europe, Australia, New Zealand, Taiwan)" region="AUS"/>
+		<release name="N-Sub (Japan, Europe, Australia, New Zealand, Taiwan)" region="EUR"/>
+		<release name="N-Sub (Japan, Europe, Australia, New Zealand, Taiwan)" region="JPN"/>
+		<rom name="N-Sub (Japan, Europe, Australia, New Zealand, Taiwan).sg" size="16384" crc="652bbd1e" md5="56c559d0d82a3e6fb2e87230d39f32f4" sha1="2640e267441bf25463a19273c46f3edb5e459496" status="verified"/>
+	</game>
+	<game name="N-Sub (Taiwan)" cloneof="N-Sub (Japan, Europe, Australia, New Zealand, Taiwan)">
+		<description>N-Sub (Taiwan)</description>
+		<release name="N-Sub (Taiwan)" region="TAI"/>
+		<rom name="N-Sub (Taiwan).sg" size="16384" crc="3e371769" md5="1a800abac4c55948528d2a62771c10a9" sha1="55a36c77cbdf87530611feccf2f1807bdd2ac0ec" status="verified"/>
+	</game>
+	<game name="N-Sub (Japan) (Alt 1)" cloneof="N-Sub (Japan, Europe, Australia, New Zealand, Taiwan)">
+		<description>N-Sub (Japan) (Alt 1)</description>
+		<rom name="N-Sub (Japan) (Alt 1).sg" size="40960" crc="b377d6e1" md5="cfced1ba39adee6a75dc830ed9c12f73" sha1="aa3eae849553a5a176762466b101f312b8b968e4" status="verified"/>
+	</game>
+	<game name="Nihonshi Nenpyou (Japan) (SC-3000) (Program)">
+		<description>Nihonshi Nenpyou (Japan) (SC-3000) (Program)</description>
+		<release name="Nihonshi Nenpyou (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Nihonshi Nenpyou (Japan) (SC-3000) (Program).sc" size="16384" crc="129d6359" md5="1d17adcdeef7e827b7493631719adf4e" sha1="9a9363004d77037a0bbc9a8bcae1bb05138ffc36" status="verified"/>
+	</game>
+	<game name="Ninja Princess (Japan, Australia)">
+		<description>Ninja Princess (Japan, Australia)</description>
+		<release name="Ninja Princess (Japan, Australia)" region="AUS"/>
+		<release name="Ninja Princess (Japan, Australia)" region="JPN"/>
+		<rom name="Ninja Princess (Japan, Australia).sg" size="32768" crc="3b912408" md5="28d83150c298bcdae6aec51cc2c6975a" sha1="f142bb823cebc4e31488e7a9a94644af24186d99" status="verified"/>
+	</game>
+	<game name="Ninja Princess (Taiwan)" cloneof="Ninja Princess (Japan, Australia)">
+		<description>Ninja Princess (Taiwan)</description>
+		<release name="Ninja Princess (Taiwan)" region="TAI"/>
+		<rom name="Ninja Princess (Taiwan).sg" size="32768" crc="464d144b" md5="96c1dc438a7b4269ee0d5414a6f13dc2" sha1="dac76d52c9d88f7b6bf71fc897669d7e6440d143" status="verified"/>
+	</game>
+	<game name="Okamoto Ayako no Match Play Golf (Japan) (Rev 1) (Othello Multivision)">
+		<description>Okamoto Ayako no Match Play Golf (Japan) (Rev 1) (Othello Multivision)</description>
+		<release name="Okamoto Ayako no Match Play Golf (Japan) (Rev 1) (Othello Multivision)" region="JPN"/>
+		<rom name="Okamoto Ayako no Match Play Golf (Japan) (Rev 1) (Othello Multivision).sg" size="32768" crc="49d3db2c" md5="0195c955df38b55f6f12694179503f10" sha1="bcb03afd3bbd5dadf00474eac44bb66a5df419cf" status="verified"/>
+	</game>
+	<game name="Okamoto Ayako no Match Play Golf (Taiwan) (Rev 1) (Othello Multivision)" cloneof="Okamoto Ayako no Match Play Golf (Japan) (Rev 1) (Othello Multivision)">
+		<description>Okamoto Ayako no Match Play Golf (Taiwan) (Rev 1) (Othello Multivision)</description>
+		<release name="Okamoto Ayako no Match Play Golf (Taiwan) (Rev 1) (Othello Multivision)" region="TAI"/>
+		<rom name="Okamoto Ayako no Match Play Golf (Taiwan) (Rev 1) (Othello Multivision).sg" size="32768" crc="b60492d5" md5="009a804fb1d28775519312ffdf3c8d70" sha1="543046650e07b10dbd2dca6f20bcafb9dd6dda77" status="verified"/>
+	</game>
+	<game name="Okamoto Ayako no Match Play Golf (Japan) (Othello Multivision)" cloneof="Okamoto Ayako no Match Play Golf (Japan) (Rev 1) (Othello Multivision)">
+		<description>Okamoto Ayako no Match Play Golf (Japan) (Othello Multivision)</description>
+		<rom name="Okamoto Ayako no Match Play Golf (Japan) (Othello Multivision).sg" size="32768" crc="547dd7fd" md5="07ca24bef805f15d13d3123c765c3039" sha1="2fe5e6811aa340f10b67f78ee9ed566a94326bad" status="verified"/>
+	</game>
+	<game name="Orguss (Japan, Europe, Australia, New Zealand, Taiwan)">
+		<description>Orguss (Japan, Europe, Australia, New Zealand, Taiwan)</description>
+		<release name="Orguss (Japan, Europe, Australia, New Zealand, Taiwan)" region="AUS"/>
+		<release name="Orguss (Japan, Europe, Australia, New Zealand, Taiwan)" region="EUR"/>
+		<release name="Orguss (Japan, Europe, Australia, New Zealand, Taiwan)" region="JPN"/>
+		<release name="Orguss (Japan, Europe, Australia, New Zealand, Taiwan)" region="TAI"/>
+		<rom name="Orguss (Japan, Europe, Australia, New Zealand, Taiwan).sg" size="32768" crc="f4f78b76" md5="0f45fa8e9b985fd5c6545645462b9400" sha1="c50b133dac95718e3a92a7ed45b6c7e83927abb0" status="verified"/>
+	</game>
+	<game name="Othello (Japan)">
+		<description>Othello (Japan)</description>
+		<release name="Othello (Japan)" region="JPN"/>
+		<rom name="Othello (Japan).sg" size="32768" crc="af4f14bc" md5="3f429704761d34d7793e7123a183d7f6" sha1="d0cd594ddb321f707ddba8a044fa3e9b906e720a" status="verified"/>
+	</game>
+	<game name="Othello (Taiwan)" cloneof="Othello (Japan)">
+		<description>Othello (Taiwan)</description>
+		<release name="Othello (Taiwan)" region="TAI"/>
+		<rom name="Othello (Taiwan).sg" size="32768" crc="1d1a0ca3" md5="aa741b3264ee312c291b2c8ab0d73a04" sha1="242c29989149b94ff27d59a94f067d0f1c84b4a7" status="verified"/>
+	</game>
+	<game name="Pacar (Japan, Europe, Australia, New Zealand)">
+		<description>Pacar (Japan, Europe, Australia, New Zealand)</description>
+		<release name="Pacar (Japan, Europe, Australia, New Zealand)" region="AUS"/>
+		<release name="Pacar (Japan, Europe, Australia, New Zealand)" region="EUR"/>
+		<release name="Pacar (Japan, Europe, Australia, New Zealand)" region="JPN"/>
+		<rom name="Pacar (Japan, Europe, Australia, New Zealand).sg" size="16384" crc="30c52e5e" md5="8f46800e6fc7d5a40716045f6d739932" sha1="91fd213308b83bb1bda1dfc7e971e576caace291" status="verified"/>
+	</game>
+	<game name="Pacar (Taiwan)" cloneof="Pacar (Japan, Europe, Australia, New Zealand)">
+		<description>Pacar (Taiwan)</description>
+		<release name="Pacar (Taiwan)" region="TAI"/>
+		<rom name="Pacar (Taiwan).sg" size="16384" crc="dd6817a0" md5="722da0d7454c99ba46d432ee3d003464" sha1="0833be2743608983012cab6e3bdd6fd56453114e" status="verified"/>
+	</game>
+	<game name="Pacar (Japan) (Alt 1)" cloneof="Pacar (Japan, Europe, Australia, New Zealand)">
+		<description>Pacar (Japan) (Alt 1)</description>
+		<rom name="Pacar (Japan) (Alt 1).sg" size="40960" crc="19949375" md5="c672bc2409443cc5bca35abd041d11e0" sha1="5e89857a374cbf3efa32efb62d26973d46a856ae" status="verified"/>
+	</game>
+	<game name="Pachinko (Japan)">
+		<description>Pachinko (Japan)</description>
+		<release name="Pachinko (Japan)" region="JPN"/>
+		<rom name="Pachinko (Japan).sg" size="40960" crc="326587e1" md5="37f5e516d9fbce05052204b67379a6da" sha1="aeaa15155e7d4275880c35c866c45626daa4dab9" status="verified"/>
+	</game>
+	<game name="Pachinko II (Japan)">
+		<description>Pachinko II (Japan)</description>
+		<release name="Pachinko II (Japan)" region="JPN"/>
+		<rom name="Pachinko II (Japan).sg" size="16384" crc="fd7cb50a" md5="eadae13ff73047a47f354e258c12619e" sha1="1dbc4babbbb377a1ff59a11e550a9b1b5e742b02" status="verified"/>
+	</game>
+	<game name="Pachinko II (Taiwan)" cloneof="Pachinko II (Japan)">
+		<description>Pachinko II (Taiwan)</description>
+		<release name="Pachinko II (Taiwan)" region="TAI"/>
+		<rom name="Pachinko II (Taiwan).sg" size="16384" crc="6ebe81bf" md5="a3409283bf8c808a15095cc005a74975" sha1="ca0c66b4d48d6ade38e7f9093eea74ad090ecdb7" status="verified"/>
+	</game>
+	<game name="Ping Pong (Taiwan)">
+		<description>Ping Pong (Taiwan)</description>
+		<release name="Ping Pong (Taiwan)" region="TAI"/>
+		<rom name="Ping Pong (Taiwan).sg" size="32768" crc="4d972a9e" md5="97f8b798ad727563b1ee42cf41697fed" sha1="cba791acd9e0f46bfa6132645bf44027e100c68a" status="verified"/>
+	</game>
+	<game name="Pippols (Taiwan)">
+		<description>Pippols (Taiwan)</description>
+		<release name="Pippols (Taiwan)" region="TAI"/>
+		<rom name="Pippols (Taiwan).sg" size="32768" crc="df7cbfa5" md5="2b99db5c8a7a9a45c174088bab310803" sha1="4a95b98e127fb0c6428d6debcfc92152069ac531" status="verified"/>
+	</game>
+	<game name="Pitfall II - The Lost Caverns (Japan) (Rev 1)">
+		<description>Pitfall II - The Lost Caverns (Japan) (Rev 1)</description>
+		<release name="Pitfall II - The Lost Caverns (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Pitfall II - The Lost Caverns (Japan) (Rev 1).sg" size="32768" crc="3db74761" md5="38ae610eb6266d4db8bc6d3dcb8fcd4a" sha1="a14453650b6b2ef85e03b9637f08f691878acff4" status="verified"/>
+	</game>
+	<game name="Pitfall II (Taiwan) (Chinese Logo)" cloneof="Pitfall II - The Lost Caverns (Japan) (Rev 1)">
+		<description>Pitfall II (Taiwan) (Chinese Logo)</description>
+		<rom name="Pitfall II (Taiwan) (Chinese Logo).sg" size="32768" crc="476a079b" md5="030363fabd71be3c077168918fcbb51d" sha1="38c25d7730863877fdae5491724a3aed9c6b04d5" status="verified"/>
+	</game>
+	<game name="Pitfall II (Taiwan) (English Logo)" cloneof="Pitfall II - The Lost Caverns (Japan) (Rev 1)">
+		<description>Pitfall II (Taiwan) (English Logo)</description>
+		<release name="Pitfall II (Taiwan) (English Logo)" region="TAI"/>
+		<rom name="Pitfall II (Taiwan) (English Logo).sg" size="32768" crc="4e93bc8e" md5="7f2026d17c336942756ffb77ad9942c5" sha1="c98a5bdb2f97e2e85d0a131d58e311544adb416e" status="verified"/>
+	</game>
+	<game name="Pitfall II - The Lost Caverns (Japan)" cloneof="Pitfall II - The Lost Caverns (Japan) (Rev 1)">
+		<description>Pitfall II - The Lost Caverns (Japan)</description>
+		<rom name="Pitfall II - The Lost Caverns (Japan).sg" size="32768" crc="37fca2eb" md5="c34260b61c6a45bbdd074df3f3e72c46" sha1="356db6edcd337a06063957bd8cb27edeb7160f6c" status="verified"/>
+	</game>
+	<game name="Pop Flamer (Japan, Europe, Australia, New Zealand)">
+		<description>Pop Flamer (Japan, Europe, Australia, New Zealand)</description>
+		<release name="Pop Flamer (Japan, Europe, Australia, New Zealand)" region="AUS"/>
+		<release name="Pop Flamer (Japan, Europe, Australia, New Zealand)" region="EUR"/>
+		<release name="Pop Flamer (Japan, Europe, Australia, New Zealand)" region="JPN"/>
+		<rom name="Pop Flamer (Japan, Europe, Australia, New Zealand).sg" size="16384" crc="db6404ba" md5="7f841aa0c225662e26ca7a8df20b2eb8" sha1="84b59a9f855ef5e953c43495d7a15dd78386d0a8" status="verified"/>
+	</game>
+	<game name="Pop Flamer (Taiwan)" cloneof="Pop Flamer (Japan, Europe, Australia, New Zealand)">
+		<description>Pop Flamer (Taiwan)</description>
+		<release name="Pop Flamer (Taiwan)" region="TAI"/>
+		<rom name="Pop Flamer (Taiwan).sg" size="16384" crc="ab1da8a6" md5="e5082018ff7cbac17db003f159ab2dfb" sha1="25d5cdc7fdd5cba97abbd9d32f61a39aacceb2c0" status="verified"/>
+	</game>
+	<game name="Poseidon Wars + Space Panic + Rambo (France) (SF-7000)">
+		<description>Poseidon Wars + Space Panic + Rambo (France) (SF-7000)</description>
+		<release name="Poseidon Wars + Space Panic + Rambo (France) (SF-7000)" region="FRA"/>
+		<rom name="Poseidon Wars + Space Panic + Rambo (France) (SF-7000).sf" size="163840" crc="5ca7b5c4" md5="180fee8dc10c0949d86ae2eec20751f0" sha1="909d6335034cf9e241d7fc4c8074a280b5c4112f" status="verified"/>
+	</game>
+	<game name="Q-bert (Japan) (Othello Multivision)">
+		<description>Q-bert (Japan) (Othello Multivision)</description>
+		<release name="Q-bert (Japan) (Othello Multivision)" region="JPN"/>
+		<rom name="Q-bert (Japan) (Othello Multivision).sg" size="8192" crc="77db4704" md5="a768a8ae921126300e98f9d918a4a0c9" sha1="ae23fce5dbbc1536275d57ca65d2aa9170d46ea4" status="verified"/>
+	</game>
+	<game name="Rally-X (Taiwan) (English Logo)">
+		<description>Rally-X (Taiwan) (English Logo)</description>
+		<release name="Rally-X (Taiwan) (English Logo)" region="TAI"/>
+		<rom name="Rally-X (Taiwan) (English Logo).sg" size="32768" crc="aaac12cf" md5="42f2844dcc4b3979b7f538ef9f52e4a5" sha1="0c1957a5faae5254c69f3331e79d87499dd7cf48" status="verified"/>
+	</game>
+	<game name="Rally-X (Taiwan) (Chinese Logo)" cloneof="Rally-X (Taiwan) (English Logo)">
+		<description>Rally-X (Taiwan) (Chinese Logo)</description>
+		<rom name="Rally-X (Taiwan) (Chinese Logo).sg" size="32768" crc="306d5f78" md5="3071f939aaa0911fc0907aae5daaa160" sha1="21770691191b62bafec9099bbe0f9942f5480f83" status="verified"/>
+	</game>
+	<game name="Road Fighter (Taiwan) (English Logo)">
+		<description>Road Fighter (Taiwan) (English Logo)</description>
+		<release name="Road Fighter (Taiwan) (English Logo)" region="TAI"/>
+		<rom name="Road Fighter (Taiwan) (English Logo).sg" size="32768" crc="d2edd329" md5="be975a2510125ff4b545bb162826ef26" sha1="2755f74019dc94559fd0c2248e2ecb7f48879b90" status="verified"/>
+	</game>
+	<game name="Road Fighter (Taiwan) (Chinese Logo)" cloneof="Road Fighter (Taiwan) (English Logo)">
+		<description>Road Fighter (Taiwan) (Chinese Logo)</description>
+		<rom name="Road Fighter (Taiwan) (Chinese Logo).sg" size="32768" crc="29e047cc" md5="e872bbe06fcee32e53fb9e11b61fe762" sha1="4f1a139974e3db27af5973bc9572ed68acd6ea68" status="verified"/>
+	</game>
+	<game name="Rock n' Bolt (Japan)">
+		<description>Rock n' Bolt (Japan)</description>
+		<release name="Rock n' Bolt (Japan)" region="JPN"/>
+		<rom name="Rock n' Bolt (Japan).sg" size="32768" crc="0ffdd03d" md5="108ffe4ba5c2c8c5e0459cb7f0cfac0e" sha1="d5e8e7ca7623521d4291ae5ab2740816fc674389" status="verified"/>
+	</game>
+	<game name="Rock n' Bolt (Taiwan) (Chinese Logo)" cloneof="Rock n' Bolt (Japan)">
+		<description>Rock n' Bolt (Taiwan) (Chinese Logo)</description>
+		<rom name="Rock n' Bolt (Taiwan) (Chinese Logo).sg" size="32768" crc="4eacb981" md5="f05b48934a7d29ab2719273cbdc45b28" sha1="18a6b34d071feaad416704d5e6fd7680374dd669" status="verified"/>
+	</game>
+	<game name="Rock n' Bolt (Taiwan) (English Logo)" cloneof="Rock n' Bolt (Japan)">
+		<description>Rock n' Bolt (Taiwan) (English Logo)</description>
+		<release name="Rock n' Bolt (Taiwan) (English Logo)" region="TAI"/>
+		<rom name="Rock n' Bolt (Taiwan) (English Logo).sg" size="32768" crc="09a82af7" md5="0cbbd9fafc39cccefd8d0b8fca3b3d33" sha1="e3be08bda8459fc60836abe332e9864e7c596202" status="verified"/>
+	</game>
+	<game name="Safari Hunting (Japan, Europe, Australia, New Zealand)">
+		<description>Safari Hunting (Japan, Europe, Australia, New Zealand)</description>
+		<release name="Safari Hunting (Japan, Europe, Australia, New Zealand)" region="AUS"/>
+		<release name="Safari Hunting (Japan, Europe, Australia, New Zealand)" region="EUR"/>
+		<release name="Safari Hunting (Japan, Europe, Australia, New Zealand)" region="JPN"/>
+		<rom name="Safari Hunting (Japan, Europe, Australia, New Zealand).sg" size="16384" crc="49e9718b" md5="f77826f62d943c4a24f7fb9c3bb4a5f9" sha1="902dbabbfa98d71299adda0638b87152188e1cf1" status="verified"/>
+	</game>
+	<game name="Safari Hunting (Taiwan)" cloneof="Safari Hunting (Japan, Europe, Australia, New Zealand)">
+		<description>Safari Hunting (Taiwan)</description>
+		<release name="Safari Hunting (Taiwan)" region="TAI"/>
+		<rom name="Safari Hunting (Taiwan).sg" size="16384" crc="6dc51c01" md5="48185bc0b8ed743c6a44f2759219b955" sha1="e3aa37f4c9f213a673e369f62561f3f80513e4f3" status="verified"/>
+	</game>
+	<game name="Safari Race (Japan, Europe, Australia, New Zealand)">
+		<description>Safari Race (Japan, Europe, Australia, New Zealand)</description>
+		<release name="Safari Race (Japan, Europe, Australia, New Zealand)" region="AUS"/>
+		<release name="Safari Race (Japan, Europe, Australia, New Zealand)" region="EUR"/>
+		<release name="Safari Race (Japan, Europe, Australia, New Zealand)" region="JPN"/>
+		<rom name="Safari Race (Japan, Europe, Australia, New Zealand).sg" size="32768" crc="08707fe3" md5="8384956e456a91ca59f9c5e72f1cb1c4" sha1="ecbba909f2227786e7ba3360d2dd158f6513cfd4" status="verified"/>
+	</game>
+	<game name="Safari Race (Taiwan)" cloneof="Safari Race (Japan, Europe, Australia, New Zealand)">
+		<description>Safari Race (Taiwan)</description>
+		<release name="Safari Race (Taiwan)" region="TAI"/>
+		<rom name="Safari Race (Taiwan).sg" size="32768" crc="b2724428" md5="eac09096175cbb2fb49468d475fdec88" sha1="06fe09074bef542b590761ba585911d0998af646" status="verified"/>
+	</game>
+	<game name="San-nin Mahjong (Japan) (Othello Multivision)">
+		<description>San-nin Mahjong (Japan) (Othello Multivision)</description>
+		<release name="San-nin Mahjong (Japan) (Othello Multivision)" region="JPN"/>
+		<rom name="San-nin Mahjong (Japan) (Othello Multivision).sg" size="16384" crc="885fa64d" md5="cf02277eacdf348dbde960769a0b0d55" sha1="75dd13ea139a91f4e471e658ab19f9847e15576c" status="verified"/>
+	</game>
+	<game name="San-nin Mahjong (Taiwan) (Othello Multivision)" cloneof="San-nin Mahjong (Japan) (Othello Multivision)">
+		<description>San-nin Mahjong (Taiwan) (Othello Multivision)</description>
+		<release name="San-nin Mahjong (Taiwan) (Othello Multivision)" region="TAI"/>
+		<rom name="San-nin Mahjong (Taiwan) (Othello Multivision).sg" size="16384" crc="6fd17655" md5="fe641daee46a4f55aa79dcb23114971c" sha1="245e9adf0fdb33849f1e6ef872c1b204cbed5754" status="verified"/>
+	</game>
+	<game name="San-nin Mahjong (Japan) (Alt 1) (Othello Multivision)" cloneof="San-nin Mahjong (Japan) (Othello Multivision)">
+		<description>San-nin Mahjong (Japan) (Alt 1) (Othello Multivision)</description>
+		<rom name="San-nin Mahjong (Japan) (Alt 1) (Othello Multivision).sg" size="40960" crc="0e641f36" md5="6cd591be7b3aa4ed9c1f7038c581106a" sha1="a5c2acba93cd3809577f401c00fa9d728627ed60" status="verified"/>
+	</game>
+	<game name="Sega Flipper ~ Video Flipper (Japan, Europe, Australia, New Zealand)">
+		<description>Sega Flipper ~ Video Flipper (Japan, Europe, Australia, New Zealand)</description>
+		<release name="Sega Flipper ~ Video Flipper (Japan, Europe, Australia, New Zealand)" region="AUS"/>
+		<release name="Sega Flipper ~ Video Flipper (Japan, Europe, Australia, New Zealand)" region="EUR"/>
+		<release name="Sega Flipper ~ Video Flipper (Japan, Europe, Australia, New Zealand)" region="JPN"/>
+		<rom name="Sega Flipper ~ Video Flipper (Japan, Europe, Australia, New Zealand).sg" size="16384" crc="8efc77bc" md5="3f2acc9de65c8496c3d8470ef12dc210" sha1="e0605e23d80b8b975743d3417f548b28810e0ba3" status="verified"/>
+	</game>
+	<game name="Sega Flipper (Taiwan)" cloneof="Sega Flipper ~ Video Flipper (Japan, Europe, Australia, New Zealand)">
+		<description>Sega Flipper (Taiwan)</description>
+		<release name="Sega Flipper (Taiwan)" region="TAI"/>
+		<rom name="Sega Flipper (Taiwan).sg" size="16384" crc="042c36ba" md5="3cfec6aa7bfdf81b40b7ee6d630f5c03" sha1="b7eb254a014772a83829e1991dcd32396e8dd9cc" status="verified"/>
+	</game>
+	<game name="Sega Flipper (Japan) (Alt 1)" cloneof="Sega Flipper ~ Video Flipper (Japan, Europe, Australia, New Zealand)">
+		<description>Sega Flipper (Japan) (Alt 1)</description>
+		<rom name="Sega Flipper (Japan) (Alt 1).sg" size="40960" crc="fd76ad99" md5="49c7c14879a437e60730b62a7550cdf6" sha1="d713dcbd79a3db8f1ef2cfb27da31a286fff16d1" status="verified"/>
+	</game>
+	<game name="Sega Logo (Japan) (SF-7000) (Program)">
+		<description>Sega Logo (Japan) (SF-7000) (Program)</description>
+		<release name="Sega Logo (Japan) (SF-7000) (Program)" region="JPN"/>
+		<rom name="Sega Logo (Japan) (SF-7000) (Program).sf" size="163840" crc="a7b1da17" md5="69f373bfc4ba492a9c12979d62fd2371" sha1="1a54fbf5bd1442a96e7806249a6812ea2006e092" status="verified"/>
+	</game>
+	<game name="Sega-Galaga (Japan, Australia)">
+		<description>Sega-Galaga (Japan, Australia)</description>
+		<release name="Sega-Galaga (Japan, Australia)" region="AUS"/>
+		<release name="Sega-Galaga (Japan, Australia)" region="JPN"/>
+		<rom name="Sega-Galaga (Japan, Australia).sg" size="16384" crc="981e36c1" md5="e2619cf7c307ac1916c534519f6043d9" sha1="32e776b3a17f7c0df0fa9eb49a3e451cfe702bfd" status="verified"/>
+	</game>
+	<game name="Sega-Galaga (Taiwan)" cloneof="Sega-Galaga (Japan, Australia)">
+		<description>Sega-Galaga (Taiwan)</description>
+		<release name="Sega-Galaga (Taiwan)" region="TAI"/>
+		<rom name="Sega-Galaga (Taiwan).sg" size="16384" crc="845bbb22" md5="7e31ffe1446d6b792d0debf87bcc3f75" sha1="6c049daa08af7b1f08b98d6998ba52d7cf3cc4de" status="verified"/>
+	</game>
+	<game name="Sega-Galaga (Japan)" cloneof="Sega-Galaga (Japan, Australia)">
+		<description>Sega-Galaga (Japan)</description>
+		<rom name="Sega-Galaga (Japan).sg" size="40960" crc="31283003" md5="7f7e1d564448fdce96d239ad9ebf37d6" sha1="9b093878f92ce8b918beaa44dcc8a41282f9f267" status="verified"/>
+	</game>
+	<game name="Sekaishi Nenpyou (Japan) (SC-3000) (Program)">
+		<description>Sekaishi Nenpyou (Japan) (SC-3000) (Program)</description>
+		<release name="Sekaishi Nenpyou (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Sekaishi Nenpyou (Japan) (SC-3000) (Program).sc" size="16384" crc="3274ee48" md5="e2ac39e87f9a7ddb0be8cb6f6d2c0737" sha1="388fdff0cf2ad276e07a419239710632c376e1db" status="verified"/>
+	</game>
+	<game name="Serizawa Hachidan no Tsumeshougi (Japan)">
+		<description>Serizawa Hachidan no Tsumeshougi (Japan)</description>
+		<release name="Serizawa Hachidan no Tsumeshougi (Japan)" region="JPN"/>
+		<rom name="Serizawa Hachidan no Tsumeshougi (Japan).sg" size="16384" crc="545fc9bb" md5="63713feb1c8b8da77bd2e8cf03fe0a4c" sha1="c2d3882874a5a9b79a5dc9fdeb7af750bc52ca21" status="verified"/>
+	</game>
+	<game name="SG-1000 M2 Test Cartridge (Japan)">
+		<description>SG-1000 M2 Test Cartridge (Japan)</description>
+		<release name="SG-1000 M2 Test Cartridge (Japan)" region="JPN"/>
+		<rom name="SG-1000 M2 Test Cartridge (Japan).sg" size="8192" crc="207e7e99" md5="c958ae8d0ad245ce65db5bb06b1c2c0e" sha1="35141a11fff42ff33b9154e030501656925d271c" status="verified"/>
+	</game>
+	<game name="Shinnyushain Tooru-kun (Japan)">
+		<description>Shinnyushain Tooru-kun (Japan)</description>
+		<release name="Shinnyushain Tooru-kun (Japan)" region="JPN"/>
+		<rom name="Shinnyushain Tooru-kun (Japan).sg" size="32768" crc="5a917e06" md5="a8094de8e2c72e9490e421f66ba2777b" sha1="83784e8248e2367546115382dac157ca8e6fe3ab" status="verified"/>
+	</game>
+	<game name="Shinnyushain Tooru-kun (Taiwan)" cloneof="Shinnyushain Tooru-kun (Japan)">
+		<description>Shinnyushain Tooru-kun (Taiwan)</description>
+		<release name="Shinnyushain Tooru-kun (Taiwan)" region="TAI"/>
+		<rom name="Shinnyushain Tooru-kun (Taiwan).sg" size="32768" crc="33fc5cf6" md5="ff6c07ce43d99b4ef732b5df7e73a5a7" sha1="e47e56be455d46c6cc5334895e54069a85da6c3b" status="verified"/>
+	</game>
+	<game name="Sindbad Mystery (Japan, Europe, Australia, New Zealand)">
+		<description>Sindbad Mystery (Japan, Europe, Australia, New Zealand)</description>
+		<release name="Sindbad Mystery (Japan, Europe, Australia, New Zealand)" region="AUS"/>
+		<release name="Sindbad Mystery (Japan, Europe, Australia, New Zealand)" region="EUR"/>
+		<release name="Sindbad Mystery (Japan, Europe, Australia, New Zealand)" region="JPN"/>
+		<rom name="Sindbad Mystery (Japan, Europe, Australia, New Zealand).sg" size="32768" crc="01932df9" md5="7b0f2be3588337df59959ababbefe505" sha1="90bb8b8337866339f32b3fd48b4d25d78d682b55" status="verified"/>
+	</game>
+	<game name="Sindbad Mystery (Taiwan)" cloneof="Sindbad Mystery (Japan, Europe, Australia, New Zealand)">
+		<description>Sindbad Mystery (Taiwan)</description>
+		<release name="Sindbad Mystery (Taiwan)" region="TAI"/>
+		<rom name="Sindbad Mystery (Taiwan).sg" size="32768" crc="945f7847" md5="db6b5ff4d8c8cef6d0c9f2d004f56bf6" sha1="9a4e44ccd3cabd092aae59fcabda8f047609a675" status="verified"/>
+	</game>
+	<game name="Soukoban (Japan, Australia)">
+		<description>Soukoban (Japan, Australia)</description>
+		<release name="Soukoban (Japan, Australia)" region="AUS"/>
+		<release name="Soukoban (Japan, Australia)" region="JPN"/>
+		<rom name="Soukoban (Japan, Australia).sg" size="32768" crc="922c5468" md5="6cae3b6286041e742020aeb3cd2bdf52" sha1="94e79b4a8b4a5fb77c837ea0a1e28bc5993d36af" status="verified"/>
+	</game>
+	<game name="I.Q. (Korea) (Unl)" cloneof="Soukoban (Japan, Australia)">
+		<description>I.Q. (Korea) (Unl)</description>
+		<rom name="I.Q. (Korea) (Unl).sg" size="32768" crc="89bafec5" md5="9334ef849d22ae49f1d816ea068bf055" sha1="3a8505aabd165bd9de51369f588ae8c867b7671f" status="verified"/>
+	</game>
+	<game name="Soukoban (Taiwan)" cloneof="Soukoban (Japan, Australia)">
+		<description>Soukoban (Taiwan)</description>
+		<release name="Soukoban (Taiwan)" region="TAI"/>
+		<rom name="Soukoban (Taiwan).sg" size="32768" crc="a2c3fc97" md5="417368339f45d0ede7df03c9a6f96b27" sha1="4216770efbaf49f832ff7a78fbc9cd2c8300f52c" status="verified"/>
+	</game>
+	<game name="Soukoban (Korea) (Unl)" cloneof="Soukoban (Japan, Australia)">
+		<description>Soukoban (Korea) (Unl)</description>
+		<release name="Soukoban (Korea) (Unl)" region="KOR"/>
+		<rom name="Soukoban (Korea) (Unl).sg" size="32768" crc="148ea752" md5="cbd4d466882ba81d5eb63e849797fd4c" sha1="a9d77c6dee31956bb382abd14245ff581369578d" status="verified"/>
+	</game>
+	<game name="Space Armor (Japan) (Rev 2) (Othello Multivision)">
+		<description>Space Armor (Japan) (Rev 2) (Othello Multivision)</description>
+		<release name="Space Armor (Japan) (Rev 2) (Othello Multivision)" region="JPN"/>
+		<rom name="Space Armor (Japan) (Rev 2) (Othello Multivision).sg" size="16384" crc="ac4f0a5c" md5="b6aff368af8c8e1f0ae257c519d96ca8" sha1="a968b1debb39909cd83203244cc60da1e0003f71" status="verified"/>
+	</game>
+	<game name="Space Armor (Japan, Taiwan) (Rev 1) (Othello Multivision)" cloneof="Space Armor (Japan) (Rev 2) (Othello Multivision)">
+		<description>Space Armor (Japan, Taiwan) (Rev 1) (Othello Multivision)</description>
+		<release name="Space Armor (Japan, Taiwan) (Rev 1) (Othello Multivision)" region="TAI"/>
+		<rom name="Space Armor (Japan, Taiwan) (Rev 1) (Othello Multivision).sg" size="16384" crc="d5fdb4a3" md5="16a9d6fc4a959c84db189c59fdf39d22" sha1="3c3b59321321061642f8cf609ae3e2cab56eb83b" status="verified"/>
+	</game>
+	<game name="Space Armor (Japan) (Othello Multivision)" cloneof="Space Armor (Japan) (Rev 2) (Othello Multivision)">
+		<description>Space Armor (Japan) (Othello Multivision)</description>
+		<rom name="Space Armor (Japan) (Othello Multivision).sg" size="40960" crc="d23b0e3e" md5="49587defd7dd2e6fd87e01e7f48d132f" sha1="bbffe62f8f851e3c4a62981437facb518054a8ab" status="verified"/>
+	</game>
+	<game name="Space Invaders (Japan)">
+		<description>Space Invaders (Japan)</description>
+		<release name="Space Invaders (Japan)" region="JPN"/>
+		<rom name="Space Invaders (Japan).sg" size="16384" crc="6ad5cb3d" md5="87a97b049ec01b1803b93f06d0407586" sha1="a4e4b0c2967e39c4931fba8bc87428f296e461c5" status="verified"/>
+	</game>
+	<game name="Space Invaders (Taiwan)" cloneof="Space Invaders (Japan)">
+		<description>Space Invaders (Taiwan)</description>
+		<release name="Space Invaders (Taiwan)" region="TAI"/>
+		<rom name="Space Invaders (Taiwan).sg" size="16384" crc="0760ea93" md5="47359548b666e9e1b6287df5688e2fd2" sha1="5a7904697ea8a360066ea8403793227021735969" status="verified"/>
+	</game>
+	<game name="Space Mountain (Japan) (Othello Multivision)">
+		<description>Space Mountain (Japan) (Othello Multivision)</description>
+		<release name="Space Mountain (Japan) (Othello Multivision)" region="JPN"/>
+		<rom name="Space Mountain (Japan) (Othello Multivision).sg" size="8192" crc="bbd87d8f" md5="2321b2a684b83d58489fda2df66ab6fb" sha1="08d9360d6e92b081d99b7629f91d4fe482383a18" status="verified"/>
+	</game>
+	<game name="Space Slalom (Japan)">
+		<description>Space Slalom (Japan)</description>
+		<release name="Space Slalom (Japan)" region="JPN"/>
+		<rom name="Space Slalom (Japan).sg" size="8192" crc="b8b58b30" md5="c04dc7fb9d27629735edb1570ec39f00" sha1="798b5f3742cb3f95fd5977d9a2cb48ba2dc804e6" status="verified"/>
+	</game>
+	<game name="Star Force (Japan, Australia)">
+		<description>Star Force (Japan, Australia)</description>
+		<release name="Star Force (Japan, Australia)" region="AUS"/>
+		<release name="Star Force (Japan, Australia)" region="JPN"/>
+		<rom name="Star Force (Japan, Australia).sg" size="32768" crc="b846b52a" md5="2cbd1f9f4927f9618390340f56f116a6" sha1="d38875cb08de0ea892e5ef80f93987bbc445ef8f" status="verified"/>
+	</game>
+	<game name="Star Force (Taiwan) (Alt 1)" cloneof="Star Force (Japan, Australia)">
+		<description>Star Force (Taiwan) (Alt 1)</description>
+		<rom name="Star Force (Taiwan) (Alt 1).sg" size="32768" crc="6f9b1ccd" md5="19649d51aee49a9fef103de6b1a7a17b" sha1="ff6e3bdb830e6f74f9997b4d36604fd07d7e6019" status="verified"/>
+	</game>
+	<game name="Star Force (Taiwan)" cloneof="Star Force (Japan, Australia)">
+		<description>Star Force (Taiwan)</description>
+		<release name="Star Force (Taiwan)" region="TAI"/>
+		<rom name="Star Force (Taiwan).sg" size="32768" crc="1f736931" md5="3011655195d3a299f3a53255e0d7939a" sha1="f3ddf97ddf0e40289e38d9105300f15ec7eab78c" status="verified"/>
+	</game>
+	<game name="Star Jacker (Japan, Europe) (Rev 2)">
+		<description>Star Jacker (Japan, Europe) (Rev 2)</description>
+		<release name="Star Jacker (Japan, Europe) (Rev 2)" region="EUR"/>
+		<release name="Star Jacker (Japan, Europe) (Rev 2)" region="JPN"/>
+		<rom name="Star Jacker (Japan, Europe) (Rev 2).sg" size="32768" crc="3fe59505" md5="22200ef1461212cacdc58f6636d759fd" sha1="a2a06e7545ca1e0d522d0eb75a72b5b520f42330" status="verified"/>
+	</game>
+	<game name="Star Jacker (Taiwan) (Rev 1)" cloneof="Star Jacker (Japan, Europe) (Rev 2)">
+		<description>Star Jacker (Taiwan) (Rev 1)</description>
+		<release name="Star Jacker (Taiwan) (Rev 1)" region="TAI"/>
+		<rom name="Star Jacker (Taiwan) (Rev 1).sg" size="32768" crc="df162201" md5="0104171ade3cfeaf10c92926869e2a52" sha1="2bc990615a6ea7f005e8458c9791f0098c4d4a85" status="verified"/>
+	</game>
+	<game name="Star Jacker (Japan, Europe, Australia, New Zealand) (Rev 1)" cloneof="Star Jacker (Japan, Europe) (Rev 2)">
+		<description>Star Jacker (Japan, Europe, Australia, New Zealand) (Rev 1)</description>
+		<release name="Star Jacker (Japan, Europe, Australia, New Zealand) (Rev 1)" region="AUS"/>
+		<rom name="Star Jacker (Japan, Europe, Australia, New Zealand) (Rev 1).sg" size="32768" crc="7f25deca" md5="658ede490eae6af2b0f61dd136761d95" sha1="be078bfa5340f2e1d307b85d3648192972529e46" status="verified"/>
+	</game>
+	<game name="Star Jacker (Japan)" cloneof="Star Jacker (Japan, Europe) (Rev 2)">
+		<description>Star Jacker (Japan)</description>
+		<rom name="Star Jacker (Japan).sg" size="32768" crc="1ae94122" md5="eccad04698782862f3785ff9708f73e8" sha1="5d074708edf6c40dc6d80032cd91ff6197aa79c7" status="verified"/>
+	</game>
+	<game name="Star Soldier (Taiwan)">
+		<description>Star Soldier (Taiwan)</description>
+		<release name="Star Soldier (Taiwan)" region="TAI"/>
+		<rom name="Star Soldier (Taiwan).sg" size="49152" crc="e0816bb7" md5="cb95017c8d13d95c91129f9b3b1f6798" sha1="c1984257809ec5bce80a65d22b9b32561e04922c" status="verified"/>
+	</game>
+	<game name="Super Tank (Japan)">
+		<description>Super Tank (Japan)</description>
+		<release name="Super Tank (Japan)" region="JPN"/>
+		<rom name="Super Tank (Japan).sg" size="32768" crc="084cc13e" md5="59d01bf1093a65e9ec08e533cfbbc5ff" sha1="58d7d51b91b763d812376d56643a4f8a331e826b" status="verified"/>
+	</game>
+	<game name="Super Tank (Taiwan)" cloneof="Super Tank (Japan)">
+		<description>Super Tank (Taiwan)</description>
+		<release name="Super Tank (Taiwan)" region="TAI"/>
+		<rom name="Super Tank (Taiwan).sg" size="32768" crc="d0c3df3f" md5="bcb549a442584255601dc7938accd2d6" sha1="0d014fc9db775b62ff55196b85b8e91c5e3249f3" status="verified"/>
+	</game>
+	<game name="Super Tank (Korea) (Unl)" cloneof="Super Tank (Japan)">
+		<description>Super Tank (Korea) (Unl)</description>
+		<release name="Super Tank (Korea) (Unl)" region="KOR"/>
+		<rom name="Super Tank (Korea) (Unl).sg" size="32768" crc="4c48b7ac" md5="e4b0859bd9cb372e41f81e593c67f225" sha1="0a49de909b07b69a24b5c02ad08446e2cd1787d2" status="verified"/>
+	</game>
+	<game name="Tank Battalion (Taiwan)">
+		<description>Tank Battalion (Taiwan)</description>
+		<release name="Tank Battalion (Taiwan)" region="TAI"/>
+		<rom name="Tank Battalion (Taiwan).sg" size="32768" crc="5cbd1163" md5="dada9d76f7743089811dcc8ec1543076" sha1="0ca3b740b28266a2a606127ed8967c684b67cb44" status="verified"/>
+	</game>
+	<game name="Tanoshii Sansuu - Shougaku 4-Nen Ge (Japan) (SC-3000) (Program)">
+		<description>Tanoshii Sansuu - Shougaku 4-Nen Ge (Japan) (SC-3000) (Program)</description>
+		<release name="Tanoshii Sansuu - Shougaku 4-Nen Ge (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Tanoshii Sansuu - Shougaku 4-Nen Ge (Japan) (SC-3000) (Program).sc" size="16384" crc="5fde25bb" md5="c07d87577918eee0327bf67538b6f5cc" sha1="5500a59f4474833687e7d2d7bbd09cf0fb925684" status="verified"/>
+	</game>
+	<game name="Tanoshii Sansuu - Shougaku 4-Nen Jou (Japan) (SC-3000) (Program)">
+		<description>Tanoshii Sansuu - Shougaku 4-Nen Jou (Japan) (SC-3000) (Program)</description>
+		<release name="Tanoshii Sansuu - Shougaku 4-Nen Jou (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Tanoshii Sansuu - Shougaku 4-Nen Jou (Japan) (SC-3000) (Program).sc" size="16384" crc="573e04dd" md5="a3e3d2b2f9250875f2d30a4b2c7197ae" sha1="59c7c6d0e373f78961a0e501a533ea271b15abdb" status="verified"/>
+	</game>
+	<game name="Tanoshii Sansuu - Shougaku 4-Nen Jou (Japan) (Alt 1) (SC-3000) (Program)" cloneof="Tanoshii Sansuu - Shougaku 4-Nen Jou (Japan) (SC-3000) (Program)">
+		<description>Tanoshii Sansuu - Shougaku 4-Nen Jou (Japan) (Alt 1) (SC-3000) (Program)</description>
+		<rom name="Tanoshii Sansuu - Shougaku 4-Nen Jou (Japan) (Alt 1) (SC-3000) (Program).sc" size="40960" crc="7c400e3b" md5="793bc3ca1b2cb0997cbe3457eafb15f7" sha1="8a693531a3cfd0cef01d6b2ac900a2c95ff4f75e" status="verified"/>
+	</game>
+	<game name="Tanoshii Sansuu - Shougaku 5-Nen Ge (Japan) (SC-3000) (Program)">
+		<description>Tanoshii Sansuu - Shougaku 5-Nen Ge (Japan) (SC-3000) (Program)</description>
+		<release name="Tanoshii Sansuu - Shougaku 5-Nen Ge (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Tanoshii Sansuu - Shougaku 5-Nen Ge (Japan) (SC-3000) (Program).sc" size="16384" crc="6a96978d" md5="64280bd1e75ef922fe368dba2fe7fbcf" sha1="751d82119e19d46a20165c8debbfe95b3241a701" status="verified"/>
+	</game>
+	<game name="Tanoshii Sansuu - Shougaku 5-Nen Jou (Japan) (SC-3000) (Program)">
+		<description>Tanoshii Sansuu - Shougaku 5-Nen Jou (Japan) (SC-3000) (Program)</description>
+		<release name="Tanoshii Sansuu - Shougaku 5-Nen Jou (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Tanoshii Sansuu - Shougaku 5-Nen Jou (Japan) (SC-3000) (Program).sc" size="32768" crc="419d75d5" md5="b4c2518922f99c4fd6a5fa89cb24385c" sha1="3d99878e901e0095df7fc6ae2ef0915c9b00dcfb" status="verified"/>
+	</game>
+	<game name="Tanoshii Sansuu - Shougaku 6-Nen Ge (Japan) (SC-3000) (Program)">
+		<description>Tanoshii Sansuu - Shougaku 6-Nen Ge (Japan) (SC-3000) (Program)</description>
+		<release name="Tanoshii Sansuu - Shougaku 6-Nen Ge (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Tanoshii Sansuu - Shougaku 6-Nen Ge (Japan) (SC-3000) (Program).sc" size="32768" crc="d0d18e70" md5="f250e5b2ddd3928211174f9992e749c5" sha1="c3428ec915a172992a7c643da662eb1469cd37d4" status="verified"/>
+	</game>
+	<game name="Tanoshii Sansuu - Shougaku 6-Nen Jou (Japan) (SC-3000) (Program)">
+		<description>Tanoshii Sansuu - Shougaku 6-Nen Jou (Japan) (SC-3000) (Program)</description>
+		<release name="Tanoshii Sansuu - Shougaku 6-Nen Jou (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Tanoshii Sansuu - Shougaku 6-Nen Jou (Japan) (SC-3000) (Program).sc" size="32768" crc="8b5e6e1b" md5="b8fc10dd1cf58e342f045128c2614c3c" sha1="103fcb058b6f9671e5ca969a5cbd4bd171caddc3" status="verified"/>
+	</game>
+	<game name="Terebi Oekaki (Japan, Taiwan) (Program)">
+		<description>Terebi Oekaki (Japan, Taiwan) (Program)</description>
+		<release name="Terebi Oekaki (Japan, Taiwan) (Program)" region="JPN"/>
+		<release name="Terebi Oekaki (Japan, Taiwan) (Program)" region="TAI"/>
+		<rom name="Terebi Oekaki (Japan, Taiwan) (Program).sg" size="8192" crc="dd4a661b" md5="be31a84bfa537117a62eaeb8c0a07bf9" sha1="12296f2bb57d80d1774749d3002a039e0940c6fa" status="verified"/>
+	</game>
+	<game name="TwinBee (Taiwan)">
+		<description>TwinBee (Taiwan)</description>
+		<release name="TwinBee (Taiwan)" region="TAI"/>
+		<rom name="TwinBee (Taiwan).sg" size="49152" crc="c550b4f0" md5="8c2c0d7e8415ae7b0c577cf947e89e78" sha1="a8c30043c145e63f79a3265dde167529f0e08d49" status="verified"/>
+	</game>
+	<game name="Uranai Angel Cutie (Japan) (SC-3000) (Program)">
+		<description>Uranai Angel Cutie (Japan) (SC-3000) (Program)</description>
+		<release name="Uranai Angel Cutie (Japan) (SC-3000) (Program)" region="JPN"/>
+		<rom name="Uranai Angel Cutie (Japan) (SC-3000) (Program).sc" size="32768" crc="ae4f92cf" md5="6dbcbfcd15bd206aca31dd2557f4e44d" sha1="90e32471b68cb60449b30e5d5a19d3a88f9829d3" status="verified"/>
+	</game>
+	<game name="Wonder Boy (Japan) (Rev 1)">
+		<description>Wonder Boy (Japan) (Rev 1)</description>
+		<release name="Wonder Boy (Japan) (Rev 1)" region="JPN"/>
+		<rom name="Wonder Boy (Japan) (Rev 1).sg" size="32768" crc="e8f0344d" md5="d26fabfe84ad40ae04a2cd3dc6cf75df" sha1="240600a0dda16809f49b173f731c7fdaf921466a" status="verified"/>
+	</game>
+	<game name="Wonder Boy (Japan)" cloneof="Wonder Boy (Japan) (Rev 1)">
+		<description>Wonder Boy (Japan)</description>
+		<rom name="Wonder Boy (Japan).sg" size="32768" crc="160535c5" md5="76f29fee0cd3af921e488a276dace636" sha1="4a54933135cdff546fd79cbc61a38355f7335f3f" status="verified"/>
+	</game>
+	<game name="Wonder Boy (Taiwan) (Rev 1)" cloneof="Wonder Boy (Japan) (Rev 1)">
+		<description>Wonder Boy (Taiwan) (Rev 1)</description>
+		<release name="Wonder Boy (Taiwan) (Rev 1)" region="TAI"/>
+		<rom name="Wonder Boy (Taiwan) (Rev 1).sg" size="32768" crc="953fc2b2" md5="d6fab98601ade59cf90a500c05446163" sha1="8f261b955162c179fe4c936ece767bbf25c4888c" status="verified"/>
+	</game>
+	<game name="Yamato (Japan, Europe, Australia, New Zealand)">
+		<description>Yamato (Japan, Europe, Australia, New Zealand)</description>
+		<release name="Yamato (Japan, Europe, Australia, New Zealand)" region="AUS"/>
+		<release name="Yamato (Japan, Europe, Australia, New Zealand)" region="EUR"/>
+		<release name="Yamato (Japan, Europe, Australia, New Zealand)" region="JPN"/>
+		<rom name="Yamato (Japan, Europe, Australia, New Zealand).sg" size="16384" crc="e2fd5201" md5="0dd197a0e1f43c0684f98b52514fce59" sha1="4d746558fb699c5cb480ba26130518105b2e2031" status="verified"/>
+	</game>
+	<game name="Yamato (Japan) (Alt 1)" cloneof="Yamato (Japan, Europe, Australia, New Zealand)">
+		<description>Yamato (Japan) (Alt 1)</description>
+		<rom name="Yamato (Japan) (Alt 1).sg" size="40960" crc="9c7497ff" md5="653d415ed202c09c08207c83f9e311eb" sha1="fe86e669f3e4b808236d7b80aeb5a83172edb9ac" status="verified"/>
+	</game>
+	<game name="Yamato (Taiwan)" cloneof="Yamato (Japan, Europe, Australia, New Zealand)">
+		<description>Yamato (Taiwan)</description>
+		<release name="Yamato (Taiwan)" region="TAI"/>
+		<rom name="Yamato (Taiwan).sg" size="16384" crc="b65a093f" md5="9c751fb92d2280d89ee9c273f3c6785a" sha1="6fbdc967f5c7c39eb1fdea08d2dcabfd64b8e7ee" status="verified"/>
+	</game>
+	<game name="Yie Ar Kung-Fu (Taiwan)">
+		<description>Yie Ar Kung-Fu (Taiwan)</description>
+		<release name="Yie Ar Kung-Fu (Taiwan)" region="TAI"/>
+		<rom name="Yie Ar Kung-Fu (Taiwan).sg" size="32768" crc="bb0f1930" md5="b14852ce157619fd60666a6474936d69" sha1="0a6157837af2e5dec2e9b30d475b48fa7c14cc3e" status="verified"/>
+	</game>
+	<game name="Yie Ar Kung-Fu II (Taiwan)">
+		<description>Yie Ar Kung-Fu II (Taiwan)</description>
+		<release name="Yie Ar Kung-Fu II (Taiwan)" region="TAI"/>
+		<rom name="Yie Ar Kung-Fu II (Taiwan).sg" size="49152" crc="fc87463c" md5="c1f51f5dbfb859b1204a812d9c08ffd3" sha1="44fb2dca3774f859f0ae0ad4d809a67f760cf9ae" status="verified"/>
+	</game>
+	<game name="Zaxxon (Japan, Taiwan)">
+		<description>Zaxxon (Japan, Taiwan)</description>
+		<release name="Zaxxon (Japan, Taiwan)" region="JPN"/>
+		<rom name="Zaxxon (Japan, Taiwan).sg" size="32768" crc="905467e4" md5="52bbf5336c190610a0fb1ab0bdaca455" sha1="e32f536c3576d41ab485e07809c4404e6b462443" status="verified"/>
+	</game>
+	<game name="Zaxxon (Taiwan)" cloneof="Zaxxon (Japan, Taiwan)">
+		<description>Zaxxon (Taiwan)</description>
+		<release name="Zaxxon (Taiwan)" region="TAI"/>
+		<rom name="Zaxxon (Taiwan).sg" size="32768" crc="49cae925" md5="bb1c5b1071d5b9224b7733d60465e769" sha1="172a8ff1a574d7920906c5cf60e1d39f31b9b639" status="verified"/>
+	</game>
+	<game name="Zippy Race (Japan, Australia)">
+		<description>Zippy Race (Japan, Australia)</description>
+		<release name="Zippy Race (Japan, Australia)" region="AUS"/>
+		<release name="Zippy Race (Japan, Australia)" region="JPN"/>
+		<rom name="Zippy Race (Japan, Australia).sg" size="32768" crc="bc5d20df" md5="0eda34ba313d3bb34558fd5939b19794" sha1="8c48dbe187ff4b26d6244d38075565f284536d0c" status="verified"/>
+	</game>
+	<game name="Zippy Race (Taiwan)" cloneof="Zippy Race (Japan, Australia)">
+		<description>Zippy Race (Taiwan)</description>
+		<release name="Zippy Race (Taiwan)" region="TAI"/>
+		<rom name="Zippy Race (Taiwan).sg" size="32768" crc="bcf441a5" md5="16856425e0bcc3ab475f46f7cfd00402" sha1="f6926d0c3c654a038cd5eec9aaa6876bce86fdaa" status="verified"/>
+	</game>
+	<game name="Zoom 909 (Japan, Taiwan)">
+		<description>Zoom 909 (Japan, Taiwan)</description>
+		<release name="Zoom 909 (Japan, Taiwan)" region="JPN"/>
+		<rom name="Zoom 909 (Japan, Taiwan).sg" size="32768" crc="093830d8" md5="4e457a6c5b4b613f2aac3472f6827a89" sha1="09552aaa7140f9fc780b5f7d541478b534320075" status="verified"/>
+	</game>
+	<game name="Zoom 909 (Taiwan)" cloneof="Zoom 909 (Japan, Taiwan)">
+		<description>Zoom 909 (Taiwan)</description>
+		<release name="Zoom 909 (Taiwan)" region="ASI"/>
+		<rom name="Zoom 909 (Taiwan).sg" size="32768" crc="9943fc2b" md5="d99925f7b3fa1961906f169b61f1a492" sha1="7a998a0da19471f7e3e5bd82a9fbaf82a966ee40" status="verified"/>
+	</game>
+</datafile>

@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Nintendo - Nintendo 3DS (Digital) (CDN) (CIA)</name>
+		<description>Nintendo - Nintendo 3DS (Digital) (CDN) (CIA)</description>
+		<version>20200704-063309</version>
+		<author>Gefflon, Hiccup, InternalLoss, Jack, niemand, SonGoku, u53r123, Whovian9369, xuom2</author>
+		<homepage>No-Intro</homepage>
+		<url>http://www.no-intro.org</url>
+	</header>
+	<game name="Eurosport (Europe, Australia) (En,Fr,De,Es,It)">
+		<description>Eurosport (Europe, Australia) (En,Fr,De,Es,It)</description>
+		<game_id>CTR-N-JEWP</game_id>
+		<rom name="Eurosport (Europe, Australia) (En,Fr,De,Es,It).16.cia" size="5318976" crc="918135D4" md5="58903CC33CF697EB610D8D0B404244E8" sha1="9DD4EA3D42F6930274B93D009B39E3D5EC4A48BB" status="verified"/>
+	</game>
+	<game name="Flipnote Studio 3D (Europe, Australia) (En,Fr,De,Es,It)">
+		<description>Flipnote Studio 3D (Europe, Australia) (En,Fr,De,Es,It)</description>
+		<game_id>CTR-N-JKZP</game_id>
+		<rom name="Flipnote Studio 3D (Europe, Australia) (En,Fr,De,Es,It).cia" size="9824576" crc="12AE3141" md5="1A35301BFBE4FD09E1B343E72015DD70" sha1="8B0DAEA9AC3AB346F351603A138D7FD5CE40C116" status="verified"/>
+	</game>
+	<game name="Hatsune Miku - Project Mirai DX (Europe, Australia) (Demo)">
+		<description>Hatsune Miku - Project Mirai DX (Europe, Australia) (Demo)</description>
+		<game_id>CTR-T-BRXP</game_id>
+		<rom name="Hatsune Miku - Project Mirai DX (Europe, Australia) (Demo).cia" size="113580288" crc="82C57FE4" md5="981AB4BEB3B03ADD7A9034766E3B891B" sha1="08726A9C1855BFA44A8EB4668ADDE3D01ED8CCAC" status="verified"/>
+	</game>
+	<game name="Ice Station Z (Europe, Australia) (Demo)">
+		<description>Ice Station Z (Europe, Australia) (Demo)</description>
+		<game_id>CTR-T-KZSP</game_id>
+		<rom name="Ice Station Z (Europe, Australia) (Demo).cia" size="43653440" crc="03DDD808" md5="05CEFD69F3B89886070DE180CA6950DB" sha1="E5A830A6ED0953B54BDEE48F0C06D24C15BEA5B3" status="verified"/>
+	</game>
+	<game name="Mario &amp; Luigi - Dream Team Bros. (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)">
+		<description>Mario &amp; Luigi - Dream Team Bros. (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)</description>
+		<game_id>CTR-P-AYMP</game_id>
+		<rom name="Mario &amp; Luigi - Dream Team Bros. (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru).cia" size="889129280" crc="3EFD5EEA" md5="70C73739297EE5694BAC897A536F6A21" sha1="2365BFFBFA07863DC17FF9E38F6D5E6B7BDB2AFD" status="verified"/>
+	</game>
+	<game name="Mario Kart 7 (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)">
+		<description>Mario Kart 7 (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)</description>
+		<game_id>CTR-P-AMKP</game_id>
+		<rom name="Mario Kart 7 (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru).2112.cia" size="669485440" crc="A4C1E792" md5="89D1E5F3527BCEA3DC55C1E7ED675AE7" sha1="317408C63AE737B42F76A60BCA434E7A7B6BC56B" status="verified"/>
+	</game>
+	<game name="Nintendo 3DS Ambassador Certificate (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)">
+		<description>Nintendo 3DS Ambassador Certificate (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)</description>
+		<game_id>CTR-N-JC9P</game_id>
+		<rom name="Nintendo 3DS Ambassador Certificate (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru).16.cia" size="21170432" crc="FA68C6BC" md5="FBECA7F02E8073CF0CA30E3361894F92" sha1="DA4F53B97145235DF95D7A04AD50753DB90436E3" status="verified"/>
+	</game>
+	<game name="Nintendo Badge Arcade (Europe, Australia) (En,Fr,De,Es,It)">
+		<description>Nintendo Badge Arcade (Europe, Australia) (En,Fr,De,Es,It)</description>
+		<game_id>CTR-N-JWVP</game_id>
+		<rom name="Nintendo Badge Arcade (Europe, Australia) (En,Fr,De,Es,It).cia" size="84166976" crc="C91B7553" md5="8CD7E5C023B0A05D2FEA0CA6D67F122E" sha1="554B1C86A1D1BA91A31F84C30C482741BDE26068" status="verified"/>
+	</game>
+	<game name="Pokedex 3D (World)">
+		<description>Pokedex 3D (World)</description>
+		<game_id>CTR-N-JRVA</game_id>
+		<rom name="Pokedex 3D (World).cia" size="23296320" crc="4BF76FFA" md5="36EE3A9CD935C6FDAFCB419C87E3E067" sha1="4CC688DB0D2A84CF990B434F610E4670ADFC4C54" status="verified"/>
+	</game>
+	<game name="Pokemon X (World)">
+		<description>Pokemon X (World)</description>
+		<game_id>CTR-P-EKJA</game_id>
+		<rom name="Pokemon X (World).cia" size="1807300928" crc="07E5858E" md5="CA46B014672313F814CA96E52CD3C744" sha1="0201AD551DAA391DFA9D0861564206741AB3897F" status="verified"/>
+	</game>
+	<game name="Sonic Lost World (Europe, Australia)">
+		<description>Sonic Lost World (Europe, Australia)</description>
+		<game_id>CTR-P-ARVP</game_id>
+		<rom name="Sonic Lost World (Europe, Australia).cia" size="1343089024" crc="83BBEF72" md5="54229D7CDC4E79843FB90D17DB72B08D" sha1="71494F7EE3072927D8DAFE8AF7003D8CF3658274" status="verified"/>
+	</game>
+	<game name="Super Mario 3D Land (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)">
+		<description>Super Mario 3D Land (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)</description>
+		<game_id>CTR-P-AREP</game_id>
+		<rom name="Super Mario 3D Land (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru).cia" size="304744768" crc="76CCF905" md5="BB11436F160AA1082D1D0E728C2E8C6A" sha1="56351FBF4F8F526EE1D48D7015F93CEFEA7E263F" status="verified"/>
+	</game>
+</datafile>

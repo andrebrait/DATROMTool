@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Fairchild - Channel F (Parent-Clone)</name>
+		<description>Fairchild - Channel F (Parent-Clone)</description>
+		<version>20120223-000000</version>
+		<date>20120223-000000</date>
+		<author>alexian</author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="[BIOS] Fairchild Channel F (USA) (SL90025)">
+		<description>[BIOS] Fairchild Channel F (USA) (SL90025)</description>
+		<release name="[BIOS] Fairchild Channel F (USA) (SL90025)" region="USA"/>
+		<rom name="[BIOS] Fairchild Channel F (USA) (SL90025).bin" size="1024" crc="015c1e38" md5="95d339631d867c8f1d15a5f2ec26069d" sha1="759e2ed31fbde4a2d8daf8b9f3e0dffebc90dae2"/>
+	</game>
+	<game name="[BIOS] Fairchild Channel F (USA) (SL31253)" cloneof="[BIOS] Fairchild Channel F (USA) (SL90025)">
+		<description>[BIOS] Fairchild Channel F (USA) (SL31253)</description>
+		<rom name="[BIOS] Fairchild Channel F (USA) (SL31253).bin" size="1024" crc="04694ed9" md5="ac9804d4c0e9d07e33472e3726ed15c3" sha1="81193965a374d77b99b4743d317824b53c3e3c78"/>
+	</game>
+	<game name="[BIOS] Fairchild Channel F (USA) (SL31254)" cloneof="[BIOS] Fairchild Channel F (USA) (SL90025)">
+		<description>[BIOS] Fairchild Channel F (USA) (SL31254)</description>
+		<rom name="[BIOS] Fairchild Channel F (USA) (SL31254).bin" size="1024" crc="9c047ba3" md5="da98f4bb3242ab80d76629021bb27585" sha1="8f70d1b74483ba3a37e86cf16c849d601a8c3d2c"/>
+	</game>
+	<game name="Alien Invasion (USA)">
+		<description>Alien Invasion (USA)</description>
+		<release name="Alien Invasion (USA)" region="USA"/>
+		<rom name="Alien Invasion (USA).bin" size="4096" crc="85e00865" md5="f7bf7d55a7660ffa80d08ad1ba903ff7" sha1="1837e95e6631687fc6d008207e56a31705d55cdf"/>
+	</game>
+	<game name="Backgammon, Acey-Deucey (USA)">
+		<description>Backgammon, Acey-Deucey (USA)</description>
+		<release name="Backgammon, Acey-Deucey (USA)" region="USA"/>
+		<rom name="Backgammon, Acey-Deucey (USA).bin" size="2048" crc="a1731b52" md5="d89b48ae8c906488caac2b2ae1d63d88" sha1="9ac23df58c95bdbe68e3a0d0a477f07cd4e951d0"/>
+	</game>
+	<game name="Baseball (USA)">
+		<description>Baseball (USA)</description>
+		<release name="Baseball (USA)" region="USA"/>
+		<rom name="Baseball (USA).bin" size="2048" crc="01129bcd" md5="4fa83f734c139963aa02bdbb7a52e500" sha1="9b0c9bd3e52da22ca7f2aab6fbb5f3c24f89ef75"/>
+	</game>
+	<game name="Bowling (USA)">
+		<description>Bowling (USA)</description>
+		<release name="Bowling (USA)" region="USA"/>
+		<rom name="Bowling (USA).bin" size="2048" crc="94322c79" md5="25e231e7a464a32b4715bfb47af89240" sha1="82d49201ee82e8cba6a907aca80969796a84d7f4"/>
+	</game>
+	<game name="Casino Poker (USA)">
+		<description>Casino Poker (USA)</description>
+		<release name="Casino Poker (USA)" region="USA"/>
+		<rom name="Casino Poker (USA).bin" size="4096" crc="5aa30c12" md5="bb7f7bbbe21f142591cdcafa98d7f6e4" sha1="4540b1cfca461d6eba26754c34090aa74822a4bd"/>
+	</game>
+	<game name="Checkers (USA)">
+		<description>Checkers (USA)</description>
+		<release name="Checkers (USA)" region="USA"/>
+		<rom name="Checkers (USA).bin" size="2048" crc="fdae7044" md5="35d61d40ef7ec337cba092aabac74dbd" sha1="2683b330dc2350341a51f1e3bdf75922bb425a9e"/>
+	</game>
+	<game name="Demonstration Cartridge (USA)">
+		<description>Demonstration Cartridge (USA)</description>
+		<release name="Demonstration Cartridge (USA)" region="USA"/>
+		<rom name="Demonstration Cartridge (USA).bin" size="2048" crc="42727ad5" md5="54cf17c48707467295749490d458eafb" sha1="e462e594c14cdb10ddc4c263b74e753316c3b358"/>
+	</game>
+	<game name="Demonstration Cartridge 2 (USA)">
+		<description>Demonstration Cartridge 2 (USA)</description>
+		<release name="Demonstration Cartridge 2 (USA)" region="USA"/>
+		<rom name="Demonstration Cartridge 2 (USA).bin" size="2048" crc="44cf1d89" md5="f6916b665893aa8138cde57c37e50ada" sha1="13a5ca0471e6f4a7a5a2fc4d2b8f881516a28ec4"/>
+	</game>
+	<game name="Desert Fox, Shooting Gallery (USA)">
+		<description>Desert Fox, Shooting Gallery (USA)</description>
+		<release name="Desert Fox, Shooting Gallery (USA)" region="USA"/>
+		<rom name="Desert Fox, Shooting Gallery (USA).bin" size="2048" crc="1570934b" md5="4f11f13cbca685cb20e888f87b3b1586" sha1="3440928903f39354e1358018cebf12a00c8dff77"/>
+	</game>
+	<game name="Dodge It (USA)">
+		<description>Dodge It (USA)</description>
+		<release name="Dodge It (USA)" region="USA"/>
+		<rom name="Dodge It (USA).bin" size="2048" crc="e3c1811c" md5="6ffedaed3c5cd8ba74d98901849cc451" sha1="54fdab06a07f84d073858f56a054a59ec0b1142e"/>
+	</game>
+	<game name="Drag Race (USA)">
+		<description>Drag Race (USA)</description>
+		<release name="Drag Race (USA)" region="USA"/>
+		<rom name="Drag Race (USA).bin" size="2048" crc="6a64dda3" md5="f80af74b09d058b90e719bb7dfbdd50e" sha1="d915c8997f56ae09548498feecebf3c3bfcdf6c4"/>
+	</game>
+	<game name="Galactic Space Wars, Lunar Lander (USA)">
+		<description>Galactic Space Wars, Lunar Lander (USA)</description>
+		<release name="Galactic Space Wars, Lunar Lander (USA)" region="USA"/>
+		<rom name="Galactic Space Wars, Lunar Lander (USA).bin" size="2048" crc="c8ef3410" md5="9e0711b140e22729687db1e1354980ab" sha1="fc3cadc90d73ce7e3b32b5c9a855d621e79c592a"/>
+	</game>
+	<game name="Hangman (USA)">
+		<description>Hangman (USA)</description>
+		<release name="Hangman (USA)" region="USA"/>
+		<rom name="Hangman (USA).bin" size="3072" crc="9238d6ce" md5="0124cd0b61df5502aabd59029ccb6d5a" sha1="19166d49dec273cae1f2dbac983b130d282ed231"/>
+	</game>
+	<game name="Ordtaevling (Sweden)" cloneof="Hangman (USA)">
+		<description>Ordtaevling (Sweden)</description>
+		<release name="Ordtaevling (Sweden)" region="SWE"/>
+		<rom name="Ordtaevling (Sweden).bin" size="3072" crc="3a386e79" md5="c2a44d22d3865b036479e9311c74d3ad" sha1="62509545b8eef641c432705ff82cd8264c3e1d82"/>
+	</game>
+	<game name="Rat' Mal (Germany)" cloneof="Hangman (USA)">
+		<description>Rat' Mal (Germany)</description>
+		<release name="Rat' Mal (Germany)" region="GER"/>
+		<rom name="Rat' Mal (Germany).bin" size="3072" crc="87752425" md5="913ecbaa30816c6d78de8651251761fc" sha1="35f3fb741b643c4b8e8fdbff4ed0ea24402c4528"/>
+	</game>
+	<game name="Magic Numbers - Mind Reader + Nim (USA)">
+		<description>Magic Numbers - Mind Reader + Nim (USA)</description>
+		<release name="Magic Numbers - Mind Reader + Nim (USA)" region="USA"/>
+		<rom name="Magic Numbers - Mind Reader + Nim (USA).bin" size="2048" crc="24da0529" md5="4c10fa5c7316c59efa241043fc67dfa8" sha1="4b696a4f8a20f6dcd6a4ba690756d862956515a4"/>
+	</game>
+	<game name="Math Quiz I - Addition + Subtraction (USA)">
+		<description>Math Quiz I - Addition + Subtraction (USA)</description>
+		<release name="Math Quiz I - Addition + Subtraction (USA)" region="USA"/>
+		<rom name="Math Quiz I - Addition + Subtraction (USA).bin" size="2048" crc="bb4c24a2" md5="a8e6103fcae4d0f9e14d9edcfc3fc493" sha1="f0bfdc8f6beed2ef54add820c5e164005d2d1d25"/>
+	</game>
+	<game name="Math Quiz II - Multiplication + Division (USA)">
+		<description>Math Quiz II - Multiplication + Division (USA)</description>
+		<release name="Math Quiz II - Multiplication + Division (USA)" region="USA"/>
+		<rom name="Math Quiz II - Multiplication + Division (USA).bin" size="2048" crc="4aa7ea97" md5="86b77eafdf7b806e19e01724987e384f" sha1="4c643e00f32629c066e778be92f37e3f7bfd1ad6"/>
+	</game>
+	<game name="Maze, Jailbreak, Blind-man's-bluff, Trailblazer (USA)">
+		<description>Maze, Jailbreak, Blind-man's-bluff, Trailblazer (USA)</description>
+		<release name="Maze, Jailbreak, Blind-man's-bluff, Trailblazer (USA)" region="USA"/>
+		<rom name="Maze, Jailbreak, Blind-man's-bluff, Trailblazer (USA).bin" size="2048" crc="4d42b296" md5="6565df74539476d66fd78de1bac0259c" sha1="a7b70fb6f24bb1dd79f2cbb1e57b3edb04332e04"/>
+	</game>
+	<game name="Maze, Jailbreak, Blind-man's-bluff, Trailblazer (USA) (Alt 1)" cloneof="Maze, Jailbreak, Blind-man's-bluff, Trailblazer (USA)">
+		<description>Maze, Jailbreak, Blind-man's-bluff, Trailblazer (USA) (Alt 1)</description>
+		<rom name="Maze, Jailbreak, Blind-man's-bluff, Trailblazer (USA) (Alt 1).bin" size="2048" crc="0a948b61" md5="53e4cc2da0f2c167e0692b794cb7692c" sha1="b53ba16c6d91e2f62e020d18445217b91907a83b"/>
+	</game>
+	<game name="Memory Match 1 &amp; 2 (USA)">
+		<description>Memory Match 1 &amp; 2 (USA)</description>
+		<release name="Memory Match 1 &amp; 2 (USA)" region="USA"/>
+		<rom name="Memory Match 1 &amp; 2 (USA).bin" size="2048" crc="104b5e18" md5="2b3ca549e27579e4519a765fd8f52d0f" sha1="e46406119020c85002513b1c01352f76dcd604a4"/>
+	</game>
+	<game name="Pinball Challenge (USA)">
+		<description>Pinball Challenge (USA)</description>
+		<release name="Pinball Challenge (USA)" region="USA"/>
+		<rom name="Pinball Challenge (USA).bin" size="2048" crc="c610b330" md5="e90339b7068c6227d54f3c0ca637e017" sha1="9267d85982414af753172e4c9998863463c32c99"/>
+	</game>
+	<game name="Pinball Challenge (USA) (Alt 1)" cloneof="Pinball Challenge (USA)">
+		<description>Pinball Challenge (USA) (Alt 1)</description>
+		<rom name="Pinball Challenge (USA) (Alt 1).bin" size="2048" crc="7cadf0fd" md5="5cbcda1c44f0dad02b0dfe209b6325d5" sha1="cc69feb8243e6fce3e6317bf9ea82d70a85eae1c"/>
+	</game>
+	<game name="Pro Football (USA)">
+		<description>Pro Football (USA)</description>
+		<release name="Pro Football (USA)" region="USA"/>
+		<rom name="Pro Football (USA).bin" size="4096" crc="a1ae99be" md5="9a894d745356a050f95410983c3bc54a" sha1="9be97cace9b99f15a373bd95f3996034d633fff5"/>
+	</game>
+	<game name="Robot War, Torpedo Alley (USA)">
+		<description>Robot War, Torpedo Alley (USA)</description>
+		<release name="Robot War, Torpedo Alley (USA)" region="USA"/>
+		<rom name="Robot War, Torpedo Alley (USA).bin" size="2048" crc="38241e4f" md5="3783b6ac359e21b99cfa17773aa811c6" sha1="87f3f9afcc232d767cf6a5040c88b31283f76199"/>
+	</game>
+	<game name="Schach (Germany)">
+		<description>Schach (Germany)</description>
+		<release name="Schach (Germany)" region="GER"/>
+		<rom name="Schach (Germany).bin" size="6144" crc="04fb6dce" md5="5568205f926333914dedc8ef8bf16af2" sha1="cbbaa8522fee16a0cc13ed3140d41e22919da24b"/>
+	</game>
+	<game name="Slot Machine (USA)">
+		<description>Slot Machine (USA)</description>
+		<release name="Slot Machine (USA)" region="USA"/>
+		<rom name="Slot Machine (USA).bin" size="2048" crc="b7eabd08" md5="dfb66ee145fab65062fdeadafc8dc34c" sha1="97e12dba298460ce466509e9aefb82fe2503ef6f"/>
+	</game>
+	<game name="Sonar Search (USA)">
+		<description>Sonar Search (USA)</description>
+		<release name="Sonar Search (USA)" region="USA"/>
+		<rom name="Sonar Search (USA).bin" size="2048" crc="dbdc56bf" md5="4cb12edae37df23851884b82ca410754" sha1="a15449eec75382af6dd71e766cae1171308d192c"/>
+	</game>
+	<game name="Space War (USA)">
+		<description>Space War (USA)</description>
+		<release name="Space War (USA)" region="USA"/>
+		<rom name="Space War (USA).bin" size="2048" crc="22ef49e8" md5="32cca8ff09041a39251d7aade21ee22f" sha1="c1d83b1e89d11465456bd5829a85db06c4ef322f"/>
+	</game>
+	<game name="Spitfire (USA)">
+		<description>Spitfire (USA)</description>
+		<release name="Spitfire (USA)" region="USA"/>
+		<rom name="Spitfire (USA).bin" size="2048" crc="5357c5f6" md5="1b409fe1154584f4d1ab76b344a73d99" sha1="9af18e7fa3b2d040f33cbe2286392ce5fe31d0df"/>
+	</game>
+	<game name="Tic-Tac-Toe, Shooting Gallery, Doodle, Quadra-Doodle (USA)">
+		<description>Tic-Tac-Toe, Shooting Gallery, Doodle, Quadra-Doodle (USA)</description>
+		<release name="Tic-Tac-Toe, Shooting Gallery, Doodle, Quadra-Doodle (USA)" region="USA"/>
+		<rom name="Tic-Tac-Toe, Shooting Gallery, Doodle, Quadra-Doodle (USA).bin" size="2048" crc="ff4768b0" md5="7e5c26a6d1f9a90c68669a9800ba522d" sha1="8edfb668b3eb759f8597fb13b1aeaf43aaf53680"/>
+	</game>
+	<game name="Muehle, Tontauben-Schiessen, Kreatives Malspiel, Videoscope (Germany)" cloneof="Tic-Tac-Toe, Shooting Gallery, Doodle, Quadra-Doodle (USA)">
+		<description>Muehle, Tontauben-Schiessen, Kreatives Malspiel, Videoscope (Germany)</description>
+		<release name="Muehle, Tontauben-Schiessen, Kreatives Malspiel, Videoscope (Germany)" region="GER"/>
+		<rom name="Muehle, Tontauben-Schiessen, Kreatives Malspiel, Videoscope (Germany).bin" size="2048" crc="7124dc59" md5="1fbd86dcca0e4619963b902c48ae77f2" sha1="15d5e6d152d93a2099b97a2bd5dcf7134dd1a770"/>
+	</game>
+	<game name="Video Blackjack (USA)">
+		<description>Video Blackjack (USA)</description>
+		<release name="Video Blackjack (USA)" region="USA"/>
+		<rom name="Video Blackjack (USA).bin" size="2048" crc="e98d4456" md5="b074c867f235fb69ced96c6916673b45" sha1="86579196567c9686009ad271263269181496a9c7"/>
+	</game>
+	<game name="Video Whizball (USA)">
+		<description>Video Whizball (USA)</description>
+		<release name="Video Whizball (USA)" region="USA"/>
+		<rom name="Video Whizball (USA).bin" size="3072" crc="65fdfe49" md5="90a9b3952568f91502a7088bfb0ae07e" sha1="61babb950ebc0b0acab29acf5dcbecc60dcd70a3"/>
+	</game>
+</datafile>

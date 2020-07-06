@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Nintendo - Nintendo 64DD (Parent-Clone)</name>
+		<description>Nintendo - Nintendo 64DD (Parent-Clone)</description>
+		<version>20200620-071933</version>
+		<date>20200620-071933</date>
+		<author></author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="[BIOS] Nintendo 64DD IPL (Japan) (v1.2)">
+		<description>[BIOS] Nintendo 64DD IPL (Japan) (v1.2)</description>
+		<rom name="[BIOS] Nintendo 64DD IPL (Japan) (v1.2).z64" size="4194304" crc="7f933ce2" md5="8d3d9f294b6e174bc7b1d2fd1c727530" sha1="bf861922dcb78c316360e3e742f4f70ff63c9bc3" status="verified"/>
+	</game>
+	<game name="[BIOS] Nintendo 64DD IPL (USA) (Proto)" cloneof="[BIOS] Nintendo 64DD IPL (Japan) (v1.2)">
+		<description>[BIOS] Nintendo 64DD IPL (USA) (Proto)</description>
+		<release name="[BIOS] Nintendo 64DD IPL (USA) (Proto)" region="JPN"/>
+		<rom name="[BIOS] Nintendo 64DD IPL (USA) (Proto).z64" size="4194304" crc="d0f567ca" md5="37c36e4286d36892a9fc70eafe4104be" sha1="3c5b93ca231550c68693a14f03cea8d5dbd1be9e" status="verified"/>
+	</game>
+	<game name="[BIOS] Nintendo 64DD IPL (Japan) (v1.0) (Beta)" cloneof="[BIOS] Nintendo 64DD IPL (Japan) (v1.2)">
+		<description>[BIOS] Nintendo 64DD IPL (Japan) (v1.0) (Beta)</description>
+		<release name="[BIOS] Nintendo 64DD IPL (Japan) (v1.0) (Beta)" region="JPN"/>
+		<rom name="[BIOS] Nintendo 64DD IPL (Japan) (v1.0) (Beta).z64" size="4194304" crc="6224f875" md5="94dba2d79615deed567aa85f4cf74162" sha1="58670c0063793a8f3be957d71d937b618829ba9e" status="verified"/>
+	</game>
+	<game name="[BIOS] Nintendo 64DD IPL (Japan) (v1.1) (Beta)" cloneof="[BIOS] Nintendo 64DD IPL (Japan) (v1.2)">
+		<description>[BIOS] Nintendo 64DD IPL (Japan) (v1.1) (Beta)</description>
+		<release name="[BIOS] Nintendo 64DD IPL (Japan) (v1.1) (Beta)" region="JPN"/>
+		<rom name="[BIOS] Nintendo 64DD IPL (Japan) (v1.1) (Beta).z64" size="4194304" crc="417d05be" md5="7630650c7fc16e199911269647186e79" sha1="b3e26dbb4e945f78c918fabc5b9e60fcf262c47b" status="verified"/>
+	</game>
+	<game name="[BIOS] Nintendo 64DD Tool IPL (Japan) (Beta)" cloneof="[BIOS] Nintendo 64DD IPL (Japan) (v1.2)">
+		<description>[BIOS] Nintendo 64DD Tool IPL (Japan) (Beta)</description>
+		<release name="[BIOS] Nintendo 64DD Tool IPL (Japan) (Beta)" region="JPN"/>
+		<rom name="[BIOS] Nintendo 64DD Tool IPL (Japan) (Beta).z64" size="4194304" crc="b78064d9" md5="aad37b1492886b892f1821f37fd3ae34" sha1="10c4173c2a7eb09c6579818f72ef18fa0b6d32de" status="verified"/>
+	</game>
+	<game name="Dezaemon DD (Japan) (Proto)">
+		<description>Dezaemon DD (Japan) (Proto)</description>
+		<release name="Dezaemon DD (Japan) (Proto)" region="JPN"/>
+		<rom name="Dezaemon DD (Japan) (Proto).ndd" size="64931840" crc="07a920f7" md5="40aa8ec52c5e025d6c6ad94cebc2218f" sha1="f0b3e6c0a944118e4a8ee8ea54da1b103b754241" status="verified"/>
+	</game>
+	<game name="Kyojin no Doshin (Japan)">
+		<description>Kyojin no Doshin (Japan)</description>
+		<release name="Kyojin no Doshin (Japan)" region="JPN"/>
+		<rom name="Kyojin no Doshin (Japan).ndd" size="64931840" crc="14acd221" md5="e8eb810d996e12cd6c47445f87a94c72" sha1="3e7eb70138213cc944952c4c659285f729b1fe1a" status="verified"/>
+	</game>
+	<game name="Kyojin no Doshin (Japan) (Demo) (Kiosk) [b]" cloneof="Kyojin no Doshin (Japan)">
+		<description>Kyojin no Doshin (Japan) (Demo) (Kiosk) [b]</description>
+		<rom name="Kyojin no Doshin (Japan) (Demo) (Kiosk) [b].ndd" size="64931840" crc="b530daab" md5="afe059ae1210751b6c849cfb482c99dd" sha1="2a73aced8fded7a6422fa322d8ff76f6045c687f" status="baddump"/>
+	</game>
+	<game name="Kyojin no Doshin - Kaihou Sensen Chibikko Chikko Daishuugou (Japan) [b]">
+		<description>Kyojin no Doshin - Kaihou Sensen Chibikko Chikko Daishuugou (Japan) [b]</description>
+		<rom name="Kyojin no Doshin - Kaihou Sensen Chibikko Chikko Daishuugou (Japan) [b].ndd" size="64931840" crc="70680cc1" md5="fcca9af8c1174c40b478ea0e02673b16" sha1="9412f12cb67acd3534d1bbe511b42738b64f94bf" status="baddump"/>
+	</game>
+	<game name="Mario Artist - Communication Kit (Japan)">
+		<description>Mario Artist - Communication Kit (Japan)</description>
+		<release name="Mario Artist - Communication Kit (Japan)" region="JPN"/>
+		<rom name="Mario Artist - Communication Kit (Japan).ndd" size="64931840" crc="3bf36eda" md5="114af722029d6386c3bfea4cc8fa603c" sha1="8040dcd657227463b840f47f3e24a7f42945e1f8" status="verified"/>
+	</game>
+	<game name="Mario Artist - Paint Studio (Japan)">
+		<description>Mario Artist - Paint Studio (Japan)</description>
+		<release name="Mario Artist - Paint Studio (Japan)" region="JPN"/>
+		<rom name="Mario Artist - Paint Studio (Japan).ndd" size="64931840" crc="b732c3ad" md5="8485643e5830cd67ed4c0a5fd49e2491" sha1="9997e6f118c72f265eb648f18faa48c3a416fb3b" status="verified"/>
+	</game>
+	<game name="Mario Artist - Paint Studio (Japan) (Beta) (1999-02-11)" cloneof="Mario Artist - Paint Studio (Japan)">
+		<description>Mario Artist - Paint Studio (Japan) (Beta) (1999-02-11)</description>
+		<rom name="Mario Artist - Paint Studio (Japan) (Beta) (1999-02-11).ndd" size="64931840" crc="5cb44f5d" md5="a76b619ec832a7e2abcfbdfeb5375e39" sha1="ddeaf740aadd928a9bbf9cfeaec4c0ea80b75ab2" status="verified"/>
+	</game>
+	<game name="Mario Artist - Polygon Studio (Japan)">
+		<description>Mario Artist - Polygon Studio (Japan)</description>
+		<release name="Mario Artist - Polygon Studio (Japan)" region="JPN"/>
+		<rom name="Mario Artist - Polygon Studio (Japan).ndd" size="64931840" crc="ac304109" md5="da23ee561578b7dad77ed72728b46d30" sha1="4e4f267d2d063286bf4c1302386dab8b1ab0d4c6" status="verified"/>
+	</game>
+	<game name="Mario Artist - Talent Studio (Japan)">
+		<description>Mario Artist - Talent Studio (Japan)</description>
+		<release name="Mario Artist - Talent Studio (Japan)" region="JPN"/>
+		<rom name="Mario Artist - Talent Studio (Japan).ndd" size="64931840" crc="649bbcb1" md5="88228e990b58a94e9b3460beff632304" sha1="24ca7508157466e5d289ee49c2c714806d1ecce2" status="verified"/>
+	</game>
+	<game name="Nihon Pro Golf Tour 64 (Japan) [b]">
+		<description>Nihon Pro Golf Tour 64 (Japan) [b]</description>
+		<rom name="Nihon Pro Golf Tour 64 (Japan) [b].ndd" size="64931840" crc="9b8fff6d" md5="9f797a9c704b5ebd04d6a2b036309af2" sha1="053140bd97c525804747251dea3211fe55357b77" status="baddump"/>
+	</game>
+	<game name="Nintendo 64 Modem (Japan) (Add-on)">
+		<description>Nintendo 64 Modem (Japan) (Add-on)</description>
+		<rom name="Nintendo 64 Modem (Japan) (Add-on).z64" size="8388608" crc="77d7b7e3" md5="6ebbbe58d717b3b41985be70a8dfe1be" sha1="8373625fb53d888cd8e74f3b1598c2a6577c01d6" status="verified"/>
+	</game>
+	<game name="Randnet Disk (Japan) [b]">
+		<description>Randnet Disk (Japan) [b]</description>
+		<rom name="Randnet Disk (Japan) [b].ndd" size="64931840" crc="c3ef79f0" md5="26087e0750fc6da0f3de2a431e34bddf" sha1="9ade854221962f5f4c68ea0615951dd948896c1b" status="baddump"/>
+	</game>
+	<game name="Randnet Disk (Japan) (Rev 1) [b]" cloneof="Randnet Disk (Japan) [b]">
+		<description>Randnet Disk (Japan) (Rev 1) [b]</description>
+		<rom name="Randnet Disk (Japan) (Rev 1) [b].ndd" size="64931840" crc="78eeee88" md5="33cbc59786063285dc3c090e0ed312e3" sha1="a7d7a1e4e7dd02b628433070a65bf5c1a063c13b" status="baddump"/>
+	</game>
+	<game name="SimCity 64 (Japan)">
+		<description>SimCity 64 (Japan)</description>
+		<release name="SimCity 64 (Japan)" region="JPN"/>
+		<rom name="SimCity 64 (Japan).ndd" size="64931840" crc="163456ca" md5="ebba03f20096fc2bc178fc3a1f4ec2b6" sha1="5d7d5046d702dcc0ea56ce1b96eb90f0c984b51a" status="verified"/>
+	</game>
+	<game name="Super Mario 64 - Disk Version (Japan) (Proto)">
+		<description>Super Mario 64 - Disk Version (Japan) (Proto)</description>
+		<release name="Super Mario 64 - Disk Version (Japan) (Proto)" region="JPN"/>
+		<rom name="Super Mario 64 - Disk Version (Japan) (Proto).ndd" size="64931840" crc="11589525" md5="d9ea905727b44f2774926cb03c2300a7" sha1="e8f5c3f0e151cbc3b02184a2437e39fa9d1e2686" status="verified"/>
+	</game>
+</datafile>

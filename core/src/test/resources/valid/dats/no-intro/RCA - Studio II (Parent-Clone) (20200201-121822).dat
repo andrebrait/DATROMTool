@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>RCA - Studio II (Parent-Clone)</name>
+		<description>RCA - Studio II (Parent-Clone)</description>
+		<version>20200201-121822</version>
+		<date>20200201-121822</date>
+		<author>BitLooter</author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="[BIOS] RCA Studio II (USA)">
+		<description>[BIOS] RCA Studio II (USA)</description>
+		<release name="[BIOS] RCA Studio II (USA)" region="USA"/>
+		<rom name="[BIOS] RCA Studio II (USA).bin" size="2048" crc="a494b339" md5="b37205bf19b197682f00619d05da194b" sha1="f2650dacc9daab06b9fdf0e7748e977b2907010c"/>
+	</game>
+	<game name="Concentration Match (Europe)">
+		<description>Concentration Match (Europe)</description>
+		<release name="Concentration Match (Europe)" region="EUR"/>
+		<rom name="Concentration Match (Europe).bin" size="1024" crc="28e21408" md5="4ab4a2c249754400d0d7064e966d947b" sha1="df2b2c7b5ec4c2d33321934ffff29cb41c2b6f68" status="verified"/>
+	</game>
+	<game name="Demonstration Cartridge (USA)">
+		<description>Demonstration Cartridge (USA)</description>
+		<release name="Demonstration Cartridge (USA)" region="USA"/>
+		<rom name="Demonstration Cartridge (USA).bin" size="1024" crc="96f9a105" md5="da1c22bb9c56b681e66ae617ef4d1ccb" sha1="0375fd680ac7332f05acb35973b8d0756916b93d" status="verified"/>
+	</game>
+	<game name="Grand Pack (Europe)">
+		<description>Grand Pack (Europe)</description>
+		<release name="Grand Pack (Europe)" region="EUR"/>
+		<rom name="86677b (Europe).bin" size="1024" crc="82a2d29e" md5="1d93e94b18aacbecdceb87bd98899320" sha1="37e02089d611db10bad070d89c8801de41521189" status="verified"/>
+		<rom name="87201 (Europe).bin" size="1024" crc="8006a1e3" md5="62cfd740c766632a349d7d27960ed1fe" sha1="b67612d98231485fce55d604915abd19b6d64eac" status="verified"/>
+	</game>
+	<game name="Pinball (Europe)">
+		<description>Pinball (Europe)</description>
+		<release name="Pinball (Europe)" region="EUR"/>
+		<rom name="Pinball (Europe).bin" size="1024" crc="9f7f692e" md5="bc8df39e000c0dd0efef4916701151be" sha1="6afd1252d72df39482699c1ee76fa28669c7db80" status="verified"/>
+	</game>
+	<game name="Speedway + Tag (Europe)">
+		<description>Speedway + Tag (Europe)</description>
+		<release name="Speedway + Tag (Europe)" region="EUR"/>
+		<rom name="Speedway + Tag (Europe).bin" size="1024" crc="b9f6ac68" md5="60ff2f203fa00697e5d7aa23867ab66d" sha1="4e544fb4105a45e979dd7a007da1540996300f3d" status="verified"/>
+	</game>
+	<game name="Star Wars (Europe)">
+		<description>Star Wars (Europe)</description>
+		<release name="Star Wars (Europe)" region="EUR"/>
+		<rom name="Star Wars (Europe).bin" size="1024" crc="92b55eb4" md5="c3194177435ea24fba18e86191e92027" sha1="63ec52fdf1a5e04ced74560809de550c527ecd38" status="verified"/>
+	</game>
+	<game name="TV Arcade I - Space War (USA)">
+		<description>TV Arcade I - Space War (USA)</description>
+		<release name="TV Arcade I - Space War (USA)" region="USA"/>
+		<rom name="TV Arcade I - Space War (USA).bin" size="512" crc="021551f2" md5="e7a2cf0b9feeb465fb298af61b33ad36" sha1="4878ae6d313743d7e3bd45e05c6e5e0582d9febb"/>
+	</game>
+	<game name="TV Arcade II - Fun with Numbers (USA)">
+		<description>TV Arcade II - Fun with Numbers (USA)</description>
+		<release name="TV Arcade II - Fun with Numbers (USA)" region="USA"/>
+		<rom name="TV Arcade II - Fun with Numbers (USA).bin" size="512" crc="26ebe344" md5="d65d22bb2342a8503316d76ac5080d11" sha1="ede8731283d49666ddb63c1a52d6d270973d6dc8" status="verified"/>
+	</game>
+	<game name="TV Arcade III - Tennis + Squash (USA)">
+		<description>TV Arcade III - Tennis + Squash (USA)</description>
+		<release name="TV Arcade III - Tennis + Squash (USA)" region="USA"/>
+		<rom name="TV Arcade III - Tennis + Squash (USA).bin" size="512" crc="a21590c8" md5="1b2f07da69a3648030bf9d1ea096f2cd" sha1="c573e8cd7d1aa423d26e64a4da781a5989e4ed1d"/>
+	</game>
+	<game name="TV Arcade IV - Baseball (USA)">
+		<description>TV Arcade IV - Baseball (USA)</description>
+		<release name="TV Arcade IV - Baseball (USA)" region="USA"/>
+		<rom name="TV Arcade IV - Baseball (USA).bin" size="1024" crc="d7fdedaa" md5="242d1a4ef4f4cfd54eb7cca63aba4b31" sha1="fa1e3089d05503b7b1d5e98552318d5836c1798a"/>
+	</game>
+	<game name="TV Arcade Series - Gunfighter + Moonship Battle (USA, Europe)">
+		<description>TV Arcade Series - Gunfighter + Moonship Battle (USA, Europe)</description>
+		<release name="TV Arcade Series - Gunfighter + Moonship Battle (USA, Europe)" region="EUR"/>
+		<release name="TV Arcade Series - Gunfighter + Moonship Battle (USA, Europe)" region="USA"/>
+		<rom name="TV Arcade Series - Gunfighter + Moonship Battle (USA, Europe).bin" size="1024" crc="989d2c67" md5="bbb9fc3b66333aab6dffd7fc6513dd5d" sha1="82f37ec5b7599e9169873da6c269c0c092395458" status="verified"/>
+	</game>
+	<game name="TV Arcade Series - Speedway + Tag (USA)">
+		<description>TV Arcade Series - Speedway + Tag (USA)</description>
+		<release name="TV Arcade Series - Speedway + Tag (USA)" region="USA"/>
+		<rom name="TV Arcade Series - Speedway + Tag (USA).bin" size="512" crc="a80379e2" md5="93efe190665f3f3567011a82f9c11a49" sha1="5bc93a1a7ea05411f607ed56241da88b1f8468c5"/>
+	</game>
+	<game name="TV Casino Series - Blackjack (USA)">
+		<description>TV Casino Series - Blackjack (USA)</description>
+		<release name="TV Casino Series - Blackjack (USA)" region="USA"/>
+		<rom name="TV Casino Series - Blackjack (USA).bin" size="1024" crc="b30af7a9" md5="2923711d0aedb6b341b5faad80efd7d5" sha1="e328791d6aa8292d1b68abe03c7ebfefa9282ced"/>
+	</game>
+	<game name="TV Casino Series - TV Bingo (USA, Europe)">
+		<description>TV Casino Series - TV Bingo (USA, Europe)</description>
+		<release name="TV Casino Series - TV Bingo (USA, Europe)" region="EUR"/>
+		<release name="TV Casino Series - TV Bingo (USA, Europe)" region="USA"/>
+		<rom name="TV Casino Series - TV Bingo (USA, Europe).bin" size="1024" crc="39ddc4ab" md5="36297a2c7df1e53346f8452111a110fd" sha1="5e16b9572fda5d8b203df9318b8f1e250bea7432" status="verified"/>
+	</game>
+	<game name="TV Mystic Series - Biorhythm (USA, Europe)">
+		<description>TV Mystic Series - Biorhythm (USA, Europe)</description>
+		<release name="TV Mystic Series - Biorhythm (USA, Europe)" region="EUR"/>
+		<release name="TV Mystic Series - Biorhythm (USA, Europe)" region="USA"/>
+		<rom name="TV Mystic Series - Biorhythm (USA, Europe).bin" size="1024" crc="6dcbc525" md5="f4a867990eb95fef171401b77baa4f9c" sha1="9fdab1be5d83aa0ccacf7e9ae2837b2b9e10be1c" status="verified"/>
+	</game>
+	<game name="TV School House I (USA)">
+		<description>TV School House I (USA)</description>
+		<release name="TV School House I (USA)" region="USA"/>
+		<rom name="TV School House I (USA).bin" size="512" crc="cf08aa66" md5="702a9c2d1ff6958f09bf6dc12616b9fb" sha1="1d709a7f6b0a3d67d184ae0d94b1cb198f9c8a6a"/>
+	</game>
+	<game name="TV School House II - Math Fun (USA, Europe)">
+		<description>TV School House II - Math Fun (USA, Europe)</description>
+		<release name="TV School House II - Math Fun (USA, Europe)" region="EUR"/>
+		<release name="TV School House II - Math Fun (USA, Europe)" region="USA"/>
+		<rom name="TV School House II - Math Fun (USA, Europe).bin" size="1024" crc="9ab5af96" md5="051c2bf443f91e6b229f8baa3903a172" sha1="12a013e483af253d75845adf0d9e86672b161f94" status="verified"/>
+	</game>
+</datafile>

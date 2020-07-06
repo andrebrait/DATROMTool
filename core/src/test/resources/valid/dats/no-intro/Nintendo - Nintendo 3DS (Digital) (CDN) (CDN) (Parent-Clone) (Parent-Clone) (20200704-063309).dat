@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Nintendo - Nintendo 3DS (Digital) (CDN) (CDN) (Parent-Clone)</name>
+		<description>Nintendo - Nintendo 3DS (Digital) (CDN) (CDN) (Parent-Clone)</description>
+		<version>20200704-063309</version>
+		<date>20200704-063309</date>
+		<author></author>
+		<url>www.no-intro.org</url>
+	</header>
+	<game name="AR Games (Europe) (System Application)">
+		<description>AR Games (Europe) (System Application)</description>
+		<rom name="00000007" size="348672" crc="40d71bcc" md5="a7dac5cdc44ebd4f037cbb31d9b9bfc6" sha1="049113068364cf43c95eaa8e4d40c9b8c25788a5" status="verified"/>
+		<rom name="cetk" size="2640" crc="b80eb413" md5="91731499951bf2abfffa2cf1974feaea" sha1="e69697826cc4e08ae7c9f2be7516530a0434c407" status="verified"/>
+		<rom name="tmd.1040" size="4708" crc="0dcd2fbc" md5="c24ecb0b510b7a457d936226af3bcce1" sha1="3c060d6f5f64e9bc761b68f146eaec95f6863a43" status="verified"/>
+		<rom name="00000006" size="15299584" crc="15bc0bba" md5="46016acecfe04fd64af33b21b2303c9b" sha1="d9e81bb73fe1f08b3dc79b6445c83589bba367ae" status="verified"/>
+	</game>
+	<game name="AR Games (Japan) (System Application)" cloneof="AR Games (Europe) (System Application)">
+		<description>AR Games (Japan) (System Application)</description>
+		<rom name="00000001" size="176640" crc="0dea1240" md5="12f705e79526c5fd8974dbacc2149c5d" sha1="a3ada40ef74a85d34c714296a21c2d955c9d5706"/>
+		<rom name="cetk" size="2640" crc="c3d73bca" md5="7d9b5ce00d9336e2510d73fc1b7f9ad8" sha1="3cd5fc3d949803ee80fc06b39a43a8f2e5e1a196"/>
+		<rom name="tmd.0" size="4708" crc="da3f2822" md5="e898b57a491b8e9aa2de182783d2a3a4" sha1="feb1f6555120fb1f0caeb42c43eecb5c8ce5939f"/>
+		<rom name="00000000" size="14950912" crc="b5029fb1" md5="3c23209bcedb0c5f309dbd1fb23d3a9b" sha1="7847f877ba40b61140597adf3f573928e2217eda"/>
+	</game>
+	<game name="BOXBOXBOY! (Europe)">
+		<description>BOXBOXBOY! (Europe)</description>
+		<rom name="00000000" size="94535680" crc="baac1073" md5="a6bdda57298f2670c5339a0220a88c7b" sha1="87aaffdffd30a945b0117e9557f2a150febb1d6e" status="verified"/>
+		<rom name="00000001" size="774144" crc="12dc9188" md5="b45cd5f434ffa5826362f8279b03a4b4" sha1="95989a48f2c6ecaf926c825328d0994b4c130625" status="verified"/>
+		<rom name="tmd.0" size="4708" crc="1e3114de" md5="93e988e34fb3f6327e8cd0bddeca255c" sha1="052739088ad28c85cd3aa63c8a743275942d4383" status="verified"/>
+	</game>
+	<game name="Chicken Wiggle (Europe)">
+		<description>Chicken Wiggle (Europe)</description>
+		<rom name="00000000" size="33906688" crc="f62a7b7a" md5="9e4b88ffca59cac24c006be05a8eb13a" sha1="8402a113d83e3f7350cb6f810296949364005e67" status="verified"/>
+		<rom name="00000001" size="135168" crc="7ebabe59" md5="a302b7a9db4239dc8579b02444ee73a1" sha1="c163bee49d12224abd761a0154c31ccb54abf129" status="verified"/>
+		<rom name="tmd.0" size="4708" crc="476ae6c8" md5="da3e0e085515eaeff8faf53e2c22771b" sha1="a2723a93efea157cd1d583d40e0994bf6cdd7181" status="verified"/>
+	</game>
+	<game name="Chicken Wiggle (USA)" cloneof="Chicken Wiggle (Europe)">
+		<description>Chicken Wiggle (USA)</description>
+		<rom name="00000000" size="33947648" crc="caf6a244" md5="57377306f9a441ffbd6e5a9fcde51115" sha1="4461b20b46fa3245b7a544b7b2d1dbd3d16719e2" status="verified"/>
+		<rom name="00000001" size="73728" crc="a31272fd" md5="38d4cf37a11e65ae4ca0c52d03e79858" sha1="605329d17f9d9b341a957e1ebe290a7ae8e6c0bc" status="verified"/>
+		<rom name="tmd.0" size="4708" crc="11b992cf" md5="0b0d511301361eec402eb5cb37f55758" sha1="0215d8495f5c32b91fbff351a07a6cb9ff566b52" status="verified"/>
+	</game>
+	<game name="IRONFALL Invasion (Europe)">
+		<description>IRONFALL Invasion (Europe)</description>
+		<rom name="00000000" size="503468032" crc="feb730ae" md5="82f3f6be45b80bf2847d8d2a429fe9de" sha1="fb75460b955534b1f2b607ed29a2a6f096af6347" status="verified"/>
+		<rom name="00000001" size="1523712" crc="f9dac788" md5="4ec4e9b94fcff45929b13df1f5c882df" sha1="9c624a38e447bbcc2f417692494d036e2c2d0a36" status="verified"/>
+		<rom name="00000002" size="504680448" crc="dab9b2e3" md5="6c10802f0322c404da6ee5c752b8cb58" sha1="3659cfc03f4527163f79dbf99e2b270f33c003c1" status="verified"/>
+		<rom name="00000003" size="1523712" crc="dde77c6e" md5="871b3ae051110d0707ebe71225634ea7" sha1="04f0fcf716627bf79f014ff733b4da32cc4da2f4" status="verified"/>
+		<rom name="tmd.0" size="4708" crc="eacda185" md5="a5c922488c291e11193c4b1bdf1e9d7e" sha1="3a6dd55caf12f18054903c5b1b334ab18af68c19" status="verified"/>
+		<rom name="tmd.2080" size="4708" crc="4866651f" md5="2eac1057ff19984b8fa51c762e1247bc" sha1="cda08dcbd943e987af0a95eaac01fd11141fcbe7" status="verified"/>
+	</game>
+	<game name="IRONFALL Invasion (Europe) (Update)" cloneof="IRONFALL Invasion (Europe)">
+		<description>IRONFALL Invasion (Europe) (Update)</description>
+		<rom name="00000000" size="2396160" crc="d3d4abe5" md5="53d1fa7a5ea6ef1caceb59cfd9b4dcd0" sha1="db536173e32ef7f9316804b4488ba2c7c8c0e9c3" status="verified"/>
+		<rom name="tmd.1040" size="4660" crc="9eb25501" md5="929ab423331a1b5c574c7c1a097291f8" sha1="00dc69415c1c3c80a690891cdafcc6db1d06ab96" status="verified"/>
+	</game>
+	<game name="IRONFALL Invasion (USA) (Update) [b]" cloneof="IRONFALL Invasion (Europe)">
+		<description>IRONFALL Invasion (USA) (Update) [b]</description>
+		<rom name="00000000" size="2396160" crc="69617280" md5="4ad63d0ec370b00c1ab5c15941d5ec67" sha1="e8fb16d3fb10cb9ad000386017d8f7f41aeab4c7" status="baddump"/>
+	</game>
+	<game name="Kirby's Blowout Blast (World)">
+		<description>Kirby's Blowout Blast (World)</description>
+		<rom name="00000000" size="95363072" crc="6a31854d" md5="7c800ae1c6b81855cbd5564ca9f6f774" sha1="f61abe54312805cb104832e91858977c3a2469a0" status="verified"/>
+		<rom name="00000001" size="2629632" crc="a1f7c4bb" md5="ece92eb47838a9ff100aea0f517bcf5b" sha1="c88f03b838c86e1ae25061155640c5f2a07e5396" status="verified"/>
+		<rom name="tmd.0" size="4708" crc="bfe30565" md5="4ab388c16e388197de6831ba220b75c2" sha1="80d23c80a81b93c290ab703201b90c552cb974d6" status="verified"/>
+	</game>
+	<game name="Mario Kart 7 (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)">
+		<description>Mario Kart 7 (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)</description>
+		<rom name="00000000" size="638832640" crc="aa91c0e4" md5="c5a5a70a88ae75ed4fec00b31922dff7" sha1="ddcaa051c02d9784018edbd34bd126de82282118" status="verified"/>
+		<rom name="00000003" size="2822144" crc="e2d2cc39" md5="a05dbd6748d4c103e490895ef179cddb" sha1="28e03c96d88fc3989b588a50a1049f67e9fa72e9" status="verified"/>
+		<rom name="00000004" size="27815936" crc="51d1ddf7" md5="76a6da67ad199fd802e2c6c9bf4bc69c" sha1="4ac329ac0caaf92e22dd0d28c7c0b7e8cf546f67" status="verified"/>
+		<rom name="tmd.2112" size="4756" crc="99a4fae6" md5="981e831c3510f1b685e526a4017523bb" sha1="c1fa4052430ddd441b1a27fe8eb28bef8bc8f217" status="verified"/>
+	</game>
+	<game name="Maliou Kadingche 7 (China) (Pre-install Only)" cloneof="Mario Kart 7 (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)">
+		<description>Maliou Kadingche 7 (China) (Pre-install Only)</description>
+	</game>
+	<game name="PDI Check (USA)">
+		<description>PDI Check (USA)</description>
+		<rom name="00000000" size="15220736" crc="06abc744" md5="a6e48a41ec5e40ea584cc14e51ebd445" sha1="fdd9789fcfbe398de175c61d2b8c2042591d6f25" status="verified"/>
+		<rom name="00000001" size="57344" crc="244373da" md5="56c47e244e1aedfabde4ec24334149cb" sha1="6454bb86edd93cbd80e906c731d92ea872843396" status="verified"/>
+		<rom name="tmd" size="4708" crc="4545442a" md5="b153e3be942723f4d1dc6b021dbbaa64" sha1="1d511e17f48bf082ad0ad71b55be64c36d419d6d" status="verified"/>
+	</game>
+	<game name="Silver Falls - 3 Down Stars (Europe) (Demo)">
+		<description>Silver Falls - 3 Down Stars (Europe) (Demo)</description>
+		<rom name="00000000" size="84451328" crc="63ef08ac" md5="18276d74f9018e56c3a5ea7c3a2d0838" sha1="49a2a4014c35038855728d847bec43df1f758922" status="verified"/>
+		<rom name="00000001" size="139264" crc="299c071b" md5="9ce4af7db10e9a776d624c7cb55c19d3" sha1="70c7748e65926a9643db1881eaa832cba4ae3bc1" status="verified"/>
+		<rom name="tmd.0" size="4708" crc="d2868e27" md5="4a1f68e543ea59dc8479f3062bbe2cb0" sha1="fb81ab080082bdb842b657a8e962e25556a27ecd" status="verified"/>
+	</game>
+	<game name="Silver Falls - 3 Down Stars (USA) (Demo)" cloneof="Silver Falls - 3 Down Stars (Europe) (Demo)">
+		<description>Silver Falls - 3 Down Stars (USA) (Demo)</description>
+		<rom name="00000000" size="84451328" crc="71c63e88" md5="b34c896556db85ec17c7b97a625c53ca" sha1="019059684131231c7c28ed5d1f65e909b882ef66" status="verified"/>
+		<rom name="00000001" size="139264" crc="814db417" md5="8822fea1721724a359a94a664e7935bf" sha1="a043da22c1b5c025eb4d1f83a9092f4d7d9e547e" status="verified"/>
+		<rom name="tmd.0" size="4708" crc="989ce9ff" md5="685b0d0e5383da127ec810c3bae30f44" sha1="daaff3df24fda10cf7caac69175f983c4804da64" status="verified"/>
+	</game>
+	<game name="Super Mario 3D Land (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)">
+		<description>Super Mario 3D Land (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)</description>
+		<rom name="00000000" size="302739456" crc="933a9d3a" md5="016c46ebcbddee31148742d9cfe08d47" sha1="e0d2d72c00ba973d7c876a87d06eea8b539fc397" status="verified"/>
+		<rom name="00000001" size="1990656" crc="7309f7b1" md5="3c399ad710a128ab55e1257b889ba537" sha1="d71ca937b20a04b7bc2147a975e62743348c37fe" status="verified"/>
+		<rom name="tmd.16" size="4708" crc="13e9e8cf" md5="41a06c6978d1537d3396ad18c7ea3542" sha1="4a8630a1420d61de1a5fb37ede7de8c9e0c90821" status="verified"/>
+	</game>
+	<game name="Chaoji Maliou 3D Leyuan (China) (Pre-install Only)" cloneof="Super Mario 3D Land (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)">
+		<description>Chaoji Maliou 3D Leyuan (China) (Pre-install Only)</description>
+	</game>
+	<game name="Super Mario 3D Land (USA)" cloneof="Super Mario 3D Land (Europe, Australia) (En,Fr,De,Es,It,Nl,Pt,Ru)">
+		<description>Super Mario 3D Land (USA)</description>
+		<rom name="00000000" size="302440448" crc="d674ce5e" md5="ed15ab5f4177a8a85a23ce46e3b70da6" sha1="d6a4639aab7369214dad9e91693ebeb17bd9590b" status="verified"/>
+		<rom name="00000003" size="1003520" crc="9a7f3860" md5="ec58a245391df91e6026da0c2aa07735" sha1="6f9f190796e62b164ccdef549251a7ed16106d62" status="verified"/>
+		<rom name="tmd.48" size="4708" crc="92b2cd9f" md5="edca31cc58d4194a1afa19f467bac583" sha1="ac78886618570d8605c6336cd710746c83ab1657" status="verified"/>
+	</game>
+	<game name="Super Mario Land (Europe) (GB) (Virtual Console)">
+		<description>Super Mario Land (Europe) (GB) (Virtual Console)</description>
+		<rom name="00000001" size="1737216" crc="4efbab14" md5="7b0e9eab2550181d3216d8b39d489678" sha1="d7ea8c953ebbe1554fefdaf910762224456d0738" status="verified"/>
+		<rom name="00000002" size="2916352" crc="a3a3d911" md5="78cf161f648c1cb40eb126f023a0b0ab" sha1="d3c1b291e12d2c49ea4739546594becfc174399d" status="verified"/>
+		<rom name="00000003" size="2916352" crc="3e7aef83" md5="2309242ab05d538119c7d05e6dc6135b" sha1="7a30129f9982f75b9ff6401cd0d392fbb54052cc" status="verified"/>
+		<rom name="00000004" size="1740800" crc="459ce2bb" md5="7f7c466014094e5bff7f40a89da510da" sha1="5c00bb2029eaa8102496bf9c1aaac446179e350a" status="verified"/>
+		<rom name="tmd.16" size="4708" crc="c51e4c89" md5="2358c658e72682313768eb9feaaf60bd" sha1="7c59a4c6f2635098b33fb20d2cc7caefadef6ac6" status="verified"/>
+		<rom name="tmd.32" size="4708" crc="7619d2b9" md5="4e03bd03dd2b5a4f8db16b85ac1c420b" sha1="aaeb176ed7821ffd096f7b6bbc859e8d012c1051" status="verified"/>
+	</game>
+	<game name="Super Mario Land (USA) (GB) (Virtual Console)" cloneof="Super Mario Land (Europe) (GB) (Virtual Console)">
+		<description>Super Mario Land (USA) (GB) (Virtual Console)</description>
+		<rom name="00000001" size="754176" crc="9b46bf68" md5="2a24262a40f97c226bc0622d67536f3f" sha1="5f4884e3d5d2c0588603f221b7f1c79f4145b93c" status="verified"/>
+		<rom name="00000002" size="2875904" crc="c8ea49b4" md5="2da44a0f253dd5dff4fea827820c71a2" sha1="2a0cfc437fc334d2bef4e7556cf8331ac95a066f" status="verified"/>
+		<rom name="00000003" size="2879488" crc="d58bd55a" md5="fd1ac583f5bc27e6d299babb2411badd" sha1="3476c998f6e7c7af9c5720581c08c2653a85c398" status="verified"/>
+		<rom name="00000004" size="757760" crc="eb1af06f" md5="e10e66811c8daf40c42d4829ad3f7a63" sha1="8b83ea4182ed2a8114f66c23af5c5016ef55158b" status="verified"/>
+		<rom name="tmd.16" size="4708" crc="3b19658d" md5="163fa667845dbcb2114553411666f5c1" sha1="405c80ca445c75b74ee643ac24bf2c114855d07c" status="verified"/>
+		<rom name="tmd.32" size="4708" crc="9ba36bf3" md5="1415070746a81e06280cc3068ca6aaf3" sha1="504a1aaac1896890ad11eca6347d88aa5580aec2" status="verified"/>
+	</game>
+	<game name="Super Mario Land (Japan) (GB) (Virtual Console)" cloneof="Super Mario Land (Europe) (GB) (Virtual Console)">
+		<description>Super Mario Land (Japan) (GB) (Virtual Console)</description>
+		<rom name="00000001" size="315904" crc="8b9c4591" md5="1120c6ac1805fc328c27e0a6007d8ca1" sha1="b54cc9d4adbdadc8890594a09be6f416035ea5c9" status="verified"/>
+		<rom name="00000002" size="2833920" crc="5705de6c" md5="cc25a35a56b3bb67d5eedb3a8d97b366" sha1="2036a897da77ab889339a42b5e610cb8c18d0677" status="verified"/>
+		<rom name="00000003" size="2834432" crc="e60f73fd" md5="b1644ac1ec38e00464425a76378cbed8" sha1="8f871f70de350e3eb52f8ed1dd31bf6f53df3345" status="verified"/>
+		<rom name="00000004" size="319488" crc="6cfcfc31" md5="8f31a07aec11b0612a26550ccd020579" sha1="5be325154a9566df05a53c41486ef6e2f5efe4f6" status="verified"/>
+		<rom name="tmd.16" size="4708" crc="865da0f4" md5="0393afba5e78a96bac6f900e4c642817" sha1="dfe561b24c9f7e58fff34ccb57d539fd5a7fbaaa" status="verified"/>
+		<rom name="tmd.32" size="4708" crc="9bc1c26e" md5="b39e02fce7ffc8b5610276fb0e58057b" sha1="077de3683f00ec0314e9fac9f2878e242fa8c9ae" status="verified"/>
+	</game>
+	<game name="Super Mario Land (Korea) (GB) (Virtual Console)" cloneof="Super Mario Land (Europe) (GB) (Virtual Console)">
+		<description>Super Mario Land (Korea) (GB) (Virtual Console)</description>
+		<rom name="00000000" size="2879488" crc="fe446fb9" md5="1742b353aee8b270bd0489c802b29083" sha1="39530e187bccf03b342431b525ddda81e552365a" status="verified"/>
+		<rom name="00000001" size="757760" crc="711d0f31" md5="d7f20cb7c73ac9be39f7a1e7a4526dd2" sha1="30370e8290f1caeec83b97f0b41109c2beb73a4c" status="verified"/>
+		<rom name="tmd.16" size="4708" crc="fae1a029" md5="27aba618866e8b29d3590247ff4a855f" sha1="ca93bcd497c9619cd3f0fdc31f05871748ddced7" status="verified"/>
+	</game>
+	<game name="Team Kirby Clash Deluxe (Europe)">
+		<description>Team Kirby Clash Deluxe (Europe)</description>
+		<rom name="00000000" size="131698688" crc="920c7dc0" md5="1caa96f521ff6ddf5f9b271ea650f9f8" sha1="859f6fb3c5d91cc11e01b94dcfec0eaef0f454a6" status="verified"/>
+		<rom name="00000001" size="1888256" crc="00f871f1" md5="54810f1eb61840ff87fe0168612c7c4d" sha1="989e20650671099031f09e5fdd54021a1612bc82" status="verified"/>
+		<rom name="00000002" size="131698688" crc="18c99d8c" md5="3092dbf5a8149c034308efc396f2a993" sha1="ceec062c874a3621fb078e0ca176474e6507871e" status="verified"/>
+		<rom name="tmd.0" size="4708" crc="60093e3e" md5="5a81dcdd1fda82ef9860e6afb1ce95b4" sha1="e7778bdb6ebea75644956fd90252e3dc5dc80e7c" status="verified"/>
+		<rom name="tmd.1040" size="4708" crc="9d04acbb" md5="467c9eb511446e935e2930f4db105c0f" sha1="94e74d4abe2fb38633f88f7402f2a0c2fb0c1e6e" status="verified"/>
+	</game>
+	<game name="Timberman (Europe)">
+		<description>Timberman (Europe)</description>
+		<rom name="00000000" size="10600448" crc="b64ac298" md5="393784354585b632b38caa88b4129fce" sha1="5450087b11c4c80379320896d49a3fce72cadf4c" status="verified"/>
+		<rom name="00000001" size="90112" crc="918e2ad7" md5="de104366712496e65814433ba81773ad" sha1="ceb215f2ca9740db98b3007b4f37ad766c28e2f3" status="verified"/>
+		<rom name="tmd" size="4708" crc="e6f76d2d" md5="e777acdffc00f82f47e36fa5654d3455" sha1="91727458b406ba566cd5fbad17f0a2dc2f6e0f03" status="verified"/>
+	</game>
+</datafile>
