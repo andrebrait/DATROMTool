@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<detector>
+
+  <name>Nintendo Super Famicom/SNES</name>
+  <author>Matt Nadareski (darksabre76)</author>
+  <version>1.0</version>
+  
+  <!-- fig header -->
+  <rule start_offset="200">
+	<data offset="16" value="0000000000000000"/>
+  </rule>
+  
+  <!-- smc header -->
+  <rule start_offset="200">
+	<data offset="16" value="AABB040000000000"/>
+  </rule>
+  
+  <!-- ufo header -->
+  <rule start_offset="200">
+	<data offset="16" value="535550455255464F"/>
+  </rule>
+
+</detector>

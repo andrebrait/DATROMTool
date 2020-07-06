@@ -14,6 +14,9 @@ import static java.util.regex.Pattern.quote;
 @NoArgsConstructor(access = PRIVATE)
 public final class Patterns {
 
+    @SuppressWarnings("RegExpUnexpectedAnchor")
+    public final static Pattern NO_MATCH =
+            compile("a^");
     public final static Pattern SECTIONS =
             compile("\\(([^()]+)\\)");
     public final static Pattern BIOS =

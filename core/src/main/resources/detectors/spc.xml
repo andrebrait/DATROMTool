@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<detector>
+
+  <name>Nintendo Super Famicon SPC</name>
+  <author>Yori Yoshizuki</author>
+  <version>1.0</version>
+
+  <rule start_offset="00100" end_offset="EOF" operation="none">
+	<data offset="0" value="534E45532D535043" result="true"/>
+  </rule>
+
+</detector>

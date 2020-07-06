@@ -2,6 +2,7 @@ package io.github.datromtool;
 
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.data.Filter;
+import io.github.datromtool.data.ParsedGame;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

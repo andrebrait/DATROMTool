@@ -2,16 +2,16 @@ package io.github.datromtool;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.RegionData;
-import io.github.datromtool.generated.datafile.Datafile;
-import io.github.datromtool.generated.datafile.Game;
-import io.github.datromtool.generated.datafile.Release;
+import io.github.datromtool.domain.datafile.Datafile;
+import io.github.datromtool.domain.datafile.Game;
+import io.github.datromtool.domain.datafile.Release;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -22,11 +22,8 @@ public final class GameParser {
 
     private final RegionData regionData;
 
-    @SuppressWarnings("RegExpUnexpectedAnchor")
-    private final static Pattern NO_MATCH = Pattern.compile("a^");
-
     public ImmutableList<ParsedGame> parse(Datafile input) {
-        return input.getGame().stream()
+        return input.getGames().stream()
                 .map(g -> ParsedGame.builder()
                         .game(g)
                         .regionData(detectRegionData(g))
@@ -47,15 +44,13 @@ public final class GameParser {
                 }
             }
         }
-        for (Release release : game.getRelease()) {
+        for (Release release : game.getReleases()) {
             String code = release.getRegion();
             if (isNotEmpty(code)) {
                 detected.add(findRegionDataEntry(code.toUpperCase()));
             }
         }
-        return RegionData.builder()
-                .regions(detected.build())
-                .build();
+        return RegionData.builder().regions(detected.build()).build();
     }
 
     private RegionData.RegionDataEntry findRegionDataEntry(String code) {
@@ -64,11 +59,7 @@ public final class GameParser {
                 .findFirst()
                 .orElseGet(() -> {
                     logger.warn("Unrecognized region: '{}'", code);
-                    return RegionData.RegionDataEntry.builder()
-                            .code(code)
-                            .pattern(NO_MATCH)
-                            .languages(ImmutableSet.of())
-                            .build();
+                    return RegionData.RegionDataEntry.builder().code(code).build();
                 });
     }
 
@@ -84,7 +75,7 @@ public final class GameParser {
                 }
             }
         }
-        for (Release release : game.getRelease()) {
+        for (Release release : game.getReleases()) {
             if (isNotEmpty(release.getLanguage())) {
                 detected.add(release.getLanguage().toLowerCase());
             }

@@ -3,6 +3,7 @@ package io.github.datromtool;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import io.github.datromtool.data.RegionData;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,11 +22,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@Getter
 public final class SerializationHelper {
 
     private final static Logger logger = LoggerFactory.getLogger(SerializationHelper.class);
 
-    private static final Path REGION_DATA_CONFIG_PATH = Paths.get("config", "region-data.yaml");
+    private final static Path REGION_DATA_CONFIG_PATH = Paths.get("config", "region-data.yaml");
 
     private final XmlMapper xmlMapper;
     private final JsonMapper jsonMapper;
@@ -54,6 +57,7 @@ public final class SerializationHelper {
                 .addModule(new GuavaModule())
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
+                .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .build();
@@ -66,6 +70,7 @@ public final class SerializationHelper {
                 .addModule(new GuavaModule())
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
+                .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .build();
@@ -78,6 +83,7 @@ public final class SerializationHelper {
                 .addModule(new GuavaModule())
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
+                .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .build();

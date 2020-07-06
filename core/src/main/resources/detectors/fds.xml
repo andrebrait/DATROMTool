@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<detector>
+
+  <name>fds</name>
+  <author>Yori Yoshizuki</author>
+  <version>1.0</version>
+
+  <rule start_offset="10">
+	<data offset="0" value="4644531A010000000000000000000000"/>
+  </rule>
+
+  <rule start_offset="10">
+	<data offset="0" value="4644531A020000000000000000000000"/>
+  </rule>
+
+  <rule start_offset="10">
+	<data offset="0" value="4644531A030000000000000000000000"/>
+  </rule>
+
+  <rule start_offset="10">
+	<data offset="0" value="4644531A040000000000000000000000"/>
+  </rule>
+
+</detector>

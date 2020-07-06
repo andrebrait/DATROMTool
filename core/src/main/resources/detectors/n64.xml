@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<detector>
+
+  <name>Nintendo 64 - ABCD</name>
+  <author>CUE</author>
+  <version>1.1</version>
+
+  <!-- V64 format -->
+  <rule start_offset="0" end_offset="EOF" operation="none">
+	<data offset="0" value="80371240" result="true"/>
+  </rule>
+
+  <!-- Z64 format -->
+  <rule start_offset="0" end_offset="EOF" operation="byteswap">
+	<data offset="0" value="37804012" result="true"/>
+  </rule>
+
+  <!-- N64 format? -->
+  <rule start_offset="0" end_offset="EOF" operation="wordswap">
+	<data offset="0" value="40123780" result="true"/>
+  </rule>
+
+</detector>

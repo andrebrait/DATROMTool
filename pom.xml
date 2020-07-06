@@ -14,7 +14,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <junit.jupiter.version>5.6.2</junit.jupiter.version>
-        <lombok.version>1.18.12</lombok.version>
+        <!-- Change when 1.18.13+ gets released with @Jacksonized -->
+        <lombok.version>edge-SNAPSHOT</lombok.version>
         <commons-compress.version>1.20</commons-compress.version>
         <commons-lang3.version>3.10</commons-lang3.version>
         <picocli.version>4.3.2</picocli.version>
@@ -24,7 +25,7 @@
     </properties>
 
     <modules>
-        <module>generated</module>
+        <module>domain</module>
         <module>core</module>
         <module>cli</module>
     </modules>

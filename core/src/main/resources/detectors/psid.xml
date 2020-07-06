@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<detector>
+
+  <name>psid</name>
+  <author>Yori Yoshizuki</author>
+  <version>1.2</version>
+
+  <rule start_offset="76" end_offset="EOF" operation="none">
+	<data offset="0" value="5053494400010076" result="true"/>
+  </rule>
+
+  <rule start_offset="76" end_offset="EOF" operation="none">
+	<data offset="0" value="505349440003007c" result="true"/>
+  </rule>
+
+  <rule start_offset="7c" end_offset="EOF" operation="none">
+	<data offset="0" value="505349440002007c" result="true"/>
+  </rule>
+
+   <rule start_offset="7c" end_offset="EOF" operation="none">
+	<data offset="0" value="505349440001007c" result="true"/>
+  </rule>
+
+   <rule start_offset="7c" end_offset="EOF" operation="none">
+	<data offset="0" value="525349440002007c" result="true"/>
+  </rule>
+
+</detector>

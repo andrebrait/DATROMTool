@@ -1,0 +1,13 @@
+﻿<?xml version="1.0"?>
+
+<detector>
+
+	<name>NEC TurboGrafx-16/PC-Engine</name>
+	<author>Matt Nadareski (darksabre76)</author>
+	<version>1.0</version>
+
+	<rule start_offset="200">
+		<data offset="0" value="4000000000000000AABB02"/>
+	</rule>
+
+</detector>

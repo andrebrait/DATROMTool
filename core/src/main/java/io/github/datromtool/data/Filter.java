@@ -4,26 +4,40 @@ import com.google.common.collect.ImmutableSet;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
 import java.util.regex.Pattern;
 
 @Value
-@Builder
+@Jacksonized
+@Builder(toBuilder = true)
 public class Filter {
 
     public enum Mode {
-        DEFAULT, ALL_REGIONS, ALL_WITH_LANG, ONLY_WITH_LANG;
+        DEFAULT,
+        ALL_REGIONS,
+        ALL_WITH_LANG,
+        ONLY_WITH_LANG
     }
 
     @NonNull
-    ImmutableSet<String> regions;
+    @Builder.Default
+    ImmutableSet<String> regions = ImmutableSet.of();
+
     @NonNull
-    ImmutableSet<String> languages;
+    @Builder.Default
+    ImmutableSet<String> languages = ImmutableSet.of();
+
     @NonNull
-    ImmutableSet<Pattern> negativeFilters;
+    @Builder.Default
+    ImmutableSet<Pattern> negativeFilters = ImmutableSet.of();
+
     @NonNull
-    ImmutableSet<Pattern> excludes;
+    @Builder.Default
+    ImmutableSet<Pattern> excludes = ImmutableSet.of();
+
     @NonNull
-    Mode mode;
+    @Builder.Default
+    Mode mode = Mode.DEFAULT;
 
 }
