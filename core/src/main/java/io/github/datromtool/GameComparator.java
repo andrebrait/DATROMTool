@@ -7,6 +7,9 @@ import lombok.NonNull;
 import lombok.Value;
 
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Value
@@ -39,28 +42,79 @@ public class GameComparator implements Comparator<ParsedGame> {
     @Builder.Default
     boolean preferPrereleases = false;
 
-    private static int compareParents(ParsedGame o1, ParsedGame o2, boolean preferParents) {
-        if (preferParents && o1.isParent() != o2.isParent()) {
-            if (o1.isParent()) {
-                return -1;
+    private static int comparePatterns(ParsedGame o1, ParsedGame o2, List<Pattern> patterns) {
+        int matches1 = 0;
+        int matches2 = 0;
+        for (Pattern p : patterns) {
+            Matcher m1 = p.matcher(o1.getGame().getName());
+            while (m1.find()) {
+                matches1 += 1;
             }
-            return 1;
+            Matcher m2 = p.matcher(o2.getGame().getName());
+            while (m2.find()) {
+                matches2 += 1;
+            }
+        }
+        return Integer.compare(matches1, matches2);
+    }
+
+    private static int compareLists(List<Integer> l1, List<Integer> l2) {
+        Iterator<Integer> i = l1.iterator();
+        Iterator<Integer> j = l2.iterator();
+        while (i.hasNext() || j.hasNext()) {
+            int compareHasNext = Boolean.compare(i.hasNext(), j.hasNext());
+            if (compareHasNext != 0) {
+                return compareHasNext;
+            }
+            Integer itemA = i.next();
+            Integer itemB = j.next();
+            int compareInts = Integer.compare(itemA, itemB);
+            if (compareInts != 0) {
+                return compareInts;
+            }
+        }
+        return 0;
+    }
+
+    private int compareParents(ParsedGame o1, ParsedGame o2) {
+        if (preferParents) {
+            return -Boolean.compare(o1.isParent(), o2.isParent());
+        }
+        return 0;
+    }
+
+    private int comparePrereleases(ParsedGame o1, ParsedGame o2) {
+        if (preferPrereleases) {
+            return -Boolean.compare(o1.isPrerelease(), o2.isPrerelease());
         }
         return 0;
     }
 
     @Override
     public int compare(ParsedGame o1, ParsedGame o2) {
-        // TODO sort by other things first
-        int parentCompare = compareParents(o1, o2, preferParents);
+        int badCompare = Boolean.compare(o1.isBad(), o2.isBad());
+        if (badCompare != 0) {
+            return badCompare;
+        }
+        int prereleaseCompare = comparePrereleases(o1, o2);
+        if (prereleaseCompare != 0) {
+            return prereleaseCompare;
+        }
+        // Check avoid
+        // Check languages if prefer language, region otherwise
+        // Check region if prefer language, languages otherwise
+        int parentCompare = compareParents(o1, o2);
         if (parentCompare != 0) {
             return parentCompare;
         }
-        // TODO sort by other things between these two
-        int secondParentCompare = compareParents(o1, o2, true);
-        if (secondParentCompare != 0) {
-            return secondParentCompare;
-        }
-        return 0;
+        // Check prefer list
+        // Check revision
+        // Check version
+        // Check sample
+        // Check demo
+        // Check beta
+        // Check proto
+        // Check how many languages it has (the more the better)
+        return -Boolean.compare(o1.isParent(), o2.isParent());
     }
 }

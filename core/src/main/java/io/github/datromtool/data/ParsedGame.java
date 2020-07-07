@@ -89,4 +89,12 @@ public class ParsedGame {
                         .flatMap(Collection::stream));
     }
 
+    @JsonIgnore
+    public boolean isPrerelease() {
+        return !proto.isEmpty()
+                || !beta.isEmpty()
+                || !demo.isEmpty()
+                || !sample.isEmpty();
+    }
+
 }
