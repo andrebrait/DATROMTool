@@ -35,8 +35,8 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder(toBuilder = true)
 @AllArgsConstructor(access = PRIVATE)
 @NoArgsConstructor(access = PRIVATE, force = true)
-@JacksonXmlRootElement(localName = "game")
 @JsonInclude(NON_DEFAULT)
+@JacksonXmlRootElement(localName = "game")
 public class Game {
 
     @NonNull

@@ -18,14 +18,13 @@ import lombok.extern.jackson.Jacksonized;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static lombok.AccessLevel.PRIVATE;
 
-
+@JsonPropertyOrder({"header", "games"})
 @Value
 @Jacksonized
 @Builder(toBuilder = true)
 @AllArgsConstructor(access = PRIVATE)
 @NoArgsConstructor(access = PRIVATE, force = true)
 @JsonInclude(NON_DEFAULT)
-@JsonPropertyOrder({"header", "games"})
 @JacksonXmlRootElement(localName = "datafile")
 public class Datafile {
 
