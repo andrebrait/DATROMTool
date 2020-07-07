@@ -1,24 +1,26 @@
 package io.github.datromtool.data;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableSet;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.regex.Pattern;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
+import static lombok.AccessLevel.PRIVATE;
+
 @Value
 @Jacksonized
 @Builder(toBuilder = true)
+@AllArgsConstructor(access = PRIVATE)
+@NoArgsConstructor(access = PRIVATE, force = true)
+@JsonInclude(NON_DEFAULT)
 public class Filter {
-
-    public enum Mode {
-        DEFAULT,
-        ALL_REGIONS,
-        ALL_WITH_LANG,
-        ONLY_WITH_LANG
-    }
 
     @NonNull
     @Builder.Default
@@ -30,14 +32,23 @@ public class Filter {
 
     @NonNull
     @Builder.Default
-    ImmutableSet<Pattern> negativeFilters = ImmutableSet.of();
-
-    @NonNull
-    @Builder.Default
     ImmutableSet<Pattern> excludes = ImmutableSet.of();
 
-    @NonNull
+    /*
+     * Adding the filters below here saves re-checking all names
+     */
+
     @Builder.Default
-    Mode mode = Mode.DEFAULT;
+    boolean noProto = false;
+
+    @Builder.Default
+    boolean noBeta = false;
+
+    @Builder.Default
+    boolean noDemo = false;
+
+    @Builder.Default
+    boolean noSample = false;
+
 
 }
