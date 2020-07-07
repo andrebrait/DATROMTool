@@ -41,22 +41,18 @@ public class GameComparator implements Comparator<ParsedGame> {
 
     @Builder.Default
     boolean preferPrereleases = false;
-    
+
     private static int countMatches(String string, List<Pattern> patterns) {
-        int matches = 0;
-        for (Pattern p : patterns) {
-            Matcher m1 = p.matcher(string);
-            if (m1.find()) {
-                matches += 1;
-            }
-        }
-        return matches;
+        return (int) patterns.stream()
+                .map(p -> p.matcher(string))
+                .filter(Matcher::find)
+                .count();
     }
 
     // TODO: store the result somewhere and retrieve it later
     private static int comparePatterns(ParsedGame o1, ParsedGame o2, List<Pattern> patterns) {
         int matches1 = countMatches(o1.getGame().getName(), patterns);
-        int matches2 = countMatches(o2.getGame().getName(), patterns);;
+        int matches2 = countMatches(o2.getGame().getName(), patterns);
         return Integer.compare(matches1, matches2);
     }
 
