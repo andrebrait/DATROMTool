@@ -42,6 +42,7 @@ public class GameComparator implements Comparator<ParsedGame> {
     @Builder.Default
     boolean preferPrereleases = false;
 
+    // TODO: store the result somewhere and retrieve it later
     private static int comparePatterns(ParsedGame o1, ParsedGame o2, List<Pattern> patterns) {
         int matches1 = 0;
         int matches2 = 0;
