@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
@@ -24,7 +23,7 @@ public final class GameFilterer {
     @NonNull
     private final Filter filter;
 
-    public ImmutableList<ParsedGame> filter(List<ParsedGame> input) {
+    public ImmutableList<ParsedGame> filter(Collection<ParsedGame> input) {
         return input.stream()
                 .filter(p -> !filter.isNoProto() || isEmpty(p.getProto()))
                 .filter(p -> !filter.isNoBeta() || isEmpty(p.getBeta()))

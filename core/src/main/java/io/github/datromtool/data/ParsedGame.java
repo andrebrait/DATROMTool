@@ -35,10 +35,10 @@ public class ParsedGame {
     RegionData regionData;
 
     @Builder.Default
-    boolean isParent = false;
+    boolean parent = false;
 
     @Builder.Default
-    boolean isBad = false;
+    boolean bad = false;
 
     @NonNull
     @Builder.Default
