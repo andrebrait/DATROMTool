@@ -10,14 +10,19 @@ import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.domain.datafile.Release;
 import io.github.datromtool.domain.datafile.Rom;
 import io.github.datromtool.domain.datafile.enumerations.Status;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -29,7 +34,18 @@ public final class GameParser {
     private final static Logger logger = LoggerFactory.getLogger(GameParser.class);
     private final static Pattern COMMA_OR_PLUS = Pattern.compile("[,+]");
 
+    public enum DivergenceDetection {
+        IGNORE,
+        ONE_WAY,
+        TWO_WAY,
+        ALWAYS
+    }
+
+    @NonNull
     private final RegionData regionData;
+
+    @NonNull
+    private final GameParser.DivergenceDetection detection;
 
     public ImmutableList<ParsedGame> parse(Datafile input) {
         return input.getGames().stream()
@@ -56,7 +72,7 @@ public final class GameParser {
     }
 
     private RegionData detectRegionData(Game game) {
-        ImmutableSet.Builder<RegionData.RegionDataEntry> detected = new ImmutableSet.Builder<>();
+        Set<RegionData.RegionDataEntry> detected = new LinkedHashSet<>();
         Matcher matcher = Patterns.SECTIONS.matcher(game.getName());
         while (matcher.find()) {
             for (String element : matcher.group(1).split(",")) {
@@ -67,27 +83,42 @@ public final class GameParser {
                 }
             }
         }
+        Set<RegionData.RegionDataEntry> provided = new LinkedHashSet<>();
         for (Release release : game.getReleases()) {
-            String code = release.getRegion();
-            if (isNotEmpty(code)) {
-                detected.add(findRegionDataEntry(code.toUpperCase()));
+            if (isNotBlank(release.getRegion())) {
+                String code = release.getRegion().trim().toUpperCase();
+                RegionData.RegionDataEntry regionDataEntry = regionData.getRegions().stream()
+                        .filter(e -> e.getCode().equals(code))
+                        .findFirst()
+                        .orElseGet(() -> {
+                            logger.warn("Unrecognized region: '{}' in {}", code, release);
+                            return RegionData.RegionDataEntry.builder().code(code).build();
+                        });
+                provided.add(regionDataEntry);
             }
         }
-        return RegionData.builder().regions(detected.build()).build();
+        if (shouldLogDivergences(detected, provided)) {
+            List<String> detectedCodes = detected.stream()
+                    .map(RegionData.RegionDataEntry::getCode)
+                    .collect(Collectors.toList());
+            List<String> providedCodes = provided.stream()
+                    .map(RegionData.RegionDataEntry::getCode)
+                    .collect(Collectors.toList());
+            logger.warn(
+                    "Detected regions by name do not match with the ones provided by the DAT. "
+                            + "Difference(detected={}, provided={}, game={})",
+                    detectedCodes, providedCodes, game.getName());
+        }
+        return RegionData.builder()
+                .regions(ImmutableSet.<RegionData.RegionDataEntry>builder()
+                        .addAll(detected)
+                        .addAll(provided)
+                        .build())
+                .build();
     }
 
-    private RegionData.RegionDataEntry findRegionDataEntry(String code) {
-        return regionData.getRegions().stream()
-                .filter(e -> e.getCode().equals(code))
-                .findFirst()
-                .orElseGet(() -> {
-                    logger.warn("Unrecognized region: '{}'", code);
-                    return RegionData.RegionDataEntry.builder().code(code).build();
-                });
-    }
-
-    private static ImmutableSet<String> detectLanguages(Game game) {
-        ImmutableSet.Builder<String> detected = new ImmutableSet.Builder<>();
+    private ImmutableSet<String> detectLanguages(Game game) {
+        Set<String> detected = new LinkedHashSet<>();
         Matcher matcher = Patterns.LANGUAGES.matcher(game.getName());
         while (matcher.find()) {
             for (String language : COMMA_OR_PLUS.split(matcher.group(1))) {
@@ -96,16 +127,33 @@ public final class GameParser {
                 }
             }
         }
+        Set<String> provided = new LinkedHashSet<>();
         for (Release release : game.getReleases()) {
-            if (isNotEmpty(release.getLanguage())) {
+            if (isNotBlank(release.getLanguage())) {
                 for (String language : COMMA_OR_PLUS.split(release.getLanguage())) {
                     if (isNotBlank(language)) {
-                        detected.add(language.trim().toLowerCase());
+                        provided.add(language.trim().toLowerCase());
                     }
                 }
             }
         }
-        return detected.build();
+        if (shouldLogDivergences(detected, provided)) {
+            logger.warn(
+                    "Detected languages by name do not match with the ones provided by the DAT. "
+                            + "Difference(detected={}, provided={}, game={})",
+                    detected, provided, game.getName());
+        }
+        return ImmutableSet.<String>builder()
+                .addAll(detected)
+                .addAll(provided)
+                .build();
+    }
+
+    private boolean shouldLogDivergences(Set<?> detected, Set<?> provided) {
+        return (detection == DivergenceDetection.ALWAYS && !provided.equals(detected))
+                || (!detected.isEmpty() && !provided.isEmpty()
+                && ((detection == DivergenceDetection.ONE_WAY && !provided.containsAll(detected))
+                || (detection == DivergenceDetection.TWO_WAY && !provided.equals(detected))));
     }
 
     private static ImmutableList<Integer> detectProto(Game game) {

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Streams;
 import io.github.datromtool.data.RegionData.RegionDataEntry;
 import io.github.datromtool.domain.datafile.Game;
 import lombok.AllArgsConstructor;
@@ -79,14 +78,12 @@ public class ParsedGame {
 
     @JsonIgnore
     public Stream<String> getLanguagesStream() {
-        if (regionData == null) {
+        if (regionData == null || !languages.isEmpty()) {
             return languages.stream();
         }
-        return Streams.concat(
-                languages.stream(),
-                regionData.getRegions().stream()
-                        .map(RegionDataEntry::getLanguages)
-                        .flatMap(Collection::stream));
+        return regionData.getRegions().stream()
+                .map(RegionDataEntry::getLanguages)
+                .flatMap(Collection::stream);
     }
 
     @JsonIgnore

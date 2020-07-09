@@ -35,6 +35,9 @@ regions:
   - code: "GRE"
     pattern: "(?i)Greece"
     languages: ["el"]
+  - code: "HUN"
+    pattern: "(?i)Hungary"
+    languages: ["hu"]
   - code: "ITA"
     pattern: "(?i)Italy"
     languages: ["it"]
@@ -44,6 +47,9 @@ regions:
   - code: "HOL"
     pattern: "(?i)Netherlands"
     languages: ["nl"]
+  - code: "HK"
+    pattern: "(?i)Hong Kong"
+    languages: ["zh"] # TODO check if this is correct
   - code: "KOR"
     pattern: "(?i)Korea"
     languages: ["ko"]
@@ -56,12 +62,18 @@ regions:
   - code: "RUS"
     pattern: "(?i)Russia"
     languages: ["ru"]
+  - code: "POL"
+    pattern: "(?i)Poland"
+    languages: ["pl"]
   - code: "SPA"
     pattern: "(?i)Spain"
     languages: ["es"]
   - code: "SWE"
     pattern: "(?i)Sweden"
     languages: ["sv"]
+  - code: "UK"
+    pattern: "(?i)United Kingdom"
+    languages: ["en"]
   - code: "USA"
     pattern: "(?i)(?:USA)|(?:World)"
     languages: ["en"]
