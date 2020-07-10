@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -51,7 +52,7 @@ public final class GameParser {
         return input.getGames().stream()
                 .map(g -> ParsedGame.builder()
                         .game(g)
-                        .parent(isNotEmpty(g.getCloneOf()))
+                        .parent(isBlank(g.getCloneOf()))
                         .bad(detectIsBad(g))
                         .regionData(detectRegionData(g))
                         .languages(detectLanguages(g))
