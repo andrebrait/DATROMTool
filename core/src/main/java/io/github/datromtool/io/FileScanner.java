@@ -108,6 +108,8 @@ public final class FileScanner {
                         .setUncaughtExceptionHandler((t, e) -> logUnexpected(e))
                         .setThreadFactory(new IndexedThreadFactory())
                         .build());
+        Thread hook = new Thread(executorService::shutdownNow);
+        Runtime.getRuntime().addShutdownHook(hook);
         ImmutableList.Builder<Callable<ImmutableList<Result>>> builder = ImmutableList.builder();
         try {
             Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
@@ -140,6 +142,7 @@ public final class FileScanner {
                         }
                     }).collect(ImmutableList.toImmutableList());
             executorService.shutdown();
+            Runtime.getRuntime().removeShutdownHook(hook);
             if (listener != null) {
                 listener.reportAllFinish();
             }
