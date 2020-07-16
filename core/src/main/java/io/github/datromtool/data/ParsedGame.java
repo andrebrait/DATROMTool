@@ -39,6 +39,9 @@ public class ParsedGame {
     @Builder.Default
     boolean bad = false;
 
+    @Builder.Default
+    boolean bios = false;
+
     @NonNull
     @Builder.Default
     ImmutableSet<String> languages = ImmutableSet.of();

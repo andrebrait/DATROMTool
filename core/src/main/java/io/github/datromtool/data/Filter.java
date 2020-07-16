@@ -50,5 +50,7 @@ public class Filter {
     @Builder.Default
     boolean noSample = false;
 
+    @Builder.Default
+    boolean noBios = false;
 
 }

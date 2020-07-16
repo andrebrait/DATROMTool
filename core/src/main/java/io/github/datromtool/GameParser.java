@@ -10,6 +10,7 @@ import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.domain.datafile.Release;
 import io.github.datromtool.domain.datafile.Rom;
 import io.github.datromtool.domain.datafile.enumerations.Status;
+import io.github.datromtool.domain.datafile.enumerations.YesNo;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -52,6 +53,7 @@ public final class GameParser {
         return input.getGames().stream()
                 .map(g -> ParsedGame.builder()
                         .game(g)
+                        .bios(isBios(g))
                         .parent(isBlank(g.getCloneOf()))
                         .bad(detectIsBad(g))
                         .regionData(detectRegionData(g))
@@ -64,6 +66,10 @@ public final class GameParser {
                         .version(detectVersion(g))
                         .build())
                 .collect(ImmutableList.toImmutableList());
+    }
+
+    private static boolean isBios(Game g) {
+        return g.getIsBios() == YesNo.YES || Patterns.BIOS.matcher(g.getName()).find();
     }
 
     private static boolean detectIsBad(Game g) {

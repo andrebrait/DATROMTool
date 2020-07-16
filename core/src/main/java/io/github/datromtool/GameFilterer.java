@@ -31,6 +31,7 @@ public final class GameFilterer {
 
     public ImmutableList<ParsedGame> filter(Collection<ParsedGame> input) {
         return input.stream()
+                .filter(p -> !filter.isNoBios() || !p.isBios())
                 .filter(p -> !filter.isNoProto() || isEmpty(p.getProto()))
                 .filter(p -> !filter.isNoBeta() || isEmpty(p.getBeta()))
                 .filter(p -> !filter.isNoDemo() || isEmpty(p.getDemo()))
