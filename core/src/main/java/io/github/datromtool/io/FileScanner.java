@@ -11,6 +11,8 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +25,10 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,12 +41,15 @@ import java.util.zip.CRC32;
 public final class FileScanner {
 
     private static final Logger logger = LoggerFactory.getLogger(FileScanner.class);
-    private static final int STREAM_BUFFER_LENGTH = 32 * 1024;
+    private static final Comparator<Pair<Path, Long>> fileComparator =
+            Comparator.comparingLong(p -> -p.getRight());
+
+    private static final int STREAM_BUFFER_LENGTH = 32 * 1024 * 1024;
 
     private final Listener listener;
     private final int threads;
 
-    // TODO add callback to report progress in scanning
+    // TODO handle scanning archives as ROMs
 
     @Value
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -70,7 +78,6 @@ public final class FileScanner {
 
         void reportFinish(String label, int thread);
 
-        void reportAllFinish();
     }
 
     private final static class IndexedThreadFactory implements ThreadFactory {
@@ -110,16 +117,15 @@ public final class FileScanner {
                         .build());
         Thread hook = new Thread(executorService::shutdownNow);
         Runtime.getRuntime().addShutdownHook(hook);
-        ImmutableList.Builder<Callable<ImmutableList<Result>>> builder = ImmutableList.builder();
         try {
+            List<Pair<Path, Long>> paths = new ArrayList<>();
             Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
 
                 @Override
                 public FileVisitResult visitFile(
                         Path file, BasicFileAttributes attrs) throws IOException {
-                    FileVisitResult result = super.visitFile(file, attrs);
-                    builder.add(() -> scanFile(directory, file));
-                    return result;
+                    paths.add(ImmutablePair.of(file, Files.size(file)));
+                    return FileVisitResult.CONTINUE;
                 }
 
                 @Override
@@ -128,10 +134,14 @@ public final class FileScanner {
                     return FileVisitResult.SKIP_SUBTREE;
                 }
             });
-            ImmutableList<Callable<ImmutableList<Result>>> callables = builder.build();
             if (listener != null) {
-                listener.reportTotalItems(callables.size());
+                listener.reportTotalItems(paths.size());
             }
+            ImmutableList<Callable<ImmutableList<Result>>> callables = paths.stream()
+                    .sorted(fileComparator)
+                    .map(Pair::getLeft)
+                    .map(p -> (Callable<ImmutableList<Result>>) () -> scanFile(directory, p))
+                    .collect(ImmutableList.toImmutableList());
             ImmutableList<Result> results = executorService.invokeAll(callables).stream()
                     .flatMap(f -> {
                         try {
@@ -143,9 +153,6 @@ public final class FileScanner {
                     }).collect(ImmutableList.toImmutableList());
             executorService.shutdown();
             Runtime.getRuntime().removeShutdownHook(hook);
-            if (listener != null) {
-                listener.reportAllFinish();
-            }
             return results;
         } catch (Exception e) {
             logger.error("Could not scan '{}'", directory, e);
@@ -158,8 +165,8 @@ public final class FileScanner {
     }
 
     private ImmutableList<Result> scanFile(Path baseDirectory, Path file) {
-        // TODO make label relative to input directory
-        String label = file.toString();
+        Path relative = baseDirectory.relativize(file);
+        String label = relative.toString();
         Thread t = Thread.currentThread();
         int index;
         byte[] buffer;
@@ -191,12 +198,12 @@ public final class FileScanner {
                         ZipArchiveEntry entry = entries.nextElement();
                         try (InputStream entryInputStream = zipFile.getInputStream(entry)) {
                             long size = entry.getSize();
-                            // TODO make label for zip entry
+                            String entryLabel = relative.resolve(entry.getName()).toString();
                             builder.add(new Result(
                                     file,
                                     size,
                                     processDigest(
-                                            label,
+                                            entryLabel,
                                             index,
                                             size,
                                             entryInputStream,
@@ -253,6 +260,7 @@ public final class FileScanner {
         sha1.reset();
         Result.Digest digest;
         long totalRead = 0;
+        int currentPercentage = 0;
         int read = inputStream.read(buffer, 0, buffer.length);
         while (read > -1) {
             totalRead += read;
@@ -260,7 +268,11 @@ public final class FileScanner {
             md5.update(buffer, 0, read);
             sha1.update(buffer, 0, read);
             if (listener != null) {
-                listener.reportProgress(label, index, (int) ((totalRead * 100) / size));
+                int newPercentage = (int) ((totalRead * 100) / size);
+                if (currentPercentage != newPercentage) {
+                    listener.reportProgress(label, index, newPercentage);
+                    currentPercentage = newPercentage;
+                }
             }
             read = inputStream.read(buffer, 0, buffer.length);
         }
