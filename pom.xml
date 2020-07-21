@@ -25,6 +25,7 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <xz.version>1.8</xz.version>
         <commons-codec.version>1.14</commons-codec.version>
+        <junrar.version>6.0.0</junrar.version>
     </properties>
 
     <modules>
@@ -91,6 +92,11 @@
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.junrar</groupId>
+                <artifactId>junrar</artifactId>
+                <version>${junrar.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

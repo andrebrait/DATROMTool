@@ -75,4 +75,17 @@ public final class Patterns {
             compile("\\.7z$", CASE_INSENSITIVE);
     public final static Pattern TAR_ARCHIVE =
             compile("\\.tar(?:\\.[^.]+)?$", CASE_INSENSITIVE);
+
+    public final static Pattern TAR_GZ =
+            compile("\\.tar\\.gz$", CASE_INSENSITIVE);
+    public final static Pattern TAR_XZ =
+            compile("\\.tar\\.xz$", CASE_INSENSITIVE);
+    public final static Pattern TAR_BZ2 =
+            compile("\\.tar\\.bz2$", CASE_INSENSITIVE);
+    public final static Pattern TAR_LZMA =
+            compile("\\.tar\\.lzma$", CASE_INSENSITIVE);
+    public final static Pattern TAR_LZ4 =
+            compile("\\.tar\\.lz4$", CASE_INSENSITIVE);
+    public final static Pattern TAR_UNCOMPRESSED =
+            compile("\\.tar$", CASE_INSENSITIVE);
 }

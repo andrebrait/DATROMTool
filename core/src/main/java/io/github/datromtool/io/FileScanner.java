@@ -9,24 +9,43 @@ import lombok.Getter;
 import lombok.Value;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
+import org.apache.commons.compress.archivers.sevenz.SevenZFile;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
+import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorInputStream;
+import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorOutputStream;
+import org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream;
+import org.apache.commons.compress.compressors.lzma.LZMACompressorOutputStream;
+import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
+import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -193,11 +212,17 @@ public final class FileScanner {
         }
         try {
             ImmutableList.Builder<Result> builder = ImmutableList.builder();
-            if (Patterns.ZIP.matcher(file.getFileName().toString()).find()) {
-                try (ZipFile zipFile = new ZipFile(file.toFile())) {
+            String filename = file.getFileName().toString();
+            if (Patterns.ZIP.matcher(filename).find()) {
+                SeekableByteChannel seekableByteChannel =
+                        Files.newByteChannel(file, EnumSet.of(StandardOpenOption.READ));
+                try (ZipFile zipFile = new ZipFile(seekableByteChannel)) {
                     Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
                     while (entries.hasMoreElements()) {
                         ZipArchiveEntry entry = entries.nextElement();
+                        if (entry.isDirectory()) {
+                            continue;
+                        }
                         try (InputStream entryInputStream = zipFile.getInputStream(entry)) {
                             long size = entry.getSize();
                             String name = entry.getName();
@@ -209,7 +234,7 @@ public final class FileScanner {
                                             entryLabel,
                                             index,
                                             size,
-                                            entryInputStream,
+                                            entryInputStream::read,
                                             buffer,
                                             crc32,
                                             md5,
@@ -218,7 +243,66 @@ public final class FileScanner {
                         }
                     }
                 }
+            } else if (Patterns.SEVEN_ZIP.matcher(filename).find()) {
+                SeekableByteChannel seekableByteChannel =
+                        Files.newByteChannel(file, EnumSet.of(StandardOpenOption.READ));
+                try (SevenZFile sevenZFile = new SevenZFile(seekableByteChannel)) {
+                    SevenZArchiveEntry entry;
+                    while ((entry = sevenZFile.getNextEntry()) != null) {
+                        if (entry.isDirectory()) {
+                            continue;
+                        }
+                        long size = entry.getSize();
+                        String name = entry.getName();
+                        String entryLabel = relative.resolve(name).toString();
+                        builder.add(new Result(
+                                file,
+                                size,
+                                processDigest(
+                                        entryLabel,
+                                        index,
+                                        size,
+                                        sevenZFile::read,
+                                        buffer,
+                                        crc32,
+                                        md5,
+                                        sha1),
+                                name));
+                    }
+                }
+            } else if (Patterns.TAR_ARCHIVE.matcher(filename).find()) {
+                InputStream inputStream = inputStreamForTar(file);
+                if (inputStream != null) {
+                    try (TarArchiveInputStream tarArchiveInputStream =
+                            new TarArchiveInputStream(inputStream)) {
+                        TarArchiveEntry entry;
+                        while ((entry = tarArchiveInputStream.getNextTarEntry()) != null) {
+                            if (!entry.isFile() || !tarArchiveInputStream.canReadEntryData(entry)) {
+                                continue;
+                            }
+                            long size = entry.getRealSize();
+                            String name = entry.getName();
+                            String entryLabel = relative.resolve(name).toString();
+                            builder.add(new Result(
+                                    file,
+                                    size,
+                                    processDigest(
+                                            entryLabel,
+                                            index,
+                                            size,
+                                            tarArchiveInputStream::read,
+                                            buffer,
+                                            crc32,
+                                            md5,
+                                            sha1),
+                                    name));
+                        }
+                    }
+                } else {
+                    logger.warn("Unsupported TAR archive compression for '{}'", file);
+                }
             } else {
+                // TODO also read the archive itself
                 try (InputStream inputStream = Files.newInputStream(file)) {
                     long size = Files.size(file);
                     builder.add(new Result(
@@ -228,7 +312,7 @@ public final class FileScanner {
                                     label,
                                     index,
                                     size,
-                                    inputStream,
+                                    inputStream::read,
                                     buffer,
                                     crc32,
                                     md5,
@@ -249,11 +333,61 @@ public final class FileScanner {
         }
     }
 
+    @Nullable
+    private static InputStream inputStreamForTar(Path file) throws IOException {
+        InputStream inputStream = null;
+        String filename = file.getFileName().toString();
+        if (Patterns.TAR_GZ.matcher(filename).find()) {
+            inputStream = new GzipCompressorInputStream(Files.newInputStream(file));
+        } else if (Patterns.TAR_BZ2.matcher(filename).find()) {
+            inputStream = new BZip2CompressorInputStream(Files.newInputStream(file));
+        } else if (Patterns.TAR_XZ.matcher(filename).find()) {
+            inputStream = new XZCompressorInputStream(Files.newInputStream(file));
+        } else if (Patterns.TAR_LZMA.matcher(filename).find()) {
+            inputStream = new LZMACompressorInputStream(Files.newInputStream(file));
+        } else if (Patterns.TAR_LZ4.matcher(filename).find()) {
+            inputStream = new BlockLZ4CompressorInputStream(Files.newInputStream(file));
+        } else if (Patterns.TAR_UNCOMPRESSED.matcher(filename).find()) {
+            inputStream = Files.newInputStream(file);
+        }
+        return inputStream;
+    }
+
+    @Nullable
+    private static OutputStream outputStreamForTar(Path file) throws IOException {
+        OutputStream outputStream = null;
+        String filename = file.getFileName().toString();
+        if (Patterns.TAR_GZ.matcher(filename).find()) {
+            outputStream = new GzipCompressorOutputStream(Files.newOutputStream(
+                    file,
+                    StandardOpenOption.CREATE_NEW));
+        } else if (Patterns.TAR_BZ2.matcher(filename).find()) {
+            outputStream = new BZip2CompressorOutputStream(Files.newOutputStream(
+                    file,
+                    StandardOpenOption.CREATE_NEW));
+        } else if (Patterns.TAR_XZ.matcher(filename).find()) {
+            outputStream = new XZCompressorOutputStream(Files.newOutputStream(
+                    file,
+                    StandardOpenOption.CREATE_NEW));
+        } else if (Patterns.TAR_LZMA.matcher(filename).find()) {
+            outputStream = new LZMACompressorOutputStream(Files.newOutputStream(
+                    file,
+                    StandardOpenOption.CREATE_NEW));
+        } else if (Patterns.TAR_LZ4.matcher(filename).find()) {
+            outputStream = new BlockLZ4CompressorOutputStream(Files.newOutputStream(
+                    file,
+                    StandardOpenOption.CREATE_NEW));
+        } else if (Patterns.TAR_UNCOMPRESSED.matcher(filename).find()) {
+            outputStream = Files.newOutputStream(file, StandardOpenOption.CREATE_NEW);
+        }
+        return outputStream;
+    }
+
     private Result.Digest processDigest(
             String label,
             int index,
             long size,
-            InputStream inputStream,
+            TriFunction<byte[], Integer, Integer, Integer, IOException> function,
             byte[] buffer,
             CRC32 crc32,
             MessageDigest md5,
@@ -264,13 +398,15 @@ public final class FileScanner {
         int reportedPercentage = 0;
         long totalRead = 0;
         long start = System.nanoTime();
-        int bytesRead = inputStream.read(buffer, 0, buffer.length);
-        while (bytesRead > -1) {
+        int bytesRead;
+        long remainingBytes;
+        while ((remainingBytes = Math.min(size - totalRead, buffer.length)) > 0
+                && (bytesRead = function.apply(buffer, 0, (int) remainingBytes)) > -1) {
+            totalRead += bytesRead;
             crc32.update(buffer, 0, bytesRead);
             md5.update(buffer, 0, bytesRead);
             sha1.update(buffer, 0, bytesRead);
             if (listener != null) {
-                totalRead += bytesRead;
                 int percentage = (int) ((totalRead * 100d) / size);
                 if (reportedPercentage != percentage) {
                     double secondsPassed = (System.nanoTime() - start) / 1E9d;
@@ -280,7 +416,6 @@ public final class FileScanner {
                 }
                 start = System.nanoTime();
             }
-            bytesRead = inputStream.read(buffer, 0, buffer.length);
         }
         Result.Digest digest = new Result.Digest(
                 Long.toHexString(crc32.getValue()),
@@ -290,6 +425,11 @@ public final class FileScanner {
         md5.reset();
         sha1.reset();
         return digest;
+    }
+
+    private interface TriFunction<K, L, M, N, E extends Throwable> {
+
+        N apply(K k, L l, M m) throws E;
     }
 
 }
