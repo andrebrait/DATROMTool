@@ -24,6 +24,8 @@ public final class GameSorter {
     @NonNull
     private final SortingPreference sortingPreference;
 
+    // TODO: log in each step what was changed and why
+
     public ImmutableMap<String, ImmutableList<ParsedGame>> sortAndGroupByParent(
             Collection<ParsedGame> parsedGames) {
         GameComparator comparator = new GameComparator(sortingPreference);

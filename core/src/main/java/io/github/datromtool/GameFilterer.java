@@ -29,6 +29,8 @@ public final class GameFilterer {
     @NonNull
     private final PostFilter postFilter;
 
+    // TODO: log in each step what was removed and why
+
     public ImmutableList<ParsedGame> filter(Collection<ParsedGame> input) {
         return input.stream()
                 .filter(p -> !filter.isNoBios() || !p.isBios())

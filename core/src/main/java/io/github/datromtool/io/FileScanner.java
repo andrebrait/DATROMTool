@@ -29,9 +29,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
@@ -44,7 +44,7 @@ public final class FileScanner {
     private static final Comparator<Pair<Path, Long>> fileComparator =
             Comparator.comparingLong(p -> -p.getRight());
 
-    private static final int STREAM_BUFFER_LENGTH = 32 * 1024 * 1024;
+    private static final int BUFFER_SIZE = 32 * 1024; // 32KB per thread
 
     private final Listener listener;
     private final int threads;
@@ -74,7 +74,9 @@ public final class FileScanner {
 
         void reportTotalItems(int totalItems);
 
-        void reportProgress(String label, int thread, int percentage);
+        void reportStart(String label, int thread);
+
+        void reportProgress(String label, int thread, int percentage, long speed);
 
         void reportFinish(String label, int thread);
 
@@ -94,7 +96,7 @@ public final class FileScanner {
     private final static class IndexedThread extends Thread {
 
         private final int index;
-        private final byte[] buffer = new byte[STREAM_BUFFER_LENGTH];
+        private final byte[] buffer = new byte[BUFFER_SIZE];
         private final CRC32 crc32 = new CRC32();
         private final MessageDigest md5 = DigestUtils.getMd5Digest();
         private final MessageDigest sha1 = DigestUtils.getSha1Digest();
@@ -137,12 +139,12 @@ public final class FileScanner {
             if (listener != null) {
                 listener.reportTotalItems(paths.size());
             }
-            ImmutableList<Callable<ImmutableList<Result>>> callables = paths.stream()
+            ImmutableList<Future<ImmutableList<Result>>> futures = paths.stream()
                     .sorted(fileComparator)
                     .map(Pair::getLeft)
-                    .map(p -> (Callable<ImmutableList<Result>>) () -> scanFile(directory, p))
+                    .map(p -> executorService.submit(() -> scanFile(directory, p)))
                     .collect(ImmutableList.toImmutableList());
-            ImmutableList<Result> results = executorService.invokeAll(callables).stream()
+            ImmutableList<Result> results = futures.stream()
                     .flatMap(f -> {
                         try {
                             return f.get().stream();
@@ -181,13 +183,13 @@ public final class FileScanner {
             sha1 = ((IndexedThread) t).getSha1();
         } else {
             index = 0;
-            buffer = new byte[STREAM_BUFFER_LENGTH];
+            buffer = new byte[BUFFER_SIZE];
             crc32 = new CRC32();
             md5 = DigestUtils.getMd5Digest();
             sha1 = DigestUtils.getSha1Digest();
         }
         if (listener != null) {
-            listener.reportProgress(label, index, 0);
+            listener.reportStart(label, index);
         }
         try {
             ImmutableList.Builder<Result> builder = ImmutableList.builder();
@@ -198,7 +200,8 @@ public final class FileScanner {
                         ZipArchiveEntry entry = entries.nextElement();
                         try (InputStream entryInputStream = zipFile.getInputStream(entry)) {
                             long size = entry.getSize();
-                            String entryLabel = relative.resolve(entry.getName()).toString();
+                            String name = entry.getName();
+                            String entryLabel = relative.resolve(name).toString();
                             builder.add(new Result(
                                     file,
                                     size,
@@ -211,7 +214,7 @@ public final class FileScanner {
                                             crc32,
                                             md5,
                                             sha1),
-                                    entry.getName()));
+                                    name));
                         }
                     }
                 }
@@ -258,25 +261,28 @@ public final class FileScanner {
         crc32.reset();
         md5.reset();
         sha1.reset();
-        Result.Digest digest;
+        int reportedPercentage = 0;
         long totalRead = 0;
-        int currentPercentage = 0;
-        int read = inputStream.read(buffer, 0, buffer.length);
-        while (read > -1) {
-            totalRead += read;
-            crc32.update(buffer, 0, read);
-            md5.update(buffer, 0, read);
-            sha1.update(buffer, 0, read);
+        long start = System.nanoTime();
+        int bytesRead = inputStream.read(buffer, 0, buffer.length);
+        while (bytesRead > -1) {
+            crc32.update(buffer, 0, bytesRead);
+            md5.update(buffer, 0, bytesRead);
+            sha1.update(buffer, 0, bytesRead);
             if (listener != null) {
-                int newPercentage = (int) ((totalRead * 100) / size);
-                if (currentPercentage != newPercentage) {
-                    listener.reportProgress(label, index, newPercentage);
-                    currentPercentage = newPercentage;
+                totalRead += bytesRead;
+                int percentage = (int) ((totalRead * 100d) / size);
+                if (reportedPercentage != percentage) {
+                    double secondsPassed = (System.nanoTime() - start) / 1E9d;
+                    long bytesPerSecond = Math.round(bytesRead / secondsPassed);
+                    listener.reportProgress(label, index, percentage, bytesPerSecond);
+                    reportedPercentage = percentage;
                 }
+                start = System.nanoTime();
             }
-            read = inputStream.read(buffer, 0, buffer.length);
+            bytesRead = inputStream.read(buffer, 0, buffer.length);
         }
-        digest = new Result.Digest(
+        Result.Digest digest = new Result.Digest(
                 Long.toHexString(crc32.getValue()),
                 Hex.encodeHexString(md5.digest()),
                 Hex.encodeHexString(sha1.digest()));
