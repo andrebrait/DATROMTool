@@ -34,6 +34,8 @@ import static lombok.AccessLevel.PRIVATE;
 @JacksonXmlRootElement(localName = "rule")
 public class Rule {
 
+    public static final String END_OF_FILE = "EOF";
+
     @NonNull
     @Builder.Default
     @JacksonXmlProperty(localName = "data")
@@ -68,8 +70,8 @@ public class Rule {
     @NonNull
     @Builder.Default
     @JacksonXmlProperty(localName = "end_offset", isAttribute = true)
-    @JsonProperty(defaultValue = "EOF")
-    String endOffset = "EOF";
+    @JsonProperty(defaultValue = END_OF_FILE)
+    String endOffset = END_OF_FILE;
 
     @NonNull
     @Builder.Default
