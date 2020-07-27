@@ -383,15 +383,16 @@ public final class FileScanner {
         int remainingBytes;
         while ((remainingBytes = (int) Math.min(size - totalRead, buffer.length)) > 0
                 && (bytesRead = function.apply(buffer, 0, remainingBytes)) > -1) {
+            totalRead += bytesRead;
             if (bytesRead == size && detector != null) {
                 // Apply logic to detect headers
                 // This is the only time we're going to read the file anyway
                 // We can safely redefine the buffer variable here
                 for (Rule r : detector.getRules()) {
                     buffer = r.apply(buffer, bytesRead);
+                    bytesRead = buffer.length;
                 }
             }
-            totalRead += bytesRead;
             crc32.update(buffer, 0, bytesRead);
             md5.update(buffer, 0, bytesRead);
             sha1.update(buffer, 0, bytesRead);
