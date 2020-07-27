@@ -133,20 +133,20 @@ public class Rule {
                         if (out.length % 2 != 0) {
                             throw new RuleException(this, "Array size is not a multiple of 2");
                         }
-                        swap(bytes, 2);
+                        swap(out, 2);
                         break;
                     case WORD_SWAP:
                         if (out.length % 4 != 0) {
                             throw new RuleException(this, "Array size is not a multiple of 4");
                         }
-                        swap(bytes, 4);
+                        swap(out, 4);
                         break;
                     case WORD_BYTE_SWAP:
                         if (out.length % 4 != 0) {
                             throw new RuleException(this, "Array size is not a multiple of 4");
                         }
-                        swap(bytes, 4);
-                        swap(bytes, 2);
+                        swap(out, 4);
+                        swap(out, 2);
                         break;
                 }
                 return out;
