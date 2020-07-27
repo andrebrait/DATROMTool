@@ -22,4 +22,8 @@ import static lombok.AccessLevel.PRIVATE;
 @JacksonXmlRootElement(localName = "and")
 public class AndTest extends LogicalTest {
 
+    @Override
+    protected byte operate(byte a, byte b) {
+        return (byte) (a & b);
+    }
 }

@@ -2,6 +2,8 @@ package io.github.datromtool.io;
 
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.Patterns;
+import io.github.datromtool.domain.detector.Detector;
+import io.github.datromtool.domain.detector.Rule;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -59,8 +61,17 @@ public final class FileScanner {
 
     private static final int BUFFER_SIZE = 8 * 1024 * 1024; // 8MB per thread
 
+    private final Detector detector;
     private final Listener listener;
     private final int numThreads;
+
+    private static final ThreadLocal<CRC32> threadLocalCrc32 = ThreadLocal.withInitial(CRC32::new);
+    private static final ThreadLocal<MessageDigest> threadLocalMd5 =
+            ThreadLocal.withInitial(DigestUtils::getMd5Digest);
+    private static final ThreadLocal<MessageDigest> threadLocalSha1 =
+            ThreadLocal.withInitial(DigestUtils::getSha1Digest);
+    private static final ThreadLocal<byte[]> threadLocalBuffer =
+            ThreadLocal.withInitial(() -> new byte[BUFFER_SIZE]);
 
     // TODO handle scanning archives as ROMs
 
@@ -142,10 +153,6 @@ public final class FileScanner {
     private final static class IndexedThread extends Thread {
 
         private final int index;
-        private final byte[] buffer = new byte[BUFFER_SIZE];
-        private final CRC32 crc32 = new CRC32();
-        private final MessageDigest md5 = DigestUtils.getMd5Digest();
-        private final MessageDigest sha1 = DigestUtils.getSha1Digest();
 
         private IndexedThread(int index, Runnable target) {
             super(target);
@@ -158,8 +165,6 @@ public final class FileScanner {
         ExecutorService executorService = Executors.newFixedThreadPool(
                 numThreads,
                 new IndexedThreadFactory());
-        Thread hook = new Thread(executorService::shutdownNow);
-        Runtime.getRuntime().addShutdownHook(hook);
         try {
             ImmutableList.Builder<FileMetadata> pathsBuilder = ImmutableList.builder();
             Files.walkFileTree(directory, new AppendingFileVisitor(directory, pathsBuilder::add));
@@ -167,24 +172,18 @@ public final class FileScanner {
             if (listener != null) {
                 listener.reportTotalItems(paths.size());
             }
-            ImmutableList<Result> results = paths
-                    .stream()
+            return paths.stream()
                     .sorted(Comparator.comparingLong(fm -> -fm.getSize()))
                     .map(fm -> executorService.submit(() -> scanFile(fm)))
                     .collect(ImmutableList.toImmutableList())
                     .stream()
                     .flatMap(FileScanner::streamResults)
                     .collect(ImmutableList.toImmutableList());
-            executorService.shutdown();
-            return results;
         } catch (Exception e) {
             logger.error("Could not scan '{}'", directory, e);
             return ImmutableList.of();
         } finally {
-            if (!executorService.isTerminated()) {
-                executorService.shutdownNow();
-            }
-            Runtime.getRuntime().removeShutdownHook(hook);
+            executorService.shutdownNow();
         }
     }
 
@@ -205,25 +204,7 @@ public final class FileScanner {
         Path file = fileMetadata.getPath();
         Path relative = fileMetadata.getBaseDirectory().relativize(file);
         String label = relative.toString();
-        Thread t = Thread.currentThread();
-        int index;
-        byte[] buffer;
-        MessageDigest md5;
-        MessageDigest sha1;
-        CRC32 crc32;
-        if (t instanceof IndexedThread) {
-            index = ((IndexedThread) t).getIndex();
-            buffer = ((IndexedThread) t).getBuffer();
-            crc32 = ((IndexedThread) t).getCrc32();
-            md5 = ((IndexedThread) t).getMd5();
-            sha1 = ((IndexedThread) t).getSha1();
-        } else {
-            index = 0;
-            buffer = new byte[BUFFER_SIZE];
-            crc32 = new CRC32();
-            md5 = DigestUtils.getMd5Digest();
-            sha1 = DigestUtils.getSha1Digest();
-        }
+        int index = ((IndexedThread) Thread.currentThread()).getIndex();
         if (listener != null) {
             listener.reportStart(label, index);
         }
@@ -251,11 +232,7 @@ public final class FileScanner {
                                             entryLabel,
                                             index,
                                             size,
-                                            entryInputStream::read,
-                                            buffer,
-                                            crc32,
-                                            md5,
-                                            sha1),
+                                            entryInputStream::read),
                                     name));
                         }
                     }
@@ -279,11 +256,7 @@ public final class FileScanner {
                                         entryLabel,
                                         index,
                                         size,
-                                        sevenZFile::read,
-                                        buffer,
-                                        crc32,
-                                        md5,
-                                        sha1),
+                                        sevenZFile::read),
                                 name));
                     }
                 }
@@ -307,11 +280,7 @@ public final class FileScanner {
                                             entryLabel,
                                             index,
                                             size,
-                                            tarArchiveInputStream::read,
-                                            buffer,
-                                            crc32,
-                                            md5,
-                                            sha1),
+                                            tarArchiveInputStream::read),
                                     name));
                         }
                     }
@@ -329,11 +298,7 @@ public final class FileScanner {
                                     label,
                                     index,
                                     size,
-                                    inputStream::read,
-                                    buffer,
-                                    crc32,
-                                    md5,
-                                    sha1),
+                                    inputStream::read),
                             null));
                 }
             }
@@ -405,15 +370,12 @@ public final class FileScanner {
             String label,
             int index,
             long size,
-            TriFunction<byte[], Integer, Integer, Integer, IOException> function,
-            byte[] buffer,
-            CRC32 crc32,
-            MessageDigest md5,
-            MessageDigest sha1) throws IOException {
-        // TODO add support for headers
-        crc32.reset();
-        md5.reset();
-        sha1.reset();
+            TriFunction<byte[], Integer, Integer, Integer, IOException> function)
+            throws IOException {
+        CRC32 crc32 = threadLocalCrc32.get();
+        MessageDigest md5 = threadLocalMd5.get();
+        MessageDigest sha1 = threadLocalSha1.get();
+        byte[] buffer = threadLocalBuffer.get();
         int reportedPercentage = 0;
         long totalRead = 0;
         long start = System.nanoTime();
@@ -421,6 +383,14 @@ public final class FileScanner {
         int remainingBytes;
         while ((remainingBytes = (int) Math.min(size - totalRead, buffer.length)) > 0
                 && (bytesRead = function.apply(buffer, 0, remainingBytes)) > -1) {
+            if (bytesRead == size && detector != null) {
+                // Apply logic to detect headers
+                // This is the only time we're going to read the file anyway
+                // We can safely redefine the buffer variable here
+                for (Rule r : detector.getRules()) {
+                    buffer = r.apply(buffer, bytesRead);
+                }
+            }
             totalRead += bytesRead;
             crc32.update(buffer, 0, bytesRead);
             md5.update(buffer, 0, bytesRead);

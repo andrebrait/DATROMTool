@@ -1,6 +1,7 @@
 
 package io.github.datromtool.domain.detector;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -28,6 +29,8 @@ import static lombok.AccessLevel.PRIVATE;
 @JacksonXmlRootElement(localName = "data")
 public class FileTest extends Test {
 
+    private static final String POWER_OF_TWO = "PO2";
+
     @NonNull
     @JacksonXmlProperty(isAttribute = true)
     @JsonProperty(required = true)
@@ -39,4 +42,27 @@ public class FileTest extends Test {
     @JsonProperty(defaultValue = "equal")
     ComparisonOperator operator = ComparisonOperator.EQUAL;
 
+    @JsonIgnore
+    public long getSizeAsLong() {
+        return Long.parseLong(getSize(), 16);
+    }
+
+    @Override
+    public boolean test(byte[] bytes, int actualLength) {
+        actualLength = Math.min(bytes.length, actualLength);
+        if (POWER_OF_TWO.equals(getSize())) {
+            double log = Math.log(actualLength) / Math.log(2);
+            return Math.abs(Math.round(log) - log) < 1e-11;
+        }
+        switch (getOperator()) {
+            case LESS:
+                return (actualLength < getSizeAsLong()) == getResult();
+            case GREATER:
+                return (actualLength > getSizeAsLong()) == getResult();
+            case EQUAL:
+                return (actualLength == getSizeAsLong()) == getResult();
+            default:
+                return false;
+        }
+    }
 }

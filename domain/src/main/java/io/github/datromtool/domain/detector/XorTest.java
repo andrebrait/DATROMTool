@@ -22,4 +22,9 @@ import static lombok.AccessLevel.PRIVATE;
 @JacksonXmlRootElement(localName = "xor")
 public class XorTest extends LogicalTest {
 
+    @Override
+    protected byte operate(byte a, byte b) {
+        return (byte) (a ^ b);
+    }
+
 }
