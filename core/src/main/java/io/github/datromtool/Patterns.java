@@ -1,5 +1,6 @@
 package io.github.datromtool;
 
+import com.google.common.collect.ImmutableSet;
 import lombok.NoArgsConstructor;
 
 import java.util.regex.Pattern;
@@ -88,4 +89,15 @@ public final class Patterns {
             compile("\\.tar\\.lz4$", CASE_INSENSITIVE);
     public final static Pattern TAR_UNCOMPRESSED =
             compile("\\.tar$", CASE_INSENSITIVE);
+
+    public final static ImmutableSet<Pattern> ARCHIVE_PATTERNS = ImmutableSet.of(
+            ZIP,
+            RAR,
+            SEVEN_ZIP,
+            TAR_GZ,
+            TAR_XZ,
+            TAR_BZ2,
+            TAR_LZMA,
+            TAR_LZ4,
+            TAR_UNCOMPRESSED);
 }
