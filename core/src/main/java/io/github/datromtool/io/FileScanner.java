@@ -310,7 +310,7 @@ public final class FileScanner {
                     Enumeration<ZipArchiveEntry> entries = zipFile.getEntriesInPhysicalOrder();
                     while (entries.hasMoreElements()) {
                         ZipArchiveEntry entry = entries.nextElement();
-                        if (entry.isDirectory()) {
+                        if (entry.isDirectory() || entry.isUnixSymlink()) {
                             continue;
                         }
                         try (InputStream entryInputStream = zipFile.getInputStream(entry)) {
@@ -335,7 +335,7 @@ public final class FileScanner {
                 try (SevenZFile sevenZFile = new SevenZFile(file.toFile())) {
                     SevenZArchiveEntry entry;
                     while ((entry = sevenZFile.getNextEntry()) != null) {
-                        if (entry.isDirectory()) {
+                        if (entry.isDirectory() || entry.isAntiItem()) {
                             continue;
                         }
                         long size = entry.getSize();

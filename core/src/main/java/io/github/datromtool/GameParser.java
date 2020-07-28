@@ -54,7 +54,7 @@ public final class GameParser {
                 .map(g -> ParsedGame.builder()
                         .game(g)
                         .bios(isBios(g))
-                        .parent(isBlank(g.getCloneOf()))
+                        .parent(isBlank(g.getCloneOf()) && isBlank(g.getRomOf()))
                         .bad(detectIsBad(g))
                         .regionData(detectRegionData(g))
                         .languages(detectLanguages(g))

@@ -7,6 +7,7 @@ import io.github.datromtool.data.SortingPreference;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,9 @@ public final class GameSorter {
                 .collect(Collectors.groupingBy(
                         p -> p.isParent()
                                 ? p.getGame().getName()
-                                : p.getGame().getCloneOf(),
+                                : StringUtils.defaultIfBlank(
+                                        p.getGame().getCloneOf(),
+                                        p.getGame().getRomOf()),
                         LinkedHashMap::new,
                         Collectors.toList()));
         return groupedByParent.entrySet().stream()
