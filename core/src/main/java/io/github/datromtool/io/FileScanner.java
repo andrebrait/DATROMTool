@@ -1,5 +1,8 @@
 package io.github.datromtool.io;
 
+import com.github.junrar.Archive;
+import com.github.junrar.impl.FileVolumeManager;
+import com.github.junrar.rarfile.FileHeader;
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.ByteUnit;
 import io.github.datromtool.Patterns;
@@ -216,6 +219,8 @@ public final class FileScanner {
 
         void reportProgress(String label, int thread, int percentage, long speed);
 
+        void reportFailure(String label, int thread, String message, Throwable cause);
+
         void reportFinish(String label, int thread);
 
     }
@@ -267,7 +272,7 @@ public final class FileScanner {
 
     }
 
-    public ImmutableList<Result> scan(Path directory) {
+    public ImmutableList<Result> scan(Path directory) throws Exception {
         ExecutorService executorService = Executors.newFixedThreadPool(
                 numThreads,
                 new IndexedThreadFactory());
@@ -287,7 +292,7 @@ public final class FileScanner {
                     .collect(ImmutableList.toImmutableList());
         } catch (Exception e) {
             logger.error("Could not scan '{}'", directory, e);
-            return ImmutableList.of();
+            throw e;
         } finally {
             executorService.shutdownNow();
         }
@@ -304,6 +309,30 @@ public final class FileScanner {
 
     private static void logUnexpected(Throwable e) {
         logger.error("Unexpected exception thrown", e);
+    }
+
+    private boolean shouldSkip(String label, int index, long size) {
+        if (size < minRomSize) {
+            logger.info(
+                    "File is smaller than minimum ROM size of {}. Skip calculation of hashes: '{}'",
+                    minRomSizeStr,
+                    label);
+            if (listener != null) {
+                listener.reportProgress(label, index, 100, 0);
+            }
+            return true;
+        }
+        if (size > maxRomSize) {
+            logger.info(
+                    "File is larger than maximum ROM size of {}. Skip calculation of hashes: '{}'",
+                    maxRomSizeStr,
+                    label);
+            if (listener != null) {
+                listener.reportProgress(label, index, 100, 0);
+            }
+            return true;
+        }
+        return false;
     }
 
     private ImmutableList<Result> scanFile(FileMetadata fileMetadata) {
@@ -325,15 +354,45 @@ public final class FileScanner {
                         if (entry.isDirectory() || entry.isUnixSymlink()) {
                             continue;
                         }
+                        long size = entry.getSize();
+                        String name = entry.getName();
+                        String entryLabel = relative.resolve(name).toString();
+                        if (shouldSkip(entryLabel, index, size)) {
+                            continue;
+                        }
                         try (InputStream entryInputStream = zipFile.getInputStream(entry)) {
-                            long size = entry.getSize();
-                            String name = entry.getName();
-                            String entryLabel = relative.resolve(name).toString();
                             ProcessingResult processingResult = process(
                                     entryLabel,
                                     index,
                                     size,
                                     entryInputStream::read);
+                            builder.add(new Result(
+                                    file,
+                                    size,
+                                    processingResult.getUnheaderedSize(),
+                                    processingResult.getDigest(),
+                                    name));
+                        }
+                    }
+                }
+            } else if (Patterns.RAR.matcher(filename).find()) {
+                try (Archive archive = new Archive(new FileVolumeManager(file.toFile()))) {
+                    for (FileHeader fileHeader : archive) {
+                        if (!fileHeader.isFileHeader() || fileHeader.isDirectory()) {
+                            continue;
+                        }
+                        long size = fileHeader.getFullUnpackSize();
+                        String name = fileHeader.getFileNameString();
+                        String entryLabel = relative.resolve(name).toString();
+                        if (shouldSkip(entryLabel, index, size)) {
+                            continue;
+                        }
+                        try (InputStream rarFileInputStream = archive.getInputStream(fileHeader)) {
+                            ProcessingResult processingResult = process(
+                                    entryLabel,
+                                    index,
+                                    size,
+                                    rarFileInputStream::read);
                             builder.add(new Result(
                                     file,
                                     size,
@@ -353,6 +412,9 @@ public final class FileScanner {
                         long size = entry.getSize();
                         String name = entry.getName();
                         String entryLabel = relative.resolve(name).toString();
+                        if (shouldSkip(entryLabel, index, size)) {
+                            continue;
+                        }
                         ProcessingResult processingResult = process(
                                 entryLabel,
                                 index,
@@ -379,6 +441,9 @@ public final class FileScanner {
                             long size = entry.getRealSize();
                             String name = entry.getName();
                             String entryLabel = relative.resolve(name).toString();
+                            if (shouldSkip(entryLabel, index, size)) {
+                                continue;
+                            }
                             ProcessingResult processingResult = process(
                                     entryLabel,
                                     index,
@@ -397,19 +462,21 @@ public final class FileScanner {
                 }
             } else {
                 // TODO also read the archive itself
-                try (InputStream inputStream = Files.newInputStream(file)) {
-                    long size = fileMetadata.getSize();
-                    ProcessingResult processingResult = process(
-                            label,
-                            index,
-                            size,
-                            inputStream::read);
-                    builder.add(new Result(
-                            file,
-                            size,
-                            processingResult.getUnheaderedSize(),
-                            processingResult.getDigest(),
-                            null));
+                long size = fileMetadata.getSize();
+                if (!shouldSkip(label, index, size)) {
+                    try (InputStream inputStream = Files.newInputStream(file)) {
+                        ProcessingResult processingResult = process(
+                                label,
+                                index,
+                                size,
+                                inputStream::read);
+                        builder.add(new Result(
+                                file,
+                                size,
+                                processingResult.getUnheaderedSize(),
+                                processingResult.getDigest(),
+                                null));
+                    }
                 }
             }
             if (listener != null) {
@@ -419,6 +486,7 @@ public final class FileScanner {
         } catch (Exception e) {
             logger.error("Could not read file '{}'", file, e);
             if (listener != null) {
+                listener.reportFailure(label, index, "Could not read the file", e);
                 listener.reportFinish(label, index);
             }
             return ImmutableList.of();
@@ -483,26 +551,6 @@ public final class FileScanner {
             long size,
             TriFunction<byte[], Integer, Integer, Integer, IOException> function)
             throws IOException {
-        if (size < minRomSize) {
-            logger.info(
-                    "File is smaller than minimum ROM size of {}. Skip calculation of hashes: '{}'",
-                    minRomSizeStr,
-                    label);
-            if (listener != null) {
-                listener.reportProgress(label, index, 100, 0);
-            }
-            return new ProcessingResult(null, size);
-        }
-        if (size > maxRomSize) {
-            logger.info(
-                    "File is larger than maximum ROM size of {}. Skip calculation of hashes: '{}'",
-                    maxRomSizeStr,
-                    label);
-            if (listener != null) {
-                listener.reportProgress(label, index, 100, 0);
-            }
-            return new ProcessingResult(null, size);
-        }
         CRC32 crc32 = threadLocalCrc32.get();
         MessageDigest md5 = threadLocalMd5.get();
         MessageDigest sha1 = threadLocalSha1.get();
