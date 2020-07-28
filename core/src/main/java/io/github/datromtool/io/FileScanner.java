@@ -2,7 +2,6 @@ package io.github.datromtool.io;
 
 import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;
-import com.github.junrar.impl.FileVolumeManager;
 import com.github.junrar.rarfile.FileHeader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -456,13 +455,13 @@ public final class FileScanner {
             Path relative,
             int index,
             ImmutableList.Builder<Result> builder) throws IOException, RarException {
-        try (Archive archive = new Archive(new FileVolumeManager(file.toFile()))) {
+        try (Archive archive = new Archive(file.toFile())) {
             for (FileHeader fileHeader : archive) {
                 if (!fileHeader.isFileHeader() || fileHeader.isDirectory()) {
                     continue;
                 }
                 long size = fileHeader.getFullUnpackSize();
-                String name = fileHeader.getFileNameString();
+                String name = fileHeader.getFileName();
                 String entryLabel = relative.resolve(name).toString();
                 if (shouldSkip(entryLabel, index, size)) {
                     continue;
