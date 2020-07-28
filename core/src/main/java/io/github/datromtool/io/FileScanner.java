@@ -614,6 +614,9 @@ public final class FileScanner {
         CRC32 crc32 = threadLocalCrc32.get();
         MessageDigest md5 = threadLocalMd5.get();
         MessageDigest sha1 = threadLocalSha1.get();
+        crc32.reset();
+        md5.reset();
+        sha1.reset();
         byte[] buffer = threadLocalBuffer.get();
         int reportedPercentage = 0;
         long totalRead = 0;
