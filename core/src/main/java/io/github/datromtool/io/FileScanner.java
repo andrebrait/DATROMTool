@@ -488,6 +488,9 @@ public final class FileScanner {
                     "File is smaller than minimum ROM size of {}. Skip calculation of hashes: '{}'",
                     minRomSizeStr,
                     label);
+            if (listener != null) {
+                listener.reportProgress(label, index, 100, 0);
+            }
             return new ProcessingResult(null, size);
         }
         if (size > maxRomSize) {
@@ -495,6 +498,9 @@ public final class FileScanner {
                     "File is larger than maximum ROM size of {}. Skip calculation of hashes: '{}'",
                     maxRomSizeStr,
                     label);
+            if (listener != null) {
+                listener.reportProgress(label, index, 100, 0);
+            }
             return new ProcessingResult(null, size);
         }
         CRC32 crc32 = threadLocalCrc32.get();
