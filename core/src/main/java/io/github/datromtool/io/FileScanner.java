@@ -1,7 +1,11 @@
 package io.github.datromtool.io;
 
 import com.google.common.collect.ImmutableList;
+import io.github.datromtool.ByteUnit;
 import io.github.datromtool.Patterns;
+import io.github.datromtool.domain.datafile.Datafile;
+import io.github.datromtool.domain.datafile.Game;
+import io.github.datromtool.domain.datafile.Rom;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.detector.Rule;
 import lombok.AccessLevel;
@@ -34,7 +38,6 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.channels.SeekableByteChannel;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -42,8 +45,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
+import java.util.Collection;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.Enumeration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -54,24 +57,107 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.zip.CRC32;
 
-@AllArgsConstructor
 public final class FileScanner {
 
     private static final Logger logger = LoggerFactory.getLogger(FileScanner.class);
 
-    private static final int BUFFER_SIZE = 8 * 1024 * 1024; // 8MB per thread
+    private static final int DEFAULT_BUFFER_SIZE = 32 * 1024; // 32KB per thread
+    private static final int MAX_BUFFER_NO_WARNING = 64 * 1024 * 1024; // 64MB
+    private static final int MAX_BUFFER = 256 * 1024 * 1024; // 256MB
 
+    private final ThreadLocal<CRC32> threadLocalCrc32 = ThreadLocal.withInitial(CRC32::new);
+    private final ThreadLocal<MessageDigest> threadLocalMd5 =
+            ThreadLocal.withInitial(DigestUtils::getMd5Digest);
+    private final ThreadLocal<MessageDigest> threadLocalSha1 =
+            ThreadLocal.withInitial(DigestUtils::getSha1Digest);
+
+    private final int numThreads;
     private final Detector detector;
     private final Listener listener;
-    private final int numThreads;
+    private final long maxRomSize;
+    private final String maxHeaderedSizeStr;
+    private final ThreadLocal<byte[]> threadLocalBuffer;
 
-    private static final ThreadLocal<CRC32> threadLocalCrc32 = ThreadLocal.withInitial(CRC32::new);
-    private static final ThreadLocal<MessageDigest> threadLocalMd5 =
-            ThreadLocal.withInitial(DigestUtils::getMd5Digest);
-    private static final ThreadLocal<MessageDigest> threadLocalSha1 =
-            ThreadLocal.withInitial(DigestUtils::getSha1Digest);
-    private static final ThreadLocal<byte[]> threadLocalBuffer =
-            ThreadLocal.withInitial(() -> new byte[BUFFER_SIZE]);
+    public FileScanner(
+            int numThreads,
+            @Nullable Datafile datafile,
+            @Nullable Detector detector,
+            @Nullable Listener listener) {
+        this.numThreads = numThreads;
+        this.detector = detector;
+        this.listener = listener;
+        int bufferSize;
+        if (datafile == null) {
+            bufferSize = DEFAULT_BUFFER_SIZE;
+            this.maxRomSize = Long.MAX_VALUE;
+        } else {
+            if (detector == null) {
+                bufferSize = DEFAULT_BUFFER_SIZE;
+                this.maxRomSize = datafile.getGames().stream()
+                        .map(Game::getRoms)
+                        .flatMap(Collection::stream)
+                        .filter(r -> r.getSize() != null)
+                        .mapToLong(Rom::getSize)
+                        .max()
+                        .orElse(Long.MAX_VALUE);
+            } else {
+                long maxStartOffset = detector.getRules()
+                        .stream()
+                        .filter(r -> r.getStartOffset() != null)
+                        .mapToLong(Rule::getStartOffset)
+                        .max()
+                        .orElse(0);
+                long minEndOffset = detector.getRules()
+                        .stream()
+                        .filter(r -> r.getEndOffset() != null)
+                        .mapToLong(Rule::getEndOffset)
+                        .min()
+                        .orElse(Long.MAX_VALUE);
+                long maxUnheaderedSize = datafile.getGames().stream()
+                        .map(Game::getRoms)
+                        .flatMap(Collection::stream)
+                        .filter(r -> r.getSize() != null)
+                        .mapToLong(Rom::getSize)
+                        .max()
+                        .orElse(Long.MAX_VALUE);
+                if (maxStartOffset < 0) {
+                    maxStartOffset += maxUnheaderedSize;
+                }
+                if (minEndOffset < 0) {
+                    minEndOffset += maxUnheaderedSize;
+                }
+                maxStartOffset = Math.max(maxStartOffset, 0);
+                minEndOffset = Math.min(minEndOffset, maxUnheaderedSize);
+                this.maxRomSize = maxUnheaderedSize
+                        + maxStartOffset
+                        + (maxUnheaderedSize - minEndOffset);
+                bufferSize =
+                        (int) Math.max(Math.min(maxRomSize, MAX_BUFFER), DEFAULT_BUFFER_SIZE);
+                ByteUnit unit = ByteUnit.getUnit(bufferSize);
+                String bufferSizeStr = String.format("%.02f", unit.convert(bufferSize));
+                if (bufferSize > MAX_BUFFER_NO_WARNING) {
+                    logger.warn(
+                            "Using a bigger I/O buffer size of {} {} due to header detection",
+                            bufferSizeStr,
+                            unit.getSymbol());
+                    if (bufferSize == MAX_BUFFER) {
+                        logger.warn(
+                                "Disabling header detection for ROMs larger than {} {}",
+                                bufferSizeStr,
+                                unit.getSymbol());
+                    }
+                } else {
+                    logger.info("Using I/O buffer size of {} {}", bufferSizeStr, unit.getSymbol());
+                }
+            }
+        }
+        ByteUnit maxHeaderedSizeUnit = ByteUnit.getUnit(this.maxRomSize);
+        this.maxHeaderedSizeStr = String.format(
+                "%.02f %s",
+                maxHeaderedSizeUnit.convert(maxRomSize),
+                maxHeaderedSizeUnit.getSymbol());
+        this.threadLocalBuffer = ThreadLocal.withInitial(() -> new byte[bufferSize]);
+    }
 
     // TODO handle scanning archives as ROMs
 
@@ -90,8 +176,16 @@ public final class FileScanner {
 
         Path path;
         long size;
+        long unheaderedSize;
         Digest digest;
         String archivePath;
+    }
+
+    @Value
+    private static class ProcessingResult {
+
+        Result.Digest digest;
+        long unheaderedSize;
     }
 
     @Value
@@ -212,10 +306,8 @@ public final class FileScanner {
             ImmutableList.Builder<Result> builder = ImmutableList.builder();
             String filename = file.getFileName().toString();
             if (Patterns.ZIP.matcher(filename).find()) {
-                SeekableByteChannel seekableByteChannel =
-                        Files.newByteChannel(file, EnumSet.of(StandardOpenOption.READ));
-                try (ZipFile zipFile = new ZipFile(seekableByteChannel)) {
-                    Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
+                try (ZipFile zipFile = new ZipFile(file.toFile())) {
+                    Enumeration<ZipArchiveEntry> entries = zipFile.getEntriesInPhysicalOrder();
                     while (entries.hasMoreElements()) {
                         ZipArchiveEntry entry = entries.nextElement();
                         if (entry.isDirectory()) {
@@ -225,22 +317,22 @@ public final class FileScanner {
                             long size = entry.getSize();
                             String name = entry.getName();
                             String entryLabel = relative.resolve(name).toString();
+                            ProcessingResult processingResult = process(
+                                    entryLabel,
+                                    index,
+                                    size,
+                                    entryInputStream::read);
                             builder.add(new Result(
                                     file,
                                     size,
-                                    processDigest(
-                                            entryLabel,
-                                            index,
-                                            size,
-                                            entryInputStream::read),
+                                    processingResult.getUnheaderedSize(),
+                                    processingResult.getDigest(),
                                     name));
                         }
                     }
                 }
             } else if (Patterns.SEVEN_ZIP.matcher(filename).find()) {
-                SeekableByteChannel seekableByteChannel =
-                        Files.newByteChannel(file, EnumSet.of(StandardOpenOption.READ));
-                try (SevenZFile sevenZFile = new SevenZFile(seekableByteChannel)) {
+                try (SevenZFile sevenZFile = new SevenZFile(file.toFile())) {
                     SevenZArchiveEntry entry;
                     while ((entry = sevenZFile.getNextEntry()) != null) {
                         if (entry.isDirectory()) {
@@ -249,14 +341,16 @@ public final class FileScanner {
                         long size = entry.getSize();
                         String name = entry.getName();
                         String entryLabel = relative.resolve(name).toString();
+                        ProcessingResult processingResult = process(
+                                entryLabel,
+                                index,
+                                size,
+                                sevenZFile::read);
                         builder.add(new Result(
                                 file,
                                 size,
-                                processDigest(
-                                        entryLabel,
-                                        index,
-                                        size,
-                                        sevenZFile::read),
+                                processingResult.getUnheaderedSize(),
+                                processingResult.getDigest(),
                                 name));
                     }
                 }
@@ -273,14 +367,16 @@ public final class FileScanner {
                             long size = entry.getRealSize();
                             String name = entry.getName();
                             String entryLabel = relative.resolve(name).toString();
+                            ProcessingResult processingResult = process(
+                                    entryLabel,
+                                    index,
+                                    size,
+                                    tarArchiveInputStream::read);
                             builder.add(new Result(
                                     file,
                                     size,
-                                    processDigest(
-                                            entryLabel,
-                                            index,
-                                            size,
-                                            tarArchiveInputStream::read),
+                                    processingResult.getUnheaderedSize(),
+                                    processingResult.getDigest(),
                                     name));
                         }
                     }
@@ -291,14 +387,16 @@ public final class FileScanner {
                 // TODO also read the archive itself
                 try (InputStream inputStream = Files.newInputStream(file)) {
                     long size = fileMetadata.getSize();
+                    ProcessingResult processingResult = process(
+                            label,
+                            index,
+                            size,
+                            inputStream::read);
                     builder.add(new Result(
                             file,
                             size,
-                            processDigest(
-                                    label,
-                                    index,
-                                    size,
-                                    inputStream::read),
+                            processingResult.getUnheaderedSize(),
+                            processingResult.getDigest(),
                             null));
                 }
             }
@@ -366,12 +464,20 @@ public final class FileScanner {
         return outputStream;
     }
 
-    private Result.Digest processDigest(
+    @Nonnull
+    private ProcessingResult process(
             String label,
             int index,
             long size,
             TriFunction<byte[], Integer, Integer, Integer, IOException> function)
             throws IOException {
+        if (size > maxRomSize) {
+            logger.info(
+                    "File is larger than maximum ROM size of {}. Skip calculation of hashes: '{}'",
+                    maxHeaderedSizeStr,
+                    label);
+            return new ProcessingResult(null, size);
+        }
         CRC32 crc32 = threadLocalCrc32.get();
         MessageDigest md5 = threadLocalMd5.get();
         MessageDigest sha1 = threadLocalSha1.get();
@@ -381,40 +487,68 @@ public final class FileScanner {
         long start = System.nanoTime();
         int bytesRead;
         int remainingBytes;
-        while ((remainingBytes = (int) Math.min(size - totalRead, buffer.length)) > 0
-                && (bytesRead = function.apply(buffer, 0, remainingBytes)) > -1) {
-            totalRead += bytesRead;
-            if (bytesRead == size && detector != null) {
-                // Apply logic to detect headers
-                // This is the only time we're going to read the file anyway
-                // We can safely redefine the buffer variable here
-                for (Rule r : detector.getRules()) {
-                    buffer = r.apply(buffer, bytesRead);
-                    bytesRead = buffer.length;
+        if (size <= buffer.length && detector != null) {
+            // Read the whole entry to the buffer and check headers
+            while ((remainingBytes = (int) Math.min(size - totalRead, buffer.length)) > 0
+                    && (bytesRead = function.apply(buffer, (int) totalRead, remainingBytes)) > -1) {
+                totalRead += bytesRead;
+            }
+            // Apply logic to detect headers
+            // This is the only time we're going to read the file anyway
+            // We can safely redefine the buffer variable here
+            for (Rule r : detector.getRules()) {
+                try {
+                    byte[] newBuffer = r.apply(buffer, (int) totalRead);
+                    if (newBuffer != buffer) {
+                        logger.info(
+                                "Detected header using '{}' for '{}'",
+                                detector.getName(),
+                                label);
+                        totalRead = newBuffer.length;
+                        buffer = newBuffer;
+                        break;
+                    }
+                } catch (Exception e) {
+                    logger.error("Error while processing rule for '{}'", label, e);
                 }
             }
-            crc32.update(buffer, 0, bytesRead);
-            md5.update(buffer, 0, bytesRead);
-            sha1.update(buffer, 0, bytesRead);
+            crc32.update(buffer, 0, (int) totalRead);
+            md5.update(buffer, 0, (int) totalRead);
+            sha1.update(buffer, 0, (int) totalRead);
             if (listener != null) {
-                int percentage = (int) ((totalRead * 100d) / size);
-                if (reportedPercentage != percentage) {
-                    double secondsPassed = (System.nanoTime() - start) / 1E9d;
-                    long bytesPerSecond = Math.round(bytesRead / secondsPassed);
-                    listener.reportProgress(label, index, percentage, bytesPerSecond);
-                    reportedPercentage = percentage;
+                double secondsPassed = (System.nanoTime() - start) / 1E9d;
+                long bytesPerSecond = Math.round(totalRead / secondsPassed);
+                listener.reportProgress(label, index, 100, bytesPerSecond);
+            }
+        } else {
+            while ((remainingBytes = (int) Math.min(size - totalRead, buffer.length)) > 0
+                    && (bytesRead = function.apply(buffer, 0, remainingBytes)) > -1) {
+                totalRead += bytesRead;
+                crc32.update(buffer, 0, bytesRead);
+                md5.update(buffer, 0, bytesRead);
+                sha1.update(buffer, 0, bytesRead);
+                if (listener != null) {
+                    int percentage = (int) ((totalRead * 100d) / size);
+                    if (reportedPercentage != percentage) {
+                        double secondsPassed = (System.nanoTime() - start) / 1E9d;
+                        long bytesPerSecond = Math.round(bytesRead / secondsPassed);
+                        listener.reportProgress(label, index, percentage, bytesPerSecond);
+                        reportedPercentage = percentage;
+                    }
+                    start = System.nanoTime();
                 }
-                start = System.nanoTime();
             }
         }
-        Result.Digest digest = new Result.Digest(
-                Long.toHexString(crc32.getValue()),
-                Hex.encodeHexString(md5.digest()),
-                Hex.encodeHexString(sha1.digest()));
+        ProcessingResult processingResult = new ProcessingResult(
+                new Result.Digest(
+                        Long.toHexString(crc32.getValue()),
+                        Hex.encodeHexString(md5.digest()),
+                        Hex.encodeHexString(sha1.digest())),
+                totalRead);
         crc32.reset();
         md5.reset();
         sha1.reset();
-        return digest;
+        return processingResult;
     }
 
     private interface TriFunction<K, L, M, N, E extends Throwable> {

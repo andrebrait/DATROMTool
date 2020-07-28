@@ -44,17 +44,16 @@ public class FileTest extends Test {
 
     @JsonIgnore
     public long getSizeAsLong() {
-        return Long.parseLong(getSize(), 16);
+        return size != null ? Long.parseLong(size, 16) : 0;
     }
 
     @Override
     public boolean test(byte[] bytes, int actualLength) {
-        actualLength = Math.min(bytes.length, actualLength);
-        if (POWER_OF_TWO.equals(getSize())) {
+        if (POWER_OF_TWO.equals(size)) {
             double log = Math.log(actualLength) / Math.log(2);
             return Math.abs(Math.round(log) - log) < 1e-11;
         }
-        switch (getOperator()) {
+        switch (operator) {
             case LESS:
                 return (actualLength < getSizeAsLong()) == getResult();
             case GREATER:

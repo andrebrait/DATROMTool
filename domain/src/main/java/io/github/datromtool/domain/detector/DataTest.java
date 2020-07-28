@@ -3,6 +3,7 @@ package io.github.datromtool.domain.detector;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import io.github.datromtool.domain.detector.util.NumberUtils;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Value;
@@ -24,17 +25,16 @@ public class DataTest extends BinaryTest {
     @Override
     public boolean test(byte[] bytes, int actualLength) {
         actualLength = Math.min(bytes.length, actualLength);
-        byte[] value = getValueAsBytes();
-        int offset = (int) getOffsetAsLong();
+        int offset = NumberUtils.asInt(getOffset());
         if (offset < 0) {
-            offset = actualLength + offset;
+            offset += actualLength;
         }
-        if (offset < 0 || actualLength - offset < value.length) {
+        if (offset < 0 || actualLength - offset < getValue().length) {
             return false;
         }
         boolean matches = true;
-        for (int i = 0; matches && i < value.length; i++) {
-            matches = value[i] == bytes[i + offset];
+        for (int i = 0; matches && i < getValue().length; i++) {
+            matches = getValue()[i] == bytes[i + offset];
         }
         return matches == getResult();
     }

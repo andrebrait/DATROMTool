@@ -1,16 +1,20 @@
 
 package io.github.datromtool.domain.detector;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Bytes;
 import io.github.datromtool.domain.detector.enumerations.BinaryOperation;
 import io.github.datromtool.domain.detector.exception.RuleException;
+import io.github.datromtool.domain.detector.util.NumberUtils;
+import io.github.datromtool.domain.serialization.HexDeserializer;
+import io.github.datromtool.domain.serialization.HexSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -71,13 +75,17 @@ public class Rule {
     @Builder.Default
     @JacksonXmlProperty(localName = "start_offset", isAttribute = true)
     @JsonProperty(defaultValue = "0")
-    String startOffset = "0";
+    @JsonSerialize(using = HexSerializer.class)
+    @JsonDeserialize(using = HexDeserializer.class)
+    Long startOffset = 0L;
 
     @NonNull
     @Builder.Default
     @JacksonXmlProperty(localName = "end_offset", isAttribute = true)
     @JsonProperty(defaultValue = END_OF_FILE)
-    String endOffset = END_OF_FILE;
+    @JsonSerialize(using = HexSerializer.class)
+    @JsonDeserialize(using = HexDeserializer.class)
+    Long endOffset = Long.MAX_VALUE;
 
     @NonNull
     @Builder.Default
@@ -85,45 +93,32 @@ public class Rule {
     @JsonProperty(defaultValue = "none")
     BinaryOperation operation = BinaryOperation.NONE;
 
-    @JsonIgnore
-    public long getStartOffsetAsLong() {
-        return Long.parseLong(getStartOffset(), 16);
-    }
-
-    @JsonIgnore
-    public long getEndOffsetAsLong() {
-        return END_OF_FILE.equals(getEndOffset())
-                ? Long.MAX_VALUE
-                : Long.parseLong(getEndOffset(), 16);
-    }
-
-    private boolean testAll(List<? extends Test> tests, byte[] bytes, int actualLength) {
+    private static boolean testAll(List<? extends Test> tests, byte[] bytes, int actualLength) {
         return tests.stream().allMatch(t -> t.test(bytes, actualLength));
     }
 
-    @JsonIgnore
     public byte[] apply(byte[] bytes, int actualLength) {
         actualLength = Math.min(bytes.length, actualLength);
-        if (testAll(getDataTests(), bytes, actualLength)
-                && testAll(getFileTests(), bytes, actualLength)
-                && testAll(getAndTests(), bytes, actualLength)
-                && testAll(getOrTests(), bytes, actualLength)
-                && testAll(getXorTests(), bytes, actualLength)) {
-            int startOffset = (int) getStartOffsetAsLong();
+        if (testAll(dataTests, bytes, actualLength)
+                && testAll(fileTests, bytes, actualLength)
+                && testAll(andTests, bytes, actualLength)
+                && testAll(orTests, bytes, actualLength)
+                && testAll(xorTests, bytes, actualLength)) {
+            int startOffset = NumberUtils.asInt(this.startOffset);
             if (startOffset < 0) {
-                startOffset = actualLength + startOffset;
+                startOffset += actualLength;
             }
             startOffset = Math.max(startOffset, 0);
-            int endOffset = (int) getEndOffsetAsLong();
+            int endOffset = NumberUtils.asInt(this.endOffset);
             if (endOffset < 0) {
-                endOffset = actualLength + endOffset;
+                endOffset += actualLength;
             }
             endOffset = Math.min(endOffset, actualLength);
             if (startOffset != 0
                     || endOffset != actualLength
-                    || getOperation() != BinaryOperation.NONE) {
+                    || operation != BinaryOperation.NONE) {
                 byte[] out = Arrays.copyOfRange(bytes, startOffset, endOffset);
-                switch (getOperation()) {
+                switch (operation) {
                     case BIT_SWAP:
                         for (int i = 0; i < out.length; i++) {
                             out[i] = (byte) (Integer.reverse(out[i] << 24) & 0xFF);

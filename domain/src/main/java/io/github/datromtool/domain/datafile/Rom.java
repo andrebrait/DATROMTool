@@ -33,7 +33,7 @@ public class Rom {
     @NonNull
     @JacksonXmlProperty(isAttribute = true)
     @JsonProperty(required = true)
-    String size;
+    Long size;
 
     @JacksonXmlProperty(isAttribute = true)
     String crc;
