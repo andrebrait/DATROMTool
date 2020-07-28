@@ -74,8 +74,10 @@ public final class FileScanner {
     private final int numThreads;
     private final Detector detector;
     private final Listener listener;
+    private final long minRomSize;
     private final long maxRomSize;
-    private final String maxHeaderedSizeStr;
+    private final String minRomSizeStr;
+    private final String maxRomSizeStr;
     private final ThreadLocal<byte[]> threadLocalBuffer;
 
     public FileScanner(
@@ -90,7 +92,15 @@ public final class FileScanner {
         if (datafile == null) {
             bufferSize = DEFAULT_BUFFER_SIZE;
             this.maxRomSize = Long.MAX_VALUE;
+            this.minRomSize = 0L;
         } else {
+            this.minRomSize = datafile.getGames().stream()
+                    .map(Game::getRoms)
+                    .flatMap(Collection::stream)
+                    .filter(r -> r.getSize() != null)
+                    .mapToLong(Rom::getSize)
+                    .min()
+                    .orElse(0);
             if (detector == null) {
                 bufferSize = DEFAULT_BUFFER_SIZE;
                 this.maxRomSize = datafile.getGames().stream()
@@ -151,12 +161,14 @@ public final class FileScanner {
                 }
             }
         }
-        ByteUnit maxHeaderedSizeUnit = ByteUnit.getUnit(this.maxRomSize);
-        this.maxHeaderedSizeStr = String.format(
-                "%.02f %s",
-                maxHeaderedSizeUnit.convert(maxRomSize),
-                maxHeaderedSizeUnit.getSymbol());
+        this.minRomSizeStr = makeRomSizeStr(this.minRomSize);
+        this.maxRomSizeStr = makeRomSizeStr(this.maxRomSize);
         this.threadLocalBuffer = ThreadLocal.withInitial(() -> new byte[bufferSize]);
+    }
+
+    private static String makeRomSizeStr(long size) {
+        ByteUnit minRomSizeUnit = ByteUnit.getUnit(size);
+        return String.format("%.02f %s", minRomSizeUnit.convert(size), minRomSizeUnit.getSymbol());
     }
 
     // TODO handle scanning archives as ROMs
@@ -471,10 +483,17 @@ public final class FileScanner {
             long size,
             TriFunction<byte[], Integer, Integer, Integer, IOException> function)
             throws IOException {
+        if (size < minRomSize) {
+            logger.info(
+                    "File is smaller than minimum ROM size of {}. Skip calculation of hashes: '{}'",
+                    minRomSizeStr,
+                    label);
+            return new ProcessingResult(null, size);
+        }
         if (size > maxRomSize) {
             logger.info(
                     "File is larger than maximum ROM size of {}. Skip calculation of hashes: '{}'",
-                    maxHeaderedSizeStr,
+                    maxRomSizeStr,
                     label);
             return new ProcessingResult(null, size);
         }
