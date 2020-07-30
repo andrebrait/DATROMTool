@@ -35,6 +35,8 @@ public final class GameParser {
 
     private final static Logger logger = LoggerFactory.getLogger(GameParser.class);
     private final static Pattern COMMA_OR_PLUS = Pattern.compile("[,+]");
+    private final static Pattern NUMERIC_HEX =
+            Pattern.compile("^-?[a-f0-9]+$", Pattern.CASE_INSENSITIVE);
 
     public enum DivergenceDetection {
         IGNORE,
@@ -163,31 +165,31 @@ public final class GameParser {
                 || (detection == DivergenceDetection.TWO_WAY && !provided.equals(detected))));
     }
 
-    private static ImmutableList<Integer> detectProto(Game game) {
+    private static ImmutableList<Long> detectProto(Game game) {
         return parseNumberFromPattern(Patterns.PROTO, game);
     }
 
-    private static ImmutableList<Integer> detectBeta(Game game) {
+    private static ImmutableList<Long> detectBeta(Game game) {
         return parseNumberFromPattern(Patterns.BETA, game);
     }
 
-    private static ImmutableList<Integer> detectDemo(Game game) {
+    private static ImmutableList<Long> detectDemo(Game game) {
         return parseNumberFromPattern(Patterns.DEMO, game);
     }
 
-    private static ImmutableList<Integer> detectSample(Game game) {
+    private static ImmutableList<Long> detectSample(Game game) {
         return parseNumberFromPattern(Patterns.SAMPLE, game);
     }
 
-    private static ImmutableList<Integer> detectRevision(Game game) {
+    private static ImmutableList<Long> detectRevision(Game game) {
         return parseNumberFromPattern(Patterns.REVISION, game);
     }
 
-    private static ImmutableList<Integer> detectVersion(Game game) {
+    private static ImmutableList<Long> detectVersion(Game game) {
         return parseNumberFromPattern(Patterns.VERSION, game);
     }
 
-    private static ImmutableList<Integer> parseNumberFromPattern(Pattern pattern, Game game) {
+    private static ImmutableList<Long> parseNumberFromPattern(Pattern pattern, Game game) {
         Matcher matcher = pattern.matcher(game.getName());
         if (matcher.find()) {
             return IntStream.range(1, matcher.groupCount() + 1)
@@ -197,12 +199,12 @@ public final class GameParser {
                     .map(s -> s.split("\\."))
                     .flatMap(Arrays::stream)
                     .map(n -> {
-                        try {
-                            return Integer.valueOf(n, 16);
-                        } catch (NumberFormatException ignore) {
+                        if (NUMERIC_HEX.matcher(n).matches()) {
+                            return Long.valueOf(n, 16);
                         }
                         return n.toLowerCase().chars()
-                                .reduce(0, (i, j) -> (i * 16) + j);
+                                .mapToObj(Long::valueOf)
+                                .reduce(0L, (i, j) -> (i * 16) + j);
                     }).collect(ImmutableList.toImmutableList());
         }
         return ImmutableList.of();

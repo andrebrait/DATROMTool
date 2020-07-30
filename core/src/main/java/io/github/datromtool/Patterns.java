@@ -1,6 +1,5 @@
 package io.github.datromtool;
 
-import com.google.common.collect.ImmutableSet;
 import lombok.NoArgsConstructor;
 
 import java.util.regex.Pattern;
@@ -65,39 +64,4 @@ public final class Patterns {
     public final static Pattern VERSION =
             compile("\\(v\\s*([a-z0-9.]+)(?:,\\s*v\\s*([a-z0-9.]+))?\\)", CASE_INSENSITIVE);
 
-    /*
-     * Archive formats
-     */
-    public final static Pattern ZIP =
-            compile("\\.zip$", CASE_INSENSITIVE);
-    public final static Pattern RAR =
-            compile("\\.rar$", CASE_INSENSITIVE);
-    public final static Pattern SEVEN_ZIP =
-            compile("\\.7z$", CASE_INSENSITIVE);
-    public final static Pattern TAR_ARCHIVE =
-            compile("\\.tar(?:\\.[^.]+)?$", CASE_INSENSITIVE);
-
-    public final static Pattern TAR_GZ =
-            compile("\\.tar\\.gz$", CASE_INSENSITIVE);
-    public final static Pattern TAR_XZ =
-            compile("\\.tar\\.xz$", CASE_INSENSITIVE);
-    public final static Pattern TAR_BZ2 =
-            compile("\\.tar\\.bz2$", CASE_INSENSITIVE);
-    public final static Pattern TAR_LZMA =
-            compile("\\.tar\\.lzma$", CASE_INSENSITIVE);
-    public final static Pattern TAR_LZ4 =
-            compile("\\.tar\\.lz4$", CASE_INSENSITIVE);
-    public final static Pattern TAR_UNCOMPRESSED =
-            compile("\\.tar$", CASE_INSENSITIVE);
-
-    public final static ImmutableSet<Pattern> ARCHIVE_PATTERNS = ImmutableSet.of(
-            ZIP,
-            RAR,
-            SEVEN_ZIP,
-            TAR_GZ,
-            TAR_XZ,
-            TAR_BZ2,
-            TAR_LZMA,
-            TAR_LZ4,
-            TAR_UNCOMPRESSED);
 }

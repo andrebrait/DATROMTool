@@ -1,12 +1,9 @@
 package io.github.datromtool.io;
 
-import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;
-import com.github.junrar.rarfile.FileHeader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.ByteUnit;
-import io.github.datromtool.Patterns;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.domain.datafile.Rom;
@@ -18,22 +15,6 @@ import lombok.Getter;
 import lombok.Value;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
-import org.apache.commons.compress.archivers.sevenz.SevenZFile;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipFile;
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorInputStream;
-import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorOutputStream;
-import org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream;
-import org.apache.commons.compress.compressors.lzma.LZMACompressorOutputStream;
-import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
-import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,25 +22,20 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.zip.CRC32;
 
@@ -86,7 +62,7 @@ public final class FileScanner {
     private final String maxRomSizeStr;
     private final ThreadLocal<byte[]> threadLocalBuffer;
 
-    private final ImmutableSet<Pattern> alsoScanArchives;
+    private final ImmutableSet<ArchiveType> alsoScanArchives;
 
     public FileScanner(
             int numThreads,
@@ -115,8 +91,8 @@ public final class FileScanner {
                     .flatMap(Collection::stream)
                     .filter(r -> r.getSize() != null)
                     .map(Rom::getName)
-                    .flatMap(n -> Patterns.ARCHIVE_PATTERNS.stream()
-                            .filter(p -> p.matcher(n).find()))
+                    .map(ArchiveType::parse)
+                    .filter(at -> at != ArchiveType.NONE)
                     .collect(ImmutableSet.toImmutableSet());
             if (detector == null) {
                 bufferSize = DEFAULT_BUFFER_SIZE;
@@ -201,6 +177,7 @@ public final class FileScanner {
             String sha1;
         }
 
+        ArchiveType archiveType;
         Path path;
         long size;
         long unheaderedSize;
@@ -230,6 +207,8 @@ public final class FileScanner {
         void reportStart(String label, int thread);
 
         void reportProgress(String label, int thread, int percentage, long speed);
+
+        void reportSkip(String label, int thread, String message);
 
         void reportFailure(String label, int thread, String message, Throwable cause);
 
@@ -330,7 +309,7 @@ public final class FileScanner {
                     minRomSizeStr,
                     label);
             if (listener != null) {
-                listener.reportProgress(label, index, 100, 0);
+                listener.reportSkip(label, index, "File too small");
             }
             return true;
         }
@@ -340,7 +319,7 @@ public final class FileScanner {
                     maxRomSizeStr,
                     label);
             if (listener != null) {
-                listener.reportProgress(label, index, 100, 0);
+                listener.reportSkip(label, index, "File too big");
             }
             return true;
         }
@@ -357,24 +336,40 @@ public final class FileScanner {
         }
         try {
             ImmutableList.Builder<Result> builder = ImmutableList.builder();
-            String filename = file.getFileName().toString();
             boolean scanned = false;
-            if (Patterns.ZIP.matcher(filename).find()) {
-                scanZip(file, relative, index, builder);
-                scanned = true;
-            } else if (Patterns.RAR.matcher(filename).find()) {
-                scanRar(file, relative, index, builder);
-                scanned = true;
-            } else if (Patterns.SEVEN_ZIP.matcher(filename).find()) {
-                scanSevenZip(file, relative, index, builder);
-                scanned = true;
-            } else if (Patterns.TAR_ARCHIVE.matcher(filename).find()) {
-                scanTar(file, relative, index, builder);
-                scanned = true;
+            ArchiveType archiveType = ArchiveType.parse(file);
+            try {
+                switch (archiveType) {
+                    case ZIP:
+                        scanZip(file, relative, index, builder);
+                        scanned = true;
+                        break;
+                    case RAR:
+                        scanRar(file, relative, index, builder);
+                        scanned = true;
+                        break;
+                    case SEVEN_ZIP:
+                        scanSevenZip(file, relative, index, builder);
+                        scanned = true;
+                        break;
+                    case TAR:
+                    case TAR_BZ2:
+                    case TAR_GZ:
+                    case TAR_LZ4:
+                    case TAR_LZMA:
+                    case TAR_XZ:
+                    case TAR_ZSTD:
+                        scanTar(archiveType, file, relative, index, builder);
+                        scanned = true;
+                }
+            } catch (Exception e) {
+                logger.error(
+                        "Unexpected error while reading archive '{}' detected as {}",
+                        file,
+                        archiveType,
+                        e);
             }
-            if (!scanned || alsoScanArchives.stream()
-                    .map(p -> p.matcher(filename))
-                    .anyMatch(Matcher::find)) {
+            if (!scanned || alsoScanArchives.contains(archiveType)) {
                 scanFile(fileMetadata, file, label, index, builder);
             }
             if (listener != null) {
@@ -406,6 +401,7 @@ public final class FileScanner {
                         size,
                         inputStream::read);
                 builder.add(new Result(
+                        ArchiveType.NONE,
                         file,
                         size,
                         processingResult.getUnheaderedSize(),
@@ -420,34 +416,28 @@ public final class FileScanner {
             Path relative,
             int index,
             ImmutableList.Builder<Result> builder) throws IOException {
-        try (ZipFile zipFile = new ZipFile(file.toFile())) {
-            Enumeration<ZipArchiveEntry> entries = zipFile.getEntriesInPhysicalOrder();
-            while (entries.hasMoreElements()) {
-                ZipArchiveEntry entry = entries.nextElement();
-                if (entry.isDirectory() || entry.isUnixSymlink()) {
-                    continue;
-                }
-                long size = entry.getSize();
-                String name = entry.getName();
-                String entryLabel = relative.resolve(name).toString();
-                if (shouldSkip(entryLabel, index, size)) {
-                    continue;
-                }
-                try (InputStream entryInputStream = zipFile.getInputStream(entry)) {
-                    ProcessingResult processingResult = process(
-                            entryLabel,
-                            index,
-                            size,
-                            entryInputStream::read);
-                    builder.add(new Result(
-                            file,
-                            size,
-                            processingResult.getUnheaderedSize(),
-                            processingResult.getDigest(),
-                            name));
-                }
+        ArchiveUtils.readZip(file, (zipFile, zipArchiveEntry) -> {
+            long size = zipArchiveEntry.getSize();
+            String name = zipArchiveEntry.getName();
+            String entryLabel = relative.resolve(name).toString();
+            if (shouldSkip(entryLabel, index, size)) {
+                return;
             }
-        }
+            try (InputStream entryInputStream = zipFile.getInputStream(zipArchiveEntry)) {
+                ProcessingResult processingResult = process(
+                        entryLabel,
+                        index,
+                        size,
+                        entryInputStream::read);
+                builder.add(new Result(
+                        ArchiveType.ZIP,
+                        file,
+                        size,
+                        processingResult.getUnheaderedSize(),
+                        processingResult.getDigest(),
+                        name));
+            }
+        });
     }
 
     private void scanRar(
@@ -455,32 +445,28 @@ public final class FileScanner {
             Path relative,
             int index,
             ImmutableList.Builder<Result> builder) throws IOException, RarException {
-        try (Archive archive = new Archive(file.toFile())) {
-            for (FileHeader fileHeader : archive) {
-                if (!fileHeader.isFileHeader() || fileHeader.isDirectory()) {
-                    continue;
-                }
-                long size = fileHeader.getFullUnpackSize();
-                String name = fileHeader.getFileName();
-                String entryLabel = relative.resolve(name).toString();
-                if (shouldSkip(entryLabel, index, size)) {
-                    continue;
-                }
-                try (InputStream rarFileInputStream = archive.getInputStream(fileHeader)) {
-                    ProcessingResult processingResult = process(
-                            entryLabel,
-                            index,
-                            size,
-                            rarFileInputStream::read);
-                    builder.add(new Result(
-                            file,
-                            size,
-                            processingResult.getUnheaderedSize(),
-                            processingResult.getDigest(),
-                            name));
-                }
+        ArchiveUtils.readRar(file, (archive, fileHeader) -> {
+            long size = fileHeader.getFullUnpackSize();
+            String name = fileHeader.getFileName();
+            String entryLabel = relative.resolve(name).toString();
+            if (shouldSkip(entryLabel, index, size)) {
+                return;
             }
-        }
+            try (InputStream rarFileInputStream = archive.getInputStream(fileHeader)) {
+                ProcessingResult processingResult = process(
+                        entryLabel,
+                        index,
+                        size,
+                        rarFileInputStream::read);
+                builder.add(new Result(
+                        ArchiveType.RAR,
+                        file,
+                        size,
+                        processingResult.getUnheaderedSize(),
+                        processingResult.getDigest(),
+                        name));
+            }
+        });
     }
 
     private void scanSevenZip(
@@ -488,120 +474,54 @@ public final class FileScanner {
             Path relative,
             int index,
             ImmutableList.Builder<Result> builder) throws IOException {
-        try (SevenZFile sevenZFile = new SevenZFile(file.toFile())) {
-            SevenZArchiveEntry entry;
-            while ((entry = sevenZFile.getNextEntry()) != null) {
-                if (entry.isDirectory() || entry.isAntiItem()) {
-                    continue;
-                }
-                long size = entry.getSize();
-                String name = entry.getName();
-                String entryLabel = relative.resolve(name).toString();
-                if (shouldSkip(entryLabel, index, size)) {
-                    continue;
-                }
-                ProcessingResult processingResult = process(
-                        entryLabel,
-                        index,
-                        size,
-                        sevenZFile::read);
-                builder.add(new Result(
-                        file,
-                        size,
-                        processingResult.getUnheaderedSize(),
-                        processingResult.getDigest(),
-                        name));
+        ArchiveUtils.readSevenZip(file, (sevenZFile, sevenZArchiveEntry) -> {
+            long size = sevenZArchiveEntry.getSize();
+            String name = sevenZArchiveEntry.getName();
+            String entryLabel = relative.resolve(name).toString();
+            if (shouldSkip(entryLabel, index, size)) {
+                return;
             }
-        }
+            ProcessingResult processingResult = process(
+                    entryLabel,
+                    index,
+                    size,
+                    sevenZFile::read);
+            builder.add(new Result(
+                    ArchiveType.SEVEN_ZIP,
+                    file,
+                    size,
+                    processingResult.getUnheaderedSize(),
+                    processingResult.getDigest(),
+                    name));
+        });
     }
 
     private void scanTar(
+            ArchiveType archiveType,
             Path file,
             Path relative,
             int index,
             ImmutableList.Builder<Result> builder) throws IOException {
-        InputStream inputStream = inputStreamForTar(file);
-        if (inputStream != null) {
-            try (TarArchiveInputStream tarArchiveInputStream =
-                    new TarArchiveInputStream(inputStream)) {
-                TarArchiveEntry entry;
-                while ((entry = tarArchiveInputStream.getNextTarEntry()) != null) {
-                    if (!entry.isFile() || !tarArchiveInputStream.canReadEntryData(entry)) {
-                        continue;
-                    }
-                    long size = entry.getRealSize();
-                    String name = entry.getName();
-                    String entryLabel = relative.resolve(name).toString();
-                    if (shouldSkip(entryLabel, index, size)) {
-                        continue;
-                    }
-                    ProcessingResult processingResult = process(
-                            entryLabel,
-                            index,
-                            size,
-                            tarArchiveInputStream::read);
-                    builder.add(new Result(
-                            file,
-                            size,
-                            processingResult.getUnheaderedSize(),
-                            processingResult.getDigest(),
-                            name));
-                }
+        ArchiveUtils.readTar(file, (tarArchiveEntry, tarArchiveInputStream) -> {
+            long size = tarArchiveEntry.getRealSize();
+            String name = tarArchiveEntry.getName();
+            String entryLabel = relative.resolve(name).toString();
+            if (shouldSkip(entryLabel, index, size)) {
+                return;
             }
-        } else {
-            logger.warn("Unsupported TAR archive compression for '{}'", file);
-        }
-    }
-
-    @Nullable
-    private static InputStream inputStreamForTar(Path file) throws IOException {
-        InputStream inputStream = null;
-        String filename = file.getFileName().toString();
-        if (Patterns.TAR_GZ.matcher(filename).find()) {
-            inputStream = new GzipCompressorInputStream(Files.newInputStream(file));
-        } else if (Patterns.TAR_BZ2.matcher(filename).find()) {
-            inputStream = new BZip2CompressorInputStream(Files.newInputStream(file));
-        } else if (Patterns.TAR_XZ.matcher(filename).find()) {
-            inputStream = new XZCompressorInputStream(Files.newInputStream(file));
-        } else if (Patterns.TAR_LZMA.matcher(filename).find()) {
-            inputStream = new LZMACompressorInputStream(Files.newInputStream(file));
-        } else if (Patterns.TAR_LZ4.matcher(filename).find()) {
-            inputStream = new BlockLZ4CompressorInputStream(Files.newInputStream(file));
-        } else if (Patterns.TAR_UNCOMPRESSED.matcher(filename).find()) {
-            inputStream = Files.newInputStream(file);
-        }
-        return inputStream;
-    }
-
-    // TODO: extract this to writer
-    @Nullable
-    private static OutputStream outputStreamForTar(Path file) throws IOException {
-        OutputStream outputStream = null;
-        String filename = file.getFileName().toString();
-        if (Patterns.TAR_GZ.matcher(filename).find()) {
-            outputStream = new GzipCompressorOutputStream(Files.newOutputStream(
+            ProcessingResult processingResult = process(
+                    entryLabel,
+                    index,
+                    size,
+                    tarArchiveInputStream::read);
+            builder.add(new Result(
+                    archiveType,
                     file,
-                    StandardOpenOption.CREATE_NEW));
-        } else if (Patterns.TAR_BZ2.matcher(filename).find()) {
-            outputStream = new BZip2CompressorOutputStream(Files.newOutputStream(
-                    file,
-                    StandardOpenOption.CREATE_NEW));
-        } else if (Patterns.TAR_XZ.matcher(filename).find()) {
-            outputStream = new XZCompressorOutputStream(Files.newOutputStream(
-                    file,
-                    StandardOpenOption.CREATE_NEW));
-        } else if (Patterns.TAR_LZMA.matcher(filename).find()) {
-            outputStream = new LZMACompressorOutputStream(Files.newOutputStream(
-                    file,
-                    StandardOpenOption.CREATE_NEW));
-        } else if (Patterns.TAR_LZ4.matcher(filename).find()) {
-            outputStream = new BlockLZ4CompressorOutputStream(Files.newOutputStream(
-                    file,
-                    StandardOpenOption.CREATE_NEW));
-        } else if (Patterns.TAR_UNCOMPRESSED.matcher(filename).find()) {
-            outputStream = Files.newOutputStream(file, StandardOpenOption.CREATE_NEW);
-        }
-        return outputStream;
+                    size,
+                    processingResult.getUnheaderedSize(),
+                    processingResult.getDigest(),
+                    name));
+        });
     }
 
     @Nonnull
@@ -614,10 +534,10 @@ public final class FileScanner {
         CRC32 crc32 = threadLocalCrc32.get();
         MessageDigest md5 = threadLocalMd5.get();
         MessageDigest sha1 = threadLocalSha1.get();
+        byte[] buffer = threadLocalBuffer.get();
         crc32.reset();
         md5.reset();
         sha1.reset();
-        byte[] buffer = threadLocalBuffer.get();
         int reportedPercentage = 0;
         long totalRead = 0;
         long start = System.nanoTime();
@@ -635,6 +555,7 @@ public final class FileScanner {
             for (Rule r : detector.getRules()) {
                 try {
                     byte[] newBuffer = r.apply(buffer, (int) totalRead);
+                    // Identity check is enough here
                     if (newBuffer != buffer) {
                         logger.info(
                                 "Detected header using '{}' for '{}'",
@@ -646,11 +567,15 @@ public final class FileScanner {
                     }
                 } catch (Exception e) {
                     logger.error("Error while processing rule for '{}'", label, e);
+                    if (listener != null) {
+                        listener.reportFailure(label, index, "Error while processing rule", e);
+                    }
                 }
             }
-            crc32.update(buffer, 0, (int) totalRead);
-            md5.update(buffer, 0, (int) totalRead);
-            sha1.update(buffer, 0, (int) totalRead);
+            int totalReadInt = Math.toIntExact(totalRead);
+            crc32.update(buffer, 0, totalReadInt);
+            md5.update(buffer, 0, totalReadInt);
+            sha1.update(buffer, 0, totalReadInt);
             if (listener != null) {
                 double secondsPassed = (System.nanoTime() - start) / 1E9d;
                 long bytesPerSecond = Math.round(totalRead / secondsPassed);
@@ -675,18 +600,15 @@ public final class FileScanner {
                 }
             }
         }
-        ProcessingResult processingResult = new ProcessingResult(
+        return new ProcessingResult(
                 new Result.Digest(
                         Long.toHexString(crc32.getValue()),
                         Hex.encodeHexString(md5.digest()),
                         Hex.encodeHexString(sha1.digest())),
                 totalRead);
-        crc32.reset();
-        md5.reset();
-        sha1.reset();
-        return processingResult;
     }
 
+    @FunctionalInterface
     private interface TriFunction<K, L, M, N, E extends Throwable> {
 
         N apply(K k, L l, M m) throws E;

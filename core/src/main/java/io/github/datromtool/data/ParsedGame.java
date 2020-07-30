@@ -48,27 +48,27 @@ public class ParsedGame {
 
     @NonNull
     @Builder.Default
-    ImmutableList<Integer> proto = ImmutableList.of();
+    ImmutableList<Long> proto = ImmutableList.of();
 
     @NonNull
     @Builder.Default
-    ImmutableList<Integer> beta = ImmutableList.of();
+    ImmutableList<Long> beta = ImmutableList.of();
 
     @NonNull
     @Builder.Default
-    ImmutableList<Integer> demo = ImmutableList.of();
+    ImmutableList<Long> demo = ImmutableList.of();
 
     @NonNull
     @Builder.Default
-    ImmutableList<Integer> sample = ImmutableList.of();
+    ImmutableList<Long> sample = ImmutableList.of();
 
     @NonNull
     @Builder.Default
-    ImmutableList<Integer> revision = ImmutableList.of();
+    ImmutableList<Long> revision = ImmutableList.of();
 
     @NonNull
     @Builder.Default
-    ImmutableList<Integer> version = ImmutableList.of();
+    ImmutableList<Long> version = ImmutableList.of();
 
     @JsonIgnore
     public Stream<String> getRegionsStream() {

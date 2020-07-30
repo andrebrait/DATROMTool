@@ -19,6 +19,7 @@
         <commons-compress.version>1.20</commons-compress.version>
         <commons-lang3.version>3.11</commons-lang3.version>
         <picocli.version>4.4.0</picocli.version>
+        <slf4j-api.version>1.7.30</slf4j-api.version>
         <logback.version>1.2.3</logback.version>
         <guava.version>29.0-jre</guava.version>
         <jackson.version>2.11.1</jackson.version>
@@ -26,12 +27,14 @@
         <xz.version>1.8</xz.version>
         <commons-codec.version>1.14</commons-codec.version>
         <junrar.version>7.2.0</junrar.version>
+        <zstd-jni.version>1.4.5-6</zstd-jni.version>
     </properties>
 
     <modules>
         <module>domain</module>
         <module>core</module>
         <module>cli</module>
+        <module>logging</module>
     </modules>
 
     <dependencyManagement>
@@ -64,6 +67,16 @@
                 <version>${commons-collections4.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>log4j-over-slf4j</artifactId>
+                <version>${slf4j-api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
@@ -87,6 +100,11 @@
                 <groupId>org.tukaani</groupId>
                 <artifactId>xz</artifactId>
                 <version>${xz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.luben</groupId>
+                <artifactId>zstd-jni</artifactId>
+                <version>${zstd-jni.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
