@@ -114,9 +114,10 @@ public class Rule {
                 endOffset += actualLength;
             }
             endOffset = Math.min(endOffset, actualLength);
-            if (startOffset != 0
+            if (startOffset <= endOffset
+                    && (startOffset != 0
                     || endOffset != actualLength
-                    || operation != BinaryOperation.NONE) {
+                    || operation != BinaryOperation.NONE)) {
                 byte[] out = Arrays.copyOfRange(bytes, startOffset, endOffset);
                 switch (operation) {
                     case BIT_SWAP:

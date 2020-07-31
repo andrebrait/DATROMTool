@@ -1,6 +1,7 @@
 package io.github.datromtool.io;
 
 import com.github.junrar.exception.RarException;
+import com.github.junrar.exception.UnsupportedRarV5Exception;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.ByteUnit;
@@ -15,6 +16,8 @@ import lombok.Getter;
 import lombok.Value;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.compress.compressors.lzma.LZMAUtils;
+import org.apache.commons.compress.compressors.xz.XZUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -267,6 +270,12 @@ public final class FileScanner {
         ExecutorService executorService = Executors.newFixedThreadPool(
                 numThreads,
                 new IndexedThreadFactory());
+        if (!LZMAUtils.isLZMACompressionAvailable()) {
+            logger.warn("LZMA compression support is disabled");
+        }
+        if (!XZUtils.isXZCompressionAvailable()) {
+            logger.warn("XZ compression support is disabled");
+        }
         try {
             ImmutableList.Builder<FileMetadata> pathsBuilder = ImmutableList.builder();
             Files.walkFileTree(directory, new AppendingFileVisitor(directory, pathsBuilder::add));
@@ -358,10 +367,16 @@ public final class FileScanner {
                     case TAR_LZ4:
                     case TAR_LZMA:
                     case TAR_XZ:
-                    case TAR_ZSTD:
                         scanTar(archiveType, file, relative, index, builder);
                         scanned = true;
+                        break;
                 }
+            } catch (UnsupportedRarV5Exception e) {
+                logger.error(
+                        "Unexpected error while reading archive '{}' detected as {}. "
+                                + "Cause: RAR5 is not supported yet",
+                        file,
+                        archiveType);
             } catch (Exception e) {
                 logger.error(
                         "Unexpected error while reading archive '{}' detected as {}",

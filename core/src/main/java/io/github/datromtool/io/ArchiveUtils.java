@@ -15,14 +15,12 @@ import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorInputStream;
-import org.apache.commons.compress.compressors.lz4.BlockLZ4CompressorOutputStream;
+import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorInputStream;
+import org.apache.commons.compress.compressors.lz4.FramedLZ4CompressorOutputStream;
 import org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream;
 import org.apache.commons.compress.compressors.lzma.LZMACompressorOutputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
-import org.apache.commons.compress.compressors.zstandard.ZstdCompressorInputStream;
-import org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,20 +46,38 @@ public final class ArchiveUtils {
             case TAR:
                 return Files.newInputStream(file);
             case TAR_BZ2:
-                return new BZip2CompressorInputStream(Files.newInputStream(file));
+                return newBz2InputStream(file);
             case TAR_GZ:
-                return new GzipCompressorInputStream(Files.newInputStream(file));
+                return newGzipInputStream(file);
             case TAR_LZ4:
-                return new BlockLZ4CompressorInputStream(Files.newInputStream(file));
+                return newLz4InputStream(file);
             case TAR_LZMA:
-                return new LZMACompressorInputStream(Files.newInputStream(file));
+                return newLzmaInputStream(file);
             case TAR_XZ:
-                return new XZCompressorInputStream(Files.newInputStream(file));
-            case TAR_ZSTD:
-                return new ZstdCompressorInputStream(Files.newInputStream(file));
+                return newXzInputStream(file);
             default:
                 return null;
         }
+    }
+
+    public static BZip2CompressorInputStream newBz2InputStream(Path file) throws IOException {
+        return new BZip2CompressorInputStream(Files.newInputStream(file));
+    }
+
+    public static GzipCompressorInputStream newGzipInputStream(Path file) throws IOException {
+        return new GzipCompressorInputStream(Files.newInputStream(file));
+    }
+
+    public static FramedLZ4CompressorInputStream newLz4InputStream(Path file) throws IOException {
+        return new FramedLZ4CompressorInputStream(Files.newInputStream(file));
+    }
+
+    public static LZMACompressorInputStream newLzmaInputStream(Path file) throws IOException {
+        return new LZMACompressorInputStream(Files.newInputStream(file));
+    }
+
+    public static XZCompressorInputStream newXzInputStream(Path file) throws IOException {
+        return new XZCompressorInputStream(Files.newInputStream(file));
     }
 
     @Nullable
@@ -75,13 +91,11 @@ public final class ArchiveUtils {
             case TAR_GZ:
                 return new GzipCompressorOutputStream(Files.newOutputStream(file, CREATE_NEW));
             case TAR_LZ4:
-                return new BlockLZ4CompressorOutputStream(Files.newOutputStream(file, CREATE_NEW));
+                return new FramedLZ4CompressorOutputStream(Files.newOutputStream(file, CREATE_NEW));
             case TAR_LZMA:
                 return new LZMACompressorOutputStream(Files.newOutputStream(file, CREATE_NEW));
             case TAR_XZ:
                 return new XZCompressorOutputStream(Files.newOutputStream(file, CREATE_NEW));
-            case TAR_ZSTD:
-                return new ZstdCompressorOutputStream(Files.newOutputStream(file, CREATE_NEW));
             default:
                 return null;
         }

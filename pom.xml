@@ -27,7 +27,6 @@
         <xz.version>1.8</xz.version>
         <commons-codec.version>1.14</commons-codec.version>
         <junrar.version>7.2.0</junrar.version>
-        <zstd-jni.version>1.4.5-6</zstd-jni.version>
     </properties>
 
     <modules>
@@ -100,11 +99,6 @@
                 <groupId>org.tukaani</groupId>
                 <artifactId>xz</artifactId>
                 <version>${xz.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.luben</groupId>
-                <artifactId>zstd-jni</artifactId>
-                <version>${zstd-jni.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
