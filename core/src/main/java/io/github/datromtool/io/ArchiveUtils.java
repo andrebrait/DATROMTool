@@ -40,8 +40,8 @@ public final class ArchiveUtils {
     private static final Logger logger = LoggerFactory.getLogger(ArchiveUtils.class);
 
     @Nullable
-    public static InputStream inputStreamForTar(Path file) throws IOException {
-        ArchiveType archiveType = ArchiveType.parse(file);
+    public static InputStream inputStreamForTar(ArchiveType archiveType, Path file)
+            throws IOException {
         switch (archiveType) {
             case TAR:
                 return Files.newInputStream(file);
@@ -81,8 +81,8 @@ public final class ArchiveUtils {
     }
 
     @Nullable
-    public static OutputStream outputStreamForTar(Path file) throws IOException {
-        ArchiveType archiveType = ArchiveType.parse(file);
+    public static OutputStream outputStreamForTar(ArchiveType archiveType, Path file)
+            throws IOException {
         switch (archiveType) {
             case TAR:
                 return Files.newOutputStream(file, CREATE_NEW);
@@ -146,10 +146,11 @@ public final class ArchiveUtils {
     }
 
     public static void readTar(
+            ArchiveType archiveType,
             Path file,
             ThrowingBiConsumer<TarArchiveEntry, TarArchiveInputStream, IOException> consumer)
             throws IOException {
-        InputStream inputStream = inputStreamForTar(file);
+        InputStream inputStream = inputStreamForTar(archiveType, file);
         if (inputStream != null) {
             try (TarArchiveInputStream tarArchiveInputStream =
                     new TarArchiveInputStream(inputStream)) {

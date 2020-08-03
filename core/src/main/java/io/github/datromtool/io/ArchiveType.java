@@ -5,6 +5,7 @@ import org.apache.commons.compress.compressors.gzip.GzipUtils;
 import org.apache.commons.compress.compressors.lzma.LZMAUtils;
 import org.apache.commons.compress.compressors.xz.XZUtils;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -42,6 +43,9 @@ public enum ArchiveType {
     }
 
     public static ArchiveType parse(Path file) {
+        if (Files.isDirectory(file)) {
+            return NONE;
+        }
         String fileName = file.getFileName().toString();
         return parse(fileName);
     }
@@ -55,7 +59,7 @@ public enum ArchiveType {
         return NONE;
     }
 
-    private static class Constants {
+    private static final class Constants {
 
         private static final Pattern ZIP = compile("\\.zip$", CASE_INSENSITIVE);
         private static final Pattern RAR = compile("\\.rar$", CASE_INSENSITIVE);

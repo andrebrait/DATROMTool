@@ -13,6 +13,6 @@ public final class TestException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "Test '" + test + "' failed. Cause: " + super.getMessage();
+        return "Test '" + test + "' failed. Reason: " + super.getMessage();
     }
 }

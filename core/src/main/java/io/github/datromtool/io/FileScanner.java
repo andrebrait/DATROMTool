@@ -12,7 +12,6 @@ import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.detector.Rule;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.Value;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -36,8 +35,6 @@ import java.util.Comparator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.zip.CRC32;
@@ -189,6 +186,7 @@ public final class FileScanner {
     }
 
     @Value
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     private static class ProcessingResult {
 
         Result.Digest digest;
@@ -196,9 +194,9 @@ public final class FileScanner {
     }
 
     @Value
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     private static class FileMetadata {
 
-        Path baseDirectory;
         Path path;
         long size;
     }
@@ -207,28 +205,27 @@ public final class FileScanner {
 
         void reportTotalItems(int totalItems);
 
-        void reportStart(String label, int thread);
+        void reportStart(Path path, int thread);
 
-        void reportProgress(String label, int thread, int percentage, long speed);
+        void reportProgress(Path path, int thread, int percentage, long speed);
 
-        void reportSkip(String label, int thread, String message);
+        void reportSkip(Path path, int thread, String message);
 
-        void reportFailure(String label, int thread, String message, Throwable cause);
+        void reportFailure(Path path, int thread, String message, Throwable cause);
 
-        void reportFinish(String label, int thread);
+        void reportFinish(Path path, int thread);
 
     }
 
     @AllArgsConstructor
     private final static class AppendingFileVisitor extends SimpleFileVisitor<Path> {
 
-        private final Path baseDirectory;
         private final Consumer<FileMetadata> onVisited;
 
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
             if (attrs.isRegularFile()) {
-                onVisited.accept(new FileMetadata(baseDirectory, file, attrs.size()));
+                onVisited.accept(new FileMetadata(file, attrs.size()));
             }
             return FileVisitResult.CONTINUE;
         }
@@ -240,36 +237,10 @@ public final class FileScanner {
         }
     }
 
-    private final static class IndexedThreadFactory implements ThreadFactory {
-
-        private final AtomicInteger indexCounter = new AtomicInteger(1);
-
-        @Override
-        public Thread newThread(@Nonnull Runnable r) {
-            IndexedThread thread = new IndexedThread(indexCounter.getAndIncrement(), r);
-            thread.setDaemon(true);
-            thread.setName("SCANNER-" + thread.getIndex());
-            thread.setUncaughtExceptionHandler((t, e) -> logUnexpected(e));
-            return thread;
-        }
-    }
-
-    @Getter
-    private final static class IndexedThread extends Thread {
-
-        private final int index;
-
-        private IndexedThread(int index, Runnable target) {
-            super(target);
-            this.index = index;
-        }
-
-    }
-
     public ImmutableList<Result> scan(Path directory) throws Exception {
         ExecutorService executorService = Executors.newFixedThreadPool(
                 numThreads,
-                new IndexedThreadFactory());
+                new IndexedThreadFactory(logger, "SCANNER"));
         if (!LZMAUtils.isLZMACompressionAvailable()) {
             logger.warn("LZMA compression support is disabled");
         }
@@ -278,7 +249,7 @@ public final class FileScanner {
         }
         try {
             ImmutableList.Builder<FileMetadata> pathsBuilder = ImmutableList.builder();
-            Files.walkFileTree(directory, new AppendingFileVisitor(directory, pathsBuilder::add));
+            Files.walkFileTree(directory, new AppendingFileVisitor(pathsBuilder::add));
             ImmutableList<FileMetadata> paths = pathsBuilder.build();
             if (listener != null) {
                 listener.reportTotalItems(paths.size());
@@ -302,23 +273,19 @@ public final class FileScanner {
         try {
             return future.get().stream();
         } catch (Exception e) {
-            logUnexpected(e);
+            logger.error("Unexpected exception thrown", e);
             return Stream.empty();
         }
     }
 
-    private static void logUnexpected(Throwable e) {
-        logger.error("Unexpected exception thrown", e);
-    }
-
-    private boolean shouldSkip(String label, int index, long size) {
+    private boolean shouldSkip(Path path, int index, long size) {
         if (size < minRomSize) {
             logger.info(
                     "File is smaller than minimum ROM size of {}. Skip calculation of hashes: '{}'",
                     minRomSizeStr,
-                    label);
+                    path);
             if (listener != null) {
-                listener.reportSkip(label, index, "File too small");
+                listener.reportSkip(path, index, "File too small");
             }
             return true;
         }
@@ -326,9 +293,9 @@ public final class FileScanner {
             logger.info(
                     "File is larger than maximum ROM size of {}. Skip calculation of hashes: '{}'",
                     maxRomSizeStr,
-                    label);
+                    path);
             if (listener != null) {
-                listener.reportSkip(label, index, "File too big");
+                listener.reportSkip(path, index, "File too big");
             }
             return true;
         }
@@ -337,11 +304,9 @@ public final class FileScanner {
 
     private ImmutableList<Result> scanFile(FileMetadata fileMetadata) {
         Path file = fileMetadata.getPath();
-        Path relative = fileMetadata.getBaseDirectory().relativize(file);
-        String label = relative.toString();
         int index = ((IndexedThread) Thread.currentThread()).getIndex();
         if (listener != null) {
-            listener.reportStart(label, index);
+            listener.reportStart(file, index);
         }
         try {
             ImmutableList.Builder<Result> builder = ImmutableList.builder();
@@ -350,15 +315,15 @@ public final class FileScanner {
             try {
                 switch (archiveType) {
                     case ZIP:
-                        scanZip(file, relative, index, builder);
+                        scanZip(file, index, builder);
                         scanned = true;
                         break;
                     case RAR:
-                        scanRar(file, relative, index, builder);
+                        scanRar(file, index, builder);
                         scanned = true;
                         break;
                     case SEVEN_ZIP:
-                        scanSevenZip(file, relative, index, builder);
+                        scanSevenZip(file, index, builder);
                         scanned = true;
                         break;
                     case TAR:
@@ -367,14 +332,14 @@ public final class FileScanner {
                     case TAR_LZ4:
                     case TAR_LZMA:
                     case TAR_XZ:
-                        scanTar(archiveType, file, relative, index, builder);
+                        scanTar(archiveType, file, index, builder);
                         scanned = true;
                         break;
                 }
             } catch (UnsupportedRarV5Exception e) {
                 logger.error(
                         "Unexpected error while reading archive '{}' detected as {}. "
-                                + "Cause: RAR5 is not supported yet",
+                                + "Reason: RAR5 is not supported yet",
                         file,
                         archiveType);
             } catch (Exception e) {
@@ -385,33 +350,35 @@ public final class FileScanner {
                         e);
             }
             if (!scanned || alsoScanArchives.contains(archiveType)) {
-                scanFile(fileMetadata, file, label, index, builder);
+                scanFile(fileMetadata, file, index, builder);
             }
             if (listener != null) {
-                listener.reportFinish(label, index);
+                listener.reportFinish(file, index);
             }
             return builder.build();
         } catch (Exception e) {
             logger.error("Could not read file '{}'", file, e);
             if (listener != null) {
-                listener.reportFailure(label, index, "Could not read the file", e);
-                listener.reportFinish(label, index);
+                listener.reportFailure(file, index, "Could not read the file", e);
             }
             return ImmutableList.of();
+        } finally {
+            if (listener != null) {
+                listener.reportFinish(file, index);
+            }
         }
     }
 
     private void scanFile(
             FileMetadata fileMetadata,
             Path file,
-            String label,
             int index,
             ImmutableList.Builder<Result> builder) throws IOException {
         long size = fileMetadata.getSize();
-        if (!shouldSkip(label, index, size)) {
+        if (!shouldSkip(file, index, size)) {
             try (InputStream inputStream = Files.newInputStream(file)) {
                 ProcessingResult processingResult = process(
-                        label,
+                        file,
                         index,
                         size,
                         inputStream::read);
@@ -428,19 +395,18 @@ public final class FileScanner {
 
     private void scanZip(
             Path file,
-            Path relative,
             int index,
             ImmutableList.Builder<Result> builder) throws IOException {
         ArchiveUtils.readZip(file, (zipFile, zipArchiveEntry) -> {
             long size = zipArchiveEntry.getSize();
             String name = zipArchiveEntry.getName();
-            String entryLabel = relative.resolve(name).toString();
-            if (shouldSkip(entryLabel, index, size)) {
+            Path entryPath = file.resolve(name);
+            if (shouldSkip(entryPath, index, size)) {
                 return;
             }
             try (InputStream entryInputStream = zipFile.getInputStream(zipArchiveEntry)) {
                 ProcessingResult processingResult = process(
-                        entryLabel,
+                        entryPath,
                         index,
                         size,
                         entryInputStream::read);
@@ -457,19 +423,18 @@ public final class FileScanner {
 
     private void scanRar(
             Path file,
-            Path relative,
             int index,
             ImmutableList.Builder<Result> builder) throws IOException, RarException {
         ArchiveUtils.readRar(file, (archive, fileHeader) -> {
             long size = fileHeader.getFullUnpackSize();
             String name = fileHeader.getFileName();
-            String entryLabel = relative.resolve(name).toString();
-            if (shouldSkip(entryLabel, index, size)) {
+            Path entryPath = file.resolve(name);
+            if (shouldSkip(entryPath, index, size)) {
                 return;
             }
             try (InputStream rarFileInputStream = archive.getInputStream(fileHeader)) {
                 ProcessingResult processingResult = process(
-                        entryLabel,
+                        entryPath,
                         index,
                         size,
                         rarFileInputStream::read);
@@ -486,18 +451,17 @@ public final class FileScanner {
 
     private void scanSevenZip(
             Path file,
-            Path relative,
             int index,
             ImmutableList.Builder<Result> builder) throws IOException {
         ArchiveUtils.readSevenZip(file, (sevenZFile, sevenZArchiveEntry) -> {
             long size = sevenZArchiveEntry.getSize();
             String name = sevenZArchiveEntry.getName();
-            String entryLabel = relative.resolve(name).toString();
-            if (shouldSkip(entryLabel, index, size)) {
+            Path entryPath = file.resolve(name);
+            if (shouldSkip(entryPath, index, size)) {
                 return;
             }
             ProcessingResult processingResult = process(
-                    entryLabel,
+                    entryPath,
                     index,
                     size,
                     sevenZFile::read);
@@ -514,18 +478,17 @@ public final class FileScanner {
     private void scanTar(
             ArchiveType archiveType,
             Path file,
-            Path relative,
             int index,
             ImmutableList.Builder<Result> builder) throws IOException {
-        ArchiveUtils.readTar(file, (tarArchiveEntry, tarArchiveInputStream) -> {
+        ArchiveUtils.readTar(archiveType, file, (tarArchiveEntry, tarArchiveInputStream) -> {
             long size = tarArchiveEntry.getRealSize();
             String name = tarArchiveEntry.getName();
-            String entryLabel = relative.resolve(name).toString();
-            if (shouldSkip(entryLabel, index, size)) {
+            Path entryPath = file.resolve(name);
+            if (shouldSkip(entryPath, index, size)) {
                 return;
             }
             ProcessingResult processingResult = process(
-                    entryLabel,
+                    entryPath,
                     index,
                     size,
                     tarArchiveInputStream::read);
@@ -541,7 +504,7 @@ public final class FileScanner {
 
     @Nonnull
     private ProcessingResult process(
-            String label,
+            Path path,
             int index,
             long size,
             TriFunction<byte[], Integer, Integer, Integer, IOException> function)
@@ -575,15 +538,15 @@ public final class FileScanner {
                         logger.info(
                                 "Detected header using '{}' for '{}'",
                                 detector.getName(),
-                                label);
+                                path);
                         totalRead = newBuffer.length;
                         buffer = newBuffer;
                         break;
                     }
                 } catch (Exception e) {
-                    logger.error("Error while processing rule for '{}'", label, e);
+                    logger.error("Error while processing rule for '{}'", path, e);
                     if (listener != null) {
-                        listener.reportFailure(label, index, "Error while processing rule", e);
+                        listener.reportFailure(path, index, "Error while processing rule", e);
                     }
                 }
             }
@@ -594,7 +557,7 @@ public final class FileScanner {
             if (listener != null) {
                 double secondsPassed = (System.nanoTime() - start) / 1E9d;
                 long bytesPerSecond = Math.round(totalRead / secondsPassed);
-                listener.reportProgress(label, index, 100, bytesPerSecond);
+                listener.reportProgress(path, index, 100, bytesPerSecond);
             }
         } else {
             while ((remainingBytes = (int) Math.min(size - totalRead, buffer.length)) > 0
@@ -608,7 +571,7 @@ public final class FileScanner {
                     if (reportedPercentage != percentage) {
                         double secondsPassed = (System.nanoTime() - start) / 1E9d;
                         long bytesPerSecond = Math.round(bytesRead / secondsPassed);
-                        listener.reportProgress(label, index, percentage, bytesPerSecond);
+                        listener.reportProgress(path, index, percentage, bytesPerSecond);
                         reportedPercentage = percentage;
                     }
                     start = System.nanoTime();

@@ -13,6 +13,6 @@ public final class RuleException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "Could not apply rule '" + rule + "'. Cause: " + super.getMessage();
+        return "Could not apply rule '" + rule + "'. Reason: " + super.getMessage();
     }
 }
