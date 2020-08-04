@@ -7,8 +7,10 @@ import io.github.datromtool.ByteUnit;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.domain.datafile.Rom;
+import io.github.datromtool.domain.detector.BinaryTest;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.detector.Rule;
+import io.github.datromtool.domain.detector.enumerations.BinaryOperation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Value;
@@ -60,6 +62,7 @@ public final class FileScanner {
     private final String minRomSizeStr;
     private final String maxRomSizeStr;
     private final ThreadLocal<byte[]> threadLocalBuffer;
+    private final boolean useLazyDetector;
 
     private final ImmutableSet<ArchiveType> alsoScanArchives;
 
@@ -77,6 +80,7 @@ public final class FileScanner {
             this.maxRomSize = Long.MAX_VALUE;
             this.minRomSize = 0L;
             this.alsoScanArchives = ImmutableSet.of();
+            this.useLazyDetector = false;
         } else {
             this.minRomSize = datafile.getGames().stream()
                     .map(Game::getRoms)
@@ -95,6 +99,7 @@ public final class FileScanner {
                     .collect(ImmutableSet.toImmutableSet());
             if (detector == null) {
                 bufferSize = DEFAULT_BUFFER_SIZE;
+                this.useLazyDetector = false;
                 this.maxRomSize = datafile.getGames().stream()
                         .map(Game::getRoms)
                         .flatMap(Collection::stream)
@@ -133,8 +138,42 @@ public final class FileScanner {
                 this.maxRomSize = maxUnheaderedSize
                         + maxStartOffset
                         + (maxUnheaderedSize - minEndOffset);
-                bufferSize =
-                        (int) Math.max(Math.min(maxRomSize, MAX_BUFFER), DEFAULT_BUFFER_SIZE);
+                if (detector.getRules()
+                        .stream()
+                        .map(Rule::getOperation)
+                        .allMatch(BinaryOperation.NONE::equals)) {
+                    long minTestOffset = detector.getRules()
+                            .stream()
+                            .flatMap(Rule::getAllBinaryTest)
+                            .mapToLong(BinaryTest::getOffset)
+                            .min()
+                            .orElse(0);
+                    long minInitialOffset = detector.getRules()
+                            .stream()
+                            .mapToLong(Rule::getStartOffset)
+                            .min()
+                            .orElse(0);
+                    if (minTestOffset >= 0 && minInitialOffset >= 0) {
+                        long maxTestOffset = detector.getRules()
+                                .stream()
+                                .flatMap(Rule::getAllBinaryTest)
+                                .mapToLong(t -> t.getOffset() + t.getValue().length)
+                                .max()
+                                .orElse(0);
+                        this.useLazyDetector =
+                                Math.max(maxTestOffset, maxStartOffset) <= DEFAULT_BUFFER_SIZE;
+                    } else {
+                        this.useLazyDetector = false;
+                    }
+                } else {
+                    this.useLazyDetector = false;
+                }
+                if (this.useLazyDetector) {
+                    bufferSize = DEFAULT_BUFFER_SIZE;
+                } else {
+                    bufferSize =
+                            (int) Math.max(Math.min(maxRomSize, MAX_BUFFER), DEFAULT_BUFFER_SIZE);
+                }
                 ByteUnit unit = ByteUnit.getUnit(bufferSize);
                 String bufferSizeStr = String.format("%.02f", unit.convert(bufferSize));
                 if (bufferSize > MAX_BUFFER_NO_WARNING) {
@@ -501,7 +540,6 @@ public final class FileScanner {
         });
     }
 
-    // TODO: optimization for common detectors (because we don't need the full file!)
     @Nonnull
     private ProcessingResult process(
             Path path,
@@ -532,14 +570,13 @@ public final class FileScanner {
             // We can safely redefine the buffer variable here
             for (Rule r : detector.getRules()) {
                 try {
-                    byte[] newBuffer = r.apply(buffer, (int) totalRead);
+                    byte[] newBuffer = r.apply(buffer, (int) totalRead, size);
                     // Identity check is enough here
                     if (newBuffer != buffer) {
                         logger.info(
                                 "Detected header using '{}' for '{}'",
                                 detector.getName(),
                                 path);
-                        totalRead = newBuffer.length;
                         buffer = newBuffer;
                         break;
                     }
@@ -550,17 +587,58 @@ public final class FileScanner {
                     }
                 }
             }
-            int totalReadInt = Math.toIntExact(totalRead);
-            crc32.update(buffer, 0, totalReadInt);
-            md5.update(buffer, 0, totalReadInt);
-            sha1.update(buffer, 0, totalReadInt);
+            int endRead = (int) Math.min(totalRead, buffer.length);
+            crc32.update(buffer, 0, endRead);
+            md5.update(buffer, 0, endRead);
+            sha1.update(buffer, 0, endRead);
             if (listener != null) {
                 double secondsPassed = (System.nanoTime() - start) / 1E9d;
                 long bytesPerSecond = Math.round(totalRead / secondsPassed);
                 listener.reportProgress(path, index, 100, bytesPerSecond);
             }
         } else {
-            while ((remainingBytes = (int) Math.min(size - totalRead, buffer.length)) > 0
+            long endOffset = size;
+            if (detector != null && useLazyDetector) {
+                long startOffset = 0;
+                // Fill the whole buffer
+                while ((remainingBytes = (int) (buffer.length - totalRead)) > 0
+                        && (bytesRead = function.apply(buffer, (int) totalRead, remainingBytes))
+                        > -1) {
+                    totalRead += bytesRead;
+                }
+                for (Rule r : detector.getRules()) {
+                    try {
+                        if (r.test(buffer, (int) totalRead, size)) {
+                            startOffset = Math.max(r.getStartOffset(), startOffset);
+                            endOffset = Math.min(r.getEndOffset(), endOffset);
+                        }
+                    } catch (Exception e) {
+                        logger.error("Error while processing rule for '{}'", path, e);
+                        if (listener != null) {
+                            listener.reportFailure(
+                                    path,
+                                    index,
+                                    "Error while processing rule",
+                                    e);
+                        }
+                    }
+                }
+                int endRead = (int) (Math.min(totalRead, endOffset) - startOffset);
+                crc32.update(buffer, (int) startOffset, endRead);
+                md5.update(buffer, (int) startOffset, endRead);
+                sha1.update(buffer, (int) startOffset, endRead);
+                if (listener != null) {
+                    int percentage = (int) ((totalRead * 100d) / size);
+                    if (reportedPercentage != percentage) {
+                        double secondsPassed = (System.nanoTime() - start) / 1E9d;
+                        long bytesPerSecond = Math.round(totalRead / secondsPassed);
+                        listener.reportProgress(path, index, percentage, bytesPerSecond);
+                        reportedPercentage = percentage;
+                    }
+                    start = System.nanoTime();
+                }
+            }
+            while ((remainingBytes = (int) Math.min(endOffset - totalRead, buffer.length)) > 0
                     && (bytesRead = function.apply(buffer, 0, remainingBytes)) > -1) {
                 totalRead += bytesRead;
                 crc32.update(buffer, 0, bytesRead);

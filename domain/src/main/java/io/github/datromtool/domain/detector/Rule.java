@@ -1,6 +1,7 @@
 
 package io.github.datromtool.domain.detector;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -24,6 +25,7 @@ import lombok.extern.jackson.Jacksonized;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static lombok.AccessLevel.PRIVATE;
@@ -93,17 +95,25 @@ public class Rule {
     @JsonProperty(defaultValue = "none")
     BinaryOperation operation = BinaryOperation.NONE;
 
-    private static boolean testAll(List<? extends Test> tests, byte[] bytes, int actualLength) {
-        return tests.stream().allMatch(t -> t.test(bytes, actualLength));
+    private static boolean testAll(
+            List<? extends Test> tests,
+            byte[] bytes,
+            int actualLength,
+            long fileSize) {
+        return tests.stream().allMatch(t -> t.test(bytes, actualLength, fileSize));
     }
 
-    public byte[] apply(byte[] bytes, int actualLength) {
+    public boolean test(byte[] bytes, int actualLength, long fileSize) {
+        return testAll(dataTests, bytes, actualLength, fileSize)
+                && testAll(fileTests, bytes, actualLength, fileSize)
+                && testAll(andTests, bytes, actualLength, fileSize)
+                && testAll(orTests, bytes, actualLength, fileSize)
+                && testAll(xorTests, bytes, actualLength, fileSize);
+    }
+
+    public byte[] apply(byte[] bytes, int actualLength, long fileSize) {
         actualLength = Math.min(bytes.length, actualLength);
-        if (testAll(dataTests, bytes, actualLength)
-                && testAll(fileTests, bytes, actualLength)
-                && testAll(andTests, bytes, actualLength)
-                && testAll(orTests, bytes, actualLength)
-                && testAll(xorTests, bytes, actualLength)) {
+        if (test(bytes, actualLength, fileSize)) {
             int startOffset = NumberUtils.asInt(this.startOffset);
             if (startOffset < 0) {
                 startOffset += actualLength;
@@ -155,6 +165,16 @@ public class Rule {
         for (int i = 0; i < bytes.length - chunkSize; i += chunkSize) {
             Bytes.reverse(bytes, i, i + chunkSize);
         }
+    }
+
+    @JsonIgnore
+    public Stream<BinaryTest> getAllBinaryTest() {
+        Stream.Builder<BinaryTest> builder = Stream.builder();
+        dataTests.forEach(builder);
+        andTests.forEach(builder);
+        orTests.forEach(builder);
+        xorTests.forEach(builder);
+        return builder.build();
     }
 
 }

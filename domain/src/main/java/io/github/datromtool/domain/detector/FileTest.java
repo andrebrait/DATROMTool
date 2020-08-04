@@ -48,18 +48,18 @@ public class FileTest extends Test {
     }
 
     @Override
-    public boolean test(byte[] bytes, int actualLength) {
+    public boolean test(byte[] bytes, int actualLength, long fileSize) {
         if (POWER_OF_TWO.equals(size)) {
-            double log = Math.log(actualLength) / Math.log(2);
+            double log = Math.log(fileSize) / Math.log(2);
             return Math.abs(Math.round(log) - log) < 1e-11;
         }
         switch (operator) {
             case LESS:
-                return (actualLength < getSizeAsLong()) == getResult();
+                return (fileSize < getSizeAsLong()) == getResult();
             case GREATER:
-                return (actualLength > getSizeAsLong()) == getResult();
+                return (fileSize > getSizeAsLong()) == getResult();
             case EQUAL:
-                return (actualLength == getSizeAsLong()) == getResult();
+                return (fileSize == getSizeAsLong()) == getResult();
             default:
                 return false;
         }

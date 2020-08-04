@@ -23,7 +23,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class DataTest extends BinaryTest {
 
     @Override
-    public boolean test(byte[] bytes, int actualLength) {
+    public boolean test(byte[] bytes, int actualLength, long fileSize) {
         actualLength = Math.min(bytes.length, actualLength);
         int offset = NumberUtils.asInt(getOffset());
         if (offset < 0) {

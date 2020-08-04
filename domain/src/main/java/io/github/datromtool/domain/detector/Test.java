@@ -30,6 +30,6 @@ public abstract class Test {
     @JsonProperty(defaultValue = "true")
     Boolean result = Boolean.TRUE;
 
-    public abstract boolean test(byte[] bytes, int actualLength);
+    public abstract boolean test(byte[] bytes, int actualLength, long fileSize);
 
 }

@@ -42,7 +42,7 @@ public abstract class LogicalTest extends BinaryTest {
     protected abstract byte operate(byte a, byte b);
 
     @Override
-    public final boolean test(byte[] bytes, int actualLength) {
+    public final boolean test(byte[] bytes, int actualLength, long fileSize) {
         actualLength = Math.min(bytes.length, actualLength);
         if (getValue().length != mask.length) {
             throw new TestException(this, "Mask and value lengths do not match");
