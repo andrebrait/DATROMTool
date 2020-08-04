@@ -1,6 +1,5 @@
 package io.github.datromtool.io;
 
-import com.github.junrar.exception.RarException;
 import com.github.junrar.exception.UnsupportedRarV5Exception;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -424,7 +423,7 @@ public final class FileScanner {
     private void scanRar(
             Path file,
             int index,
-            ImmutableList.Builder<Result> builder) throws IOException, RarException {
+            ImmutableList.Builder<Result> builder) throws Exception {
         ArchiveUtils.readRar(file, (archive, fileHeader) -> {
             long size = fileHeader.getFullUnpackSize();
             String name = fileHeader.getFileName();

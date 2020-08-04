@@ -32,7 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Enumeration;
 
-import static java.nio.file.StandardOpenOption.CREATE_NEW;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ArchiveUtils {
@@ -85,25 +85,25 @@ public final class ArchiveUtils {
             throws IOException {
         switch (archiveType) {
             case TAR:
-                return Files.newOutputStream(file, CREATE_NEW);
+                return Files.newOutputStream(file, CREATE);
             case TAR_BZ2:
-                return new BZip2CompressorOutputStream(Files.newOutputStream(file, CREATE_NEW));
+                return new BZip2CompressorOutputStream(Files.newOutputStream(file, CREATE));
             case TAR_GZ:
-                return new GzipCompressorOutputStream(Files.newOutputStream(file, CREATE_NEW));
+                return new GzipCompressorOutputStream(Files.newOutputStream(file, CREATE));
             case TAR_LZ4:
-                return new FramedLZ4CompressorOutputStream(Files.newOutputStream(file, CREATE_NEW));
+                return new FramedLZ4CompressorOutputStream(Files.newOutputStream(file, CREATE));
             case TAR_LZMA:
-                return new LZMACompressorOutputStream(Files.newOutputStream(file, CREATE_NEW));
+                return new LZMACompressorOutputStream(Files.newOutputStream(file, CREATE));
             case TAR_XZ:
-                return new XZCompressorOutputStream(Files.newOutputStream(file, CREATE_NEW));
+                return new XZCompressorOutputStream(Files.newOutputStream(file, CREATE));
             default:
                 return null;
         }
     }
 
-    public static void readZip(
+    public static <T extends Throwable> void readZip(
             Path file,
-            ThrowingBiConsumer<ZipFile, ZipArchiveEntry, IOException> consumer) throws IOException {
+            ThrowingBiConsumer<ZipFile, ZipArchiveEntry, T> consumer) throws IOException, T {
         try (ZipFile zipFile = new ZipFile(file.toFile())) {
             Enumeration<ZipArchiveEntry> entries = zipFile.getEntriesInPhysicalOrder();
             while (entries.hasMoreElements()) {
@@ -116,10 +116,10 @@ public final class ArchiveUtils {
         }
     }
 
-    public static void readRar(
+    public static <T extends Throwable> void readRar(
             Path file,
-            BiThrowingBiConsumer<Archive, FileHeader, IOException, RarException> consumer)
-            throws IOException, RarException {
+            ThrowingBiConsumer<Archive, FileHeader, T> consumer)
+            throws IOException, RarException, T {
         try (Archive archive = new Archive(file.toFile())) {
             for (FileHeader fileHeader : archive) {
                 if (!fileHeader.isFileHeader() || fileHeader.isDirectory()) {
@@ -130,10 +130,10 @@ public final class ArchiveUtils {
         }
     }
 
-    public static void readSevenZip(
+    public static <T extends Throwable> void readSevenZip(
             Path file,
-            ThrowingBiConsumer<SevenZFile, SevenZArchiveEntry, IOException> consumer)
-            throws IOException {
+            ThrowingBiConsumer<SevenZFile, SevenZArchiveEntry, T> consumer)
+            throws IOException, T {
         try (SevenZFile sevenZFile = new SevenZFile(file.toFile())) {
             SevenZArchiveEntry sevenZArchiveEntry;
             while ((sevenZArchiveEntry = sevenZFile.getNextEntry()) != null) {
@@ -145,11 +145,11 @@ public final class ArchiveUtils {
         }
     }
 
-    public static void readTar(
+    public static <T extends Throwable> void readTar(
             ArchiveType archiveType,
             Path file,
-            ThrowingBiConsumer<TarArchiveEntry, TarArchiveInputStream, IOException> consumer)
-            throws IOException {
+            ThrowingBiConsumer<TarArchiveEntry, TarArchiveInputStream, T> consumer)
+            throws IOException, T {
         InputStream inputStream = inputStreamForTar(archiveType, file);
         if (inputStream != null) {
             try (TarArchiveInputStream tarArchiveInputStream =
@@ -172,12 +172,6 @@ public final class ArchiveUtils {
     public interface ThrowingBiConsumer<T, D, E extends Throwable> {
 
         void accept(T t, D d) throws E;
-    }
-
-    @FunctionalInterface
-    public interface BiThrowingBiConsumer<T, D, E extends Throwable, E2 extends Throwable> {
-
-        void accept(T t, D d) throws E, E2;
     }
 
 }

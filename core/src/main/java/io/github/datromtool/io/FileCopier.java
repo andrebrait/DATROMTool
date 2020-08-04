@@ -11,17 +11,20 @@ import lombok.Value;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.compressors.lzma.LZMAUtils;
 import org.apache.commons.compress.compressors.xz.XZUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
@@ -54,6 +57,7 @@ public final class FileCopier {
     @Value
     public static class CopyDefinition {
 
+        ArchiveType fromType;
         @NonNull
         Path from;
         @NonNull
@@ -172,8 +176,10 @@ public final class FileCopier {
     }
 
     private void extractOrCompress(CopyDefinition copyDefinition, int index)
-            throws IOException, RarException {
-        ArchiveType fromType = ArchiveType.parse(copyDefinition.getFrom());
+            throws Exception {
+        ArchiveType fromType = copyDefinition.getFromType() != null
+                ? copyDefinition.getFromType()
+                : ArchiveType.parse(copyDefinition.getFrom());
         ArchiveType toType = ArchiveType.parse(copyDefinition.getTo());
         if (fromType == ArchiveType.NONE && toType == ArchiveType.NONE) {
             logger.error(
@@ -229,66 +235,16 @@ public final class FileCopier {
                     compressTarEntries(toType, copyDefinition, index);
             }
         } else {
+            // Copy files from an archive to another
             switch (fromType) {
                 case ZIP:
-                    switch (toType) {
-                        case ZIP:
-                            //compressZipEntries(copyDefinition, index);
-                            return;
-                        case RAR:
-                            throw new UnsupportedOperationException(
-                                    "RAR compression is not supported");
-                        case SEVEN_ZIP:
-                            //compressSevenZipEntries(copyDefinition, index);
-                            return;
-                        case TAR:
-                        case TAR_BZ2:
-                        case TAR_GZ:
-                        case TAR_LZ4:
-                        case TAR_LZMA:
-                        case TAR_XZ:
-                            //compressTarEntries(toType, copyDefinition, index);
-                    }
+                    fromZipToArchive(toType, copyDefinition, index);
                     return;
                 case RAR:
-                    switch (toType) {
-                        case ZIP:
-                            //compressZipEntries(copyDefinition, index);
-                            return;
-                        case RAR:
-                            throw new UnsupportedOperationException(
-                                    "RAR compression is not supported");
-                        case SEVEN_ZIP:
-                            //compressSevenZipEntries(copyDefinition, index);
-                            return;
-                        case TAR:
-                        case TAR_BZ2:
-                        case TAR_GZ:
-                        case TAR_LZ4:
-                        case TAR_LZMA:
-                        case TAR_XZ:
-                            //compressTarEntries(toType, copyDefinition, index);
-                    }
+                    fromRarToArchive(toType, copyDefinition, index);
                     return;
                 case SEVEN_ZIP:
-                    switch (toType) {
-                        case ZIP:
-                            //compressZipEntries(copyDefinition, index);
-                            return;
-                        case RAR:
-                            throw new UnsupportedOperationException(
-                                    "RAR compression is not supported");
-                        case SEVEN_ZIP:
-                            //compressSevenZipEntries(copyDefinition, index);
-                            return;
-                        case TAR:
-                        case TAR_BZ2:
-                        case TAR_GZ:
-                        case TAR_LZ4:
-                        case TAR_LZMA:
-                        case TAR_XZ:
-                            //compressTarEntries(toType, copyDefinition, index);
-                    }
+                    fromSevenZipToArchive(toType, copyDefinition, index);
                     return;
                 case TAR:
                 case TAR_BZ2:
@@ -296,24 +252,7 @@ public final class FileCopier {
                 case TAR_LZ4:
                 case TAR_LZMA:
                 case TAR_XZ:
-                    switch (toType) {
-                        case ZIP:
-                            //compressZipEntries(copyDefinition, index);
-                            return;
-                        case RAR:
-                            throw new UnsupportedOperationException(
-                                    "RAR compression is not supported");
-                        case SEVEN_ZIP:
-                            //compressSevenZipEntries(copyDefinition, index);
-                            return;
-                        case TAR:
-                        case TAR_BZ2:
-                        case TAR_GZ:
-                        case TAR_LZ4:
-                        case TAR_LZMA:
-                        case TAR_XZ:
-                            //compressTarEntries(toType, copyDefinition, index);
-                    }
+                    fromTarToArchive(fromType, toType, copyDefinition, index);
             }
         }
     }
@@ -338,6 +277,8 @@ public final class FileCopier {
                             to,
                             inputStream::read,
                             outputStream::write);
+                } catch (FileAlreadyExistsException e) {
+                    throw e;
                 } catch (IOException e) {
                     Files.delete(to);
                     throw e;
@@ -352,7 +293,7 @@ public final class FileCopier {
     }
 
     private void extractRarEntries(CopyDefinition copyDefinition, int index)
-            throws IOException, RarException {
+            throws Exception {
         ArchiveUtils.readRar(copyDefinition.getFrom(), (archive, fileHeader) -> {
             String name = fileHeader.getFileName();
             ArchiveCopyDefinition archiveCopyDefinition =
@@ -372,6 +313,8 @@ public final class FileCopier {
                             to,
                             inputStream::read,
                             outputStream::write);
+                } catch (FileAlreadyExistsException e) {
+                    throw e;
                 } catch (IOException e) {
                     Files.delete(to);
                     throw e;
@@ -399,6 +342,8 @@ public final class FileCopier {
                 Path source = copyDefinition.getFrom().resolve(name);
                 long size = sevenZArchiveEntry.getSize();
                 copyWithProgress(index, size, source, to, sevenZFile::read, outputStream::write);
+            } catch (FileAlreadyExistsException e) {
+                throw e;
             } catch (IOException e) {
                 Files.delete(to);
                 throw e;
@@ -431,7 +376,7 @@ public final class FileCopier {
                             copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
                     try (OutputStream outputStream = Files.newOutputStream(to)) {
                         Path source = copyDefinition.getFrom().resolve(name);
-                        long size = tarArchiveEntry.getSize();
+                        long size = tarArchiveEntry.getRealSize();
                         copyWithProgress(
                                 index,
                                 size,
@@ -439,6 +384,8 @@ public final class FileCopier {
                                 to,
                                 tarArchiveInputStream::read,
                                 outputStream::write);
+                    } catch (FileAlreadyExistsException e) {
+                        throw e;
                     } catch (IOException e) {
                         Files.delete(to);
                         throw e;
@@ -473,6 +420,8 @@ public final class FileCopier {
                     zipArchiveOutputStream.closeArchiveEntry();
                 }
             }
+        } catch (FileAlreadyExistsException e) {
+            throw e;
         } catch (IOException e) {
             Files.delete(copyDefinition.getTo());
             throw e;
@@ -503,6 +452,8 @@ public final class FileCopier {
                     sevenZOutputFile.closeArchiveEntry();
                 }
             }
+        } catch (FileAlreadyExistsException e) {
+            throw e;
         } catch (IOException e) {
             Files.delete(copyDefinition.getTo());
             throw e;
@@ -540,14 +491,685 @@ public final class FileCopier {
                     tarArchiveOutputStream.closeArchiveEntry();
                 }
             }
+        } catch (FileAlreadyExistsException e) {
+            throw e;
         } catch (IOException e) {
             Files.delete(copyDefinition.getTo());
             throw e;
         }
     }
 
-    private static FileTime fromDate(@Nonnull Date date) {
-        return FileTime.fromMillis(date.getTime());
+    private void fromZipToArchive(ArchiveType toType, CopyDefinition copyDefinition, int index)
+            throws IOException {
+        switch (toType) {
+            case ZIP:
+                if (allowRawZipCopy) {
+                    fromZipToZipRaw(copyDefinition, index);
+                } else {
+                    fromZipToZip(copyDefinition, index);
+                }
+                return;
+            case RAR:
+                throw new UnsupportedOperationException("RAR compression is not supported");
+            case SEVEN_ZIP:
+                fromZipToSevenZip(copyDefinition, index);
+                return;
+            case TAR:
+            case TAR_BZ2:
+            case TAR_GZ:
+            case TAR_LZ4:
+            case TAR_LZMA:
+            case TAR_XZ:
+                fromZipToTar(toType, copyDefinition, index);
+        }
+    }
+
+    private void fromRarToArchive(ArchiveType toType, CopyDefinition copyDefinition, int index)
+            throws Exception {
+        switch (toType) {
+            case ZIP:
+                fromRarToZip(copyDefinition, index);
+                return;
+            case RAR:
+                throw new UnsupportedOperationException("RAR compression is not supported");
+            case SEVEN_ZIP:
+                fromRarToSevenZip(copyDefinition, index);
+                return;
+            case TAR:
+            case TAR_BZ2:
+            case TAR_GZ:
+            case TAR_LZ4:
+            case TAR_LZMA:
+            case TAR_XZ:
+                fromRarToTar(toType, copyDefinition, index);
+        }
+    }
+
+    private void fromSevenZipToArchive(
+            ArchiveType toType,
+            CopyDefinition copyDefinition,
+            int index) throws IOException {
+        switch (toType) {
+            case ZIP:
+                fromSevenZipToZip(copyDefinition, index);
+                return;
+            case RAR:
+                throw new UnsupportedOperationException("RAR compression is not supported");
+            case SEVEN_ZIP:
+                fromSevenZipToSevenZip(copyDefinition, index);
+                return;
+            case TAR:
+            case TAR_BZ2:
+            case TAR_GZ:
+            case TAR_LZ4:
+            case TAR_LZMA:
+            case TAR_XZ:
+                fromSevenZipToTar(toType, copyDefinition, index);
+        }
+    }
+
+    private void fromTarToArchive(
+            ArchiveType fromType,
+            ArchiveType toType,
+            CopyDefinition copyDefinition,
+            int index)
+            throws IOException {
+        switch (toType) {
+            case ZIP:
+                fromTarToZip(fromType, copyDefinition, index);
+                return;
+            case RAR:
+                throw new UnsupportedOperationException("RAR compression is not supported");
+            case SEVEN_ZIP:
+                fromTarToSevenZip(fromType, copyDefinition, index);
+                return;
+            case TAR:
+            case TAR_BZ2:
+            case TAR_GZ:
+            case TAR_LZ4:
+            case TAR_LZMA:
+            case TAR_XZ:
+                fromTarToTar(fromType, toType, copyDefinition, index);
+        }
+    }
+
+    private void fromZipToZipRaw(
+            CopyDefinition copyDefinition,
+            int index) throws IOException {
+        try (ZipArchiveOutputStream zipArchiveOutputStream =
+                new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
+            ArchiveUtils.readZip(copyDefinition.getFrom(), (zipFile, zipArchiveEntry) -> {
+                String name = zipArchiveEntry.getName();
+                ArchiveCopyDefinition archiveCopyDefinition =
+                        findArchiveCopyDefinition(copyDefinition, name);
+                if (archiveCopyDefinition == null) {
+                    return;
+                }
+                Path source = copyDefinition.getFrom().resolve(name);
+                Path to = copyDefinition.getTo().resolve(name);
+                if (!name.equals(archiveCopyDefinition.getDestination())) {
+                    logger.warn(
+                            "Cannot rename files inside ZIPs when using raw copy. "
+                                    + "Writing '{}' as '{}'",
+                            copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination()),
+                            to);
+                }
+                if (listener != null) {
+                    listener.reportProgress(
+                            source,
+                            to,
+                            index,
+                            0,
+                            0);
+                }
+                long start = System.nanoTime();
+                zipArchiveOutputStream.addRawArchiveEntry(
+                        zipArchiveEntry,
+                        zipFile.getRawInputStream(zipArchiveEntry));
+                if (listener != null) {
+                    double secondsPassed = (System.nanoTime() - start) / 1E9d;
+                    long bytesPerSecond = Math.round(zipArchiveEntry.getSize() / secondsPassed);
+                    listener.reportProgress(
+                            source,
+                            to,
+                            index,
+                            100,
+                            bytesPerSecond);
+                }
+            });
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromZipToZip(
+            CopyDefinition copyDefinition,
+            int index) throws IOException {
+        try (ZipArchiveOutputStream zipArchiveOutputStream =
+                new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
+            ArchiveUtils.readZip(
+                    copyDefinition.getFrom(),
+                    (zipFile, zipArchiveEntry) -> toZip(
+                            index,
+                            zipArchiveOutputStream,
+                            () -> zipFile.getInputStream(zipArchiveEntry),
+                            copyDefinition,
+                            zipArchiveEntry.getName(),
+                            zipArchiveEntry.getCreationTime(),
+                            zipArchiveEntry.getLastModifiedTime(),
+                            zipArchiveEntry.getLastAccessTime(),
+                            zipArchiveEntry.getSize()));
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromZipToSevenZip(
+            CopyDefinition copyDefinition,
+            int index) throws IOException {
+        try (SevenZOutputFile sevenZOutputFile =
+                new SevenZOutputFile(copyDefinition.getTo().toFile())) {
+            ArchiveUtils.readZip(
+                    copyDefinition.getFrom(),
+                    (zipFile, zipArchiveEntry) -> toSevenZip(
+                            index,
+                            sevenZOutputFile,
+                            () -> zipFile.getInputStream(zipArchiveEntry),
+                            copyDefinition,
+                            zipArchiveEntry.getName(),
+                            toDate(zipArchiveEntry.getCreationTime()),
+                            toDate(zipArchiveEntry.getLastModifiedTime()),
+                            toDate(zipArchiveEntry.getLastAccessTime()),
+                            zipArchiveEntry.getSize()));
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromZipToTar(
+            ArchiveType archiveType,
+            CopyDefinition copyDefinition,
+            int index) throws IOException {
+        OutputStream outputStream =
+                ArchiveUtils.outputStreamForTar(archiveType, copyDefinition.getTo());
+        if (outputStream == null) {
+            return;
+        }
+        try (TarArchiveOutputStream tarArchiveOutputStream =
+                new TarArchiveOutputStream(outputStream)) {
+            ArchiveUtils.readZip(
+                    copyDefinition.getFrom(),
+                    (zipFile, zipArchiveEntry) -> toTar(
+                            index,
+                            tarArchiveOutputStream,
+                            () -> zipFile.getInputStream(zipArchiveEntry),
+                            copyDefinition,
+                            zipArchiveEntry.getName(),
+                            toDate(zipArchiveEntry.getLastModifiedTime()),
+                            zipArchiveEntry.getSize()));
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromRarToZip(
+            CopyDefinition copyDefinition,
+            int index) throws Exception {
+        try (ZipArchiveOutputStream zipArchiveOutputStream =
+                new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
+            ArchiveUtils.readRar(
+                    copyDefinition.getFrom(),
+                    (archive, fileHeader) -> toZip(
+                            index,
+                            zipArchiveOutputStream,
+                            () -> archive.getInputStream(fileHeader),
+                            copyDefinition,
+                            fileHeader.getFileName(),
+                            fromDate(fileHeader.getCTime()),
+                            fromDate(fileHeader.getMTime()),
+                            fromDate(fileHeader.getATime()),
+                            fileHeader.getFullUnpackSize()));
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException | RarException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromRarToSevenZip(
+            CopyDefinition copyDefinition,
+            int index) throws Exception {
+        try (SevenZOutputFile sevenZOutputFile =
+                new SevenZOutputFile(copyDefinition.getTo().toFile())) {
+            ArchiveUtils.readRar(
+                    copyDefinition.getFrom(),
+                    (archive, fileHeader) -> toSevenZip(
+                            index,
+                            sevenZOutputFile,
+                            () -> archive.getInputStream(fileHeader),
+                            copyDefinition,
+                            fileHeader.getFileName(),
+                            fileHeader.getCTime(),
+                            fileHeader.getMTime(),
+                            fileHeader.getATime(),
+                            fileHeader.getFullUnpackSize()));
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException | RarException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromRarToTar(
+            ArchiveType archiveType,
+            CopyDefinition copyDefinition,
+            int index) throws Exception {
+        OutputStream outputStream =
+                ArchiveUtils.outputStreamForTar(archiveType, copyDefinition.getTo());
+        if (outputStream == null) {
+            return;
+        }
+        try (TarArchiveOutputStream tarArchiveOutputStream =
+                new TarArchiveOutputStream(outputStream)) {
+            ArchiveUtils.readRar(
+                    copyDefinition.getFrom(),
+                    (archive, fileHeader) -> toTar(
+                            index,
+                            tarArchiveOutputStream,
+                            () -> archive.getInputStream(fileHeader),
+                            copyDefinition,
+                            fileHeader.getFileName(),
+                            fileHeader.getMTime(),
+                            fileHeader.getFullUnpackSize()));
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException | RarException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromSevenZipToZip(
+            CopyDefinition copyDefinition,
+            int index) throws IOException {
+        try (ZipArchiveOutputStream zipArchiveOutputStream =
+                new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
+            ArchiveUtils.readSevenZip(
+                    copyDefinition.getFrom(),
+                    (sevenZFile, sevenZArchiveEntry) -> toZip(
+                            index,
+                            sevenZFile::read,
+                            zipArchiveOutputStream,
+                            copyDefinition,
+                            sevenZArchiveEntry.getName(),
+                            sevenZArchiveEntry.getHasCreationDate()
+                                    ? fromDate(sevenZArchiveEntry.getCreationDate())
+                                    : null,
+                            sevenZArchiveEntry.getHasLastModifiedDate()
+                                    ? fromDate(sevenZArchiveEntry.getLastModifiedDate())
+                                    : null,
+                            sevenZArchiveEntry.getHasAccessDate()
+                                    ? fromDate(sevenZArchiveEntry.getAccessDate())
+                                    : null,
+                            sevenZArchiveEntry.getSize()));
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromSevenZipToSevenZip(
+            CopyDefinition copyDefinition,
+            int index) throws IOException {
+        try (SevenZOutputFile sevenZOutputFile =
+                new SevenZOutputFile(copyDefinition.getTo().toFile())) {
+            ArchiveUtils.readSevenZip(
+                    copyDefinition.getFrom(),
+                    (sevenZFile, sevenZArchiveEntry) -> toSevenZip(
+                            index,
+                            sevenZFile::read,
+                            sevenZOutputFile,
+                            copyDefinition,
+                            sevenZArchiveEntry.getName(),
+                            sevenZArchiveEntry.getHasCreationDate()
+                                    ? sevenZArchiveEntry.getCreationDate()
+                                    : null,
+                            sevenZArchiveEntry.getHasLastModifiedDate()
+                                    ? sevenZArchiveEntry.getLastModifiedDate()
+                                    : null,
+                            sevenZArchiveEntry.getHasAccessDate()
+                                    ? sevenZArchiveEntry.getAccessDate()
+                                    : null,
+                            sevenZArchiveEntry.getSize()));
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromSevenZipToTar(
+            ArchiveType archiveType,
+            CopyDefinition copyDefinition,
+            int index) throws IOException {
+        OutputStream outputStream =
+                ArchiveUtils.outputStreamForTar(archiveType, copyDefinition.getTo());
+        if (outputStream == null) {
+            return;
+        }
+        try (TarArchiveOutputStream tarArchiveOutputStream =
+                new TarArchiveOutputStream(outputStream)) {
+            ArchiveUtils.readSevenZip(
+                    copyDefinition.getFrom(),
+                    (sevenZFile, sevenZArchiveEntry) -> toTar(
+                            index,
+                            sevenZFile::read,
+                            tarArchiveOutputStream,
+                            copyDefinition,
+                            sevenZArchiveEntry.getName(),
+                            sevenZArchiveEntry.getHasLastModifiedDate()
+                                    ? sevenZArchiveEntry.getLastModifiedDate()
+                                    : null,
+                            sevenZArchiveEntry.getSize()));
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromTarToZip(ArchiveType archiveType, CopyDefinition copyDefinition, int index)
+            throws IOException {
+        try (ZipArchiveOutputStream zipArchiveOutputStream =
+                new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
+            ArchiveUtils.readTar(
+                    archiveType,
+                    copyDefinition.getFrom(),
+                    (tarArchiveEntry, tarArchiveInputStream) -> toZip(
+                            index,
+                            tarArchiveInputStream::read,
+                            zipArchiveOutputStream,
+                            copyDefinition,
+                            tarArchiveEntry.getName(),
+                            null,
+                            fromDate(tarArchiveEntry.getLastModifiedDate()),
+                            null,
+                            tarArchiveEntry.getRealSize()));
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromTarToSevenZip(
+            ArchiveType archiveType,
+            CopyDefinition copyDefinition,
+            int index)
+            throws IOException {
+        try (SevenZOutputFile sevenZOutputFile =
+                new SevenZOutputFile(copyDefinition.getTo().toFile())) {
+            ArchiveUtils.readTar(
+                    archiveType,
+                    copyDefinition.getFrom(),
+                    (tarArchiveEntry, tarArchiveInputStream) -> toSevenZip(
+                            index,
+                            tarArchiveInputStream::read,
+                            sevenZOutputFile,
+                            copyDefinition,
+                            tarArchiveEntry.getName(),
+                            null,
+                            tarArchiveEntry.getLastModifiedDate(),
+                            null,
+                            tarArchiveEntry.getRealSize()));
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromTarToTar(
+            ArchiveType fromType,
+            ArchiveType toType,
+            CopyDefinition copyDefinition,
+            int index)
+            throws IOException {
+        OutputStream outputStream =
+                ArchiveUtils.outputStreamForTar(toType, copyDefinition.getTo());
+        if (outputStream == null) {
+            return;
+        }
+        try (TarArchiveOutputStream tarArchiveOutputStream =
+                new TarArchiveOutputStream(outputStream)) {
+            ArchiveUtils.readTar(
+                    fromType,
+                    copyDefinition.getFrom(),
+                    (tarArchiveEntry, tarArchiveInputStream) -> toTar(
+                            index,
+                            tarArchiveInputStream::read,
+                            tarArchiveOutputStream,
+                            copyDefinition,
+                            tarArchiveEntry.getName(),
+                            tarArchiveEntry.getLastModifiedDate(),
+                            tarArchiveEntry.getRealSize()));
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private <T extends Throwable> void toZip(
+            int index,
+            ZipArchiveOutputStream zipArchiveOutputStream,
+            ThrowingSupplier<InputStream, T> inputStreamSupplier,
+            CopyDefinition copyDefinition,
+            String name,
+            @Nullable FileTime creationTime,
+            @Nullable FileTime lastModifiedTime,
+            @Nullable FileTime lastAccessTime,
+            long size) throws T, IOException {
+        try (InputStream inputStream = inputStreamSupplier.get()) {
+            toZip(
+                    index,
+                    inputStream::read,
+                    zipArchiveOutputStream,
+                    copyDefinition,
+                    name,
+                    creationTime,
+                    lastModifiedTime,
+                    lastAccessTime,
+                    size);
+        }
+    }
+
+    private void toZip(
+            int index,
+            TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
+            ZipArchiveOutputStream zipArchiveOutputStream,
+            CopyDefinition copyDefinition,
+            String name,
+            @Nullable FileTime creationTime,
+            @Nullable FileTime lastModifiedTime,
+            @Nullable FileTime lastAccessTime,
+            long size)
+            throws IOException {
+        ArchiveCopyDefinition archiveCopyDefinition =
+                findArchiveCopyDefinition(copyDefinition, name);
+        if (archiveCopyDefinition == null) {
+            return;
+        }
+        Path to = copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
+        ZipArchiveEntry zae = new ZipArchiveEntry(archiveCopyDefinition.getDestination());
+        zae.setSize(size);
+        if (creationTime != null) {
+            zae.setCreationTime(creationTime);
+        }
+        if (lastModifiedTime != null) {
+            zae.setLastModifiedTime(lastModifiedTime);
+        }
+        if (lastAccessTime != null) {
+            zae.setLastAccessTime(lastAccessTime);
+        }
+        Path source = copyDefinition.getFrom().resolve(name);
+        zipArchiveOutputStream.putArchiveEntry(zae);
+        copyWithProgress(
+                index,
+                size,
+                source,
+                to,
+                readFunction,
+                zipArchiveOutputStream::write);
+        zipArchiveOutputStream.closeArchiveEntry();
+    }
+
+    private <T extends Throwable> void toSevenZip(
+            int index,
+            SevenZOutputFile sevenZOutputFile,
+            ThrowingSupplier<InputStream, T> inputStreamSupplier,
+            CopyDefinition copyDefinition,
+            String name,
+            @Nullable Date creationDate,
+            @Nullable Date lastModifiedDate,
+            @Nullable Date lastAccessDate,
+            long size) throws T, IOException {
+        try (InputStream inputStream = inputStreamSupplier.get()) {
+            toSevenZip(
+                    index,
+                    inputStream::read,
+                    sevenZOutputFile,
+                    copyDefinition,
+                    name,
+                    creationDate,
+                    lastModifiedDate,
+                    lastAccessDate,
+                    size);
+        }
+    }
+
+    private void toSevenZip(
+            int index,
+            TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
+            SevenZOutputFile sevenZOutputFile,
+            CopyDefinition copyDefinition,
+            String name,
+            @Nullable Date creationDate,
+            @Nullable Date lastModifiedDate,
+            @Nullable Date lastAccessDate,
+            long size)
+            throws IOException {
+        ArchiveCopyDefinition archiveCopyDefinition =
+                findArchiveCopyDefinition(copyDefinition, name);
+        if (archiveCopyDefinition == null) {
+            return;
+        }
+        Path to = copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
+        SevenZArchiveEntry zae = new SevenZArchiveEntry();
+        zae.setName(archiveCopyDefinition.getDestination());
+        zae.setSize(size);
+        if (creationDate != null) {
+            zae.setCreationDate(creationDate);
+        }
+        if (lastModifiedDate != null) {
+            zae.setLastModifiedDate(lastModifiedDate);
+        }
+        if (lastAccessDate != null) {
+            zae.setLastModifiedDate(lastAccessDate);
+        }
+        Path source = copyDefinition.getFrom().resolve(name);
+        sevenZOutputFile.putArchiveEntry(zae);
+        copyWithProgress(
+                index,
+                size,
+                source,
+                to,
+                readFunction,
+                sevenZOutputFile::write);
+        sevenZOutputFile.closeArchiveEntry();
+    }
+
+    private <T extends Throwable> void toTar(
+            int index,
+            TarArchiveOutputStream tarArchiveOutputStream,
+            ThrowingSupplier<InputStream, T> inputStreamSupplier,
+            CopyDefinition copyDefinition,
+            String name,
+            @Nullable Date lastModifiedDate,
+            long size) throws T, IOException {
+        try (InputStream inputStream = inputStreamSupplier.get()) {
+            toTar(
+                    index,
+                    inputStream::read,
+                    tarArchiveOutputStream,
+                    copyDefinition,
+                    name,
+                    lastModifiedDate,
+                    size);
+        }
+    }
+
+    private void toTar(
+            int index,
+            TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
+            TarArchiveOutputStream tarArchiveOutputStream,
+            CopyDefinition copyDefinition,
+            String name,
+            @Nullable Date lastModifiedDate,
+            long size)
+            throws IOException {
+        ArchiveCopyDefinition archiveCopyDefinition =
+                findArchiveCopyDefinition(copyDefinition, name);
+        if (archiveCopyDefinition == null) {
+            return;
+        }
+        Path to = copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
+        TarArchiveEntry zae = new TarArchiveEntry(archiveCopyDefinition.getDestination());
+        zae.setSize(size);
+        if (lastModifiedDate != null) {
+            zae.setModTime(lastModifiedDate);
+        }
+        Path source = copyDefinition.getFrom().resolve(name);
+        tarArchiveOutputStream.putArchiveEntry(zae);
+        copyWithProgress(
+                index,
+                size,
+                source,
+                to,
+                readFunction,
+                tarArchiveOutputStream::write);
+        tarArchiveOutputStream.closeArchiveEntry();
+    }
+
+    @Nullable
+    private Date toDate(@Nullable FileTime fileTime) {
+        return fileTime != null ? new Date(fileTime.toMillis()) : null;
+    }
+
+    @Nullable
+    private static FileTime fromDate(@Nullable Date date) {
+        return date != null ? FileTime.fromMillis(date.getTime()) : null;
     }
 
     private ArchiveCopyDefinition findArchiveCopyDefinition(
@@ -576,6 +1198,7 @@ public final class FileCopier {
         int remainingBytes;
         while ((remainingBytes = (int) Math.min(size - totalRead, buffer.length)) > 0
                 && (bytesRead = readFunction.apply(buffer, 0, remainingBytes)) > -1) {
+            totalRead += bytesRead;
             writeConsumer.accept(buffer, 0, bytesRead);
             if (listener != null) {
                 int percentage = (int) ((totalRead * 100d) / size);
@@ -588,6 +1211,12 @@ public final class FileCopier {
                 start = System.nanoTime();
             }
         }
+    }
+
+    @FunctionalInterface
+    private interface ThrowingSupplier<K, E extends Throwable> {
+
+        K get() throws E;
     }
 
     @FunctionalInterface
