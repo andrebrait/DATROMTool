@@ -652,16 +652,27 @@ public final class FileCopier {
                 new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
             ArchiveUtils.readZip(
                     copyDefinition.getFrom(),
-                    (zipFile, zipArchiveEntry) -> toZip(
-                            index,
-                            zipArchiveOutputStream,
-                            () -> zipFile.getInputStream(zipArchiveEntry),
-                            copyDefinition,
-                            zipArchiveEntry.getName(),
-                            zipArchiveEntry.getCreationTime(),
-                            zipArchiveEntry.getLastModifiedTime(),
-                            zipArchiveEntry.getLastAccessTime(),
-                            zipArchiveEntry.getSize()));
+                    (zipFile, zipArchiveEntry) -> {
+                        String name = zipArchiveEntry.getName();
+                        ArchiveCopyDefinition archiveCopyDefinition =
+                                findArchiveCopyDefinition(copyDefinition, name);
+                        if (archiveCopyDefinition == null) {
+                            return;
+                        }
+                        try (InputStream inputStream = zipFile.getInputStream(zipArchiveEntry)) {
+                            toZip(
+                                    index,
+                                    inputStream::read,
+                                    zipArchiveOutputStream,
+                                    copyDefinition,
+                                    archiveCopyDefinition,
+                                    name,
+                                    zipArchiveEntry.getCreationTime(),
+                                    zipArchiveEntry.getLastModifiedTime(),
+                                    zipArchiveEntry.getLastAccessTime(),
+                                    zipArchiveEntry.getSize());
+                        }
+                    });
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
@@ -677,16 +688,27 @@ public final class FileCopier {
                 new SevenZOutputFile(copyDefinition.getTo().toFile())) {
             ArchiveUtils.readZip(
                     copyDefinition.getFrom(),
-                    (zipFile, zipArchiveEntry) -> toSevenZip(
-                            index,
-                            sevenZOutputFile,
-                            () -> zipFile.getInputStream(zipArchiveEntry),
-                            copyDefinition,
-                            zipArchiveEntry.getName(),
-                            toDate(zipArchiveEntry.getCreationTime()),
-                            toDate(zipArchiveEntry.getLastModifiedTime()),
-                            toDate(zipArchiveEntry.getLastAccessTime()),
-                            zipArchiveEntry.getSize()));
+                    (zipFile, zipArchiveEntry) -> {
+                        String name = zipArchiveEntry.getName();
+                        ArchiveCopyDefinition archiveCopyDefinition =
+                                findArchiveCopyDefinition(copyDefinition, name);
+                        if (archiveCopyDefinition == null) {
+                            return;
+                        }
+                        try (InputStream inputStream = zipFile.getInputStream(zipArchiveEntry)) {
+                            toSevenZip(
+                                    index,
+                                    inputStream::read,
+                                    sevenZOutputFile,
+                                    copyDefinition,
+                                    archiveCopyDefinition,
+                                    name,
+                                    toDate(zipArchiveEntry.getCreationTime()),
+                                    toDate(zipArchiveEntry.getLastModifiedTime()),
+                                    toDate(zipArchiveEntry.getLastAccessTime()),
+                                    zipArchiveEntry.getSize());
+                        }
+                    });
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
@@ -708,14 +730,25 @@ public final class FileCopier {
                 new TarArchiveOutputStream(outputStream)) {
             ArchiveUtils.readZip(
                     copyDefinition.getFrom(),
-                    (zipFile, zipArchiveEntry) -> toTar(
-                            index,
-                            tarArchiveOutputStream,
-                            () -> zipFile.getInputStream(zipArchiveEntry),
-                            copyDefinition,
-                            zipArchiveEntry.getName(),
-                            toDate(zipArchiveEntry.getLastModifiedTime()),
-                            zipArchiveEntry.getSize()));
+                    (zipFile, zipArchiveEntry) -> {
+                        String name = zipArchiveEntry.getName();
+                        ArchiveCopyDefinition archiveCopyDefinition =
+                                findArchiveCopyDefinition(copyDefinition, name);
+                        if (archiveCopyDefinition == null) {
+                            return;
+                        }
+                        try (InputStream inputStream = zipFile.getInputStream(zipArchiveEntry)) {
+                            toTar(
+                                    index,
+                                    inputStream::read,
+                                    tarArchiveOutputStream,
+                                    copyDefinition,
+                                    archiveCopyDefinition,
+                                    name,
+                                    toDate(zipArchiveEntry.getLastModifiedTime()),
+                                    zipArchiveEntry.getSize());
+                        }
+                    });
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
@@ -731,16 +764,27 @@ public final class FileCopier {
                 new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
             ArchiveUtils.readRar(
                     copyDefinition.getFrom(),
-                    (archive, fileHeader) -> toZip(
-                            index,
-                            zipArchiveOutputStream,
-                            () -> archive.getInputStream(fileHeader),
-                            copyDefinition,
-                            fileHeader.getFileName(),
-                            fromDate(fileHeader.getCTime()),
-                            fromDate(fileHeader.getMTime()),
-                            fromDate(fileHeader.getATime()),
-                            fileHeader.getFullUnpackSize()));
+                    (archive, fileHeader) -> {
+                        String name = fileHeader.getFileName();
+                        ArchiveCopyDefinition archiveCopyDefinition =
+                                findArchiveCopyDefinition(copyDefinition, name);
+                        if (archiveCopyDefinition == null) {
+                            return;
+                        }
+                        try (InputStream inputStream = archive.getInputStream(fileHeader)) {
+                            toZip(
+                                    index,
+                                    inputStream::read,
+                                    zipArchiveOutputStream,
+                                    copyDefinition,
+                                    archiveCopyDefinition,
+                                    name,
+                                    fromDate(fileHeader.getCTime()),
+                                    fromDate(fileHeader.getMTime()),
+                                    fromDate(fileHeader.getATime()),
+                                    fileHeader.getFullUnpackSize());
+                        }
+                    });
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException | RarException e) {
@@ -756,16 +800,27 @@ public final class FileCopier {
                 new SevenZOutputFile(copyDefinition.getTo().toFile())) {
             ArchiveUtils.readRar(
                     copyDefinition.getFrom(),
-                    (archive, fileHeader) -> toSevenZip(
-                            index,
-                            sevenZOutputFile,
-                            () -> archive.getInputStream(fileHeader),
-                            copyDefinition,
-                            fileHeader.getFileName(),
-                            fileHeader.getCTime(),
-                            fileHeader.getMTime(),
-                            fileHeader.getATime(),
-                            fileHeader.getFullUnpackSize()));
+                    (archive, fileHeader) -> {
+                        String name = fileHeader.getFileName();
+                        ArchiveCopyDefinition archiveCopyDefinition =
+                                findArchiveCopyDefinition(copyDefinition, name);
+                        if (archiveCopyDefinition == null) {
+                            return;
+                        }
+                        try (InputStream inputStream = archive.getInputStream(fileHeader)) {
+                            toSevenZip(
+                                    index,
+                                    inputStream::read,
+                                    sevenZOutputFile,
+                                    copyDefinition,
+                                    archiveCopyDefinition,
+                                    name,
+                                    fileHeader.getCTime(),
+                                    fileHeader.getMTime(),
+                                    fileHeader.getATime(),
+                                    fileHeader.getFullUnpackSize());
+                        }
+                    });
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException | RarException e) {
@@ -787,14 +842,25 @@ public final class FileCopier {
                 new TarArchiveOutputStream(outputStream)) {
             ArchiveUtils.readRar(
                     copyDefinition.getFrom(),
-                    (archive, fileHeader) -> toTar(
-                            index,
-                            tarArchiveOutputStream,
-                            () -> archive.getInputStream(fileHeader),
-                            copyDefinition,
-                            fileHeader.getFileName(),
-                            fileHeader.getMTime(),
-                            fileHeader.getFullUnpackSize()));
+                    (archive, fileHeader) -> {
+                        String name = fileHeader.getFileName();
+                        ArchiveCopyDefinition archiveCopyDefinition =
+                                findArchiveCopyDefinition(copyDefinition, name);
+                        if (archiveCopyDefinition == null) {
+                            return;
+                        }
+                        try (InputStream inputStream = archive.getInputStream(fileHeader)) {
+                            toTar(
+                                    index,
+                                    inputStream::read,
+                                    tarArchiveOutputStream,
+                                    copyDefinition,
+                                    archiveCopyDefinition,
+                                    name,
+                                    fileHeader.getMTime(),
+                                    fileHeader.getFullUnpackSize());
+                        }
+                    });
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException | RarException e) {
@@ -981,30 +1047,6 @@ public final class FileCopier {
         }
     }
 
-    private <T extends Throwable> void toZip(
-            int index,
-            ZipArchiveOutputStream zipArchiveOutputStream,
-            ThrowingSupplier<InputStream, T> inputStreamSupplier,
-            CopyDefinition copyDefinition,
-            String name,
-            @Nullable FileTime creationTime,
-            @Nullable FileTime lastModifiedTime,
-            @Nullable FileTime lastAccessTime,
-            long size) throws T, IOException {
-        try (InputStream inputStream = inputStreamSupplier.get()) {
-            toZip(
-                    index,
-                    inputStream::read,
-                    zipArchiveOutputStream,
-                    copyDefinition,
-                    name,
-                    creationTime,
-                    lastModifiedTime,
-                    lastAccessTime,
-                    size);
-        }
-    }
-
     private void toZip(
             int index,
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
@@ -1016,8 +1058,31 @@ public final class FileCopier {
             @Nullable FileTime lastAccessTime,
             long size)
             throws IOException {
-        ArchiveCopyDefinition archiveCopyDefinition =
-                findArchiveCopyDefinition(copyDefinition, name);
+        toZip(
+                index,
+                readFunction,
+                zipArchiveOutputStream,
+                copyDefinition,
+                findArchiveCopyDefinition(copyDefinition, name),
+                name,
+                creationTime,
+                lastModifiedTime,
+                lastAccessTime,
+                size);
+    }
+
+    private void toZip(
+            int index,
+            TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
+            ZipArchiveOutputStream zipArchiveOutputStream,
+            CopyDefinition copyDefinition,
+            @Nullable ArchiveCopyDefinition archiveCopyDefinition,
+            String name,
+            @Nullable FileTime creationTime,
+            @Nullable FileTime lastModifiedTime,
+            @Nullable FileTime lastAccessTime,
+            long size)
+            throws IOException {
         if (archiveCopyDefinition == null) {
             return;
         }
@@ -1045,30 +1110,6 @@ public final class FileCopier {
         zipArchiveOutputStream.closeArchiveEntry();
     }
 
-    private <T extends Throwable> void toSevenZip(
-            int index,
-            SevenZOutputFile sevenZOutputFile,
-            ThrowingSupplier<InputStream, T> inputStreamSupplier,
-            CopyDefinition copyDefinition,
-            String name,
-            @Nullable Date creationDate,
-            @Nullable Date lastModifiedDate,
-            @Nullable Date lastAccessDate,
-            long size) throws T, IOException {
-        try (InputStream inputStream = inputStreamSupplier.get()) {
-            toSevenZip(
-                    index,
-                    inputStream::read,
-                    sevenZOutputFile,
-                    copyDefinition,
-                    name,
-                    creationDate,
-                    lastModifiedDate,
-                    lastAccessDate,
-                    size);
-        }
-    }
-
     private void toSevenZip(
             int index,
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
@@ -1080,8 +1121,31 @@ public final class FileCopier {
             @Nullable Date lastAccessDate,
             long size)
             throws IOException {
-        ArchiveCopyDefinition archiveCopyDefinition =
-                findArchiveCopyDefinition(copyDefinition, name);
+        toSevenZip(
+                index,
+                readFunction,
+                sevenZOutputFile,
+                copyDefinition,
+                findArchiveCopyDefinition(copyDefinition, name),
+                name,
+                creationDate,
+                lastModifiedDate,
+                lastAccessDate,
+                size);
+    }
+
+    private void toSevenZip(
+            int index,
+            TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
+            SevenZOutputFile sevenZOutputFile,
+            CopyDefinition copyDefinition,
+            @Nullable ArchiveCopyDefinition archiveCopyDefinition,
+            String name,
+            @Nullable Date creationDate,
+            @Nullable Date lastModifiedDate,
+            @Nullable Date lastAccessDate,
+            long size)
+            throws IOException {
         if (archiveCopyDefinition == null) {
             return;
         }
@@ -1110,26 +1174,6 @@ public final class FileCopier {
         sevenZOutputFile.closeArchiveEntry();
     }
 
-    private <T extends Throwable> void toTar(
-            int index,
-            TarArchiveOutputStream tarArchiveOutputStream,
-            ThrowingSupplier<InputStream, T> inputStreamSupplier,
-            CopyDefinition copyDefinition,
-            String name,
-            @Nullable Date lastModifiedDate,
-            long size) throws T, IOException {
-        try (InputStream inputStream = inputStreamSupplier.get()) {
-            toTar(
-                    index,
-                    inputStream::read,
-                    tarArchiveOutputStream,
-                    copyDefinition,
-                    name,
-                    lastModifiedDate,
-                    size);
-        }
-    }
-
     private void toTar(
             int index,
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
@@ -1139,8 +1183,27 @@ public final class FileCopier {
             @Nullable Date lastModifiedDate,
             long size)
             throws IOException {
-        ArchiveCopyDefinition archiveCopyDefinition =
-                findArchiveCopyDefinition(copyDefinition, name);
+        toTar(
+                index,
+                readFunction,
+                tarArchiveOutputStream,
+                copyDefinition,
+                findArchiveCopyDefinition(copyDefinition, name),
+                name,
+                lastModifiedDate,
+                size);
+    }
+
+    private void toTar(
+            int index,
+            TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
+            TarArchiveOutputStream tarArchiveOutputStream,
+            CopyDefinition copyDefinition,
+            @Nullable ArchiveCopyDefinition archiveCopyDefinition,
+            String name,
+            @Nullable Date lastModifiedDate,
+            long size)
+            throws IOException {
         if (archiveCopyDefinition == null) {
             return;
         }
@@ -1172,6 +1235,7 @@ public final class FileCopier {
         return date != null ? FileTime.fromMillis(date.getTime()) : null;
     }
 
+    @Nullable
     private ArchiveCopyDefinition findArchiveCopyDefinition(
             CopyDefinition copyDefinition,
             String name) {
@@ -1211,12 +1275,6 @@ public final class FileCopier {
                 start = System.nanoTime();
             }
         }
-    }
-
-    @FunctionalInterface
-    private interface ThrowingSupplier<K, E extends Throwable> {
-
-        K get() throws E;
     }
 
     @FunctionalInterface

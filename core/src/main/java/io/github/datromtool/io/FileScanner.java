@@ -501,6 +501,7 @@ public final class FileScanner {
         });
     }
 
+    // TODO: optimization for common detectors (because we don't need the full file!)
     @Nonnull
     private ProcessingResult process(
             Path path,
