@@ -172,7 +172,7 @@ public final class FileScanner {
                     bufferSize = DEFAULT_BUFFER_SIZE;
                 } else {
                     bufferSize =
-                            (int) Math.max(Math.min(maxRomSize, MAX_BUFFER), DEFAULT_BUFFER_SIZE);
+                            toInt(Math.max(Math.min(maxRomSize, MAX_BUFFER), DEFAULT_BUFFER_SIZE));
                 }
                 ByteUnit unit = ByteUnit.getUnit(bufferSize);
                 String bufferSizeStr = String.format("%.02f", unit.convert(bufferSize));
@@ -554,111 +554,11 @@ public final class FileScanner {
         crc32.reset();
         md5.reset();
         sha1.reset();
-        int reportedPercentage = 0;
-        long totalRead = 0;
-        long start = System.nanoTime();
-        int bytesRead;
-        int remainingBytes;
+        long totalRead;
         if (size <= buffer.length && detector != null) {
-            // Read the whole entry to the buffer and check headers
-            while ((remainingBytes = (int) Math.min(size - totalRead, buffer.length)) > 0
-                    && (bytesRead = function.apply(buffer, (int) totalRead, remainingBytes)) > -1) {
-                totalRead += bytesRead;
-            }
-            // Apply logic to detect headers
-            // This is the only time we're going to read the file anyway
-            // We can safely redefine the buffer variable here
-            for (Rule r : detector.getRules()) {
-                try {
-                    byte[] newBuffer = r.apply(buffer, (int) totalRead, size);
-                    // Identity check is enough here
-                    if (newBuffer != buffer) {
-                        logger.info(
-                                "Detected header using '{}' for '{}'",
-                                detector.getName(),
-                                path);
-                        buffer = newBuffer;
-                        break;
-                    }
-                } catch (Exception e) {
-                    logger.error("Error while processing rule for '{}'", path, e);
-                    if (listener != null) {
-                        listener.reportFailure(path, index, "Error while processing rule", e);
-                    }
-                }
-            }
-            int endRead = (int) Math.min(totalRead, buffer.length);
-            crc32.update(buffer, 0, endRead);
-            md5.update(buffer, 0, endRead);
-            sha1.update(buffer, 0, endRead);
-            if (listener != null) {
-                double secondsPassed = (System.nanoTime() - start) / 1E9d;
-                long bytesPerSecond = Math.round(totalRead / secondsPassed);
-                listener.reportProgress(path, index, 100, bytesPerSecond);
-            }
+            totalRead = readAllAtOnce(path, index, size, function, crc32, md5, sha1, buffer);
         } else {
-            long endOffset = size;
-            if (detector != null && useLazyDetector) {
-                long startOffset = 0;
-                // Fill the whole buffer
-                while ((remainingBytes = (int) (buffer.length - totalRead)) > 0
-                        && (bytesRead = function.apply(buffer, (int) totalRead, remainingBytes))
-                        > -1) {
-                    totalRead += bytesRead;
-                }
-                for (Rule r : detector.getRules()) {
-                    try {
-                        if (r.test(buffer, (int) totalRead, size)) {
-                            startOffset = Math.max(r.getStartOffset(), startOffset);
-                            long currEndOffset = r.getEndOffset();
-                            if (currEndOffset < 0) {
-                                currEndOffset += size;
-                            }
-                            endOffset = Math.min(currEndOffset, endOffset);
-                        }
-                    } catch (Exception e) {
-                        logger.error("Error while processing rule for '{}'", path, e);
-                        if (listener != null) {
-                            listener.reportFailure(
-                                    path,
-                                    index,
-                                    "Error while processing rule",
-                                    e);
-                        }
-                    }
-                }
-                int endRead = (int) (Math.min(totalRead, endOffset) - startOffset);
-                crc32.update(buffer, (int) startOffset, endRead);
-                md5.update(buffer, (int) startOffset, endRead);
-                sha1.update(buffer, (int) startOffset, endRead);
-                if (listener != null) {
-                    int percentage = (int) ((totalRead * 100d) / size);
-                    if (reportedPercentage != percentage) {
-                        double secondsPassed = (System.nanoTime() - start) / 1E9d;
-                        long bytesPerSecond = Math.round(totalRead / secondsPassed);
-                        listener.reportProgress(path, index, percentage, bytesPerSecond);
-                        reportedPercentage = percentage;
-                    }
-                    start = System.nanoTime();
-                }
-            }
-            while ((remainingBytes = (int) Math.min(endOffset - totalRead, buffer.length)) > 0
-                    && (bytesRead = function.apply(buffer, 0, remainingBytes)) > -1) {
-                totalRead += bytesRead;
-                crc32.update(buffer, 0, bytesRead);
-                md5.update(buffer, 0, bytesRead);
-                sha1.update(buffer, 0, bytesRead);
-                if (listener != null) {
-                    int percentage = (int) ((totalRead * 100d) / size);
-                    if (reportedPercentage != percentage) {
-                        double secondsPassed = (System.nanoTime() - start) / 1E9d;
-                        long bytesPerSecond = Math.round(bytesRead / secondsPassed);
-                        listener.reportProgress(path, index, percentage, bytesPerSecond);
-                        reportedPercentage = percentage;
-                    }
-                    start = System.nanoTime();
-                }
-            }
+            totalRead = readInSteps(path, index, size, function, crc32, md5, sha1, buffer);
         }
         return new ProcessingResult(
                 new Result.Digest(
@@ -666,6 +566,147 @@ public final class FileScanner {
                         Hex.encodeHexString(md5.digest()),
                         Hex.encodeHexString(sha1.digest())),
                 totalRead);
+    }
+
+    private long readAllAtOnce(
+            Path path,
+            int index,
+            long size,
+            TriFunction<byte[], Integer, Integer, Integer, IOException> function,
+            CRC32 crc32, MessageDigest md5, MessageDigest sha1, byte[] buffer) throws IOException {
+        long totalRead = 0;
+        long start = System.nanoTime();
+        int bytesRead;
+        int bytesLeft;
+        // Read the whole entry to the buffer and check headers
+        while ((bytesLeft = toInt(Math.min(size - totalRead, buffer.length))) > 0
+                && (bytesRead = function.apply(buffer, toInt(totalRead), bytesLeft)) > -1) {
+            totalRead += bytesRead;
+        }
+        // Apply logic to detect headers
+        // This is the only time we're going to read the file anyway
+        // We can safely redefine the buffer variable here
+        for (Rule r : detector.getRules()) {
+            try {
+                byte[] newBuffer = r.apply(buffer, toInt(totalRead), size);
+                // Identity check is enough here
+                if (newBuffer != buffer) {
+                    logger.info(
+                            "Detected header using '{}' for '{}'",
+                            detector.getName(),
+                            path);
+                    buffer = newBuffer;
+                    break;
+                }
+            } catch (Exception e) {
+                logger.error("Error while processing rule for '{}'", path, e);
+                if (listener != null) {
+                    listener.reportFailure(path, index, "Error while processing rule", e);
+                }
+            }
+        }
+        int endRead = toInt(Math.min(totalRead, buffer.length));
+        crc32.update(buffer, 0, endRead);
+        md5.update(buffer, 0, endRead);
+        sha1.update(buffer, 0, endRead);
+        if (listener != null) {
+            double secondsPassed = (System.nanoTime() - start) / 1E9d;
+            long bytesPerSecond = Math.round(totalRead / secondsPassed);
+            listener.reportProgress(path, index, 100, bytesPerSecond);
+        }
+        return totalRead;
+    }
+
+    private long readInSteps(
+            Path path,
+            int index,
+            long size,
+            TriFunction<byte[], Integer, Integer, Integer, IOException> function,
+            CRC32 crc32, MessageDigest md5, MessageDigest sha1, byte[] buffer) throws IOException {
+        long totalRead = 0;
+        long start = System.nanoTime();
+        int reportedPercentage = 0;
+        long endOffset = size;
+        int bytesRead;
+        int bytesLeft;
+        if (detector != null && useLazyDetector) {
+            long startOffset = 0;
+            // Read as much as possible to the buffer and check headers
+            while ((bytesLeft = toInt(buffer.length - totalRead)) > 0
+                    && (bytesRead = function.apply(buffer, toInt(totalRead), bytesLeft)) > -1) {
+                totalRead += bytesRead;
+            }
+            // Apply logic to detect headers
+            for (Rule r : detector.getRules()) {
+                try {
+                    if (r.test(buffer, toInt(totalRead), size)) {
+                        startOffset = Math.max(r.getStartOffset(), startOffset);
+                        long currEndOffset = r.getEndOffset();
+                        if (currEndOffset < 0) {
+                            currEndOffset += size;
+                        }
+                        endOffset = Math.min(currEndOffset, endOffset);
+                        // The file is smaller than the detected header portion
+                        if (startOffset > endOffset) {
+                            startOffset = 0;
+                            endOffset = size;
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("Error while processing rule for '{}'", path, e);
+                    if (listener != null) {
+                        listener.reportFailure(
+                                path,
+                                index,
+                                "Error while processing rule",
+                                e);
+                    }
+                }
+            }
+            totalRead = Math.min(totalRead, endOffset) - startOffset;
+            int startOffsetInt = toInt(startOffset);
+            int totalReadInt = toInt(totalRead);
+            crc32.update(buffer, startOffsetInt, totalReadInt);
+            md5.update(buffer, startOffsetInt, totalReadInt);
+            sha1.update(buffer, startOffsetInt, totalReadInt);
+            if (listener != null) {
+                int percentage = toInt((totalRead * 100d) / size);
+                if (reportedPercentage != percentage) {
+                    double secondsPassed = (System.nanoTime() - start) / 1E9d;
+                    long bytesPerSecond = Math.round(totalRead / secondsPassed);
+                    listener.reportProgress(path, index, percentage, bytesPerSecond);
+                    reportedPercentage = percentage;
+                }
+                start = System.nanoTime();
+            }
+        }
+        // Regular reading until we get to the end offset
+        while ((bytesLeft = toInt(Math.min(endOffset - totalRead, buffer.length))) > 0
+                && (bytesRead = function.apply(buffer, 0, bytesLeft)) > -1) {
+            totalRead += bytesRead;
+            crc32.update(buffer, 0, bytesRead);
+            md5.update(buffer, 0, bytesRead);
+            sha1.update(buffer, 0, bytesRead);
+            if (listener != null) {
+                int percentage = toInt((totalRead * 100d) / size);
+                if (reportedPercentage != percentage) {
+                    double secondsPassed = (System.nanoTime() - start) / 1E9d;
+                    long bytesPerSecond = Math.round(bytesRead / secondsPassed);
+                    listener.reportProgress(path, index, percentage, bytesPerSecond);
+                    reportedPercentage = percentage;
+                }
+                start = System.nanoTime();
+            }
+        }
+        return totalRead;
+    }
+
+    private static int toInt(double a) {
+        return toInt((long) a);
+    }
+
+    private static int toInt(long a) {
+        return Math.toIntExact(a);
     }
 
     @FunctionalInterface
