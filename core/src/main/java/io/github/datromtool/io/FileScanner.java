@@ -610,7 +610,11 @@ public final class FileScanner {
                     try {
                         if (r.test(buffer, (int) totalRead, size)) {
                             startOffset = Math.max(r.getStartOffset(), startOffset);
-                            endOffset = Math.min(r.getEndOffset(), endOffset);
+                            long currEndOffset = r.getEndOffset();
+                            if (currEndOffset < 0) {
+                                currEndOffset += size;
+                            }
+                            endOffset = Math.min(currEndOffset, endOffset);
                         }
                     } catch (Exception e) {
                         logger.error("Error while processing rule for '{}'", path, e);
