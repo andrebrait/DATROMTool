@@ -31,8 +31,16 @@ public final class GameFilterer {
     private final PostFilter postFilter;
 
     public ImmutableList<ParsedGame> filter(Collection<ParsedGame> input) {
-        logger.debug("Starting filtering with {}", filter);
-        return input.stream()
+        if (logger.isDebugEnabled()) {
+            logger.debug(
+                    "Starting filtering {} with {}",
+                    input.stream()
+                            .map(ParsedGame::getGame)
+                            .map(Game::getName)
+                            .collect(Collectors.toList()),
+                    filter);
+        }
+        ImmutableList<ParsedGame> result = input.stream()
                 .filter(this::filterBioses)
                 .filter(this::filterProto)
                 .filter(this::filterBeta)
@@ -42,6 +50,15 @@ public final class GameFilterer {
                 .filter(this::filterLanguage)
                 .filter(this::filterExcludes)
                 .collect(ImmutableList.toImmutableList());
+        if (logger.isDebugEnabled()) {
+            logger.debug(
+                    "Finished filtering {}",
+                    result.stream()
+                            .map(ParsedGame::getGame)
+                            .map(Game::getName)
+                            .collect(Collectors.toList()));
+        }
+        return result;
     }
 
     private boolean filterBioses(ParsedGame p) {
@@ -117,7 +134,15 @@ public final class GameFilterer {
     }
 
     public ImmutableList<ParsedGame> postFilter(Collection<ParsedGame> input) {
-        logger.debug("Starting post-filter with {}", postFilter);
+        if (logger.isDebugEnabled()) {
+            logger.debug(
+                    "Starting post-filtering {} with {}",
+                    input.stream()
+                            .map(ParsedGame::getGame)
+                            .map(Game::getName)
+                            .collect(Collectors.toList()),
+                    filter);
+        }
         for (Pattern exclude : postFilter.getExcludes()) {
             if (input.stream()
                     .map(ParsedGame::getGame)
