@@ -5,6 +5,10 @@ import com.google.common.collect.ImmutableList;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.SortingPreference;
 import lombok.Value;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.util.Comparator;
@@ -12,12 +16,15 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public final class GameComparator implements Comparator<ParsedGame> {
+
+    private final static Logger logger = LoggerFactory.getLogger(GameComparator.class);
 
     private final ConcurrentMap<Pair<ParsedGame, ?>, Integer> operationsCache =
             new ConcurrentHashMap<>();
@@ -27,97 +34,132 @@ public final class GameComparator implements Comparator<ParsedGame> {
     public GameComparator(@Nonnull SortingPreference sortingPreference) {
         Objects.requireNonNull(sortingPreference);
         this.comparations = ImmutableList.of(
-                (o1, o2) -> Boolean.compare(o1.isBad(), o2.isBad()),
-                sortingPreference.isPreferPrereleases()
-                        ? (o1, o2) -> -Boolean.compare(o1.isPrerelease(), o2.isPrerelease())
-                        : (o1, o2) -> 0,
-                (o1, o2) -> comparePatterns(o1, o2, sortingPreference.getAvoids()),
+                new Comparation(
+                        "Bad dump",
+                        (o1, o2) -> Boolean.compare(o1.isBad(), o2.isBad())),
+                new Comparation(
+                        "Prefer prereleases",
+                        sortingPreference.isPreferPrereleases()
+                                ? (o1, o2) -> -Boolean.compare(o1.isPrerelease(), o2.isPrerelease())
+                                : (o1, o2) -> 0),
+                new Comparation(
+                        "Avoids list",
+                        (o1, o2) -> comparePatterns(o1, o2, sortingPreference.getAvoids())),
                 sortingPreference.isPrioritizeLanguages()
-                        ? (o1, o2) -> compareLanguage(o1, o2, sortingPreference)
-                        : (o1, o2) -> compareRegions(o1, o2, sortingPreference),
+                        ? languageSelectionComparation(sortingPreference)
+                        : regionSelectionComparation(sortingPreference),
                 sortingPreference.isPrioritizeLanguages()
-                        ? (o1, o2) -> compareRegions(o1, o2, sortingPreference)
-                        : (o1, o2) -> compareLanguage(o1, o2, sortingPreference),
-                sortingPreference.isPreferParents()
-                        ? (o1, o2) -> -Boolean.compare(o1.isParent(), o2.isParent())
-                        : (o1, o2) -> 0,
-                (o1, o2) -> -comparePatterns(o1, o2, sortingPreference.getPrefers()),
+                        ? regionSelectionComparation(sortingPreference)
+                        : languageSelectionComparation(sortingPreference),
+                new Comparation(
+                        "Prefer parents",
+                        sortingPreference.isPreferParents()
+                                ? (o1, o2) -> -Boolean.compare(o1.isParent(), o2.isParent())
+                                : (o1, o2) -> 0),
+                new Comparation(
+                        "Prefers list",
+                        (o1, o2) -> -comparePatterns(o1, o2, sortingPreference.getPrefers())),
+                ascendingIfTrue(
+                        sortingPreference.isEarlyRevisions(),
+                        new Comparation(
+                                "Revision",
+                                (o1, o2) -> compareLists(o1, o2, ParsedGame::getRevision))),
                 ascendingIfTrue(
                         sortingPreference.isEarlyVersions(),
-                        (o1, o2) -> compareLists(o1, o2, ParsedGame::getVersion)),
-                ascendingIfTrue(
-                        sortingPreference.isEarlyVersions(),
-                        (o1, o2) -> compareLists(o1, o2, ParsedGame::getVersion)),
-                ascendingIfTrue(
-                        sortingPreference.isEarlyPrereleases(),
-                        (o1, o2) -> compareLists(o1, o2, ParsedGame::getSample)),
-                ascendingIfTrue(
-                        sortingPreference.isEarlyPrereleases(),
-                        (o1, o2) -> compareLists(o1, o2, ParsedGame::getDemo)),
+                        new Comparation(
+                                "Version",
+                                (o1, o2) -> compareLists(o1, o2, ParsedGame::getVersion))),
+                new Comparation(
+                        "Prefer releases",
+                        (o1, o2) -> Boolean.compare(o1.isPrerelease(), o2.isPrerelease())),
                 ascendingIfTrue(
                         sortingPreference.isEarlyPrereleases(),
-                        (o1, o2) -> compareLists(o1, o2, ParsedGame::getBeta)),
+                        new Comparation(
+                                "Sample",
+                                (o1, o2) -> compareLists(o1, o2, ParsedGame::getSample))),
                 ascendingIfTrue(
                         sortingPreference.isEarlyPrereleases(),
-                        (o1, o2) -> compareLists(o1, o2, ParsedGame::getProto)),
-                (o1, o2) -> -Integer.compare(o1.getLanguages().size(), o2.getLanguages().size()),
-                (o1, o2) -> -Boolean.compare(o1.isParent(), o2.isParent()));
+                        new Comparation(
+                                "Demo",
+                                (o1, o2) -> compareLists(o1, o2, ParsedGame::getDemo))),
+                ascendingIfTrue(
+                        sortingPreference.isEarlyPrereleases(),
+                        new Comparation(
+                                "Beta",
+                                (o1, o2) -> compareLists(o1, o2, ParsedGame::getBeta))),
+                ascendingIfTrue(
+                        sortingPreference.isEarlyPrereleases(),
+                        new Comparation(
+                                "Proto",
+                                (o1, o2) -> compareLists(o1, o2, ParsedGame::getProto))),
+                new Comparation(
+                        "Number of languages (Descending)",
+                        (o1, o2) -> -Integer.compare(
+                                o1.getLanguages().size(),
+                                o2.getLanguages().size())),
+                new Comparation(
+                        "Parent",
+                        (o1, o2) -> -Boolean.compare(o1.isParent(), o2.isParent())));
+    }
+
+    private Comparation regionSelectionComparation(SortingPreference sortingPreference) {
+        return new Comparation(
+                "Region selection",
+                (o1, o2) -> compareRegions(o1, o2, sortingPreference));
+    }
+
+    private Comparation languageSelectionComparation(SortingPreference sortingPreference) {
+        return new Comparation(
+                "Language selection",
+                (o1, o2) -> compareLanguage(o1, o2, sortingPreference));
     }
 
     @Override
     public int compare(ParsedGame o1, ParsedGame o2) {
         for (Comparation comparation : comparations) {
-            int result = comparation.compare(o1, o2);
+            int result = comparation.getFunction().apply(o1, o2);
             if (result != 0) {
+                logger.debug(
+                        "Under criteria '{}', '{}' is preferred over '{}'",
+                        comparation.getCriteria(),
+                        result < 0 ? o1.getGame().getName() : o2.getGame().getName(),
+                        result < 0 ? o2.getGame().getName() : o1.getGame().getName());
                 return result;
             }
         }
+        logger.debug(
+                "'{}' and '{}' are equal under every criteria",
+                o1.getGame().getName(),
+                o2.getGame().getName());
         return 0;
     }
 
-    private interface Comparation {
-
-        int compare(ParsedGame o1, ParsedGame o2);
-    }
-
     @Value
-    private static class Pair<K, T> {
+    private static class Comparation {
 
-        K left;
-        ImmutableCollection<T> right;
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Pair)) {
-                return false;
-            }
-            Pair<?, ?> pair = (Pair<?, ?>) o;
-            // Identity comparison is all we need for this cache
-            return left == pair.left
-                    && right == pair.right;
-        }
-
-        @Override
-        public int hashCode() {
-            // Identity hashing is all we need for this cache
-            return 31 * System.identityHashCode(left) + System.identityHashCode(right);
-        }
+        String criteria;
+        BiFunction<ParsedGame, ParsedGame, Integer> function;
     }
 
     private int comparePatterns(
             ParsedGame o1,
             ParsedGame o2,
             ImmutableCollection<Pattern> patterns) {
-        int matches1 = operationsCache.computeIfAbsent(
-                new Pair<>(o1, patterns),
-                k -> countMatches(k.getLeft().getGame().getName(), patterns));
-        int matches2 = operationsCache.computeIfAbsent(
-                new Pair<>(o2, patterns),
-                k -> countMatches(k.getLeft().getGame().getName(), patterns));
+        int matches1 = computeMatches(o1, patterns);
+        int matches2 = computeMatches(o2, patterns);
         return Integer.compare(matches1, matches2);
+    }
+
+    private int computeMatches(ParsedGame parsedGame, ImmutableCollection<Pattern> patterns) {
+        int matches = operationsCache.computeIfAbsent(
+                ImmutablePair.of(parsedGame, patterns),
+                k -> countMatches(k.getLeft().getGame().getName(), patterns));
+        logger.trace(
+                "Obtained {} matches for '{}' in patterns list {}",
+                matches,
+                parsedGame.getGame().getName(),
+                patterns);
+        return matches;
     }
 
     private static int countMatches(String string, ImmutableCollection<Pattern> patterns) {
@@ -148,13 +190,24 @@ public final class GameComparator implements Comparator<ParsedGame> {
             ParsedGame o2,
             Function<ParsedGame, Stream<String>> streamFunction,
             ImmutableCollection<String> collection) {
-        int index1 = operationsCache.computeIfAbsent(
-                new Pair<>(o1, collection),
-                k -> smallestIndex(o1, streamFunction, collection.asList()));
-        int index2 = operationsCache.computeIfAbsent(
-                new Pair<>(o2, collection),
-                k -> smallestIndex(o2, streamFunction, collection.asList()));
+        int index1 = computeSmallestIndex(o1, streamFunction, collection);
+        int index2 = computeSmallestIndex(o2, streamFunction, collection);
         return Integer.compare(index1, index2);
+    }
+
+    private int computeSmallestIndex(
+            ParsedGame parsedGame,
+            Function<ParsedGame, Stream<String>> streamFunction,
+            ImmutableCollection<String> collection) {
+        int smallestIndex = operationsCache.computeIfAbsent(
+                ImmutablePair.of(parsedGame, collection),
+                k -> smallestIndex(parsedGame, streamFunction, collection.asList()));
+        logger.trace(
+                "Smallest index {} found for '{}' in list '{}'",
+                smallestIndex,
+                parsedGame,
+                collection);
+        return smallestIndex;
     }
 
     private static <K, T> int smallestIndex(
@@ -193,6 +246,10 @@ public final class GameComparator implements Comparator<ParsedGame> {
     }
 
     private static Comparation ascendingIfTrue(boolean ascending, Comparation comparation) {
-        return ascending ? comparation : (o1, o2) -> -comparation.compare(o1, o2);
+        return ascending ?
+                comparation :
+                new Comparation(
+                        comparation.getCriteria() + " (Descending)",
+                        (o1, o2) -> -comparation.getFunction().apply(o1, o2));
     }
 }

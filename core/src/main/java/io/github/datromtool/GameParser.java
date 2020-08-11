@@ -71,13 +71,21 @@ public final class GameParser {
     }
 
     private static boolean isBios(Game g) {
-        return g.getIsBios() == YesNo.YES || Patterns.BIOS.matcher(g.getName()).find();
+        boolean result = g.getIsBios() == YesNo.YES || Patterns.BIOS.matcher(g.getName()).find();
+        if (result) {
+            logger.debug("'{}' detected as BIOS", g.getName());
+        }
+        return result;
     }
 
     private static boolean detectIsBad(Game g) {
-        return Patterns.BAD.matcher(g.getName()).find()
+        boolean result = Patterns.BAD.matcher(g.getName()).find()
                 || g.getRoms().stream().map(Rom::getStatus).anyMatch(Status.BAD_DUMP::equals)
                 || g.getDisks().stream().map(Disk::getStatus).anyMatch(Status.BAD_DUMP::equals);
+        if (result) {
+            logger.debug("'{}' detected as Bad Dump", g.getName());
+        }
+        return result;
     }
 
     private RegionData detectRegionData(Game game) {
@@ -87,6 +95,10 @@ public final class GameParser {
             for (String element : matcher.group(1).split(",")) {
                 for (RegionData.RegionDataEntry regionDataEntry : regionData.getRegions()) {
                     if (regionDataEntry.getPattern().matcher(element.trim()).matches()) {
+                        logger.debug(
+                                "Detected region '{}' for '{}'",
+                                regionDataEntry.getCode(),
+                                game.getName());
                         detected.add(regionDataEntry);
                     }
                 }
@@ -103,6 +115,10 @@ public final class GameParser {
                             logger.warn("Unrecognized region: '{}' in {}", code, release);
                             return RegionData.RegionDataEntry.builder().code(code).build();
                         });
+                logger.debug(
+                        "DAT provided region '{}' for '{}'",
+                        regionDataEntry.getCode(),
+                        game.getName());
                 provided.add(regionDataEntry);
             }
         }
@@ -132,7 +148,12 @@ public final class GameParser {
         while (matcher.find()) {
             for (String language : COMMA_OR_PLUS.split(matcher.group(1))) {
                 if (isNotEmpty(language)) {
-                    detected.add(language.toLowerCase());
+                    String lowerCaseLanguage = language.toLowerCase();
+                    logger.debug(
+                            "Detected language '{}' for '{}'",
+                            lowerCaseLanguage,
+                            game.getName());
+                    detected.add(lowerCaseLanguage);
                 }
             }
         }
@@ -141,7 +162,12 @@ public final class GameParser {
             if (isNotBlank(release.getLanguage())) {
                 for (String language : COMMA_OR_PLUS.split(release.getLanguage())) {
                     if (isNotBlank(language)) {
-                        provided.add(language.trim().toLowerCase());
+                        String lowerCaseLanguage = language.trim().toLowerCase();
+                        logger.debug(
+                                "DAT provided language '{}' for '{}'",
+                                lowerCaseLanguage,
+                                game.getName());
+                        provided.add(lowerCaseLanguage);
                     }
                 }
             }
@@ -150,7 +176,9 @@ public final class GameParser {
             logger.warn(
                     "Detected languages by name do not match with the ones provided by the DAT. "
                             + "Difference(detected={}, provided={}, game={})",
-                    detected, provided, game.getName());
+                    detected,
+                    provided,
+                    game.getName());
         }
         return ImmutableSet.<String>builder()
                 .addAll(detected)
@@ -166,27 +194,51 @@ public final class GameParser {
     }
 
     private static ImmutableList<Long> detectProto(Game game) {
-        return parseNumberFromPattern(Patterns.PROTO, game);
+        ImmutableList<Long> longs = parseNumberFromPattern(Patterns.PROTO, game);
+        if (!longs.isEmpty()) {
+            logger.debug("Detected Proto {} for '{}'", longs, game.getName());
+        }
+        return longs;
     }
 
     private static ImmutableList<Long> detectBeta(Game game) {
-        return parseNumberFromPattern(Patterns.BETA, game);
+        ImmutableList<Long> longs = parseNumberFromPattern(Patterns.BETA, game);
+        if (!longs.isEmpty()) {
+            logger.debug("Detected Beta {} for '{}'", longs, game.getName());
+        }
+        return longs;
     }
 
     private static ImmutableList<Long> detectDemo(Game game) {
-        return parseNumberFromPattern(Patterns.DEMO, game);
+        ImmutableList<Long> longs = parseNumberFromPattern(Patterns.DEMO, game);
+        if (!longs.isEmpty()) {
+            logger.debug("Detected Demo {} for '{}'", longs, game.getName());
+        }
+        return longs;
     }
 
     private static ImmutableList<Long> detectSample(Game game) {
-        return parseNumberFromPattern(Patterns.SAMPLE, game);
+        ImmutableList<Long> longs = parseNumberFromPattern(Patterns.SAMPLE, game);
+        if (!longs.isEmpty()) {
+            logger.debug("Detected Sample {} for '{}'", longs, game.getName());
+        }
+        return longs;
     }
 
     private static ImmutableList<Long> detectRevision(Game game) {
-        return parseNumberFromPattern(Patterns.REVISION, game);
+        ImmutableList<Long> longs = parseNumberFromPattern(Patterns.REVISION, game);
+        if (!longs.isEmpty()) {
+            logger.debug("Detected Revision {} for '{}'", longs, game.getName());
+        }
+        return longs;
     }
 
     private static ImmutableList<Long> detectVersion(Game game) {
-        return parseNumberFromPattern(Patterns.VERSION, game);
+        ImmutableList<Long> longs = parseNumberFromPattern(Patterns.VERSION, game);
+        if (!longs.isEmpty()) {
+            logger.debug("Detected Version {} for '{}'", longs, game.getName());
+        }
+        return longs;
     }
 
     private static ImmutableList<Long> parseNumberFromPattern(Pattern pattern, Game game) {
