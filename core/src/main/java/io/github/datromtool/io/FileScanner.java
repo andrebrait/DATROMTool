@@ -2,15 +2,9 @@ package io.github.datromtool.io;
 
 import com.github.junrar.exception.UnsupportedRarV5Exception;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import io.github.datromtool.ByteUnit;
 import io.github.datromtool.domain.datafile.Datafile;
-import io.github.datromtool.domain.datafile.Game;
-import io.github.datromtool.domain.datafile.Rom;
-import io.github.datromtool.domain.detector.BinaryTest;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.detector.Rule;
-import io.github.datromtool.domain.detector.enumerations.BinaryOperation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Value;
@@ -31,7 +25,6 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,13 +33,12 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.zip.CRC32;
 
+import static io.github.datromtool.io.FileScannerParameters.forDatWithDetector;
+import static io.github.datromtool.io.FileScannerParameters.withDefaults;
+
 public final class FileScanner {
 
     private static final Logger logger = LoggerFactory.getLogger(FileScanner.class);
-
-    private static final int DEFAULT_BUFFER_SIZE = 32 * 1024; // 32KB per thread
-    private static final int MAX_BUFFER_NO_WARNING = 64 * 1024 * 1024; // 64MB
-    private static final int MAX_BUFFER = 256 * 1024 * 1024; // 256MB
 
     private final ThreadLocal<CRC32> threadLocalCrc32 = ThreadLocal.withInitial(CRC32::new);
     private final ThreadLocal<MessageDigest> threadLocalMd5 =
@@ -57,14 +49,8 @@ public final class FileScanner {
     private final int numThreads;
     private final Detector detector;
     private final Listener listener;
-    private final long minRomSize;
-    private final long maxRomSize;
-    private final String minRomSizeStr;
-    private final String maxRomSizeStr;
+    private final FileScannerParameters fileScannerParameters;
     private final ThreadLocal<byte[]> threadLocalBuffer;
-    private final boolean useLazyDetector;
-
-    private final ImmutableSet<ArchiveType> alsoScanArchives;
 
     public FileScanner(
             int numThreads,
@@ -74,132 +60,13 @@ public final class FileScanner {
         this.numThreads = numThreads;
         this.detector = detector;
         this.listener = listener;
-        int bufferSize;
         if (datafile == null) {
-            bufferSize = DEFAULT_BUFFER_SIZE;
-            this.maxRomSize = Long.MAX_VALUE;
-            this.minRomSize = 0L;
-            this.alsoScanArchives = ImmutableSet.of();
-            this.useLazyDetector = false;
+            this.fileScannerParameters = withDefaults();
         } else {
-            this.minRomSize = datafile.getGames().stream()
-                    .map(Game::getRoms)
-                    .flatMap(Collection::stream)
-                    .filter(r -> r.getSize() != null)
-                    .mapToLong(Rom::getSize)
-                    .min()
-                    .orElse(0);
-            this.alsoScanArchives = datafile.getGames().stream()
-                    .map(Game::getRoms)
-                    .flatMap(Collection::stream)
-                    .filter(r -> r.getSize() != null)
-                    .map(Rom::getName)
-                    .map(ArchiveType::parse)
-                    .filter(at -> at != ArchiveType.NONE)
-                    .collect(ImmutableSet.toImmutableSet());
-            if (detector == null) {
-                bufferSize = DEFAULT_BUFFER_SIZE;
-                this.useLazyDetector = false;
-                this.maxRomSize = datafile.getGames().stream()
-                        .map(Game::getRoms)
-                        .flatMap(Collection::stream)
-                        .filter(r -> r.getSize() != null)
-                        .mapToLong(Rom::getSize)
-                        .max()
-                        .orElse(Long.MAX_VALUE);
-            } else {
-                long maxStartOffset = detector.getRules()
-                        .stream()
-                        .filter(r -> r.getStartOffset() != null)
-                        .mapToLong(Rule::getStartOffset)
-                        .max()
-                        .orElse(0);
-                long minEndOffset = detector.getRules()
-                        .stream()
-                        .filter(r -> r.getEndOffset() != null)
-                        .mapToLong(Rule::getEndOffset)
-                        .min()
-                        .orElse(Long.MAX_VALUE);
-                long maxUnheaderedSize = datafile.getGames().stream()
-                        .map(Game::getRoms)
-                        .flatMap(Collection::stream)
-                        .filter(r -> r.getSize() != null)
-                        .mapToLong(Rom::getSize)
-                        .max()
-                        .orElse(Long.MAX_VALUE);
-                if (maxStartOffset < 0) {
-                    maxStartOffset += maxUnheaderedSize;
-                }
-                if (minEndOffset < 0) {
-                    minEndOffset += maxUnheaderedSize;
-                }
-                maxStartOffset = Math.max(maxStartOffset, 0);
-                minEndOffset = Math.min(minEndOffset, maxUnheaderedSize);
-                this.maxRomSize = maxUnheaderedSize
-                        + maxStartOffset
-                        + (maxUnheaderedSize - minEndOffset);
-                if (detector.getRules()
-                        .stream()
-                        .map(Rule::getOperation)
-                        .allMatch(BinaryOperation.NONE::equals)) {
-                    long minTestOffset = detector.getRules()
-                            .stream()
-                            .flatMap(Rule::getAllBinaryTest)
-                            .mapToLong(BinaryTest::getOffset)
-                            .min()
-                            .orElse(0);
-                    long minInitialOffset = detector.getRules()
-                            .stream()
-                            .mapToLong(Rule::getStartOffset)
-                            .min()
-                            .orElse(0);
-                    if (minTestOffset >= 0 && minInitialOffset >= 0) {
-                        long maxTestOffset = detector.getRules()
-                                .stream()
-                                .flatMap(Rule::getAllBinaryTest)
-                                .mapToLong(t -> t.getOffset() + t.getValue().length)
-                                .max()
-                                .orElse(0);
-                        this.useLazyDetector =
-                                Math.max(maxTestOffset, maxStartOffset) <= DEFAULT_BUFFER_SIZE;
-                    } else {
-                        this.useLazyDetector = false;
-                    }
-                } else {
-                    this.useLazyDetector = false;
-                }
-                if (this.useLazyDetector) {
-                    bufferSize = DEFAULT_BUFFER_SIZE;
-                } else {
-                    bufferSize =
-                            toInt(Math.max(Math.min(maxRomSize, MAX_BUFFER), DEFAULT_BUFFER_SIZE));
-                }
-                ByteUnit unit = ByteUnit.getUnit(bufferSize);
-                String bufferSizeStr = String.format("%.02f", unit.convert(bufferSize));
-                if (bufferSize > MAX_BUFFER_NO_WARNING) {
-                    logger.warn(
-                            "Using a bigger I/O buffer size of {} {} due to header detection",
-                            bufferSizeStr,
-                            unit.getSymbol());
-                    if (bufferSize == MAX_BUFFER) {
-                        logger.warn(
-                                "Disabling header detection for ROMs larger than {} {}",
-                                bufferSizeStr,
-                                unit.getSymbol());
-                    }
-                } else {
-                    logger.info("Using I/O buffer size of {} {}", bufferSizeStr, unit.getSymbol());
-                }
-            }
+            this.fileScannerParameters = forDatWithDetector(datafile, detector);
         }
-        this.minRomSizeStr = makeRomSizeStr(this.minRomSize);
-        this.maxRomSizeStr = makeRomSizeStr(this.maxRomSize);
-        this.threadLocalBuffer = ThreadLocal.withInitial(() -> new byte[bufferSize]);
-    }
-
-    private static String makeRomSizeStr(long size) {
-        ByteUnit minRomSizeUnit = ByteUnit.getUnit(size);
-        return String.format("%.02f %s", minRomSizeUnit.convert(size), minRomSizeUnit.getSymbol());
+        this.threadLocalBuffer =
+                ThreadLocal.withInitial(() -> new byte[fileScannerParameters.getBufferSize()]);
     }
 
     @Value
@@ -317,20 +184,20 @@ public final class FileScanner {
     }
 
     private boolean shouldSkip(Path path, int index, long size) {
-        if (size < minRomSize) {
+        if (size < fileScannerParameters.getMinRomSize()) {
             logger.info(
                     "File is smaller than minimum ROM size of {}. Skip calculation of hashes: '{}'",
-                    minRomSizeStr,
+                    fileScannerParameters.getMinRomSizeStr(),
                     path);
             if (listener != null) {
                 listener.reportSkip(path, index, "File too small");
             }
             return true;
         }
-        if (size > maxRomSize) {
+        if (size > fileScannerParameters.getMaxRomSize()) {
             logger.info(
                     "File is larger than maximum ROM size of {}. Skip calculation of hashes: '{}'",
-                    maxRomSizeStr,
+                    fileScannerParameters.getMaxRomSizeStr(),
                     path);
             if (listener != null) {
                 listener.reportSkip(path, index, "File too big");
@@ -387,7 +254,7 @@ public final class FileScanner {
                         archiveType,
                         e);
             }
-            if (!scanned || alsoScanArchives.contains(archiveType)) {
+            if (!scanned || fileScannerParameters.getAlsoScanArchives().contains(archiveType)) {
                 scanFile(fileMetadata, file, index, builder);
             }
             if (listener != null) {
@@ -629,7 +496,7 @@ public final class FileScanner {
         long endOffset = size;
         int bytesRead;
         int bytesLeft;
-        if (detector != null && useLazyDetector) {
+        if (detector != null && fileScannerParameters.isUseLazyDetector()) {
             long startOffset = 0;
             // Read as much as possible to the buffer and check headers
             while ((bytesLeft = toInt(buffer.length - totalRead)) > 0
