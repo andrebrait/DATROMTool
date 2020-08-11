@@ -17,6 +17,7 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -89,22 +90,34 @@ public final class SerializationHelper {
                 .build();
     }
 
-    public <T> T loadXml(Path xml, Class<T> tClass) throws Exception {
+    public <T> T loadXml(Path xml, Class<T> tClass) throws IOException {
         try (InputStream inputStream = Files.newInputStream(xml)) {
-            return xmlMapper.readValue(inputStream, tClass);
+            return loadXml(inputStream, tClass);
         }
     }
 
-    public <T> T loadJson(Path json, Class<T> tClass) throws Exception {
+    public <T> T loadXml(InputStream inputStream, Class<T> tClass) throws IOException {
+        return xmlMapper.readValue(inputStream, tClass);
+    }
+
+    public <T> T loadJson(Path json, Class<T> tClass) throws IOException {
         try (InputStream inputStream = Files.newInputStream(json)) {
-            return jsonMapper.readValue(inputStream, tClass);
+            return loadJson(inputStream, tClass);
         }
     }
 
-    public <T> T loadYaml(Path yaml, Class<T> tClass) throws Exception {
+    public <T> T loadJson(InputStream inputStream, Class<T> tClass) throws IOException {
+        return jsonMapper.readValue(inputStream, tClass);
+    }
+
+    public <T> T loadYaml(Path yaml, Class<T> tClass) throws IOException {
         try (InputStream inputStream = Files.newInputStream(yaml)) {
-            return yamlMapper.readValue(inputStream, tClass);
+            return loadYaml(inputStream, tClass);
         }
+    }
+
+    public <T> T loadYaml(InputStream inputStream, Class<T> tClass) throws IOException {
+        return yamlMapper.readValue(inputStream, tClass);
     }
 
     public RegionData loadRegionData() throws Exception {

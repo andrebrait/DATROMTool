@@ -18,12 +18,17 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import static java.nio.file.Files.newInputStream;
+
 class SerializationHelperTest {
 
     @ParameterizedTest
     @MethodSource("validNoIntroDats")
     void testReadDats(Path validFile) throws Exception {
-        Datafile datafile = SerializationHelper.getInstance().loadXml(validFile, Datafile.class);
+        Datafile datafile;
+        try (InputStream inputStream = new BZip2CompressorInputStream(newInputStream(validFile))) {
+             datafile = SerializationHelper.getInstance().loadXml(inputStream, Datafile.class);
+        }
         assertNotNull(datafile);
         assertFalse(datafile.getGames().isEmpty());
         XMLValidator.validateDat(SerializationHelper.getInstance()
