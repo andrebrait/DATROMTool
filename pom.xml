@@ -18,11 +18,11 @@
         <lombok.version>edge-SNAPSHOT</lombok.version>
         <commons-compress.version>1.20</commons-compress.version>
         <commons-lang3.version>3.11</commons-lang3.version>
-        <picocli.version>4.4.0</picocli.version>
+        <picocli.version>4.5.0</picocli.version>
         <slf4j-api.version>1.7.30</slf4j-api.version>
         <logback.version>1.2.3</logback.version>
         <guava.version>29.0-jre</guava.version>
-        <jackson.version>2.11.1</jackson.version>
+        <jackson.version>2.11.2</jackson.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <xz.version>1.8</xz.version>
         <commons-codec.version>1.14</commons-codec.version>
