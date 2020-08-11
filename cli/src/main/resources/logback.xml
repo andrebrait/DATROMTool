@@ -25,4 +25,6 @@
         <appender-ref ref="FILE"/>
     </root>
 
+    <logger name="com.github.junrar.Archive" level="error"/>
+
 </configuration>
