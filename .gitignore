@@ -40,3 +40,5 @@ buildNumber.properties
 
 # Python virtualenv
 .env
+
+core/src/test/resources/valid/dats/no-intro/*.dat
