@@ -37,6 +37,8 @@ public class AppConfig {
 
     }
 
-    FileScanner scanner;
+    @NonNull
+    @Builder.Default
+    FileScanner scanner = FileScanner.builder().build();
 
 }

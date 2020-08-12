@@ -1,0 +1,7 @@
+regions:
+  - code: "TST"
+    pattern: "(?i)Test"
+    languages: ["tt"]
+  - code: "TS2"
+    pattern: "(?i)Test2"
+    languages: ["tt", "ts"]

@@ -17,6 +17,7 @@ import io.github.datromtool.data.RegionData;
 import io.github.datromtool.domain.detector.Detector;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +35,12 @@ public final class SerializationHelper {
 
     private final static Logger logger = LoggerFactory.getLogger(SerializationHelper.class);
 
-    private final static Path DETECTORS_PATH = Paths.get(".", "detectors");
-    private final static Path CONFIG_PATH = Paths.get(".", "config");
-    private static final Path APP_CONFIG_PATH = CONFIG_PATH.resolve("config.yaml");
-    private final static Path REGION_DATA_CONFIG_PATH = CONFIG_PATH.resolve("region-data.yaml");
+    private final static Path PROGRAM_FOLDER_PATH =
+            SystemUtils.getUserHome().toPath().resolve(".DATROMTool");
+
+    private final static Path DETECTORS_PATH = PROGRAM_FOLDER_PATH.resolve("detectors");
+    private static final Path APP_CONFIG_PATH = PROGRAM_FOLDER_PATH.resolve("config.yaml");
+    private final static Path REGION_DATA_PATH = PROGRAM_FOLDER_PATH.resolve("region-data.yaml");
 
     private final XmlMapper xmlMapper = createXmlMapper();
     private final JsonMapper jsonMapper = createJsonMapper();
@@ -123,17 +126,25 @@ public final class SerializationHelper {
         return yamlMapper.readValue(inputStream, tClass);
     }
 
+    public RegionData loadRegionData(Path path) throws Exception {
+        return loadYaml(path, RegionData.class);
+    }
+
     public RegionData loadRegionData() throws Exception {
-        if (REGION_DATA_CONFIG_PATH.toFile().isFile()) {
+        if (REGION_DATA_PATH.toFile().isFile()) {
             try {
-                return loadYaml(REGION_DATA_CONFIG_PATH, RegionData.class);
+                return loadYaml(REGION_DATA_PATH, RegionData.class);
             } catch (Exception e) {
                 logger.error("Could not load custom region config from file", e);
             }
         }
         return loadYaml(
-                Paths.get(ClassLoader.getSystemResource("config/region-data.yaml").toURI()),
+                Paths.get(ClassLoader.getSystemResource("region-data.yaml").toURI()),
                 RegionData.class);
+    }
+
+    public Detector loadDetector(Path path) throws IOException {
+        return loadXml(path, Detector.class);
     }
 
     public Detector loadDetector(String name) throws Exception {
@@ -148,6 +159,10 @@ public final class SerializationHelper {
         return loadXml(
                 Paths.get(ClassLoader.getSystemResource("detectors/" + name).toURI()),
                 Detector.class);
+    }
+
+    public AppConfig loadAppConfig(Path path) throws IOException {
+        return loadYaml(path, AppConfig.class);
     }
 
     public AppConfig loadAppConfig() {

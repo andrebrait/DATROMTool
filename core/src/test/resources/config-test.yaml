@@ -1,0 +1,3 @@
+scanner:
+  threads: "4"
+  maxBufferSize: "4194304" # 4MB
