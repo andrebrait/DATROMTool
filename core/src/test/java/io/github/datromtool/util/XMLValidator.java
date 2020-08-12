@@ -1,5 +1,7 @@
 package io.github.datromtool.util;
 
+import lombok.NoArgsConstructor;
+
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -13,10 +15,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public final class XMLValidator {
+import static lombok.AccessLevel.PRIVATE;
 
-    private XMLValidator() {
-    }
+@NoArgsConstructor(access = PRIVATE)
+public final class XMLValidator {
 
     public static void validateDat(byte[] xml) throws Exception {
         validateDat(xml, "xsd/datafile/datafile.xsd");

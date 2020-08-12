@@ -2,6 +2,7 @@ package io.github.datromtool.io;
 
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.ByteUnit;
+import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.domain.datafile.Rom;
@@ -29,9 +30,8 @@ class FileScannerParameters {
 
     private static final Logger logger = LoggerFactory.getLogger(FileScannerParameters.class);
 
-    private static final int DEFAULT_BUFFER_SIZE = 32 * 1024; // 32KB per thread
+    private static final int DEFAULT_BUFFER_SIZE = 32 * 1024; // 32KB
     private static final int MAX_BUFFER_NO_WARNING = 64 * 1024 * 1024; // 64MB
-    private static final int MAX_BUFFER = 256 * 1024 * 1024; // 256MB
 
     int bufferSize;
     long minRomSize;
@@ -71,8 +71,10 @@ class FileScannerParameters {
     }
 
     public static FileScannerParameters forDatWithDetector(
+            @Nonnull AppConfig appConfig,
             @Nonnull Datafile datafile,
             @Nullable Detector detector) {
+        final int maxBuffer = appConfig.getScanner().getMaxBufferSize();
         final int bufferSize;
         final long maxRomSize;
         final boolean useLazyDetector;
@@ -162,7 +164,7 @@ class FileScannerParameters {
             if (useLazyDetector) {
                 bufferSize = DEFAULT_BUFFER_SIZE;
             } else {
-                bufferSize = toIntExact(max(min(maxRomSize, MAX_BUFFER), DEFAULT_BUFFER_SIZE));
+                bufferSize = toIntExact(max(min(maxRomSize, maxBuffer), DEFAULT_BUFFER_SIZE));
             }
             ByteUnit unit = ByteUnit.getUnit(bufferSize);
             String bufferSizeStr = String.format("%.02f", unit.convert(bufferSize));
@@ -171,7 +173,7 @@ class FileScannerParameters {
                         "Using a bigger I/O buffer size of {} {} due to header detection",
                         bufferSizeStr,
                         unit.getSymbol());
-                if (bufferSize == MAX_BUFFER) {
+                if (bufferSize == maxBuffer) {
                     logger.warn(
                             "Disabling header detection for ROMs larger than {} {}",
                             bufferSizeStr,

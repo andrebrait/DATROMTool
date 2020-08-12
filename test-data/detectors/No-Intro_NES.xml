@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<detector>
+
+  <name>Test detector</name>
+  <author>andrebrait</author>
+  <version>1.0</version>
+
+  <rule start_offset="A">
+    <data offset="B" value="CD"/>
+  </rule>
+
+</detector>

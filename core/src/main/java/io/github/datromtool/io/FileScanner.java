@@ -2,11 +2,13 @@ package io.github.datromtool.io;
 
 import com.github.junrar.exception.UnsupportedRarV5Exception;
 import com.google.common.collect.ImmutableList;
+import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.detector.Rule;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.Value;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -53,17 +55,17 @@ public final class FileScanner {
     private final ThreadLocal<byte[]> threadLocalBuffer;
 
     public FileScanner(
-            int numThreads,
+            @NonNull AppConfig appConfig,
             @Nullable Datafile datafile,
             @Nullable Detector detector,
             @Nullable Listener listener) {
-        this.numThreads = numThreads;
+        this.numThreads = appConfig.getScanner().getThreads();
         this.detector = detector;
         this.listener = listener;
         if (datafile == null) {
             this.fileScannerParameters = withDefaults();
         } else {
-            this.fileScannerParameters = forDatWithDetector(datafile, detector);
+            this.fileScannerParameters = forDatWithDetector(appConfig, datafile, detector);
         }
         this.threadLocalBuffer =
                 ThreadLocal.withInitial(() -> new byte[fileScannerParameters.getBufferSize()]);

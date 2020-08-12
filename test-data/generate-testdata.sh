@@ -4,23 +4,35 @@ rm -rf data 2> /dev/null
 mkdir -p data
 cd data || exit 1
 
-for i in $(seq 1 7); do
-    c="$((10 ** i))"
-    echo "Generating ${c}.txt and headered-${c}.txt"
-    base64 /dev/urandom | head -c "${c}" > "${c}.txt"
-    printf "\x4E\x45\x53\x1A%s" "$(base64 /dev/zero | head -c 12)" | cat - "${c}.txt" > "headered-${c}.txt"
+for i in $(seq 9 22); do
+    c="$((2 ** i))"
+    file_name="$(printf "%07d" "${c}")"
+    mkdir -p "${file_name}"
+    echo "Generating ${file_name}.txt and headered-${file_name}.txt"
+    base64 /dev/urandom | head -c "${c}" > "${file_name}/${file_name}.txt"
+    mkdir -p "${file_name}/headered"
+    printf "\x4E\x45\x53\x1A%s" "$(base64 /dev/zero | head -c 12)" \
+        | cat - "${file_name}/${file_name}.txt" > "${file_name}/headered/headered-${file_name}.txt"
 done
 
-base64 /dev/urandom | head -c "10000001" > "10000001.txt"
-printf "\x4E\x45\x53\x1A%s" "$(base64 /dev/zero | head -c 12)" | cat - "10000001.txt" > "headered-10000001.txt"
+c="$((c + 1))"
+file_name="$(printf "%07d" "${c}")"
+mkdir -p "${file_name}"
+echo "Generating ${file_name}.txt and headered-${file_name}.txt"
+base64 /dev/urandom | head -c "${c}" > "${file_name}/${file_name}.txt"
+mkdir -p "${file_name}/headered"
+printf "\x4E\x45\x53\x1A%s" "$(base64 /dev/zero | head -c 12)" \
+    | cat - "${file_name}/${file_name}.txt" > "${file_name}/headered/headered-${file_name}.txt"
 
-for i in *.txt; do sha1sum "$i" >> SHA1SUMS; done
+shopt -s globstar
 
-for i in *.txt; do md5sum "$i" >> MD5SUMS; done
+for i in **/*.txt; do sha1sum "$i" >> SHA1SUMS; done
 
-for i in *.txt; do python3 -c "import sys; a=sys.argv[1].split(' '); h=hex(int(a[0])); print(h.lstrip('0').lstrip('x'), a[1], a[2])" "$(cksum "${i}")" >> CRC32SUMS; done
+for i in **/*.txt; do md5sum "$i" >> MD5SUMS; done
 
-for i in *.txt; do
+for i in **/*.txt; do python3 -c "import sys; a=sys.argv[1].split(' '); h=hex(int(a[0])); print(h.lstrip('0').lstrip('x'), a[1], a[2])" "$(cksum "${i}")" >> CRC32SUMS; done
+
+for i in **/*.txt; do
     echo "Compressing ${i}"
     echo "Compressing ${i}.zip" && zip -q "${i}.zip" "${i}"
     echo "Compressing ${i}.rar" && rar a "${i}.rar" "${i}" > /dev/null

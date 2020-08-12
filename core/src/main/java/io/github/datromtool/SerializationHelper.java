@@ -12,8 +12,11 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.data.RegionData;
+import io.github.datromtool.domain.detector.Detector;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,16 +26,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static lombok.AccessLevel.PRIVATE;
+
 @Getter
+@NoArgsConstructor(access = PRIVATE)
 public final class SerializationHelper {
 
     private final static Logger logger = LoggerFactory.getLogger(SerializationHelper.class);
 
-    private final static Path REGION_DATA_CONFIG_PATH = Paths.get("config", "region-data.yaml");
+    private final static Path DETECTORS_PATH = Paths.get(".", "detectors");
+    private final static Path CONFIG_PATH = Paths.get(".", "config");
+    private static final Path APP_CONFIG_PATH = CONFIG_PATH.resolve("config.yaml");
+    private final static Path REGION_DATA_CONFIG_PATH = CONFIG_PATH.resolve("region-data.yaml");
 
-    private final XmlMapper xmlMapper;
-    private final JsonMapper jsonMapper;
-    private final YAMLMapper yamlMapper;
+    private final XmlMapper xmlMapper = createXmlMapper();
+    private final JsonMapper jsonMapper = createJsonMapper();
+    private final YAMLMapper yamlMapper = createYamlMapper();
 
     public static SerializationHelper getInstance() {
         return SerializationHelperHolder.INSTANCE;
@@ -41,12 +50,6 @@ public final class SerializationHelper {
     private final static class SerializationHelperHolder {
 
         private final static SerializationHelper INSTANCE = new SerializationHelper();
-    }
-
-    private SerializationHelper() {
-        this.xmlMapper = createXmlMapper();
-        this.jsonMapper = createJsonMapper();
-        this.yamlMapper = createYamlMapper();
     }
 
     private static XmlMapper createXmlMapper() {
@@ -131,5 +134,30 @@ public final class SerializationHelper {
         return loadYaml(
                 Paths.get(ClassLoader.getSystemResource("config/region-data.yaml").toURI()),
                 RegionData.class);
+    }
+
+    public Detector loadDetector(String name) throws Exception {
+        Path path = DETECTORS_PATH.resolve(name);
+        if (path.toFile().isFile()) {
+            try {
+                return loadXml(path, Detector.class);
+            } catch (Exception e) {
+                logger.error("Could not load detector from file", e);
+            }
+        }
+        return loadXml(
+                Paths.get(ClassLoader.getSystemResource("detectors/" + name).toURI()),
+                Detector.class);
+    }
+
+    public AppConfig loadAppConfig() {
+        if (APP_CONFIG_PATH.toFile().isFile()) {
+            try {
+                return loadYaml(APP_CONFIG_PATH, AppConfig.class);
+            } catch (Exception e) {
+                logger.error("Could not load application configuration from file", e);
+            }
+        }
+        return AppConfig.builder().build();
     }
 }
