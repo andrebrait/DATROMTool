@@ -41,7 +41,7 @@ class FileScannerParameters {
     String minRomSizeStr;
     String maxRomSizeStr;
 
-    public FileScannerParameters(
+    private FileScannerParameters(
             int bufferSize,
             long minRomSize,
             long maxRomSize,

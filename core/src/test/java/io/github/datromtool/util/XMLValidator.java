@@ -1,8 +1,5 @@
 package io.github.datromtool.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -20,8 +17,6 @@ public final class XMLValidator {
 
     private XMLValidator() {
     }
-
-    private final static Logger logger = LoggerFactory.getLogger(XMLValidator.class);
 
     public static void validateDat(byte[] xml) throws Exception {
         validateDat(xml, "xsd/datafile/datafile.xsd");
