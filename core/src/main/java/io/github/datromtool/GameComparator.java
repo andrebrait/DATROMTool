@@ -5,8 +5,6 @@ import com.google.common.collect.ImmutableList;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.SortingPreference;
 import lombok.Value;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,20 +12,16 @@ import javax.annotation.Nonnull;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class GameComparator implements Comparator<ParsedGame> {
 
     private final static Logger logger = LoggerFactory.getLogger(GameComparator.class);
-
-    private final ConcurrentMap<Pair<ParsedGame, ?>, Integer> operationsCache =
-            new ConcurrentHashMap<>();
 
     private final ImmutableList<Comparation> comparations;
 
@@ -93,10 +87,15 @@ public final class GameComparator implements Comparator<ParsedGame> {
                                 "Proto",
                                 (o1, o2) -> compareLists(o1, o2, ParsedGame::getProto))),
                 new Comparation(
+                        "Selected languages count (Descending)",
+                        (o1, o2) -> -Long.compare(
+                                countLanguageMatches(sortingPreference, o1),
+                                countLanguageMatches(sortingPreference, o2))),
+                new Comparation(
                         "Number of languages (Descending)",
                         (o1, o2) -> -Integer.compare(
-                                o1.getLanguages().size(),
-                                o2.getLanguages().size())),
+                                uniqueLanguagesCount(o1),
+                                uniqueLanguagesCount(o2))),
                 new Comparation(
                         "Parent",
                         (o1, o2) -> -Boolean.compare(o1.isParent(), o2.isParent())));
@@ -112,6 +111,16 @@ public final class GameComparator implements Comparator<ParsedGame> {
         return new Comparation(
                 "Language selection",
                 (o1, o2) -> compareLanguage(o1, o2, sortingPreference));
+    }
+
+    private long countLanguageMatches(SortingPreference sortingPreference, ParsedGame g) {
+        return g.getLanguagesStream()
+                .filter(sortingPreference.getLanguages()::contains)
+                .count();
+    }
+
+    private int uniqueLanguagesCount(ParsedGame o1) {
+        return o1.getLanguagesStream().collect(Collectors.toSet()).size();
     }
 
     @Override
@@ -151,14 +160,12 @@ public final class GameComparator implements Comparator<ParsedGame> {
     }
 
     private int computeMatches(ParsedGame parsedGame, ImmutableCollection<Pattern> patterns) {
-        int matches = operationsCache.computeIfAbsent(
-                ImmutablePair.of(parsedGame, patterns),
-                k -> countMatches(k.getLeft().getGame().getName(), patterns));
+        int matches = countMatches(parsedGame.getGame().getName(), patterns);
         logger.trace(
-                "Obtained {} matches for '{}' in patterns list {}",
+                "Obtained {} matches in patterns list {} for '{}'",
                 matches,
-                parsedGame.getGame().getName(),
-                patterns);
+                patterns,
+                parsedGame.getGame().getName());
         return matches;
     }
 
@@ -199,14 +206,12 @@ public final class GameComparator implements Comparator<ParsedGame> {
             ParsedGame parsedGame,
             Function<ParsedGame, Stream<String>> streamFunction,
             ImmutableCollection<String> collection) {
-        int smallestIndex = operationsCache.computeIfAbsent(
-                ImmutablePair.of(parsedGame, collection),
-                k -> smallestIndex(parsedGame, streamFunction, collection.asList()));
+        int smallestIndex = smallestIndex(parsedGame, streamFunction, collection.asList());
         logger.trace(
-                "Smallest index {} found for '{}' in list '{}'",
+                "Smallest index {} found in list {} for '{}'",
                 smallestIndex,
-                parsedGame,
-                collection);
+                collection,
+                parsedGame);
         return smallestIndex;
     }
 
