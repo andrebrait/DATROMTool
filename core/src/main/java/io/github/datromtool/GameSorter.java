@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.SortingPreference;
 import io.github.datromtool.domain.datafile.Game;
+import io.github.datromtool.sorting.GameComparator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;

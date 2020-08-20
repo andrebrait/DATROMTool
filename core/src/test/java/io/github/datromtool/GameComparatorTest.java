@@ -5,14 +5,16 @@ import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.RegionData;
 import io.github.datromtool.data.SortingPreference;
-import io.github.datromtool.domain.datafile.Game;
+import io.github.datromtool.sorting.GameComparator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.List;
+import java.util.regex.Pattern;
 
+import static io.github.datromtool.util.TestUtils.createGame;
+import static io.github.datromtool.util.TestUtils.getRegionByCode;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class GameComparatorTest {
@@ -32,11 +34,11 @@ class GameComparatorTest {
                 .regions(ImmutableSet.of("USA", "EUR"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("EUR"))
+                .regionData(getRegionByCode(regionData, "EUR"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .bad(true)
                 .game(createGame("Test game 2"))
                 .build();
@@ -51,11 +53,11 @@ class GameComparatorTest {
                 .regions(ImmutableSet.of("USA", "EUR"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("EUR"))
+                .regionData(getRegionByCode(regionData, "EUR"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -71,12 +73,12 @@ class GameComparatorTest {
                 .preferPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("EUR"))
+                .regionData(getRegionByCode(regionData, "EUR"))
                 .beta(ImmutableList.of(1L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -90,11 +92,11 @@ class GameComparatorTest {
                 .regions(ImmutableSet.of("USA", "EUR"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("EUR"))
+                .regionData(getRegionByCode(regionData, "EUR"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -108,11 +110,11 @@ class GameComparatorTest {
                 .regions(ImmutableSet.of("EUR", "USA"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("EUR"))
+                .regionData(getRegionByCode(regionData, "EUR"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -126,11 +128,11 @@ class GameComparatorTest {
                 .regions(ImmutableSet.of("EUR", "USA"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("EUR"))
+                .regionData(getRegionByCode(regionData, "EUR"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("EUR"))
+                .regionData(getRegionByCode(regionData, "EUR"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -144,11 +146,11 @@ class GameComparatorTest {
                 .regions(ImmutableSet.of("EUR", "USA"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("EUR"))
+                .regionData(getRegionByCode(regionData, "EUR"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA", "EUR"))
+                .regionData(getRegionByCode(regionData, "USA", "EUR"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -162,11 +164,11 @@ class GameComparatorTest {
                 .regions(ImmutableSet.of("EUR", "USA"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA", "EUR"))
+                .regionData(getRegionByCode(regionData, "USA", "EUR"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA", "EUR"))
+                .regionData(getRegionByCode(regionData, "USA", "EUR"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -180,11 +182,11 @@ class GameComparatorTest {
                 .languages(ImmutableSet.of("en", "ja"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("JPN"))
+                .regionData(getRegionByCode(regionData, "JPN"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -198,11 +200,11 @@ class GameComparatorTest {
                 .languages(ImmutableSet.of("ja", "en"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("JPN"))
+                .regionData(getRegionByCode(regionData, "JPN"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -216,11 +218,11 @@ class GameComparatorTest {
                 .languages(ImmutableSet.of("jp", "en"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -234,11 +236,11 @@ class GameComparatorTest {
                 .languages(ImmutableSet.of("ja", "en"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA", "JPN"))
+                .regionData(getRegionByCode(regionData, "USA", "JPN"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA", "JPN"))
+                .regionData(getRegionByCode(regionData, "USA", "JPN"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -252,11 +254,11 @@ class GameComparatorTest {
                 .languages(ImmutableSet.of("ja", "en"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA", "JPN"))
+                .regionData(getRegionByCode(regionData, "USA", "JPN"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -270,11 +272,11 @@ class GameComparatorTest {
                 .languages(ImmutableSet.of("ja", "en"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA", "JPN"))
+                .regionData(getRegionByCode(regionData, "USA", "JPN"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA", "JPN", "BRA"))
+                .regionData(getRegionByCode(regionData, "USA", "JPN", "BRA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -288,11 +290,11 @@ class GameComparatorTest {
                 .languages(ImmutableSet.of("ja", "en"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA", "BRA", "ESP", "POL"))
+                .regionData(getRegionByCode(regionData, "USA", "BRA", "ESP", "POL"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA", "JPN"))
+                .regionData(getRegionByCode(regionData, "USA", "JPN"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -307,20 +309,20 @@ class GameComparatorTest {
                 .languages(ImmutableSet.of("ja", "en"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("EUR"))
+                .regionData(getRegionByCode(regionData, "EUR"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame tg3 = ParsedGame.builder()
-                .regionData(getByCode("EUR"))
+                .regionData(getRegionByCode(regionData, "EUR"))
                 .languages(ImmutableSet.of("ja"))
                 .game(createGame("Test game 3"))
                 .build();
         ParsedGame tg4 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .languages(ImmutableSet.of("ja"))
                 .game(createGame("Test game 4"))
                 .build();
@@ -337,20 +339,20 @@ class GameComparatorTest {
                 .prioritizeLanguages(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("EUR"))
+                .regionData(getRegionByCode(regionData, "EUR"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame tg3 = ParsedGame.builder()
-                .regionData(getByCode("EUR"))
+                .regionData(getRegionByCode(regionData, "EUR"))
                 .languages(ImmutableSet.of("ja"))
                 .game(createGame("Test game 3"))
                 .build();
         ParsedGame tg4 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .languages(ImmutableSet.of("ja"))
                 .game(createGame("Test game 4"))
                 .build();
@@ -365,12 +367,12 @@ class GameComparatorTest {
                 .regions(ImmutableSet.of("USA", "EUR"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -384,12 +386,12 @@ class GameComparatorTest {
                 .preferParents(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .parent(true)
                 .game(createGame("Test game 2"))
                 .build();
@@ -403,11 +405,11 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -421,12 +423,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .parent(true)
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -440,12 +442,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -459,12 +461,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 3L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -478,12 +480,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(2L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -498,12 +500,12 @@ class GameComparatorTest {
                 .earlyRevisions(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -517,12 +519,12 @@ class GameComparatorTest {
                 .earlyRevisions(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -537,12 +539,12 @@ class GameComparatorTest {
                 .earlyRevisions(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 3L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -557,12 +559,12 @@ class GameComparatorTest {
                 .earlyRevisions(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(2L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .revision(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -576,11 +578,11 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -594,12 +596,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .parent(true)
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -613,12 +615,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -632,12 +634,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(1L, 3L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -651,12 +653,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(2L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -671,12 +673,12 @@ class GameComparatorTest {
                 .earlyVersions(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -690,12 +692,12 @@ class GameComparatorTest {
                 .earlyVersions(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -710,12 +712,12 @@ class GameComparatorTest {
                 .earlyVersions(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(1L, 3L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -730,12 +732,12 @@ class GameComparatorTest {
                 .earlyVersions(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(2L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .version(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -749,12 +751,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(0L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -768,12 +770,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -787,12 +789,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(1L, 3L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -806,12 +808,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(2L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -826,12 +828,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(0L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -846,12 +848,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -866,12 +868,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(1L, 3L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -886,12 +888,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(2L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .sample(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -905,12 +907,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(0L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -924,12 +926,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -943,12 +945,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(1L, 3L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -962,12 +964,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(2L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -982,12 +984,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -1001,12 +1003,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1021,12 +1023,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(1L, 3L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1041,12 +1043,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(2L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .demo(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1060,12 +1062,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(0L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1079,12 +1081,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1098,12 +1100,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L, 3L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1117,12 +1119,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(2L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1137,12 +1139,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -1156,12 +1158,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1176,12 +1178,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L, 3L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1196,12 +1198,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(2L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .beta(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1215,12 +1217,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(0L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1234,12 +1236,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1253,12 +1255,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(1L, 3L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1272,12 +1274,12 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(2L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1292,12 +1294,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -1311,12 +1313,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1331,12 +1333,12 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(1L, 3L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 2"))
                 .build();
@@ -1351,13 +1353,51 @@ class GameComparatorTest {
                 .earlyPrereleases(true)
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(2L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .proto(ImmutableList.of(1L, 2L))
+                .game(createGame("Test game 2"))
+                .build();
+        ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
+        Arrays.sort(parsedGames, comparator);
+        assertArrayEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+    }
+
+    @Test
+    void testCompare_shouldAvoid_ifInAvoidsList() {
+        GameComparator comparator = new GameComparator(SortingPreference.builder()
+                .avoids(ImmutableSet.of(Pattern.compile("(?i)game 1")))
+                .build());
+        ParsedGame tg1 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "USA"))
+                .game(createGame("Test game 1"))
+                .build();
+        ParsedGame tg2 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "USA"))
+                .parent(true)
+                .game(createGame("Test game 2"))
+                .build();
+        ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
+        Arrays.sort(parsedGames, comparator);
+        assertArrayEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+    }
+
+    @Test
+    void testCompare_shouldPrefer_ifInPrefersList() {
+        GameComparator comparator = new GameComparator(SortingPreference.builder()
+                .prefers(ImmutableSet.of(Pattern.compile("(?i)game 2")))
+                .build());
+        ParsedGame tg1 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "USA"))
+                .game(createGame("Test game 1"))
+                .build();
+        ParsedGame tg2 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "USA"))
+                .parent(true)
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
@@ -1370,32 +1410,16 @@ class GameComparatorTest {
         GameComparator comparator = new GameComparator(SortingPreference.builder()
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getByCode("USA"))
+                .regionData(getRegionByCode(regionData, "USA"))
                 .parent(true)
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
         assertArrayEquals(parsedGames, new ParsedGame[]{tg2, tg1});
-    }
-
-    private Game createGame(String s) {
-        return Game.builder()
-                .name(s)
-                .description(s)
-                .build();
-    }
-
-    private RegionData getByCode(String code, String... codes) {
-        List<String> codeList = Arrays.asList(codes);
-        return RegionData.builder().regions(regionData.getRegions()
-                .stream()
-                .filter(r -> code.equals(r.getCode()) || codeList.contains(r.getCode()))
-                .collect(ImmutableSet.toImmutableSet()))
-                .build();
     }
 }
