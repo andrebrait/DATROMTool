@@ -15,7 +15,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <junit.jupiter.version>5.6.2</junit.jupiter.version>
         <!-- Change when 1.18.13+ gets released with @Jacksonized -->
-        <lombok.version>edge-SNAPSHOT</lombok.version>
+        <lombok.version>1.18.13</lombok.version>
         <commons-compress.version>1.20</commons-compress.version>
         <commons-lang3.version>3.11</commons-lang3.version>
         <picocli.version>4.5.0</picocli.version>
@@ -27,6 +27,7 @@
         <xz.version>1.8</xz.version>
         <commons-codec.version>1.14</commons-codec.version>
         <junrar.version>7.2.0</junrar.version>
+        <git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
     </properties>
 
     <modules>
@@ -127,6 +128,32 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.7</version>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>${git-commit-id-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <offline>true</offline>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <includeOnlyProperties>
+                        <includeOnlyProperty>git.branch</includeOnlyProperty>
+                        <includeOnlyProperty>git.build.time</includeOnlyProperty>
+                        <includeOnlyProperty>git.build.version</includeOnlyProperty>
+                        <includeOnlyProperty>git.commit.id</includeOnlyProperty>
+                        <includeOnlyProperty>git.commit.time</includeOnlyProperty>
+                        <includeOnlyProperty>git.dirty</includeOnlyProperty>
+                    </includeOnlyProperties>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -18,26 +18,15 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.github.datromtool</groupId>
+            <artifactId>logging</artifactId>
+            <version>${project.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-                <excludes>
-                    <exclude>filtered/**</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/resources/filtered</directory>
-                <targetPath>filtered</targetPath>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>
 
 </project>

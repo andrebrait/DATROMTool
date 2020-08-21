@@ -5,8 +5,8 @@ import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "datrom",
-        description = "Base command for DATROMTool - *that* tool to work with DATs and ROMs!",
-        versionProvider = MavenVersionProvider.class,
+        description = "Base command for " + GitVersionProvider.TITLE,
+        versionProvider = GitVersionProvider.class,
         mixinStandardHelpOptions = true,
         subcommands = {OneGameOneRomCommand.class})
 public final class DatRomCommand {

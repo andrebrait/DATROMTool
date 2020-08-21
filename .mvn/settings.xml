@@ -7,8 +7,8 @@
             <id>lombok</id>
             <repositories>
                 <repository>
-                    <id>projectlombok.org</id>
-                    <url>https://projectlombok.org/edge-releases</url>
+                    <id>local-libs</id>
+                    <url>file://${project.basedir}/lib</url>
                 </repository>
             </repositories>
         </profile>
