@@ -22,7 +22,7 @@ class BadDumpSubComparatorTest {
     }
 
     @Test
-    void compare_shouldKeepOrderIfNotApplicable() {
+    void testCompare_shouldKeepOrderIfNotApplicable() {
         SubComparator subComparator = new BadDumpSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -54,20 +54,4 @@ class BadDumpSubComparatorTest {
         assertArrayEquals(parsedGames, new ParsedGame[]{tg2, tg1});
     }
 
-    @Test
-    void testCompare_shouldPreferIfBad() {
-        SubComparator subComparator = new BadDumpSubComparator().reversed();
-        ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getRegionByCode(regionData, "USA"))
-                .game(createGame("Test game 1"))
-                .build();
-        ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getRegionByCode(regionData, "USA"))
-                .game(createGame("Test game 2"))
-                .bad(true)
-                .build();
-        ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
-        Arrays.sort(parsedGames, subComparator);
-        assertArrayEquals(parsedGames, new ParsedGame[]{tg2, tg1});
-    }
 }

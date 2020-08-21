@@ -28,6 +28,7 @@
         <commons-codec.version>1.14</commons-codec.version>
         <junrar.version>7.2.0</junrar.version>
         <git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
+        <mockito-core.version>3.3.3</mockito-core.version>
     </properties>
 
     <modules>
@@ -110,6 +111,11 @@
                 <groupId>com.github.junrar</groupId>
                 <artifactId>junrar</artifactId>
                 <version>${junrar.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito-core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

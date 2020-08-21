@@ -23,7 +23,7 @@ class DemoSubComparatorTest {
     }
 
     @Test
-    void compare_shouldKeepOrderIfNotApplicable() {
+    void testCompare_shouldKeepOrderIfNotApplicable() {
         SubComparator subComparator = new DemoSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -57,24 +57,6 @@ class DemoSubComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferRecentDemos() {
-        SubComparator subComparator = new DemoSubComparator().reversed();
-        ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getRegionByCode(regionData, "USA"))
-                .demo(ImmutableList.of(0L))
-                .game(createGame("Test game 1"))
-                .build();
-        ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getRegionByCode(regionData, "USA"))
-                .demo(ImmutableList.of(1L, 2L))
-                .game(createGame("Test game 2"))
-                .build();
-        ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
-        Arrays.sort(parsedGames, subComparator);
-        assertArrayEquals(parsedGames, new ParsedGame[]{tg2, tg1});
-    }
-
-    @Test
     void testCompare_shouldPreferReleaseOverDemo() {
         SubComparator subComparator = new DemoSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
@@ -91,20 +73,4 @@ class DemoSubComparatorTest {
         assertArrayEquals(parsedGames, new ParsedGame[]{tg2, tg1});
     }
 
-    @Test
-    void testCompare_shouldPreferDemoOverRelease() {
-        SubComparator subComparator = new DemoSubComparator().reversed();
-        ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getRegionByCode(regionData, "USA"))
-                .game(createGame("Test game 1"))
-                .build();
-        ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getRegionByCode(regionData, "USA"))
-                .demo(ImmutableList.of(1L, 2L))
-                .game(createGame("Test game 2"))
-                .build();
-        ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
-        Arrays.sort(parsedGames, subComparator);
-        assertArrayEquals(parsedGames, new ParsedGame[]{tg2, tg1});
-    }
 }

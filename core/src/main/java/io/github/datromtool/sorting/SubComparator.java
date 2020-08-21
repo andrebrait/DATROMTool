@@ -21,12 +21,12 @@ public abstract class SubComparator implements Comparator<ParsedGame> {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final static class ReversedSubComparator extends SubComparator {
+    final static class ReversedSubComparator extends SubComparator {
 
         private final SubComparator delegate;
 
-        public ReversedSubComparator(SubComparator delegate) {
-            super(delegate.criteria, true);
+        private ReversedSubComparator(SubComparator delegate) {
+            super(delegate.criteria + " (reversed)");
             this.delegate = delegate;
         }
 
@@ -37,20 +37,19 @@ public abstract class SubComparator implements Comparator<ParsedGame> {
     }
 
     private final String criteria;
-    private final boolean reversed;
 
     protected SubComparator(String criteria) {
-        this(criteria, false);
-    }
-
-    private SubComparator(String criteria, boolean reversed) {
         this.criteria = criteria;
-        this.reversed = reversed;
     }
 
     @Override
     public final SubComparator reversed() {
         return new ReversedSubComparator(this);
+    }
+
+    public final boolean isReverseOf(Class<? extends SubComparator> tClass) {
+        return this instanceof ReversedSubComparator
+                && tClass.isInstance(((ReversedSubComparator) this).delegate);
     }
 
     protected int comparePatterns(

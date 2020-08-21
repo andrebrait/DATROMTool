@@ -23,7 +23,7 @@ class SampleSubComparatorTest {
     }
 
     @Test
-    void compare_shouldKeepOrderIfNotApplicable() {
+    void testCompare_shouldKeepOrderIfNotApplicable() {
         SubComparator subComparator = new SampleSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -57,24 +57,6 @@ class SampleSubComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferRecentSamples() {
-        SubComparator subComparator = new SampleSubComparator().reversed();
-        ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getRegionByCode(regionData, "USA"))
-                .sample(ImmutableList.of(0L))
-                .game(createGame("Test game 1"))
-                .build();
-        ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getRegionByCode(regionData, "USA"))
-                .sample(ImmutableList.of(1L, 2L))
-                .game(createGame("Test game 2"))
-                .build();
-        ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
-        Arrays.sort(parsedGames, subComparator);
-        assertArrayEquals(parsedGames, new ParsedGame[]{tg2, tg1});
-    }
-
-    @Test
     void testCompare_shouldPreferReleaseOverSample() {
         SubComparator subComparator = new SampleSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
@@ -91,20 +73,4 @@ class SampleSubComparatorTest {
         assertArrayEquals(parsedGames, new ParsedGame[]{tg2, tg1});
     }
 
-    @Test
-    void testCompare_shouldPreferSampleOverRelease() {
-        SubComparator subComparator = new SampleSubComparator().reversed();
-        ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getRegionByCode(regionData, "USA"))
-                .game(createGame("Test game 1"))
-                .build();
-        ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getRegionByCode(regionData, "USA"))
-                .sample(ImmutableList.of(1L, 2L))
-                .game(createGame("Test game 2"))
-                .build();
-        ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
-        Arrays.sort(parsedGames, subComparator);
-        assertArrayEquals(parsedGames, new ParsedGame[]{tg2, tg1});
-    }
 }

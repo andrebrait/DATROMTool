@@ -1,6 +1,6 @@
 package io.github.datromtool.sorting;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.RegionData;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,7 +13,7 @@ import static io.github.datromtool.util.TestUtils.getRegionByCode;
 import static io.github.datromtool.util.TestUtils.loadRegionData;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-class LanguagesCountSubComparatorTest {
+class PreferReleasesComparatorTest {
 
     static RegionData regionData;
 
@@ -24,7 +24,7 @@ class LanguagesCountSubComparatorTest {
 
     @Test
     void testCompare_shouldKeepOrderIfNotApplicable() {
-        SubComparator subComparator = new LanguagesCountSubComparator();
+        SubComparator subComparator = new PreferReleasesSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 1"))
@@ -39,11 +39,11 @@ class LanguagesCountSubComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferLeastLanguagesCounts() {
-        SubComparator subComparator = new LanguagesCountSubComparator();
+    void testCompare_shouldPreferReleaseOverProto() {
+        SubComparator subComparator = new PreferReleasesSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
-                .languages(ImmutableSet.of("ja", "en"))
+                .proto(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
@@ -56,10 +56,11 @@ class LanguagesCountSubComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferLeastLanguagesCounts_useRegionsIfNoLanguagesSet() {
-        SubComparator subComparator = new LanguagesCountSubComparator();
+    void testCompare_shouldPreferReleaseOverBeta() {
+        SubComparator subComparator = new PreferReleasesSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getRegionByCode(regionData, "USA", "JPN"))
+                .regionData(getRegionByCode(regionData, "USA"))
+                .beta(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
@@ -72,15 +73,32 @@ class LanguagesCountSubComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferLeastLanguagesCounts_ignoreRegionsIfLanguagesSet() {
-        SubComparator subComparator = new LanguagesCountSubComparator();
+    void testCompare_shouldPreferReleaseOverDemo() {
+        SubComparator subComparator = new PreferReleasesSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
-                .languages(ImmutableSet.of("en", "es", "fr"))
+                .demo(ImmutableList.of(1L, 2L))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
-                .regionData(getRegionByCode(regionData, "USA", "JPN"))
+                .regionData(getRegionByCode(regionData, "USA"))
+                .game(createGame("Test game 2"))
+                .build();
+        ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
+        Arrays.sort(parsedGames, subComparator);
+        assertArrayEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+    }
+
+    @Test
+    void testCompare_shouldPreferReleaseOverSample() {
+        SubComparator subComparator = new PreferReleasesSubComparator();
+        ParsedGame tg1 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "USA"))
+                .sample(ImmutableList.of(1L, 2L))
+                .game(createGame("Test game 1"))
+                .build();
+        ParsedGame tg2 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 2"))
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};

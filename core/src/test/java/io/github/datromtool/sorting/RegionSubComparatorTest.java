@@ -8,14 +8,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.regex.Pattern;
 
 import static io.github.datromtool.util.TestUtils.createGame;
 import static io.github.datromtool.util.TestUtils.getRegionByCode;
 import static io.github.datromtool.util.TestUtils.loadRegionData;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-class AvoidsListSubComparatorTest {
+class RegionSubComparatorTest {
 
     static RegionData regionData;
 
@@ -27,7 +26,7 @@ class AvoidsListSubComparatorTest {
     @Test
     void testCompare_shouldKeepOrderIfNotApplicable() {
         SubComparator subComparator =
-                new AvoidsListSubComparator(SortingPreference.builder().build());
+                new RegionSubComparator(SortingPreference.builder().build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
                 .game(createGame("Test game 1"))
@@ -42,12 +41,12 @@ class AvoidsListSubComparatorTest {
     }
 
     @Test
-    void testCompare_shouldAvoidIfInAvoidsList() {
-        SubComparator subComparator = new AvoidsListSubComparator(SortingPreference.builder()
-                .avoids(ImmutableSet.of(Pattern.compile("(?i)game 1")))
+    void testCompare_shouldPreferFirstRegions() {
+        SubComparator subComparator = new RegionSubComparator(SortingPreference.builder()
+                .regions(ImmutableSet.of("USA", "JPN"))
                 .build());
         ParsedGame tg1 = ParsedGame.builder()
-                .regionData(getRegionByCode(regionData, "USA"))
+                .regionData(getRegionByCode(regionData, "JPN"))
                 .game(createGame("Test game 1"))
                 .build();
         ParsedGame tg2 = ParsedGame.builder()
@@ -58,4 +57,5 @@ class AvoidsListSubComparatorTest {
         Arrays.sort(parsedGames, subComparator);
         assertArrayEquals(parsedGames, new ParsedGame[]{tg2, tg1});
     }
+
 }

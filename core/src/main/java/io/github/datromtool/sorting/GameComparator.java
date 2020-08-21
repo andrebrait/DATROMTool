@@ -33,9 +33,8 @@ public final class GameComparator implements Comparator<ParsedGame> {
             int result = subComparator.compare(o1, o2);
             if (result != 0) {
                 logger.debug(
-                        "Under criteria '{}'{}, '{}' is preferred over '{}'",
+                        "Under criteria '{}', '{}' is preferred over '{}'",
                         subComparator.getCriteria(),
-                        subComparator.isReversed() ? " (reversed)" : "",
                         result < 0 ? o1.getGame().getName() : o2.getGame().getName(),
                         result < 0 ? o2.getGame().getName() : o1.getGame().getName());
                 return result;

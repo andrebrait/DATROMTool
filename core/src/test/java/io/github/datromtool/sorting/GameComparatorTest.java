@@ -1,11 +1,11 @@
-package io.github.datromtool;
+package io.github.datromtool.sorting;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.RegionData;
 import io.github.datromtool.data.SortingPreference;
-import io.github.datromtool.sorting.GameComparator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,13 @@ import java.util.regex.Pattern;
 import static io.github.datromtool.util.TestUtils.createGame;
 import static io.github.datromtool.util.TestUtils.getRegionByCode;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 class GameComparatorTest {
 
     static RegionData regionData;
@@ -26,6 +32,95 @@ class GameComparatorTest {
         regionData = SerializationHelper.getInstance()
                 .loadRegionData(Paths.get(ClassLoader.getSystemResource("region-data.yaml")
                         .toURI()));
+    }
+
+    @Test
+    void testCompare_stopAtFirstNonZero() {
+        SubComparatorProvider mock = mock(SubComparatorProvider.class);
+        ImmutableList<SubComparator> mocks = ImmutableList.of(
+                mock(SubComparator.class),
+                mock(SubComparator.class),
+                mock(SubComparator.class));
+        given(mock.toList(any())).willReturn(mocks);
+        ParsedGame tg1 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "EUR"))
+                .game(createGame("Test game 1"))
+                .build();
+        ParsedGame tg2 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "USA"))
+                .bad(true)
+                .game(createGame("Test game 2"))
+                .build();
+        ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
+        given(mocks.get(0).compare(tg1, tg2)).willReturn(-1);
+        given(mocks.get(0).compare(tg2, tg1)).willReturn(1);
+
+        GameComparator comparator = new GameComparator(SortingPreference.builder().build(), mock);
+        Arrays.sort(parsedGames, comparator);
+        assertArrayEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        verify(mocks.get(0)).compare(any(), any());
+        verifyNoInteractions(mocks.get(1), mocks.get(2));
+    }
+
+    @Test
+    void testCompare_stopAtFirstNonZero_2() {
+        SubComparatorProvider mock = mock(SubComparatorProvider.class);
+        ImmutableList<SubComparator> mocks = ImmutableList.of(
+                mock(SubComparator.class),
+                mock(SubComparator.class),
+                mock(SubComparator.class));
+        given(mock.toList(any())).willReturn(mocks);
+        ParsedGame tg1 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "EUR"))
+                .game(createGame("Test game 1"))
+                .build();
+        ParsedGame tg2 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "USA"))
+                .bad(true)
+                .game(createGame("Test game 2"))
+                .build();
+        ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
+        given(mocks.get(0).compare(any(), any())).willReturn(0);
+        given(mocks.get(1).compare(tg1, tg2)).willReturn(-1);
+        given(mocks.get(1).compare(tg2, tg1)).willReturn(1);
+
+        GameComparator comparator = new GameComparator(SortingPreference.builder().build(), mock);
+        Arrays.sort(parsedGames, comparator);
+        assertArrayEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        verify(mocks.get(0)).compare(any(), any());
+        verify(mocks.get(1)).compare(any(), any());
+        verifyNoInteractions(mocks.get(2));
+    }
+
+    @Test
+    void testCompare_stopAtFirstNonZero_3() {
+        SubComparatorProvider mock = mock(SubComparatorProvider.class);
+        ImmutableList<SubComparator> mocks = ImmutableList.of(
+                mock(SubComparator.class),
+                mock(SubComparator.class),
+                mock(SubComparator.class));
+        given(mock.toList(any())).willReturn(mocks);
+        ParsedGame tg1 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "EUR"))
+                .game(createGame("Test game 1"))
+                .build();
+        ParsedGame tg2 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "USA"))
+                .bad(true)
+                .game(createGame("Test game 2"))
+                .build();
+        ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
+        given(mocks.get(0).compare(any(), any())).willReturn(0);
+        given(mocks.get(1).compare(any(), any())).willReturn(0);
+        given(mocks.get(2).compare(tg1, tg2)).willReturn(-1);
+        given(mocks.get(2).compare(tg2, tg1)).willReturn(1);
+
+        GameComparator comparator = new GameComparator(SortingPreference.builder().build(), mock);
+        Arrays.sort(parsedGames, comparator);
+        assertArrayEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        verify(mocks.get(0)).compare(any(), any());
+        verify(mocks.get(1)).compare(any(), any());
+        verify(mocks.get(2)).compare(any(), any());
     }
 
     @Test
