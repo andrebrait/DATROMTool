@@ -63,7 +63,7 @@ public enum ArchiveType {
 
         private static final Pattern ZIP = compile("\\.zip$", CASE_INSENSITIVE);
         private static final Pattern RAR = compile("\\.rar$", CASE_INSENSITIVE);
-        private static final Pattern SEVEN_ZIP = compile("^\\.7z$", CASE_INSENSITIVE);
+        private static final Pattern SEVEN_ZIP = compile("\\.7z$", CASE_INSENSITIVE);
         private static final Pattern TAR = compile("\\.tar$", CASE_INSENSITIVE);
         private static final Pattern TAR_7Z = compile("\\.tar\\.7z$", CASE_INSENSITIVE);
         private static final Pattern TAR_LZ4 = compile("\\.tar\\.lz4$", CASE_INSENSITIVE);
