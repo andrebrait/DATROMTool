@@ -30,8 +30,8 @@ class FileScannerParameters {
 
     private static final Logger logger = LoggerFactory.getLogger(FileScannerParameters.class);
 
-    private static final int DEFAULT_BUFFER_SIZE = 32 * 1024; // 32KB
-    private static final int MAX_BUFFER_NO_WARNING = 64 * 1024 * 1024; // 64MB
+    public static final int DEFAULT_BUFFER_SIZE = 32 * 1024; // 32KB
+    public static final int MAX_BUFFER_NO_WARNING = 64 * 1024 * 1024; // 64MB
 
     int bufferSize;
     long minRomSize;

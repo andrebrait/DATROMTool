@@ -5,6 +5,6 @@ import org.junit.jupiter.api.Test;
 class GameParserTest {
 
     @Test
-    void parse() {
+    void testParse() {
     }
 }

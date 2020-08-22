@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 class GameFiltererTest {
 
     @Test
-    void filter() {
+    void testFilter() {
     }
 
     @Test
-    void postFilter() {
+    void testPostFilter() {
     }
 }

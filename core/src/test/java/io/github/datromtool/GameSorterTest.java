@@ -5,6 +5,6 @@ import org.junit.jupiter.api.Test;
 class GameSorterTest {
 
     @Test
-    void sortAndGroupByParent() {
+    void testSortAndGroupByParent() {
     }
 }

@@ -5,6 +5,6 @@ import org.junit.jupiter.api.Test;
 class FileCopierTest {
 
     @Test
-    void copy() {
+    void testCopy() {
     }
 }
