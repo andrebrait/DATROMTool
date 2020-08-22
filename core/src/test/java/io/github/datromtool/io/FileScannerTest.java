@@ -1,10 +1,10 @@
 package io.github.datromtool.io;
 
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
-class FileScannerTest {
+public class FileScannerTest {
 
     @Test
-    void testScan() {
+    public void testScan() {
     }
 }

@@ -7,8 +7,8 @@
             <id>lombok</id>
             <repositories>
                 <repository>
-                    <id>local-libs</id>
-                    <url>file://${project.basedir}/lib</url>
+                    <id>project-repository</id>
+                    <url>file://${project.basedir}/.mvn/repository</url>
                 </repository>
             </repositories>
         </profile>

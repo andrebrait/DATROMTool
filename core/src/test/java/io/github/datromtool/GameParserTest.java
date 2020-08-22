@@ -1,10 +1,10 @@
 package io.github.datromtool;
 
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
-class GameParserTest {
+public class GameParserTest {
 
     @Test
-    void testParse() {
+    public void testParse() {
     }
 }

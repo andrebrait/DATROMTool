@@ -13,7 +13,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <junit.jupiter.version>5.6.2</junit.jupiter.version>
         <!-- Change when 1.18.13+ gets released with @Jacksonized -->
         <lombok.version>1.18.13</lombok.version>
         <commons-compress.version>1.20</commons-compress.version>
@@ -29,6 +28,7 @@
         <junrar.version>7.2.0</junrar.version>
         <git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
         <mockito-core.version>3.3.3</mockito-core.version>
+        <testng.version>7.3.0</testng.version>
     </properties>
 
     <modules>
@@ -88,9 +88,9 @@
                 <version>${lombok.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter</artifactId>
-                <version>${junit.jupiter.version}</version>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -129,6 +129,11 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <testng.dtd.http>true</testng.dtd.http>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

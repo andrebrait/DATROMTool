@@ -2,19 +2,19 @@ package io.github.datromtool.sorting;
 
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.data.SortingPreference;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
-class SubComparatorProviderTest {
+public class SubComparatorProviderTest {
 
     @Test
-    void testToList_defaultOptions() {
+    public void testToList_defaultOptions() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder().build());
         assertNotNull(subComparators);
@@ -39,7 +39,7 @@ class SubComparatorProviderTest {
     }
 
     @Test
-    void testToList_preferPrereleases() {
+    public void testToList_preferPrereleases() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
                         .preferPrereleases(true)
@@ -67,7 +67,7 @@ class SubComparatorProviderTest {
     }
 
     @Test
-    void testToList_prioritizeLanguages() {
+    public void testToList_prioritizeLanguages() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
                         .prioritizeLanguages(true)
@@ -94,7 +94,7 @@ class SubComparatorProviderTest {
     }
 
     @Test
-    void testToList_preferParents() {
+    public void testToList_preferParents() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
                         .preferParents(true)
@@ -122,7 +122,7 @@ class SubComparatorProviderTest {
     }
 
     @Test
-    void testToList_earlyRevisions() {
+    public void testToList_earlyRevisions() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
                         .earlyRevisions(true)
@@ -149,7 +149,7 @@ class SubComparatorProviderTest {
     }
 
     @Test
-    void testToList_earlyVersions() {
+    public void testToList_earlyVersions() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
                         .earlyVersions(true)
@@ -176,7 +176,7 @@ class SubComparatorProviderTest {
     }
 
     @Test
-    void testToList_earlyPrereleases() {
+    public void testToList_earlyPrereleases() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
                         .earlyPrereleases(true)

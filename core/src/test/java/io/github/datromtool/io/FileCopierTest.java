@@ -1,10 +1,10 @@
 package io.github.datromtool.io;
 
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
-class FileCopierTest {
+public class FileCopierTest {
 
     @Test
-    void testCopy() {
+    public void testCopy() {
     }
 }
