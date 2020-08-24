@@ -17,7 +17,6 @@ import io.github.datromtool.data.RegionData;
 import io.github.datromtool.domain.detector.Detector;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +35,7 @@ public final class SerializationHelper {
     private final static Logger logger = LoggerFactory.getLogger(SerializationHelper.class);
 
     private final static Path PROGRAM_FOLDER_PATH =
-            SystemUtils.getUserHome().toPath().resolve(".DATROMTool");
+            Paths.get(System.getProperty("user.home")).resolve(".DATROMTool");
 
     private final static Path DETECTORS_PATH = PROGRAM_FOLDER_PATH.resolve("detectors");
     private static final Path APP_CONFIG_PATH = PROGRAM_FOLDER_PATH.resolve("config.yaml");

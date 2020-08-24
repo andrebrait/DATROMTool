@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static lombok.AccessLevel.PRIVATE;
 
 @Value
@@ -95,6 +96,20 @@ public class ParsedGame {
                 || !beta.isEmpty()
                 || !demo.isEmpty()
                 || !sample.isEmpty();
+    }
+
+    @JsonIgnore
+    public String getParentName() {
+        if (game == null) {
+            return "";
+        }
+        if (parent) {
+            return game.getName();
+        }
+        if (!isNullOrEmpty(game.getCloneOf())) {
+            return getGame().getCloneOf();
+        }
+        return getGame().getRomOf();
     }
 
 }

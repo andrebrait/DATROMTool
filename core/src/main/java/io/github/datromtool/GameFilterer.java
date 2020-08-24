@@ -17,8 +17,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.apache.commons.collections4.CollectionUtils.isEmpty;
-
 @RequiredArgsConstructor
 public final class GameFilterer {
 
@@ -70,7 +68,7 @@ public final class GameFilterer {
     }
 
     private boolean filterProto(ParsedGame p) {
-        boolean result = !filter.isNoProto() || isEmpty(p.getProto());
+        boolean result = !filter.isNoProto() || p.getProto().isEmpty();
         if (!result) {
             logger.debug("Proto filter removed '{}'", p.getGame().getName());
         }
@@ -78,7 +76,7 @@ public final class GameFilterer {
     }
 
     private boolean filterBeta(ParsedGame p) {
-        boolean result = !filter.isNoBeta() || isEmpty(p.getBeta());
+        boolean result = !filter.isNoBeta() || p.getBeta().isEmpty();
         if (!result) {
             logger.debug("Beta filter removed '{}'", p.getGame().getName());
         }
@@ -86,7 +84,7 @@ public final class GameFilterer {
     }
 
     private boolean filterDemo(ParsedGame p) {
-        boolean result = !filter.isNoDemo() || isEmpty(p.getDemo());
+        boolean result = !filter.isNoDemo() || p.getDemo().isEmpty();
         if (!result) {
             logger.debug("Demo filter removed '{}'", p.getGame().getName());
         }
@@ -94,7 +92,7 @@ public final class GameFilterer {
     }
 
     private boolean filterSample(ParsedGame p) {
-        boolean result = !filter.isNoSample() || isEmpty(p.getSample());
+        boolean result = !filter.isNoSample() || p.getSample().isEmpty();
         if (!result) {
             logger.debug("Sample filter removed '{}'", p.getGame().getName());
         }
@@ -120,7 +118,7 @@ public final class GameFilterer {
     private static boolean containsAny(
             Supplier<Stream<String>> streamSupplier,
             Collection<String> filter) {
-        return isEmpty(filter) || streamSupplier.get().anyMatch(filter::contains);
+        return filter.isEmpty() || streamSupplier.get().anyMatch(filter::contains);
     }
 
     private boolean filterExcludes(ParsedGame p) {

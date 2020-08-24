@@ -37,8 +37,26 @@ public class AppConfig {
 
     }
 
+    @Value
+    @Jacksonized
+    @Builder(toBuilder = true)
+    @AllArgsConstructor(access = PRIVATE)
+    @NoArgsConstructor(access = PRIVATE, force = true)
+    @JsonInclude(NON_DEFAULT)
+    public static class FileCopier {
+
+        @Builder.Default
+        @NonNull
+        Integer threads = Runtime.getRuntime().availableProcessors();
+
+    }
+
     @NonNull
     @Builder.Default
     FileScanner scanner = FileScanner.builder().build();
+
+    @NonNull
+    @Builder.Default
+    FileCopier copier = FileCopier.builder().build();
 
 }

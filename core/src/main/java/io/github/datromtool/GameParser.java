@@ -13,7 +13,6 @@ import io.github.datromtool.domain.datafile.enumerations.Status;
 import io.github.datromtool.domain.datafile.enumerations.YesNo;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +25,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 @RequiredArgsConstructor
 public final class GameParser {
@@ -56,7 +53,7 @@ public final class GameParser {
                 .map(g -> ParsedGame.builder()
                         .game(g)
                         .bios(isBios(g))
-                        .parent(isBlank(g.getCloneOf()) && isBlank(g.getRomOf()))
+                        .parent(isNullOrEmpty(g.getCloneOf()) && isNullOrEmpty(g.getRomOf()))
                         .bad(detectIsBad(g))
                         .regionData(detectRegionData(g))
                         .languages(detectLanguages(g))
@@ -106,7 +103,7 @@ public final class GameParser {
         }
         Set<RegionData.RegionDataEntry> provided = new LinkedHashSet<>();
         for (Release release : game.getReleases()) {
-            if (isNotBlank(release.getRegion())) {
+            if (release.getRegion() != null && !release.getRegion().isEmpty()) {
                 String code = release.getRegion().trim().toUpperCase();
                 RegionData.RegionDataEntry regionDataEntry = regionData.getRegions().stream()
                         .filter(e -> e.getCode().equals(code))
@@ -146,28 +143,28 @@ public final class GameParser {
         Set<String> detected = new LinkedHashSet<>();
         Matcher matcher = Patterns.LANGUAGES.matcher(game.getName());
         while (matcher.find()) {
-            for (String language : COMMA_OR_PLUS.split(matcher.group(1))) {
-                if (isNotEmpty(language)) {
-                    String lowerCaseLanguage = language.toLowerCase();
+            for (String part : COMMA_OR_PLUS.split(matcher.group(1))) {
+                String language = part.trim().toLowerCase();
+                if (!language.isEmpty()) {
                     logger.debug(
                             "Detected language '{}' for '{}'",
-                            lowerCaseLanguage,
+                            language,
                             game.getName());
-                    detected.add(lowerCaseLanguage);
+                    detected.add(language);
                 }
             }
         }
         Set<String> provided = new LinkedHashSet<>();
         for (Release release : game.getReleases()) {
-            if (isNotBlank(release.getLanguage())) {
-                for (String language : COMMA_OR_PLUS.split(release.getLanguage())) {
-                    if (isNotBlank(language)) {
-                        String lowerCaseLanguage = language.trim().toLowerCase();
+            if (release.getLanguage() != null && !release.getLanguage().isEmpty()) {
+                for (String part : COMMA_OR_PLUS.split(release.getLanguage())) {
+                    String language = part.trim().toLowerCase();
+                    if (!language.isEmpty()) {
                         logger.debug(
                                 "DAT provided language '{}' for '{}'",
-                                lowerCaseLanguage,
+                                language,
                                 game.getName());
-                        provided.add(lowerCaseLanguage);
+                        provided.add(language);
                     }
                 }
             }
@@ -247,7 +244,7 @@ public final class GameParser {
             return IntStream.range(1, matcher.groupCount() + 1)
                     .filter(i -> i == 1 || matcher.group(i) != null)
                     .mapToObj(matcher::group)
-                    .map(StringUtils::defaultString)
+                    .map(s -> s == null ? "" : s)
                     .map(s -> s.split("\\."))
                     .flatMap(Arrays::stream)
                     .map(n -> {

@@ -4,9 +4,9 @@ import com.github.junrar.exception.RarException;
 import com.github.junrar.exception.UnsupportedRarV5Exception;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import io.github.datromtool.config.AppConfig;
 import lombok.Builder;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
@@ -20,6 +20,7 @@ import org.apache.commons.compress.compressors.xz.XZUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,9 +35,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static org.apache.commons.collections4.CollectionUtils.isEmpty;
-
-@RequiredArgsConstructor
 public final class FileCopier {
 
     private static final Logger logger = LoggerFactory.getLogger(FileCopier.class);
@@ -84,11 +82,21 @@ public final class FileCopier {
 
         void reportFinish(Path path, Path destination, int thread);
 
+
     }
 
-    private final boolean allowRawZipCopy;
     private final int numThreads;
+    private final boolean allowRawZipCopy;
     private final Listener listener;
+
+    public FileCopier(
+            @Nonnull AppConfig appConfig,
+            boolean allowRawZipCopy,
+            @Nullable Listener listener) {
+        this.allowRawZipCopy = allowRawZipCopy;
+        this.numThreads = appConfig.getCopier().getThreads();
+        this.listener = listener;
+    }
 
     private final ThreadLocal<byte[]> threadLocalBuffer =
             ThreadLocal.withInitial(() -> new byte[BUFFER_SIZE]);
@@ -124,7 +132,7 @@ public final class FileCopier {
             listener.reportStart(copyDefinition.getFrom(), copyDefinition.getTo(), index);
         }
         try {
-            if (isEmpty(copyDefinition.getArchiveCopyDefinitions())) {
+            if (copyDefinition.getArchiveCopyDefinitions().isEmpty()) {
                 try (InputStream inputStream = Files.newInputStream(copyDefinition.getFrom())) {
                     try (OutputStream outputStream =
                             Files.newOutputStream(copyDefinition.getTo())) {
@@ -137,6 +145,9 @@ public final class FileCopier {
                                 outputStream::write);
                     }
                 }
+                Files.setLastModifiedTime(
+                        copyDefinition.getTo(),
+                        Files.getLastModifiedTime(copyDefinition.getFrom()));
             } else {
                 extractOrCompress(copyDefinition, index);
             }

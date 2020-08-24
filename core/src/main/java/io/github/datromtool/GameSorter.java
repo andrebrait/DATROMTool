@@ -3,13 +3,10 @@ package io.github.datromtool;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.github.datromtool.data.ParsedGame;
-import io.github.datromtool.data.SortingPreference;
 import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.sorting.GameComparator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,23 +22,17 @@ public final class GameSorter {
     private final static Logger logger = LoggerFactory.getLogger(GameSorter.class);
 
     @NonNull
-    private final SortingPreference sortingPreference;
+    private final GameComparator comparator;
 
     public ImmutableMap<String, ImmutableList<ParsedGame>> sortAndGroupByParent(
             Collection<ParsedGame> parsedGames) {
-        logger.debug("Starting sorting with {}", sortingPreference);
-        GameComparator comparator = new GameComparator(sortingPreference);
         Map<String, List<ParsedGame>> groupedByParent = parsedGames.stream()
                 .collect(Collectors.groupingBy(
-                        p -> p.isParent()
-                                ? p.getGame().getName()
-                                : StringUtils.defaultIfBlank(
-                                        p.getGame().getCloneOf(),
-                                        p.getGame().getRomOf()),
+                        ParsedGame::getParentName,
                         LinkedHashMap::new,
                         Collectors.toList()));
         return groupedByParent.entrySet().stream()
-                .filter(e -> CollectionUtils.isNotEmpty(e.getValue()))
+                .filter(e -> !e.getValue().isEmpty())
                 .peek(e -> sortList(comparator, e))
                 .collect(ImmutableMap.toImmutableMap(
                         Map.Entry::getKey,
