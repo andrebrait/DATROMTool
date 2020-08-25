@@ -18,9 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
+
 public class FileCopierTest {
 
-    private static final String TEST_DATA_FOLDER = "./test-data";
+    private static final String TEST_DATA_FOLDER = "../test-data";
     private Path testDataSource;
     private Path tempDir;
 
@@ -28,14 +30,10 @@ public class FileCopierTest {
     public void setup() throws Exception {
         tempDir = Files.createTempDirectory("datromtool_copy_test");
         String testDir = System.getenv("DATROMTOOL_TEST_DIR");
-        if (testDir == null) {
-            if (Files.isDirectory(Paths.get(TEST_DATA_FOLDER))) {
-                testDir = TEST_DATA_FOLDER;
-            } else {
-                testDir = System.getProperty("java.io.tmpdir") + "/datromtool_copy_test_data";
-            }
+        if (testDir == null && Files.isDirectory(Paths.get(TEST_DATA_FOLDER))) {
+            testDir = TEST_DATA_FOLDER;
         }
-        testDataSource = Paths.get(testDir, "data");
+        testDataSource = Paths.get(requireNonNull(testDir), "data", "files");
     }
 
     @AfterMethod

@@ -42,7 +42,5 @@ buildNumber.properties
 .env
 
 core/src/test/resources/valid/dats/no-intro/*.dat
-test-data/data
-!test-data/rar4.rar
 !repository/**
 !lib/**/*.jar

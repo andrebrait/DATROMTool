@@ -3,8 +3,10 @@
 rm -rf data 2> /dev/null
 mkdir -p data
 cd data || exit 1
+mkdir -p files
+cd files || exit 1
 
-for i in $(seq 9 22); do
+for i in $(seq 14 20); do
     c="$((2 ** i))"
     file_name="$(printf "%07d" "${c}")"
     mkdir -p "${file_name}"
@@ -26,11 +28,13 @@ printf "\x4E\x45\x53\x1A%s" "$(base64 /dev/zero | head -c 12)" \
 
 shopt -s globstar
 
+cd ..
+
 for i in **/*.txt; do sha1sum "$i" >> SHA1SUMS; done
 
 for i in **/*.txt; do md5sum "$i" >> MD5SUMS; done
 
-for i in **/*.txt; do python3 -c "import sys; a=sys.argv[1].split(' '); h=hex(int(a[0])); print(h.lstrip('0').lstrip('x'), a[1], a[2])" "$(cksum "${i}")" >> CRC32SUMS; done
+for i in **/*.txt; do echo "$(crc32 "${i}") $(du -b "${i}" | sed -E 's/\t/ /g')" >> CRC32SUMS; done
 
 for i in **/*.txt; do
     echo "Compressing ${i}"
