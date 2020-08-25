@@ -42,5 +42,5 @@ buildNumber.properties
 .env
 
 core/src/test/resources/valid/dats/no-intro/*.dat
-!repository/**
-!lib/**/*.jar
+!.mvn/repository/**
+!test-data/**
