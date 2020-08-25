@@ -100,6 +100,56 @@ public class FileScannerTest {
         }
     }
 
+    @Test
+    public void testScan_maxSizeLimit() throws Exception {
+        FileScanner fileScanner = new FileScanner(
+                AppConfig.builder().build(),
+                buildDatafile(16 * 1024L, 768 * 1024L),
+                null,
+                null);
+        ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
+        assertFalse(results.isEmpty());
+        assertEquals(results.size(), (crc32sums.size() - 4) * 17);
+        for (FileScanner.Result i : results) {
+            assertEquals(i.getSize(), i.getUnheaderedSize());
+            if (isRar5(i)) {
+                continue;
+            }
+            String filename = getFilename(i);
+            Pair<Long, String> crc32 = crc32sums.get(filename);
+            assertNotNull(crc32);
+            assertEquals(i.getSize(), (long) crc32.getLeft());
+            assertEquals(i.getDigest().getCrc(), crc32.getRight());
+            assertEquals(i.getDigest().getMd5(), md5sums.get(filename));
+            assertEquals(i.getDigest().getSha1(), sha1sums.get(filename));
+        }
+    }
+
+    @Test
+    public void testScan_minAndmaxSizeLimit() throws Exception {
+        FileScanner fileScanner = new FileScanner(
+                AppConfig.builder().build(),
+                buildDatafile(64 * 1024L, 768 * 1024L),
+                null,
+                null);
+        ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
+        assertFalse(results.isEmpty());
+        assertEquals(results.size(), (crc32sums.size() - 8) * 17);
+        for (FileScanner.Result i : results) {
+            assertEquals(i.getSize(), i.getUnheaderedSize());
+            if (isRar5(i)) {
+                continue;
+            }
+            String filename = getFilename(i);
+            Pair<Long, String> crc32 = crc32sums.get(filename);
+            assertNotNull(crc32);
+            assertEquals(i.getSize(), (long) crc32.getLeft());
+            assertEquals(i.getDigest().getCrc(), crc32.getRight());
+            assertEquals(i.getDigest().getMd5(), md5sums.get(filename));
+            assertEquals(i.getDigest().getSha1(), sha1sums.get(filename));
+        }
+    }
+
     private Datafile buildDatafile(long minSize, long maxSize) {
         return Datafile.builder().games(ImmutableList.of(
                 Game.builder()
