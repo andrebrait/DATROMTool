@@ -1,6 +1,7 @@
 package io.github.datromtool.io;
 
 import com.github.junrar.exception.UnsupportedRarV5Exception;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.domain.datafile.Datafile;
@@ -351,7 +352,7 @@ public final class FileScanner {
                         size,
                         processingResult.getUnheaderedSize(),
                         processingResult.getDigest(),
-                        name));
+                        name.replace('\\', '/')));
             }
         });
     }
@@ -431,7 +432,7 @@ public final class FileScanner {
         }
         return new ProcessingResult(
                 new Result.Digest(
-                        Long.toHexString(crc32.getValue()),
+                        Strings.padStart(Long.toHexString(crc32.getValue()), 8, '0'),
                         Hex.encodeHexString(md5.digest()),
                         Hex.encodeHexString(sha1.digest())),
                 totalRead);
