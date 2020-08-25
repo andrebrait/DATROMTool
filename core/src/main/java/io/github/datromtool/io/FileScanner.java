@@ -250,6 +250,7 @@ public final class FileScanner {
                                 + "Reason: RAR5 is not supported yet",
                         file,
                         archiveType);
+                scanned = true;
             } catch (Exception e) {
                 logger.error(
                         "Unexpected error while reading archive '{}' detected as {}",
