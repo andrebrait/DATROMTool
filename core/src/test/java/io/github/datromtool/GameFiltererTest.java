@@ -1,14 +1,14 @@
 package io.github.datromtool;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-public class GameFiltererTest {
+class GameFiltererTest {
 
     @Test
-    public void testFilter() {
+    void testFilter() {
     }
 
     @Test
-    public void testPostFilter() {
+    void testPostFilter() {
     }
 }

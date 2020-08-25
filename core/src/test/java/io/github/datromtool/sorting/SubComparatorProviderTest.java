@@ -2,23 +2,23 @@ package io.github.datromtool.sorting;
 
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.data.SortingPreference;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SubComparatorProviderTest {
+class SubComparatorProviderTest {
 
     @Test
-    public void testToList_defaultOptions() {
+    void testToList_defaultOptions() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder().build());
         assertNotNull(subComparators);
-        assertEquals(subComparators.size(), 15);
+        assertEquals(15, subComparators.size());
         Iterator<SubComparator> i = subComparators.iterator();
         assertTrue(i.next() instanceof BadDumpSubComparator);
         assertTrue(i.next() instanceof AvoidsListSubComparator);
@@ -39,13 +39,13 @@ public class SubComparatorProviderTest {
     }
 
     @Test
-    public void testToList_preferPrereleases() {
+    void testToList_preferPrereleases() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
                         .preferPrereleases(true)
                         .build());
         assertNotNull(subComparators);
-        assertEquals(subComparators.size(), 16);
+        assertEquals(16, subComparators.size());
         Iterator<SubComparator> i = subComparators.iterator();
         assertTrue(i.next() instanceof BadDumpSubComparator);
         assertTrue(i.next().isReverseOf(PreferReleasesSubComparator.class));
@@ -67,13 +67,13 @@ public class SubComparatorProviderTest {
     }
 
     @Test
-    public void testToList_prioritizeLanguages() {
+    void testToList_prioritizeLanguages() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
                         .prioritizeLanguages(true)
                         .build());
         assertNotNull(subComparators);
-        assertEquals(subComparators.size(), 15);
+        assertEquals(15, subComparators.size());
         Iterator<SubComparator> i = subComparators.iterator();
         assertTrue(i.next() instanceof BadDumpSubComparator);
         assertTrue(i.next() instanceof AvoidsListSubComparator);
@@ -94,13 +94,13 @@ public class SubComparatorProviderTest {
     }
 
     @Test
-    public void testToList_preferParents() {
+    void testToList_preferParents() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
                         .preferParents(true)
                         .build());
         assertNotNull(subComparators);
-        assertEquals(subComparators.size(), 16);
+        assertEquals(16, subComparators.size());
         Iterator<SubComparator> i = subComparators.iterator();
         assertTrue(i.next() instanceof BadDumpSubComparator);
         assertTrue(i.next() instanceof AvoidsListSubComparator);
@@ -122,13 +122,13 @@ public class SubComparatorProviderTest {
     }
 
     @Test
-    public void testToList_earlyRevisions() {
+    void testToList_earlyRevisions() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
                         .earlyRevisions(true)
                         .build());
         assertNotNull(subComparators);
-        assertEquals(subComparators.size(), 15);
+        assertEquals(15, subComparators.size());
         Iterator<SubComparator> i = subComparators.iterator();
         assertTrue(i.next() instanceof BadDumpSubComparator);
         assertTrue(i.next() instanceof AvoidsListSubComparator);
@@ -149,13 +149,13 @@ public class SubComparatorProviderTest {
     }
 
     @Test
-    public void testToList_earlyVersions() {
+    void testToList_earlyVersions() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
                         .earlyVersions(true)
                         .build());
         assertNotNull(subComparators);
-        assertEquals(subComparators.size(), 15);
+        assertEquals(15, subComparators.size());
         Iterator<SubComparator> i = subComparators.iterator();
         assertTrue(i.next() instanceof BadDumpSubComparator);
         assertTrue(i.next() instanceof AvoidsListSubComparator);
@@ -176,13 +176,13 @@ public class SubComparatorProviderTest {
     }
 
     @Test
-    public void testToList_earlyPrereleases() {
+    void testToList_earlyPrereleases() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
                         .earlyPrereleases(true)
                         .build());
         assertNotNull(subComparators);
-        assertEquals(subComparators.size(), 15);
+        assertEquals(15, subComparators.size());
         Iterator<SubComparator> i = subComparators.iterator();
         assertTrue(i.next() instanceof BadDumpSubComparator);
         assertTrue(i.next() instanceof AvoidsListSubComparator);

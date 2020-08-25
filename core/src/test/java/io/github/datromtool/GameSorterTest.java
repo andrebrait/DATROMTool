@@ -1,10 +1,10 @@
 package io.github.datromtool;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-public class GameSorterTest {
+class GameSorterTest {
 
     @Test
-    public void testSortAndGroupByParent() {
+    void testSortAndGroupByParent() {
     }
 }

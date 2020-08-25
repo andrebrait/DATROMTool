@@ -3,9 +3,9 @@ package io.github.datromtool.io;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.config.AppConfig;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -20,14 +20,14 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
-public class FileCopierTest {
+class FileCopierTest {
 
     private static final String TEST_DATA_FOLDER = "../test-data";
     private Path testDataSource;
     private Path tempDir;
 
-    @BeforeMethod
-    public void setup() throws Exception {
+    @BeforeEach
+    void setup() throws Exception {
         tempDir = Files.createTempDirectory("datromtool_copy_test");
         String testDir = System.getenv("DATROMTOOL_TEST_DIR");
         if (testDir == null && Files.isDirectory(Paths.get(TEST_DATA_FOLDER))) {
@@ -36,8 +36,8 @@ public class FileCopierTest {
         testDataSource = Paths.get(requireNonNull(testDir), "data", "files");
     }
 
-    @AfterMethod
-    public void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() throws Exception {
         Files.walkFileTree(tempDir, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(
@@ -56,7 +56,7 @@ public class FileCopierTest {
     }
 
     @Test
-    public void testCopy() throws Exception {
+    void testCopy() throws Exception {
         FileScanner fs = new FileScanner(AppConfig.builder().build(), null, null, null);
         ImmutableList<FileScanner.Result> results = fs.scan(testDataSource);
         Map<Path, List<FileScanner.Result>> resultsForArchive =

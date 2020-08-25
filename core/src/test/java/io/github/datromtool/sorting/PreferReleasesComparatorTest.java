@@ -3,27 +3,27 @@ package io.github.datromtool.sorting;
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.RegionData;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
 import static io.github.datromtool.util.TestUtils.createGame;
 import static io.github.datromtool.util.TestUtils.getRegionByCode;
 import static io.github.datromtool.util.TestUtils.loadRegionData;
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-public class PreferReleasesComparatorTest {
+class PreferReleasesComparatorTest {
 
     static RegionData regionData;
 
-    @BeforeClass
-    public static void beforeAll() throws Exception {
+    @BeforeAll
+    static void beforeAll() throws Exception {
         regionData = loadRegionData();
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfNotApplicable() {
+    void testCompare_shouldKeepOrderIfNotApplicable() {
         SubComparator subComparator = new PreferReleasesSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -35,11 +35,11 @@ public class PreferReleasesComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, subComparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferReleaseOverProto() {
+    void testCompare_shouldPreferReleaseOverProto() {
         SubComparator subComparator = new PreferReleasesSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -52,11 +52,11 @@ public class PreferReleasesComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, subComparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferReleaseOverBeta() {
+    void testCompare_shouldPreferReleaseOverBeta() {
         SubComparator subComparator = new PreferReleasesSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -69,11 +69,11 @@ public class PreferReleasesComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, subComparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferReleaseOverDemo() {
+    void testCompare_shouldPreferReleaseOverDemo() {
         SubComparator subComparator = new PreferReleasesSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -86,11 +86,11 @@ public class PreferReleasesComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, subComparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferReleaseOverSample() {
+    void testCompare_shouldPreferReleaseOverSample() {
         SubComparator subComparator = new PreferReleasesSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -103,7 +103,7 @@ public class PreferReleasesComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, subComparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
 }

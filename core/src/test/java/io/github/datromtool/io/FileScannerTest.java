@@ -6,8 +6,8 @@ import io.github.datromtool.data.Pair;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.domain.datafile.Rom;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
 
 import static io.github.datromtool.util.TestUtils.getFilename;
 import static io.github.datromtool.util.TestUtils.isRar5;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import static java.util.Objects.requireNonNull;
 
-public class FileScannerTest {
+class FileScannerTest {
 
     private static final String TEST_DATA_FOLDER = "../test-data";
     private Path testDataSource;
@@ -33,8 +33,8 @@ public class FileScannerTest {
     private Map<String, String> md5sums;
     private Map<String, String> sha1sums;
 
-    @BeforeMethod
-    public void setup() throws IOException {
+    @BeforeEach
+    void setup() throws IOException {
         String testDir = System.getenv("DATROMTOOL_TEST_DIR");
         if (testDir == null && Files.isDirectory(Paths.get(TEST_DATA_FOLDER))) {
             testDir = TEST_DATA_FOLDER;
@@ -55,28 +55,28 @@ public class FileScannerTest {
     }
 
     @Test
-    public void testScan_defaultSettings() throws Exception {
+    void testScan_defaultSettings() throws Exception {
         FileScanner fileScanner = new FileScanner(AppConfig.builder().build(), null, null, null);
         ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
         assertFalse(results.isEmpty());
-        assertEquals(results.size(), crc32sums.size() * 17);
+        assertEquals(crc32sums.size() * 17, results.size());
         for (FileScanner.Result i : results) {
-            assertEquals(i.getSize(), i.getUnheaderedSize());
+            assertEquals(i.getUnheaderedSize(), i.getSize());
             if (isRar5(i)) {
                 continue;
             }
             String filename = getFilename(i);
             Pair<Long, String> crc32 = crc32sums.get(filename);
             assertNotNull(crc32);
-            assertEquals(i.getSize(), (long) crc32.getLeft());
-            assertEquals(i.getDigest().getCrc(), crc32.getRight());
-            assertEquals(i.getDigest().getMd5(), md5sums.get(filename));
-            assertEquals(i.getDigest().getSha1(), sha1sums.get(filename));
+            assertEquals((long) crc32.getLeft(), i.getSize());
+            assertEquals(crc32.getRight(), i.getDigest().getCrc());
+            assertEquals(md5sums.get(filename), i.getDigest().getMd5());
+            assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
         }
     }
 
     @Test
-    public void testScan_minSizeLimit() throws Exception {
+    void testScan_minSizeLimit() throws Exception {
         FileScanner fileScanner = new FileScanner(
                 AppConfig.builder().build(),
                 buildDatafile(64 * 1024L, 64 * 1024L * 1024L),
@@ -84,24 +84,24 @@ public class FileScannerTest {
                 null);
         ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
         assertFalse(results.isEmpty());
-        assertEquals(results.size(), (crc32sums.size() - 4) * 17);
+        assertEquals((crc32sums.size() - 4) * 17, results.size());
         for (FileScanner.Result i : results) {
-            assertEquals(i.getSize(), i.getUnheaderedSize());
+            assertEquals(i.getUnheaderedSize(), i.getSize());
             if (isRar5(i)) {
                 continue;
             }
             String filename = getFilename(i);
             Pair<Long, String> crc32 = crc32sums.get(filename);
             assertNotNull(crc32);
-            assertEquals(i.getSize(), (long) crc32.getLeft());
-            assertEquals(i.getDigest().getCrc(), crc32.getRight());
-            assertEquals(i.getDigest().getMd5(), md5sums.get(filename));
-            assertEquals(i.getDigest().getSha1(), sha1sums.get(filename));
+            assertEquals((long) crc32.getLeft(), i.getSize());
+            assertEquals(crc32.getRight(), i.getDigest().getCrc());
+            assertEquals(md5sums.get(filename), i.getDigest().getMd5());
+            assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
         }
     }
 
     @Test
-    public void testScan_maxSizeLimit() throws Exception {
+    void testScan_maxSizeLimit() throws Exception {
         FileScanner fileScanner = new FileScanner(
                 AppConfig.builder().build(),
                 buildDatafile(16 * 1024L, 768 * 1024L),
@@ -109,24 +109,24 @@ public class FileScannerTest {
                 null);
         ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
         assertFalse(results.isEmpty());
-        assertEquals(results.size(), (crc32sums.size() - 4) * 17);
+        assertEquals((crc32sums.size() - 4) * 17, results.size());
         for (FileScanner.Result i : results) {
-            assertEquals(i.getSize(), i.getUnheaderedSize());
+            assertEquals(i.getUnheaderedSize(), i.getSize());
             if (isRar5(i)) {
                 continue;
             }
             String filename = getFilename(i);
             Pair<Long, String> crc32 = crc32sums.get(filename);
             assertNotNull(crc32);
-            assertEquals(i.getSize(), (long) crc32.getLeft());
-            assertEquals(i.getDigest().getCrc(), crc32.getRight());
-            assertEquals(i.getDigest().getMd5(), md5sums.get(filename));
-            assertEquals(i.getDigest().getSha1(), sha1sums.get(filename));
+            assertEquals((long) crc32.getLeft(), i.getSize());
+            assertEquals(crc32.getRight(), i.getDigest().getCrc());
+            assertEquals(md5sums.get(filename), i.getDigest().getMd5());
+            assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
         }
     }
 
     @Test
-    public void testScan_minAndmaxSizeLimit() throws Exception {
+    void testScan_minAndmaxSizeLimit() throws Exception {
         FileScanner fileScanner = new FileScanner(
                 AppConfig.builder().build(),
                 buildDatafile(64 * 1024L, 768 * 1024L),
@@ -134,19 +134,19 @@ public class FileScannerTest {
                 null);
         ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
         assertFalse(results.isEmpty());
-        assertEquals(results.size(), (crc32sums.size() - 8) * 17);
+        assertEquals((crc32sums.size() - 8) * 17, results.size());
         for (FileScanner.Result i : results) {
-            assertEquals(i.getSize(), i.getUnheaderedSize());
+            assertEquals(i.getUnheaderedSize(), i.getSize());
             if (isRar5(i)) {
                 continue;
             }
             String filename = getFilename(i);
             Pair<Long, String> crc32 = crc32sums.get(filename);
             assertNotNull(crc32);
-            assertEquals(i.getSize(), (long) crc32.getLeft());
-            assertEquals(i.getDigest().getCrc(), crc32.getRight());
-            assertEquals(i.getDigest().getMd5(), md5sums.get(filename));
-            assertEquals(i.getDigest().getSha1(), sha1sums.get(filename));
+            assertEquals((long) crc32.getLeft(), i.getSize());
+            assertEquals(crc32.getRight(), i.getDigest().getCrc());
+            assertEquals(md5sums.get(filename), i.getDigest().getMd5());
+            assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
         }
     }
 

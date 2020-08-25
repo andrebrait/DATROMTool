@@ -6,8 +6,8 @@ import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.RegionData;
 import io.github.datromtool.data.SortingPreference;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -15,27 +15,27 @@ import java.util.regex.Pattern;
 
 import static io.github.datromtool.util.TestUtils.createGame;
 import static io.github.datromtool.util.TestUtils.getRegionByCode;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.testng.Assert.assertEquals;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
-public class GameComparatorTest {
+class GameComparatorTest {
 
     static RegionData regionData;
 
-    @BeforeClass
-    public static void beforeAll() throws Exception {
+    @BeforeAll
+    static void beforeAll() throws Exception {
         regionData = SerializationHelper.getInstance()
                 .loadRegionData(Paths.get(ClassLoader.getSystemResource("region-data.yaml")
                         .toURI()));
     }
 
     @Test
-    public void testCompare_stopAtFirstNonZero() {
+    void testCompare_stopAtFirstNonZero() {
         SubComparatorProvider mock = mock(SubComparatorProvider.class);
         ImmutableList<SubComparator> mocks = ImmutableList.of(
                 mock(SubComparator.class),
@@ -57,13 +57,13 @@ public class GameComparatorTest {
 
         GameComparator comparator = new GameComparator(mock, SortingPreference.builder().build());
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
         verify(mocks.get(0)).compare(any(), any());
         verifyNoInteractions(mocks.get(1), mocks.get(2));
     }
 
     @Test
-    public void testCompare_stopAtFirstNonZero_2() {
+    void testCompare_stopAtFirstNonZero_2() {
         SubComparatorProvider mock = mock(SubComparatorProvider.class);
         ImmutableList<SubComparator> mocks = ImmutableList.of(
                 mock(SubComparator.class),
@@ -86,14 +86,14 @@ public class GameComparatorTest {
 
         GameComparator comparator = new GameComparator(mock, SortingPreference.builder().build());
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
         verify(mocks.get(0)).compare(any(), any());
         verify(mocks.get(1)).compare(any(), any());
         verifyNoInteractions(mocks.get(2));
     }
 
     @Test
-    public void testCompare_stopAtFirstNonZero_3() {
+    void testCompare_stopAtFirstNonZero_3() {
         SubComparatorProvider mock = mock(SubComparatorProvider.class);
         ImmutableList<SubComparator> mocks = ImmutableList.of(
                 mock(SubComparator.class),
@@ -117,14 +117,14 @@ public class GameComparatorTest {
 
         GameComparator comparator = new GameComparator(mock, SortingPreference.builder().build());
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
         verify(mocks.get(0)).compare(any(), any());
         verify(mocks.get(1)).compare(any(), any());
         verify(mocks.get(2)).compare(any(), any());
     }
 
     @Test
-    public void testCompare_shouldPreventBadDumps() {
+    void testCompare_shouldPreventBadDumps() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .regions(ImmutableSet.of("USA", "EUR"))
@@ -140,11 +140,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldNotPreventPrereleasesIfNotPreferPrereleases() {
+    void testCompare_shouldNotPreventPrereleasesIfNotPreferPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .regions(ImmutableSet.of("USA", "EUR"))
@@ -160,11 +160,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferPrereleaseIfPreferPrereleases() {
+    void testCompare_shouldPreferPrereleaseIfPreferPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .regions(ImmutableSet.of("USA", "EUR"))
@@ -181,11 +181,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldSortByRegion() {
+    void testCompare_shouldSortByRegion() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .regions(ImmutableSet.of("USA", "EUR"))
@@ -200,11 +200,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderByRegion() {
+    void testCompare_shouldKeepOrderByRegion() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .regions(ImmutableSet.of("EUR", "USA"))
@@ -219,11 +219,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameRegions() {
+    void testCompare_shouldKeepOrderIfSameRegions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .regions(ImmutableSet.of("EUR", "USA"))
@@ -238,11 +238,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameRegions_differentNumberOfRegions() {
+    void testCompare_shouldKeepOrderIfSameRegions_differentNumberOfRegions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .regions(ImmutableSet.of("EUR", "USA"))
@@ -257,11 +257,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameRegions_sameNumberOfRegions() {
+    void testCompare_shouldKeepOrderIfSameRegions_sameNumberOfRegions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .regions(ImmutableSet.of("EUR", "USA"))
@@ -276,11 +276,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldSortByLanguage() {
+    void testCompare_shouldSortByLanguage() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .languages(ImmutableSet.of("en", "ja"))
@@ -295,11 +295,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderByLanguage() {
+    void testCompare_shouldKeepOrderByLanguage() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .languages(ImmutableSet.of("ja", "en"))
@@ -314,11 +314,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameLanguages() {
+    void testCompare_shouldKeepOrderIfSameLanguages() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .languages(ImmutableSet.of("jp", "en"))
@@ -333,11 +333,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameLanguages_sameNumberOfLanguages() {
+    void testCompare_shouldKeepOrderIfSameLanguages_sameNumberOfLanguages() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .languages(ImmutableSet.of("ja", "en"))
@@ -352,11 +352,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferWithMostSelectedLanguages() {
+    void testCompare_shouldPreferWithMostSelectedLanguages() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .languages(ImmutableSet.of("ja", "en"))
@@ -371,11 +371,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferWithMostLanguages() {
+    void testCompare_shouldPreferWithMostLanguages() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .languages(ImmutableSet.of("ja", "en"))
@@ -390,11 +390,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferWithMostSelectedLanguagesOverMostLanguages() {
+    void testCompare_shouldPreferWithMostSelectedLanguagesOverMostLanguages() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .languages(ImmutableSet.of("ja", "en"))
@@ -409,11 +409,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldSortByRegionAndLanguage() {
+    void testCompare_shouldSortByRegionAndLanguage() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .regions(ImmutableSet.of("USA", "EUR"))
@@ -439,11 +439,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2, tg3, tg4};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg4, tg2, tg3, tg1});
+        assertArrayEquals(new ParsedGame[]{tg4, tg2, tg3, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldSortByRegionAndLanguage_prioritizeLanguages() {
+    void testCompare_shouldSortByRegionAndLanguage_prioritizeLanguages() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .regions(ImmutableSet.of("USA", "EUR"))
@@ -470,11 +470,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2, tg3, tg4};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg4, tg3, tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg4, tg3, tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferReleaseIfAllElseIsEqual() {
+    void testCompare_shouldPreferReleaseIfAllElseIsEqual() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .regions(ImmutableSet.of("USA", "EUR"))
@@ -490,11 +490,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferParents_ifPreferParents() {
+    void testCompare_shouldPreferParents_ifPreferParents() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .preferParents(true)
@@ -511,11 +511,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentRevisions() {
+    void testCompare_shouldPreferRecentRevisions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -530,11 +530,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentRevisions_ignoreParent() {
+    void testCompare_shouldPreferRecentRevisions_ignoreParent() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -550,11 +550,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameRevision() {
+    void testCompare_shouldKeepOrderIfSameRevision() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -570,11 +570,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentRevision_minorDiff() {
+    void testCompare_shouldPreferRecentRevision_minorDiff() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -590,11 +590,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentRevision_majorDiff() {
+    void testCompare_shouldPreferRecentRevision_majorDiff() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -610,11 +610,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyRevisionsIfEarlyRevisions() {
+    void testCompare_shouldPreferEarlyRevisionsIfEarlyRevisions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyRevisions(true)
@@ -630,11 +630,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameRevision_earlyRevisions() {
+    void testCompare_shouldKeepOrderIfSameRevision_earlyRevisions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyRevisions(true)
@@ -651,11 +651,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyRevision_minorDiff_earlyRevisions() {
+    void testCompare_shouldPreferEarlyRevision_minorDiff_earlyRevisions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyRevisions(true)
@@ -672,11 +672,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyRevision_majorDiff_earlyRevisions() {
+    void testCompare_shouldPreferEarlyRevision_majorDiff_earlyRevisions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyRevisions(true)
@@ -693,11 +693,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentVersions() {
+    void testCompare_shouldPreferRecentVersions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -712,11 +712,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentVersions_ignoreParent() {
+    void testCompare_shouldPreferRecentVersions_ignoreParent() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -732,11 +732,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameVersion() {
+    void testCompare_shouldKeepOrderIfSameVersion() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -752,11 +752,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentVersion_minorDiff() {
+    void testCompare_shouldPreferRecentVersion_minorDiff() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -772,11 +772,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentVersion_majorDiff() {
+    void testCompare_shouldPreferRecentVersion_majorDiff() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -792,11 +792,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyVersionsIfEarlyVersions() {
+    void testCompare_shouldPreferEarlyVersionsIfEarlyVersions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyVersions(true)
@@ -812,11 +812,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameVersion_earlyVersions() {
+    void testCompare_shouldKeepOrderIfSameVersion_earlyVersions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyVersions(true)
@@ -833,11 +833,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyVersion_minorDiff_earlyVersions() {
+    void testCompare_shouldPreferEarlyVersion_minorDiff_earlyVersions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyVersions(true)
@@ -854,11 +854,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyVersion_majorDiff_earlyVersions() {
+    void testCompare_shouldPreferEarlyVersion_majorDiff_earlyVersions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyVersions(true)
@@ -875,11 +875,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentSamples() {
+    void testCompare_shouldPreferRecentSamples() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -895,11 +895,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameSample() {
+    void testCompare_shouldKeepOrderIfSameSample() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -915,11 +915,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentSample_minorDiff() {
+    void testCompare_shouldPreferRecentSample_minorDiff() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -935,11 +935,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentSample_majorDiff() {
+    void testCompare_shouldPreferRecentSample_majorDiff() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -955,11 +955,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlySamplesIfEarlySamples() {
+    void testCompare_shouldPreferEarlySamplesIfEarlySamples() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -976,11 +976,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameSample_earlyPrereleases() {
+    void testCompare_shouldKeepOrderIfSameSample_earlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -997,11 +997,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlySample_minorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlySample_minorDiff_earlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1018,11 +1018,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlySample_majorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlySample_majorDiff_earlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1039,11 +1039,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentDemos() {
+    void testCompare_shouldPreferRecentDemos() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -1059,11 +1059,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameDemo() {
+    void testCompare_shouldKeepOrderIfSameDemo() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -1079,11 +1079,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentDemo_minorDiff() {
+    void testCompare_shouldPreferRecentDemo_minorDiff() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -1099,11 +1099,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentDemo_majorDiff() {
+    void testCompare_shouldPreferRecentDemo_majorDiff() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -1119,11 +1119,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyDemosIfEarlyPrereleases() {
+    void testCompare_shouldPreferEarlyDemosIfEarlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1139,11 +1139,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameDemo_earlyPrereleases() {
+    void testCompare_shouldKeepOrderIfSameDemo_earlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1160,11 +1160,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyDemo_minorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlyDemo_minorDiff_earlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1181,11 +1181,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyDemo_majorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlyDemo_majorDiff_earlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1202,11 +1202,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentBetas() {
+    void testCompare_shouldPreferRecentBetas() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -1222,11 +1222,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameBeta() {
+    void testCompare_shouldKeepOrderIfSameBeta() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -1242,11 +1242,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentBeta_minorDiff() {
+    void testCompare_shouldPreferRecentBeta_minorDiff() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -1262,11 +1262,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentBeta_majorDiff() {
+    void testCompare_shouldPreferRecentBeta_majorDiff() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -1282,11 +1282,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyBetasIfEarlyPrereleases() {
+    void testCompare_shouldPreferEarlyBetasIfEarlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1302,11 +1302,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameBeta_earlyPrereleases() {
+    void testCompare_shouldKeepOrderIfSameBeta_earlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1323,11 +1323,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyBeta_minorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlyBeta_minorDiff_earlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1344,11 +1344,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyBeta_majorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlyBeta_majorDiff_earlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1365,11 +1365,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentProtos() {
+    void testCompare_shouldPreferRecentProtos() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -1385,11 +1385,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameProto() {
+    void testCompare_shouldKeepOrderIfSameProto() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -1405,11 +1405,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentProto_minorDiff() {
+    void testCompare_shouldPreferRecentProto_minorDiff() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -1425,11 +1425,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferRecentProto_majorDiff() {
+    void testCompare_shouldPreferRecentProto_majorDiff() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -1445,11 +1445,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyProtosIfEarlyPrereleases() {
+    void testCompare_shouldPreferEarlyProtosIfEarlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1465,11 +1465,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfSameProto_earlyPrereleases() {
+    void testCompare_shouldKeepOrderIfSameProto_earlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1486,11 +1486,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyProto_minorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlyProto_minorDiff_earlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1507,11 +1507,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferEarlyProto_majorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlyProto_majorDiff_earlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .earlyPrereleases(true)
@@ -1528,11 +1528,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldAvoid_ifInAvoidsList() {
+    void testCompare_shouldAvoid_ifInAvoidsList() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .avoids(ImmutableSet.of(Pattern.compile("(?i)game 1")))
@@ -1548,11 +1548,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPrefer_ifInPrefersList() {
+    void testCompare_shouldPrefer_ifInPrefersList() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .prefers(ImmutableSet.of(Pattern.compile("(?i)game 2")))
@@ -1568,11 +1568,11 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferParents_ifAllElseIsEqual() {
+    void testCompare_shouldPreferParents_ifAllElseIsEqual() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
                         .build());
@@ -1587,6 +1587,6 @@ public class GameComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, comparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 }

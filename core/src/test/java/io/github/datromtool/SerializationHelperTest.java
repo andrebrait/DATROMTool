@@ -7,8 +7,10 @@ import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.util.XMLValidator;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -16,18 +18,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static java.nio.file.Files.newInputStream;
 
-public class SerializationHelperTest {
+class SerializationHelperTest {
 
-    @Test(dataProvider = "validDats")
-    public void testReadDats(Path validFile) throws Exception {
+    @ParameterizedTest
+    @MethodSource("validNoIntroDats")
+    void testReadDats(Path validFile) throws Exception {
         Datafile datafile;
         try (InputStream inputStream = new BZip2CompressorInputStream(newInputStream(validFile))) {
             datafile = SerializationHelper.getInstance().loadXml(inputStream, Datafile.class);
@@ -78,19 +82,19 @@ public class SerializationHelperTest {
 //                        new FileScanner.Listener() {
 //
 //                            @Override
-//                            public void reportTotalItems(int totalItems) {
+//                            void reportTotalItems(int totalItems) {
 //                                logger.info("Reporting {} total items", totalItems);
 //                            }
 //
 //                            @Override
-//                            public void reportStart(Path label, int thread) {
+//                            void reportStart(Path label, int thread) {
 //                                logger.info(
 //                                        "Reporting starting to read '{}'",
 //                                        label);
 //                            }
 //
 //                            @Override
-//                            public void reportProgress(
+//                            void reportProgress(
 //                                    Path label,
 //                                    int thread,
 //                                    int percentage,
@@ -105,12 +109,12 @@ public class SerializationHelperTest {
 //                            }
 //
 //                            @Override
-//                            public void reportSkip(Path label, int thread, String message) {
+//                            void reportSkip(Path label, int thread, String message) {
 //                                // Do nothing
 //                            }
 //
 //                            @Override
-//                            public void reportFailure(
+//                            void reportFailure(
 //                                    Path label,
 //                                    int thread,
 //                                    String message,
@@ -126,7 +130,7 @@ public class SerializationHelperTest {
 //                            }
 //
 //                            @Override
-//                            public void reportFinish(Path label, int thread) {
+//                            void reportFinish(Path label, int thread) {
 //                                logger.info("Reporting finish for '{}'", label);
 //                            }
 //                        })
@@ -168,7 +172,7 @@ public class SerializationHelperTest {
 //        new FileCopier(true, 1, new FileCopier.Listener() {
 //
 //            @Override
-//            public void reportStart(Path from, Path to, int thread) {
+//            void reportStart(Path from, Path to, int thread) {
 //                logger.info(
 //                        "Reporting starting to copy '{}' to '{}'",
 //                        from,
@@ -176,7 +180,7 @@ public class SerializationHelperTest {
 //            }
 //
 //            @Override
-//            public void reportProgress(
+//            void reportProgress(
 //                    Path from,
 //                    Path to,
 //                    int thread,
@@ -193,12 +197,12 @@ public class SerializationHelperTest {
 //            }
 //
 //            @Override
-//            public void reportSkip(Path from, Path to, int thread, String message) {
+//            void reportSkip(Path from, Path to, int thread, String message) {
 //                // Do nothing
 //            }
 //
 //            @Override
-//            public void reportFailure(
+//            void reportFailure(
 //                    Path from,
 //                    Path to,
 //                    int thread,
@@ -216,7 +220,7 @@ public class SerializationHelperTest {
 //            }
 //
 //            @Override
-//            public void reportFinish(Path from, Path to, int thread) {
+//            void reportFinish(Path from, Path to, int thread) {
 //                logger.info("Reporting finish for '{}' to '{}'", from, to);
 //            }
 //        }).copy(copyDefinitions);
@@ -225,8 +229,9 @@ public class SerializationHelperTest {
                 .writeValueAsBytes(datafile));
     }
 
-    @Test(dataProvider = "validHeaders")
-    public void testLoadDetectors(Path validFile) throws Exception {
+    @ParameterizedTest
+    @MethodSource("validHeaders")
+    void testLoadDetectors(Path validFile) throws Exception {
         Detector detector = SerializationHelper.getInstance().loadDetector(validFile);
         assertNotNull(detector);
         assertFalse(detector.getRules().isEmpty());
@@ -236,67 +241,61 @@ public class SerializationHelperTest {
     }
 
     @Test
-    public void testLoadAppConfig() throws Exception {
+    void testLoadAppConfig() throws Exception {
         AppConfig config = SerializationHelper.getInstance()
                 .loadAppConfig(Paths.get(ClassLoader.getSystemResource("config-test.yaml")
                         .toURI()));
         assertNotNull(config);
         assertNotNull(config.getScanner());
-        assertEquals((int) config.getScanner().getThreads(), 4);
-        assertEquals((int) config.getScanner().getMaxBufferSize(), 4 * 1024 * 1024);
+        assertEquals(4, (int) config.getScanner().getThreads());
+        assertEquals(4 * 1024 * 1024, (int) config.getScanner().getMaxBufferSize());
     }
 
     @Test
-    public void testLoadDefaultAppConfig() {
+    void testLoadDefaultAppConfig() {
         AppConfig config = SerializationHelper.getInstance().loadAppConfig();
         assertNotNull(config);
-        assertEquals(config, AppConfig.builder().build());
+        assertEquals(AppConfig.builder().build(), config);
     }
 
     @Test
-    public void testLoadRegionData() throws Exception {
+    void testLoadRegionData() throws Exception {
         RegionData regionData = SerializationHelper.getInstance()
                 .loadRegionData(Paths.get(ClassLoader.getSystemResource("region-data-test.yaml")
                         .toURI()));
         assertNotNull(regionData);
         assertNotNull(regionData.getRegions());
-        assertEquals(regionData.getRegions().size(), 2);
+        assertEquals(2, regionData.getRegions().size());
         Iterator<RegionData.RegionDataEntry> iterator = regionData.getRegions().iterator();
         RegionData.RegionDataEntry r1 = iterator.next();
-        assertEquals(r1.getCode(), "TST");
+        assertEquals("TST", r1.getCode());
         assertTrue(r1.getPattern().matcher("Test").matches());
         assertTrue(r1.getPattern().matcher("test").matches());
         assertFalse(r1.getPattern().matcher("test2").matches());
-        assertEquals(r1.getLanguages(), ImmutableSet.of("tt"));
+        assertEquals(ImmutableSet.of("tt"), r1.getLanguages());
         RegionData.RegionDataEntry r2 = iterator.next();
-        assertEquals(r2.getCode(), "TS2");
+        assertEquals("TS2", r2.getCode());
         assertTrue(r2.getPattern().matcher("Test2").matches());
         assertTrue(r2.getPattern().matcher("test2").matches());
         assertFalse(r2.getPattern().matcher("test").matches());
-        assertEquals(r2.getLanguages(), ImmutableSet.of("tt", "ts"));
+        assertEquals(ImmutableSet.of("tt", "ts"), r2.getLanguages());
     }
 
     @Test
-    public void testLoadDefaultRegionData() throws Exception {
+    void testLoadDefaultRegionData() throws Exception {
         RegionData regionData = SerializationHelper.getInstance().loadRegionData();
         assertNotNull(regionData);
         assertNotNull(regionData.getRegions());
         assertFalse(regionData.getRegions().isEmpty());
     }
 
-    @DataProvider(name = "validDats")
-    public static Object[][] validNoIntroDats() throws Exception {
+    static Stream<Arguments> validNoIntroDats() throws Exception {
         URL folderUrl = ClassLoader.getSystemResource("valid/dats/no-intro");
-        return Files.list(Paths.get(folderUrl.toURI()))
-                .map(o -> new Object[]{o})
-                .toArray(Object[][]::new);
+        return Files.list(Paths.get(folderUrl.toURI())).map(Arguments::of);
     }
 
-    @DataProvider(name = "validHeaders")
-    public static Object[][] validHeaders() throws Exception {
+    static Stream<Arguments> validHeaders() throws Exception {
         URL folderUrl = ClassLoader.getSystemResource("detectors");
-        return Files.list(Paths.get(folderUrl.toURI()))
-                .map(o -> new Object[]{o})
-                .toArray(Object[][]::new);
+        return Files.list(Paths.get(folderUrl.toURI())).map(Arguments::of);
     }
 }

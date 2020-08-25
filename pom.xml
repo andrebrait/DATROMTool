@@ -13,6 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <junit.jupiter.version>5.6.2</junit.jupiter.version>
         <!-- Change when 1.18.13+ gets released with @Jacksonized -->
         <lombok.version>1.18.13</lombok.version>
         <commons-compress.version>1.20</commons-compress.version>
@@ -23,10 +24,9 @@
         <jackson.version>2.11.2</jackson.version>
         <xz.version>1.8</xz.version>
         <commons-codec.version>1.14</commons-codec.version>
-        <junrar.version>7.2.0</junrar.version>
+        <junrar.version>7.3.0</junrar.version>
         <git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
         <mockito-core.version>3.3.3</mockito-core.version>
-        <testng.version>6.14.3</testng.version>
     </properties>
 
     <modules>
@@ -76,11 +76,6 @@
                 <version>${lombok.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.testng</groupId>
-                <artifactId>testng</artifactId>
-                <version>${testng.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
@@ -99,6 +94,11 @@
                 <groupId>com.github.junrar</groupId>
                 <artifactId>junrar</artifactId>
                 <version>${junrar.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.jupiter.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>

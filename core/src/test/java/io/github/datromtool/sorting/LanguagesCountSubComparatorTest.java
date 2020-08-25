@@ -3,27 +3,27 @@ package io.github.datromtool.sorting;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.RegionData;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
 import static io.github.datromtool.util.TestUtils.createGame;
 import static io.github.datromtool.util.TestUtils.getRegionByCode;
 import static io.github.datromtool.util.TestUtils.loadRegionData;
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-public class LanguagesCountSubComparatorTest {
+class LanguagesCountSubComparatorTest {
 
     static RegionData regionData;
 
-    @BeforeClass
-    public static void beforeAll() throws Exception {
+    @BeforeAll
+    static void beforeAll() throws Exception {
         regionData = loadRegionData();
     }
 
     @Test
-    public void testCompare_shouldKeepOrderIfNotApplicable() {
+    void testCompare_shouldKeepOrderIfNotApplicable() {
         SubComparator subComparator = new LanguagesCountSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -35,11 +35,11 @@ public class LanguagesCountSubComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, subComparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg1, tg2});
+        assertArrayEquals(new ParsedGame[]{tg1, tg2}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferLeastLanguagesCounts() {
+    void testCompare_shouldPreferLeastLanguagesCounts() {
         SubComparator subComparator = new LanguagesCountSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -52,11 +52,11 @@ public class LanguagesCountSubComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, subComparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferLeastLanguagesCounts_useRegionsIfNoLanguagesSet() {
+    void testCompare_shouldPreferLeastLanguagesCounts_useRegionsIfNoLanguagesSet() {
         SubComparator subComparator = new LanguagesCountSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA", "JPN"))
@@ -68,11 +68,11 @@ public class LanguagesCountSubComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, subComparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
     @Test
-    public void testCompare_shouldPreferLeastLanguagesCounts_ignoreRegionsIfLanguagesSet() {
+    void testCompare_shouldPreferLeastLanguagesCounts_ignoreRegionsIfLanguagesSet() {
         SubComparator subComparator = new LanguagesCountSubComparator();
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -85,7 +85,7 @@ public class LanguagesCountSubComparatorTest {
                 .build();
         ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
         Arrays.sort(parsedGames, subComparator);
-        assertEquals(parsedGames, new ParsedGame[]{tg2, tg1});
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
 
 }
