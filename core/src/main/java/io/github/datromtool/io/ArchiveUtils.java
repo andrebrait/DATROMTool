@@ -1,8 +1,10 @@
 package io.github.datromtool.io;
 
 import com.github.junrar.Archive;
+import com.github.junrar.exception.BadRarArchiveException;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.rarfile.FileHeader;
+import com.google.common.collect.ImmutableList;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
@@ -25,12 +27,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.Enumeration;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static java.nio.file.StandardOpenOption.CREATE;
 
@@ -128,6 +139,114 @@ public final class ArchiveUtils {
                 consumer.accept(archive, fileHeader);
             }
         }
+    }
+
+    private static final Pattern RAR_LIST =
+            Pattern.compile("^\\s*\\S+\\s+([0-9]+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S.+\\S)\\s*$");
+
+    public static boolean isUnrarAvailable() {
+        ProcessBuilder pb = new ProcessBuilder("unrar", "-inul");
+        try {
+            Process process = pb.start();
+            return process.waitFor() == 0;
+        } catch (IOException | InterruptedException e) {
+            logger.error("Could not check if 'unrar' is available", e);
+            return false;
+        }
+    }
+
+    private static boolean isRarFileOk(Path path) {
+        ProcessBuilder pb = new ProcessBuilder("unrar", "t", path.toAbsolutePath().toString());
+        try {
+            Process process = pb.start();
+            return process.waitFor() == 0;
+        } catch (IOException | InterruptedException e) {
+            logger.error("'unrar' could not test file '{}'", path, e);
+            return false;
+        }
+    }
+
+    public static ImmutableList<UnrarArchiveEntry> listRarEntriesWithUnrar(Path path)
+            throws IOException, RarException {
+        if (!isUnrarAvailable()) {
+            throw new UnsupportedOperationException("'unrar' is not available");
+        }
+        if (!isRarFileOk(path)) {
+            throw new BadRarArchiveException();
+        }
+        ProcessBuilder pb = new ProcessBuilder("unrar", "l", path.toAbsolutePath().toString());
+        try {
+            Process process = pb.start();
+            ImmutableList<UnrarArchiveEntry> fileList = readStdout(process)
+                    .map(RAR_LIST::matcher)
+                    .filter(Matcher::matches)
+                    .map(m -> UnrarArchiveEntry.builder()
+                            .name(m.group(4))
+                            .size(Long.parseLong(m.group(1)))
+                            .modificationTime(LocalDateTime.parse(String.format(
+                                    "%sT%s:00",
+                                    m.group(2),
+                                    m.group(3))))
+                            .build())
+                    .filter(e -> e.getSize() > 0)
+                    .collect(ImmutableList.toImmutableList());
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                logger.error("Unexpected error while running 'unrar'. Exit code: {}", exitCode);
+            }
+            return fileList;
+        } catch (InterruptedException e) {
+            logger.error("'unrar' could not list contents of file '{}'", path, e);
+            return ImmutableList.of();
+        }
+    }
+
+    public static <T extends Throwable> void readRarWithUnrar(
+            Path path,
+            Set<String> desiredEntryNames,
+            ThrowingBiConsumer<UnrarArchiveEntry, InputStream, T> consumer)
+            throws IOException, RarException, T {
+        ImmutableList<UnrarArchiveEntry> allEntries = listRarEntriesWithUnrar(path);
+        ImmutableList<UnrarArchiveEntry> desiredEntries = allEntries.stream()
+                .filter(e -> desiredEntryNames.contains(e.getName()))
+                .collect(ImmutableList.toImmutableList());
+        ImmutableList<String> exclusions = allEntries.stream()
+                .filter(e -> !desiredEntryNames.contains(e.getName()))
+                .map(UnrarArchiveEntry::getName)
+                .collect(ImmutableList.toImmutableList());
+        ProcessBuilder pb =
+                new ProcessBuilder("unrar", "p", "-inul", "-x@", path.toAbsolutePath().toString());
+        try {
+            Process process = pb.start();
+            BufferedWriter writer =
+                    new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+            for (String exclusion : exclusions) {
+                writer.write(exclusion);
+                writer.newLine();
+            }
+            writer.flush();
+            writer.close();
+            InputStream processInputStream = process.getInputStream();
+            for (UnrarArchiveEntry desiredFile : desiredEntries) {
+                consumer.accept(desiredFile, processInputStream);
+            }
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                logger.error("Unexpected error while running 'unrar'. Exit code: {}", exitCode);
+            }
+        } catch (InterruptedException e) {
+            logger.error("'unrar' could not read contents of file '{}'", path, e);
+        }
+    }
+
+    public static Stream<String> readStdout(Process process) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        Stream.Builder<String> sb = Stream.builder();
+        String currLine;
+        while ((currLine = reader.readLine()) != null) {
+            sb.accept(currLine);
+        }
+        return sb.build();
     }
 
     public static <T extends Throwable> void readSevenZip(

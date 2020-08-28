@@ -3,6 +3,7 @@ package io.github.datromtool.io;
 import com.github.junrar.exception.UnsupportedRarV5Exception;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.detector.Detector;
@@ -334,27 +335,67 @@ public final class FileScanner {
             Path file,
             int index,
             ImmutableList.Builder<Result> builder) throws Exception {
-        ArchiveUtils.readRar(file, (archive, fileHeader) -> {
-            long size = fileHeader.getFullUnpackSize();
-            String name = fileHeader.getFileName();
+        try {
+            ArchiveUtils.readRar(file, (archive, fileHeader) -> {
+                long size = fileHeader.getFullUnpackSize();
+                String name = fileHeader.getFileName().replace('\\', '/');
+                Path entryPath = file.resolve(name);
+                if (shouldSkip(entryPath, index, size)) {
+                    return;
+                }
+                try (InputStream rarFileInputStream = archive.getInputStream(fileHeader)) {
+                    ProcessingResult processingResult = process(
+                            entryPath,
+                            index,
+                            size,
+                            rarFileInputStream::read);
+                    builder.add(new Result(
+                            ArchiveType.RAR,
+                            file,
+                            size,
+                            processingResult.getUnheaderedSize(),
+                            processingResult.getDigest(),
+                            name));
+                }
+            });
+        } catch (UnsupportedRarV5Exception e) {
+            if (ArchiveUtils.isUnrarAvailable()) {
+                scanRarWithUnrar(file, index, builder);
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    private void scanRarWithUnrar(
+            Path file,
+            int index,
+            ImmutableList.Builder<Result> builder) throws Exception {
+        ImmutableSet<String> desiredEntryNames =
+                ArchiveUtils.listRarEntriesWithUnrar(file)
+                        .stream()
+                        .filter(e -> !shouldSkip(file.resolve(e.getName()), index, e.getSize()))
+                        .map(UnrarArchiveEntry::getName)
+                        .collect(ImmutableSet.toImmutableSet());
+        if (desiredEntryNames.isEmpty()) {
+            return;
+        }
+        ArchiveUtils.readRarWithUnrar(file, desiredEntryNames, (entry, processInputStream) -> {
+            long size = entry.getSize();
+            String name = entry.getName();
             Path entryPath = file.resolve(name);
-            if (shouldSkip(entryPath, index, size)) {
-                return;
-            }
-            try (InputStream rarFileInputStream = archive.getInputStream(fileHeader)) {
-                ProcessingResult processingResult = process(
-                        entryPath,
-                        index,
-                        size,
-                        rarFileInputStream::read);
-                builder.add(new Result(
-                        ArchiveType.RAR,
-                        file,
-                        size,
-                        processingResult.getUnheaderedSize(),
-                        processingResult.getDigest(),
-                        name.replace('\\', '/')));
-            }
+            ProcessingResult processingResult = process(
+                    entryPath,
+                    index,
+                    size,
+                    processInputStream::read);
+            builder.add(new Result(
+                    ArchiveType.RAR,
+                    file,
+                    size,
+                    processingResult.getUnheaderedSize(),
+                    processingResult.getDigest(),
+                    name));
         });
     }
 

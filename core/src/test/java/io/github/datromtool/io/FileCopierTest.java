@@ -75,7 +75,7 @@ class FileCopierTest {
                             .to(tempDir.resolve(e.getKey()
                                     .getFileName()
                                     .toString()
-                                    .replaceFirst("(?i)\\.rar4\\.rar$", ".rar4.zip")))
+                                    .replaceFirst("(?i)\\.rar$", ".rar.zip")))
                             .fromType(archiveType)
                             .archiveCopyDefinitions(
                                     archiveType == ArchiveType.NONE

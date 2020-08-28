@@ -29,6 +29,8 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -305,38 +307,86 @@ public final class FileCopier {
 
     private void extractRarEntries(CopyDefinition copyDefinition, int index)
             throws Exception {
-        ArchiveUtils.readRar(copyDefinition.getFrom(), (archive, fileHeader) -> {
-            String name = fileHeader.getFileName();
-            ArchiveCopyDefinition archiveCopyDefinition =
-                    findArchiveCopyDefinition(copyDefinition, name);
-            if (archiveCopyDefinition == null) {
-                return;
-            }
-            try (InputStream inputStream = archive.getInputStream(fileHeader)) {
-                Path to = copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
-                try (OutputStream outputStream = Files.newOutputStream(to)) {
-                    Path source = copyDefinition.getFrom().resolve(name);
-                    long size = fileHeader.getFullUnpackSize();
-                    copyWithProgress(
-                            index,
-                            size,
-                            source,
-                            to,
-                            inputStream::read,
-                            outputStream::write);
-                } catch (FileAlreadyExistsException e) {
-                    throw e;
-                } catch (IOException e) {
-                    Files.delete(to);
-                    throw e;
+        try {
+            ArchiveUtils.readRar(copyDefinition.getFrom(), (archive, fileHeader) -> {
+                String name = fileHeader.getFileName();
+                ArchiveCopyDefinition archiveCopyDefinition =
+                        findArchiveCopyDefinition(copyDefinition, name);
+                if (archiveCopyDefinition == null) {
+                    return;
                 }
-                if (fileHeader.getMTime() != null) {
-                    Files.setLastModifiedTime(to, fromDate(fileHeader.getMTime()));
-                } else if (fileHeader.getCTime() != null) {
-                    Files.setLastModifiedTime(to, fromDate(fileHeader.getCTime()));
+                try (InputStream inputStream = archive.getInputStream(fileHeader)) {
+                    Path to =
+                            copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
+                    try (OutputStream outputStream = Files.newOutputStream(to)) {
+                        Path source = copyDefinition.getFrom().resolve(name);
+                        long size = fileHeader.getFullUnpackSize();
+                        copyWithProgress(
+                                index,
+                                size,
+                                source,
+                                to,
+                                inputStream::read,
+                                outputStream::write);
+                    } catch (FileAlreadyExistsException e) {
+                        throw e;
+                    } catch (IOException e) {
+                        Files.delete(to);
+                        throw e;
+                    }
+                    if (fileHeader.getMTime() != null) {
+                        Files.setLastModifiedTime(to, from(fileHeader.getMTime()));
+                    } else if (fileHeader.getCTime() != null) {
+                        Files.setLastModifiedTime(to, from(fileHeader.getCTime()));
+                    }
                 }
+            });
+        } catch (UnsupportedRarV5Exception e) {
+            if (ArchiveUtils.isUnrarAvailable()) {
+                extractRarEntriesWithUnrar(copyDefinition, index);
+            } else {
+                throw e;
             }
-        });
+        }
+    }
+
+    private void extractRarEntriesWithUnrar(CopyDefinition copyDefinition, int index)
+            throws Exception {
+        ImmutableSet<String> desiredEntryNames = copyDefinition.getArchiveCopyDefinitions().stream()
+                .map(ArchiveCopyDefinition::getSource)
+                .collect(ImmutableSet.toImmutableSet());
+        ArchiveUtils.readRarWithUnrar(
+                copyDefinition.getFrom(),
+                desiredEntryNames,
+                (entry, processInputStream) -> {
+                    String name = entry.getName();
+                    ArchiveCopyDefinition archiveCopyDefinition =
+                            findArchiveCopyDefinition(copyDefinition, name);
+                    if (archiveCopyDefinition == null) {
+                        return;
+                    }
+                    Path to =
+                            copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
+                    try (OutputStream outputStream = Files.newOutputStream(to)) {
+                        Path source = copyDefinition.getFrom().resolve(name);
+                        long size = entry.getSize();
+                        copyWithProgress(
+                                index,
+                                size,
+                                source,
+                                to,
+                                processInputStream::read,
+                                outputStream::write);
+                    } catch (FileAlreadyExistsException e) {
+                        throw e;
+                    } catch (IOException e) {
+                        Files.delete(to);
+                        throw e;
+                    }
+                    if (entry.getModificationTime() != null) {
+                        Files.setLastModifiedTime(to, from(entry.getModificationTime()));
+                    }
+                });
     }
 
     private void extractSevenZipEntries(CopyDefinition copyDefinition, int index)
@@ -360,10 +410,10 @@ public final class FileCopier {
                 throw e;
             }
             if (sevenZArchiveEntry.getHasLastModifiedDate()) {
-                FileTime fileTime = fromDate(sevenZArchiveEntry.getLastModifiedDate());
+                FileTime fileTime = from(sevenZArchiveEntry.getLastModifiedDate());
                 Files.setLastModifiedTime(to, fileTime);
             } else if (sevenZArchiveEntry.getHasCreationDate()) {
-                FileTime fileTime = fromDate(sevenZArchiveEntry.getCreationDate());
+                FileTime fileTime = from(sevenZArchiveEntry.getCreationDate());
                 Files.setLastModifiedTime(to, fileTime);
             }
         });
@@ -402,7 +452,7 @@ public final class FileCopier {
                         throw e;
                     }
                     if (tarArchiveEntry.getLastModifiedDate() != null) {
-                        FileTime fileTime = fromDate(tarArchiveEntry.getLastModifiedDate());
+                        FileTime fileTime = from(tarArchiveEntry.getLastModifiedDate());
                         Files.setLastModifiedTime(to, fileTime);
                     }
                 });
@@ -604,9 +654,7 @@ public final class FileCopier {
         }
     }
 
-    private void fromZipToZipRaw(
-            CopyDefinition copyDefinition,
-            int index) throws IOException {
+    private void fromZipToZipRaw(CopyDefinition copyDefinition, int index) throws IOException {
         try (ZipArchiveOutputStream zipArchiveOutputStream =
                 new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
             ArchiveUtils.readZip(copyDefinition.getFrom(), (zipFile, zipArchiveEntry) -> {
@@ -656,9 +704,7 @@ public final class FileCopier {
         }
     }
 
-    private void fromZipToZip(
-            CopyDefinition copyDefinition,
-            int index) throws IOException {
+    private void fromZipToZip(CopyDefinition copyDefinition, int index) throws IOException {
         try (ZipArchiveOutputStream zipArchiveOutputStream =
                 new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
             ArchiveUtils.readZip(
@@ -692,9 +738,7 @@ public final class FileCopier {
         }
     }
 
-    private void fromZipToSevenZip(
-            CopyDefinition copyDefinition,
-            int index) throws IOException {
+    private void fromZipToSevenZip(CopyDefinition copyDefinition, int index) throws IOException {
         try (SevenZOutputFile sevenZOutputFile =
                 new SevenZOutputFile(copyDefinition.getTo().toFile())) {
             ArchiveUtils.readZip(
@@ -768,9 +812,7 @@ public final class FileCopier {
         }
     }
 
-    private void fromRarToZip(
-            CopyDefinition copyDefinition,
-            int index) throws Exception {
+    private void fromRarToZip(CopyDefinition copyDefinition, int index) throws Exception {
         try (ZipArchiveOutputStream zipArchiveOutputStream =
                 new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
             ArchiveUtils.readRar(
@@ -790,11 +832,56 @@ public final class FileCopier {
                                     copyDefinition,
                                     archiveCopyDefinition,
                                     name,
-                                    fromDate(fileHeader.getCTime()),
-                                    fromDate(fileHeader.getMTime()),
-                                    fromDate(fileHeader.getATime()),
+                                    from(fileHeader.getCTime()),
+                                    from(fileHeader.getMTime()),
+                                    from(fileHeader.getATime()),
                                     fileHeader.getFullUnpackSize());
                         }
+                    });
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (UnsupportedRarV5Exception e) {
+            if (ArchiveUtils.isUnrarAvailable()) {
+                fromRarWithUnrarToZip(copyDefinition, index);
+            } else {
+                Files.delete(copyDefinition.getTo());
+                throw e;
+            }
+        } catch (IOException | RarException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromRarWithUnrarToZip(CopyDefinition copyDefinition, int index) throws Exception {
+        try (ZipArchiveOutputStream zipArchiveOutputStream =
+                new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
+            ImmutableSet<String> desiredEntryNames =
+                    copyDefinition.getArchiveCopyDefinitions().stream()
+                            .map(ArchiveCopyDefinition::getSource)
+                            .collect(ImmutableSet.toImmutableSet());
+            ArchiveUtils.readRarWithUnrar(
+                    copyDefinition.getFrom(),
+                    desiredEntryNames,
+                    (entry, processInputStream) -> {
+                        String name = entry.getName();
+                        ArchiveCopyDefinition archiveCopyDefinition =
+                                findArchiveCopyDefinition(copyDefinition, name);
+                        if (archiveCopyDefinition == null) {
+                            return;
+                        }
+                        FileTime time = from(entry.getModificationTime());
+                        toZip(
+                                index,
+                                processInputStream::read,
+                                zipArchiveOutputStream,
+                                copyDefinition,
+                                archiveCopyDefinition,
+                                name,
+                                time,
+                                time,
+                                time,
+                                entry.getSize());
                     });
         } catch (FileAlreadyExistsException e) {
             throw e;
@@ -804,9 +891,7 @@ public final class FileCopier {
         }
     }
 
-    private void fromRarToSevenZip(
-            CopyDefinition copyDefinition,
-            int index) throws Exception {
+    private void fromRarToSevenZip(CopyDefinition copyDefinition, int index) throws Exception {
         try (SevenZOutputFile sevenZOutputFile =
                 new SevenZOutputFile(copyDefinition.getTo().toFile())) {
             ArchiveUtils.readRar(
@@ -834,16 +919,60 @@ public final class FileCopier {
                     });
         } catch (FileAlreadyExistsException e) {
             throw e;
+        } catch (UnsupportedRarV5Exception e) {
+            if (ArchiveUtils.isUnrarAvailable()) {
+                fromRarWithUnrarToSevenZip(copyDefinition, index);
+            } else {
+                Files.delete(copyDefinition.getTo());
+                throw e;
+            }
         } catch (IOException | RarException e) {
             Files.delete(copyDefinition.getTo());
             throw e;
         }
     }
 
-    private void fromRarToTar(
-            ArchiveType archiveType,
-            CopyDefinition copyDefinition,
-            int index) throws Exception {
+    private void fromRarWithUnrarToSevenZip(CopyDefinition copyDefinition, int index)
+            throws Exception {
+        try (SevenZOutputFile sevenZOutputFile =
+                new SevenZOutputFile(copyDefinition.getTo().toFile())) {
+            ImmutableSet<String> desiredEntryNames =
+                    copyDefinition.getArchiveCopyDefinitions().stream()
+                            .map(ArchiveCopyDefinition::getSource)
+                            .collect(ImmutableSet.toImmutableSet());
+            ArchiveUtils.readRarWithUnrar(
+                    copyDefinition.getFrom(),
+                    desiredEntryNames,
+                    (entry, processInputStream) -> {
+                        String name = entry.getName();
+                        ArchiveCopyDefinition archiveCopyDefinition =
+                                findArchiveCopyDefinition(copyDefinition, name);
+                        if (archiveCopyDefinition == null) {
+                            return;
+                        }
+                        Date time = toDate(entry.getModificationTime());
+                        toSevenZip(
+                                index,
+                                processInputStream::read,
+                                sevenZOutputFile,
+                                copyDefinition,
+                                archiveCopyDefinition,
+                                name,
+                                time,
+                                time,
+                                time,
+                                entry.getSize());
+                    });
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException | RarException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromRarToTar(ArchiveType archiveType, CopyDefinition copyDefinition, int index)
+            throws Exception {
         OutputStream outputStream =
                 ArchiveUtils.outputStreamForTar(archiveType, copyDefinition.getTo());
         if (outputStream == null) {
@@ -874,15 +1003,63 @@ public final class FileCopier {
                     });
         } catch (FileAlreadyExistsException e) {
             throw e;
+        } catch (UnsupportedRarV5Exception e) {
+            if (ArchiveUtils.isUnrarAvailable()) {
+                fromRarWithUnrarToTar(archiveType, copyDefinition, index);
+            } else {
+                Files.delete(copyDefinition.getTo());
+                throw e;
+            }
         } catch (IOException | RarException e) {
             Files.delete(copyDefinition.getTo());
             throw e;
         }
     }
 
-    private void fromSevenZipToZip(
+    private void fromRarWithUnrarToTar(
+            ArchiveType archiveType,
             CopyDefinition copyDefinition,
-            int index) throws IOException {
+            int index) throws Exception {
+        OutputStream outputStream =
+                ArchiveUtils.outputStreamForTar(archiveType, copyDefinition.getTo());
+        if (outputStream == null) {
+            return;
+        }
+        try (TarArchiveOutputStream tarArchiveOutputStream =
+                new TarArchiveOutputStream(outputStream)) {
+            ImmutableSet<String> desiredEntryNames =
+                    copyDefinition.getArchiveCopyDefinitions().stream()
+                            .map(ArchiveCopyDefinition::getSource)
+                            .collect(ImmutableSet.toImmutableSet());
+            ArchiveUtils.readRarWithUnrar(
+                    copyDefinition.getFrom(),
+                    desiredEntryNames,
+                    (entry, processInputStream) -> {
+                        String name = entry.getName();
+                        ArchiveCopyDefinition archiveCopyDefinition =
+                                findArchiveCopyDefinition(copyDefinition, name);
+                        if (archiveCopyDefinition == null) {
+                            return;
+                        }
+                        toTar(
+                                index,
+                                processInputStream::read,
+                                tarArchiveOutputStream,
+                                copyDefinition,
+                                archiveCopyDefinition,
+                                name,
+                                toDate(entry.getModificationTime()),
+                                entry.getSize());
+                    });
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException | RarException e) {
+            Files.delete(copyDefinition.getTo());
+            throw e;
+        }
+    }
+
+    private void fromSevenZipToZip(CopyDefinition copyDefinition, int index) throws IOException {
         try (ZipArchiveOutputStream zipArchiveOutputStream =
                 new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
             ArchiveUtils.readSevenZip(
@@ -894,13 +1071,13 @@ public final class FileCopier {
                             copyDefinition,
                             sevenZArchiveEntry.getName(),
                             sevenZArchiveEntry.getHasCreationDate()
-                                    ? fromDate(sevenZArchiveEntry.getCreationDate())
+                                    ? from(sevenZArchiveEntry.getCreationDate())
                                     : null,
                             sevenZArchiveEntry.getHasLastModifiedDate()
-                                    ? fromDate(sevenZArchiveEntry.getLastModifiedDate())
+                                    ? from(sevenZArchiveEntry.getLastModifiedDate())
                                     : null,
                             sevenZArchiveEntry.getHasAccessDate()
-                                    ? fromDate(sevenZArchiveEntry.getAccessDate())
+                                    ? from(sevenZArchiveEntry.getAccessDate())
                                     : null,
                             sevenZArchiveEntry.getSize()));
         } catch (FileAlreadyExistsException e) {
@@ -911,9 +1088,8 @@ public final class FileCopier {
         }
     }
 
-    private void fromSevenZipToSevenZip(
-            CopyDefinition copyDefinition,
-            int index) throws IOException {
+    private void fromSevenZipToSevenZip(CopyDefinition copyDefinition, int index)
+            throws IOException {
         try (SevenZOutputFile sevenZOutputFile =
                 new SevenZOutputFile(copyDefinition.getTo().toFile())) {
             ArchiveUtils.readSevenZip(
@@ -987,7 +1163,7 @@ public final class FileCopier {
                             copyDefinition,
                             tarArchiveEntry.getName(),
                             null,
-                            fromDate(tarArchiveEntry.getLastModifiedDate()),
+                            from(tarArchiveEntry.getLastModifiedDate()),
                             null,
                             tarArchiveEntry.getRealSize()));
         } catch (FileAlreadyExistsException e) {
@@ -1242,8 +1418,20 @@ public final class FileCopier {
     }
 
     @Nullable
-    private static FileTime fromDate(@Nullable Date date) {
+    private Date toDate(@Nullable LocalDateTime date) {
+        return date != null ? new Date(date.atZone(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()) : null;
+    }
+
+    @Nullable
+    private static FileTime from(@Nullable Date date) {
         return date != null ? FileTime.fromMillis(date.getTime()) : null;
+    }
+
+    @Nullable
+    private static FileTime from(@Nullable LocalDateTime date) {
+        return date != null ? FileTime.from(date.atZone(ZoneId.systemDefault()).toInstant()) : null;
     }
 
     @Nullable

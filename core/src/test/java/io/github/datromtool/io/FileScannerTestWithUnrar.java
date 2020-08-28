@@ -8,7 +8,7 @@ import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.domain.datafile.Rom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
+import org.junit.jupiter.api.condition.EnabledIf;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,17 +18,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static io.github.datromtool.util.TestUtils.getFilename;
-import static io.github.datromtool.util.TestUtils.isRar5;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import static java.util.Objects.requireNonNull;
 
-@DisabledIf(
+@EnabledIf(
         value = "io.github.datromtool.io.ArchiveUtils#isUnrarAvailable",
-        disabledReason = "'unrar' is available")
-class FileScannerTest {
+        disabledReason = "'unrar' is not available")
+class FileScannerTestWithUnrar {
 
     private static final String TEST_DATA_FOLDER = "../test-data";
     private Path testDataSource;
@@ -63,12 +62,9 @@ class FileScannerTest {
         FileScanner fileScanner = new FileScanner(AppConfig.builder().build(), null, null, null);
         ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
         assertFalse(results.isEmpty());
-        assertEquals(crc32sums.size() * 17, results.size());
+        assertEquals(crc32sums.size() * 18, results.size());
         for (FileScanner.Result i : results) {
             assertEquals(i.getUnheaderedSize(), i.getSize());
-            if (isRar5(i)) {
-                continue;
-            }
             String filename = getFilename(i);
             Pair<Long, String> crc32 = crc32sums.get(filename);
             assertNotNull(crc32);
@@ -88,12 +84,9 @@ class FileScannerTest {
                 null);
         ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
         assertFalse(results.isEmpty());
-        assertEquals((crc32sums.size() - 4) * 17, results.size());
+        assertEquals((crc32sums.size() - 4) * 18, results.size());
         for (FileScanner.Result i : results) {
             assertEquals(i.getUnheaderedSize(), i.getSize());
-            if (isRar5(i)) {
-                continue;
-            }
             String filename = getFilename(i);
             Pair<Long, String> crc32 = crc32sums.get(filename);
             assertNotNull(crc32);
@@ -113,12 +106,9 @@ class FileScannerTest {
                 null);
         ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
         assertFalse(results.isEmpty());
-        assertEquals((crc32sums.size() - 4) * 17, results.size());
+        assertEquals((crc32sums.size() - 4) * 18, results.size());
         for (FileScanner.Result i : results) {
             assertEquals(i.getUnheaderedSize(), i.getSize());
-            if (isRar5(i)) {
-                continue;
-            }
             String filename = getFilename(i);
             Pair<Long, String> crc32 = crc32sums.get(filename);
             assertNotNull(crc32);
@@ -138,12 +128,9 @@ class FileScannerTest {
                 null);
         ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
         assertFalse(results.isEmpty());
-        assertEquals((crc32sums.size() - 8) * 17, results.size());
+        assertEquals((crc32sums.size() - 8) * 18, results.size());
         for (FileScanner.Result i : results) {
             assertEquals(i.getUnheaderedSize(), i.getSize());
-            if (isRar5(i)) {
-                continue;
-            }
             String filename = getFilename(i);
             Pair<Long, String> crc32 = crc32sums.get(filename);
             assertNotNull(crc32);
