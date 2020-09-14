@@ -44,8 +44,10 @@ public final class GameFilterer {
                 .filter(this::filterBeta)
                 .filter(this::filterDemo)
                 .filter(this::filterSample)
-                .filter(this::filterRegion)
-                .filter(this::filterLanguage)
+                .filter(this::filterIncludeRegion)
+                .filter(this::filterIncludeLanguage)
+                .filter(this::filterExcludeRegion)
+                .filter(this::filterExcludeLanguage)
                 .filter(this::filterExcludes)
                 .collect(ImmutableList.toImmutableList());
         if (logger.isDebugEnabled()) {
@@ -60,7 +62,7 @@ public final class GameFilterer {
     }
 
     private boolean filterBioses(ParsedGame p) {
-        boolean result = !filter.isNoBios() || !p.isBios();
+        boolean result = filter.isAllowBios() || !p.isBios();
         if (!result) {
             logger.debug("BIOS filter removed '{}'", p.getGame().getName());
         }
@@ -68,7 +70,7 @@ public final class GameFilterer {
     }
 
     private boolean filterProto(ParsedGame p) {
-        boolean result = !filter.isNoProto() || p.getProto().isEmpty();
+        boolean result = filter.isAllowProto() || p.getProto().isEmpty();
         if (!result) {
             logger.debug("Proto filter removed '{}'", p.getGame().getName());
         }
@@ -76,7 +78,7 @@ public final class GameFilterer {
     }
 
     private boolean filterBeta(ParsedGame p) {
-        boolean result = !filter.isNoBeta() || p.getBeta().isEmpty();
+        boolean result = filter.isAllowBeta() || p.getBeta().isEmpty();
         if (!result) {
             logger.debug("Beta filter removed '{}'", p.getGame().getName());
         }
@@ -84,7 +86,7 @@ public final class GameFilterer {
     }
 
     private boolean filterDemo(ParsedGame p) {
-        boolean result = !filter.isNoDemo() || p.getDemo().isEmpty();
+        boolean result = filter.isAllowDemo() || p.getDemo().isEmpty();
         if (!result) {
             logger.debug("Demo filter removed '{}'", p.getGame().getName());
         }
@@ -92,27 +94,49 @@ public final class GameFilterer {
     }
 
     private boolean filterSample(ParsedGame p) {
-        boolean result = !filter.isNoSample() || p.getSample().isEmpty();
+        boolean result = filter.isAllowSample() || p.getSample().isEmpty();
         if (!result) {
             logger.debug("Sample filter removed '{}'", p.getGame().getName());
         }
         return result;
     }
 
-    private boolean filterRegion(ParsedGame p) {
-        boolean result = containsAny(p::getRegionsStream, filter.getRegions());
+    private boolean filterIncludeRegion(ParsedGame p) {
+        boolean result = containsAny(p::getRegionsStream, filter.getIncludeRegions());
         if (!result) {
             logger.debug("Region filter removed '{}'", p.getGame().getName());
         }
         return result;
     }
 
-    private boolean filterLanguage(ParsedGame p) {
-        boolean result = containsAny(p::getLanguagesStream, filter.getLanguages());
+    private boolean filterIncludeLanguage(ParsedGame p) {
+        boolean result = containsAny(p::getLanguagesStream, filter.getIncludeLanguages());
         if (!result) {
             logger.debug("Language filter removed '{}'", p.getGame().getName());
         }
         return result;
+    }
+
+    private boolean filterExcludeRegion(ParsedGame p) {
+        boolean result = containsNone(p::getRegionsStream, filter.getExcludeRegions());
+        if (!result) {
+            logger.debug("Region exclusion filter removed '{}'", p.getGame().getName());
+        }
+        return result;
+    }
+
+    private boolean filterExcludeLanguage(ParsedGame p) {
+        boolean result = containsNone(p::getLanguagesStream, filter.getExcludeLanguages());
+        if (!result) {
+            logger.debug("Language exclusion filter removed '{}'", p.getGame().getName());
+        }
+        return result;
+    }
+
+    private static boolean containsNone(
+            Supplier<Stream<String>> streamSupplier,
+            Collection<String> filter) {
+        return filter.isEmpty() || streamSupplier.get().noneMatch(filter::contains);
     }
 
     private static boolean containsAny(

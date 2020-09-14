@@ -10,7 +10,7 @@ import java.util.Properties;
 import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 import static com.fasterxml.jackson.databind.SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS;
 
-final class GitVersionProvider implements CommandLine.IVersionProvider {
+public final class GitVersionProvider implements CommandLine.IVersionProvider {
 
     public static final String TITLE = "DATROMTool - *that* tool to work with DATs and ROMs!";
 

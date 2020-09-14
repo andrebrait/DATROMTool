@@ -33,7 +33,7 @@ public class AppConfig {
 
         @Builder.Default
         @NonNull
-        Integer threads = Runtime.getRuntime().availableProcessors();
+        Integer threads = Math.max(1, Runtime.getRuntime().availableProcessors() / 2);
 
     }
 
@@ -47,7 +47,7 @@ public class AppConfig {
 
         @Builder.Default
         @NonNull
-        Integer threads = Runtime.getRuntime().availableProcessors();
+        Integer threads = Math.max(1, Runtime.getRuntime().availableProcessors() / 2);
 
     }
 

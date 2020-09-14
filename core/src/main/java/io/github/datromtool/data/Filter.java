@@ -24,11 +24,19 @@ public class Filter {
 
     @NonNull
     @Builder.Default
-    ImmutableSet<String> regions = ImmutableSet.of();
+    ImmutableSet<String> includeRegions = ImmutableSet.of();
 
     @NonNull
     @Builder.Default
-    ImmutableSet<String> languages = ImmutableSet.of();
+    ImmutableSet<String> excludeRegions = ImmutableSet.of();
+
+    @NonNull
+    @Builder.Default
+    ImmutableSet<String> includeLanguages = ImmutableSet.of();
+
+    @NonNull
+    @Builder.Default
+    ImmutableSet<String> excludeLanguages = ImmutableSet.of();
 
     @NonNull
     @Builder.Default
@@ -39,18 +47,18 @@ public class Filter {
      */
 
     @Builder.Default
-    boolean noProto = false;
+    boolean allowProto = true;
 
     @Builder.Default
-    boolean noBeta = false;
+    boolean allowBeta = true;
 
     @Builder.Default
-    boolean noDemo = false;
+    boolean allowDemo = true;
 
     @Builder.Default
-    boolean noSample = false;
+    boolean allowSample = true;
 
     @Builder.Default
-    boolean noBios = false;
+    boolean allowBios = true;
 
 }

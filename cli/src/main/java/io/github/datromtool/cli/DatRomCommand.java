@@ -6,8 +6,10 @@ import picocli.CommandLine;
 @CommandLine.Command(
         name = "datrom",
         description = "Base command for " + GitVersionProvider.TITLE,
+        sortOptions = false,
         versionProvider = GitVersionProvider.class,
         mixinStandardHelpOptions = true,
+        showEndOfOptionsDelimiterInUsageHelp = true,
         subcommands = {OneGameOneRomCommand.class})
 public final class DatRomCommand {
 
