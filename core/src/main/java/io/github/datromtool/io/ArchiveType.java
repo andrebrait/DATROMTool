@@ -1,5 +1,6 @@
 package io.github.datromtool.io;
 
+import lombok.Getter;
 import org.apache.commons.compress.compressors.bzip2.BZip2Utils;
 import org.apache.commons.compress.compressors.gzip.GzipUtils;
 import org.apache.commons.compress.compressors.lzma.LZMAUtils;
@@ -15,30 +16,40 @@ import static java.util.regex.Pattern.compile;
 
 public enum ArchiveType {
 
-    NONE(s -> false),
-    // Archive formats
-    ZIP(s -> Constants.ZIP.matcher(s).find()),
-    RAR(s -> Constants.RAR.matcher(s).find()),
-    SEVEN_ZIP(s -> Constants.SEVEN_ZIP.matcher(s).find()
-            && !Constants.TAR_7Z.matcher(s).find()),
-    TAR(s -> Constants.TAR.matcher(s).find()),
+    NONE(true, s -> false),
+    ZIP(true, s -> Constants.ZIP.matcher(s).find()),
+    RAR(false, s -> Constants.RAR.matcher(s).find()),
+    SEVEN_ZIP(
+            true,
+            s -> Constants.SEVEN_ZIP.matcher(s).find()
+                    && !Constants.TAR_7Z.matcher(s).find()),
+    TAR(true, s -> Constants.TAR.matcher(s).find()),
+    TAR_BZ2(
+            true,
+            s -> BZip2Utils.isCompressedFilename(s)
+                    && Constants.TAR.matcher(BZip2Utils.getUncompressedFilename(s)).find()),
+    TAR_GZ(
+            true,
+            s -> GzipUtils.isCompressedFilename(s)
+                    && Constants.TAR.matcher(GzipUtils.getUncompressedFilename(s)).find()),
+    TAR_LZ4(true, s -> Constants.TAR_LZ4.matcher(s).find()),
+    TAR_LZMA(
+            LZMAUtils.isLZMACompressionAvailable(),
+            s -> LZMAUtils.isLZMACompressionAvailable()
+                    && LZMAUtils.isCompressedFilename(s)
+                    && Constants.TAR.matcher(LZMAUtils.getUncompressedFilename(s)).find()),
+    TAR_XZ(
+            XZUtils.isXZCompressionAvailable(),
+            s -> XZUtils.isXZCompressionAvailable()
+                    && XZUtils.isCompressedFilename(s)
+                    && Constants.TAR.matcher(XZUtils.getUncompressedFilename(s)).find());
 
-    // Compressed archive formats
-    TAR_BZ2(s -> BZip2Utils.isCompressedFilename(s)
-            && Constants.TAR.matcher(BZip2Utils.getUncompressedFilename(s)).find()),
-    TAR_GZ(s -> GzipUtils.isCompressedFilename(s)
-            && Constants.TAR.matcher(GzipUtils.getUncompressedFilename(s)).find()),
-    TAR_LZ4(s -> Constants.TAR_LZ4.matcher(s).find()),
-    TAR_LZMA(s -> LZMAUtils.isLZMACompressionAvailable()
-            && LZMAUtils.isCompressedFilename(s)
-            && Constants.TAR.matcher(LZMAUtils.getUncompressedFilename(s)).find()),
-    TAR_XZ(s -> XZUtils.isXZCompressionAvailable()
-            && XZUtils.isCompressedFilename(s)
-            && Constants.TAR.matcher(XZUtils.getUncompressedFilename(s)).find());
-
+    @Getter
+    private final boolean availableAsOutput;
     private final Predicate<String> predicate;
 
-    ArchiveType(Predicate<String> predicate) {
+    ArchiveType(boolean availableAsOutput, Predicate<String> predicate) {
+        this.availableAsOutput = availableAsOutput;
         this.predicate = predicate;
     }
 

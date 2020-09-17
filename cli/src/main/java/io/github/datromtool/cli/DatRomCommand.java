@@ -1,12 +1,13 @@
 package io.github.datromtool.cli;
 
-import io.github.datromtool.cli.command.OneGameOneRomCommand;
+import io.github.datromtool.cli.command.onegameonerom.OneGameOneRomCommand;
 import picocli.CommandLine;
 
 @CommandLine.Command(
         name = "datrom",
         description = "Base command for " + GitVersionProvider.TITLE,
         sortOptions = false,
+        abbreviateSynopsis = true,
         versionProvider = GitVersionProvider.class,
         mixinStandardHelpOptions = true,
         showEndOfOptionsDelimiterInUsageHelp = true,
