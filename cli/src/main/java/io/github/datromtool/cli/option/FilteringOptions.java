@@ -30,7 +30,7 @@ import static lombok.AccessLevel.PRIVATE;
 public final class FilteringOptions {
 
     @CommandLine.Option(
-            names = {"-ir", "--include-regions"},
+            names = {"--ir", "--include-regions"},
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
             description = "Include only entries with the given region codes",
@@ -39,7 +39,7 @@ public final class FilteringOptions {
     private List<String> includeRegions = ImmutableList.of();
 
     @CommandLine.Option(
-            names = {"-il", "--include-languages"},
+            names = {"--il", "--include-languages"},
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
             converter = LowerCaseConverter.class,
@@ -48,7 +48,7 @@ public final class FilteringOptions {
     private List<String> includeLanguages = ImmutableList.of();
 
     @CommandLine.Option(
-            names = {"-er", "--exclude-regions"},
+            names = {"--er", "--exclude-regions"},
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
             converter = UpperCaseConverter.class,
@@ -57,7 +57,7 @@ public final class FilteringOptions {
     private List<String> excludeRegions = ImmutableList.of();
 
     @CommandLine.Option(
-            names = {"-el", "--exclude-languages"},
+            names = {"--el", "--exclude-languages"},
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
             converter = LowerCaseConverter.class,

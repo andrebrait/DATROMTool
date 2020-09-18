@@ -27,7 +27,7 @@ import static lombok.AccessLevel.PRIVATE;
 public final class SortingOptions {
 
     @CommandLine.Option(
-            names = {"-sr", "--sort-regions"},
+            names = {"--sr", "--sort-regions"},
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
             converter = UpperCaseConverter.class,
@@ -36,7 +36,7 @@ public final class SortingOptions {
     private List<String> regions = ImmutableList.of();
 
     @CommandLine.Option(
-            names = {"-sl", "--sort-languages"},
+            names = {"--sl", "--sort-languages"},
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
             converter = LowerCaseConverter.class,

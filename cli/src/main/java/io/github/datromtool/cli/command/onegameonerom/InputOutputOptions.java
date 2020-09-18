@@ -2,6 +2,7 @@ package io.github.datromtool.cli.command.onegameonerom;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.datromtool.cli.ArchiveCompletionCandidates;
+import io.github.datromtool.cli.converter.ArchiveCompletionConverter;
 import io.github.datromtool.io.ArchiveType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,10 +37,11 @@ public final class InputOutputOptions {
     private Path outputDir;
 
     @CommandLine.Option(
-            names = {"-af", "--archive-format"},
+            names = {"--af", "--archive-format"},
             paramLabel = "FORMAT",
             description = "Output archive format (Default: ${DEFAULT-VALUE})\n"
                     + "Valid values: ${COMPLETION-CANDIDATES}",
+            converter = ArchiveCompletionConverter.class,
             completionCandidates = ArchiveCompletionCandidates.class,
             showDefaultValue = CommandLine.Help.Visibility.NEVER,
             defaultValue = "NONE")
