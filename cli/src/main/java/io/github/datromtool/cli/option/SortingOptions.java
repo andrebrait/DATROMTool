@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.cli.converter.LowerCaseConverter;
 import io.github.datromtool.cli.converter.UpperCaseConverter;
 import io.github.datromtool.data.SortingPreference;
+import io.github.datromtool.util.ArgumentException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -102,7 +103,7 @@ public final class SortingOptions {
             description = "Prefer parents regardless of versioning")
     boolean preferParents = false;
 
-    public SortingPreference toSortingPreference() throws IOException {
+    public SortingPreference toSortingPreference() throws ArgumentException, IOException {
         return SortingPreference.builder()
                 .regions(ImmutableSet.copyOf(regions))
                 .languages(ImmutableSet.copyOf(languages))

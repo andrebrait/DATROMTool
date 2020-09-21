@@ -8,6 +8,7 @@ import io.github.datromtool.Patterns;
 import io.github.datromtool.cli.converter.LowerCaseConverter;
 import io.github.datromtool.cli.converter.UpperCaseConverter;
 import io.github.datromtool.data.Filter;
+import io.github.datromtool.util.ArgumentException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -227,7 +228,7 @@ public final class FilteringOptions {
         return reallySet(allowUpdate);
     }
 
-    public Filter toFilter() throws IOException {
+    public Filter toFilter() throws ArgumentException, IOException {
         Filter.FilterBuilder builder = Filter.builder();
         builder.includeRegions(ImmutableSet.copyOf(includeRegions));
         builder.excludeRegions(ImmutableSet.copyOf(excludeRegions));

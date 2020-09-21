@@ -24,11 +24,17 @@ public final class ArgumentUtils {
     }
 
     public static ImmutableList<Pattern> combine(List<Pattern> patterns, List<Path> files)
-            throws IOException {
+            throws IOException, ArgumentException {
         ImmutableList.Builder<Pattern> builder = ImmutableList.builder();
         builder.addAll(patterns);
         for (Path file : files) {
-            builder.addAll(ArgumentUtils.parsePatterns(file));
+            try {
+                builder.addAll(ArgumentUtils.parsePatterns(file));
+            } catch (IOException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new ArgumentException(String.format("Error processing '%s'", file), e);
+            }
         }
         return builder.build();
     }

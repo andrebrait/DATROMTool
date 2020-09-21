@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.data.PostFilter;
+import io.github.datromtool.util.ArgumentException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,7 +41,7 @@ public final class PostFilteringOptions {
             description = "Read exclusion expressions from a file")
     private List<Path> postExcludesFiles = ImmutableList.of();
 
-    public PostFilter toPostFilter() throws IOException {
+    public PostFilter toPostFilter() throws ArgumentException, IOException {
         return PostFilter.builder()
                 .excludes(ImmutableSet.copyOf(combine(postExcludes, postExcludesFiles)))
                 .build();

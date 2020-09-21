@@ -11,6 +11,7 @@ import io.github.datromtool.data.Filter;
 import io.github.datromtool.data.PostFilter;
 import io.github.datromtool.data.SortingPreference;
 import io.github.datromtool.io.ArchiveType;
+import io.github.datromtool.util.ArgumentException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +21,8 @@ import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
 import picocli.CommandLine;
 
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -112,10 +115,29 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             SortingPreference sortingPreference = sortingOptions != null
                     ? sortingOptions.toSortingPreference()
                     : null;
-        } catch (Exception e) {
+        } catch (ArgumentException e) {
             throw new CommandLine.ParameterException(
                     commandSpec.commandLine(),
-                    "Error processing arguments",
+                    String.format(
+                            "Could not process arguments: %s: %s: %s",
+                            e.getMessage(),
+                            e.getCause().getClass().getSimpleName(),
+                            e.getCause().getMessage()),
+                    e);
+        } catch (NoSuchFileException e) {
+            throw new CommandLine.ParameterException(
+                    commandSpec.commandLine(),
+                    String.format(
+                            "Could not process arguments: File not found: %s",
+                            e.getMessage()),
+                    e);
+        } catch (IOException e) {
+            throw new CommandLine.ParameterException(
+                    commandSpec.commandLine(),
+                    String.format(
+                            "Could not process arguments: %s: %s",
+                            e.getClass().getSimpleName(),
+                            e.getMessage()),
                     e);
         }
         return 0;
