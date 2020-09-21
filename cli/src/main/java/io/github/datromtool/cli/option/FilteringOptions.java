@@ -3,8 +3,11 @@ package io.github.datromtool.cli.option;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import io.github.datromtool.Patterns;
 import io.github.datromtool.cli.converter.LowerCaseConverter;
 import io.github.datromtool.cli.converter.UpperCaseConverter;
+import io.github.datromtool.data.Filter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +16,13 @@ import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 import picocli.CommandLine;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
+import static io.github.datromtool.util.ArgumentUtils.combine;
 import static lombok.AccessLevel.NONE;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -148,6 +153,20 @@ public final class FilteringOptions {
     private Boolean allowUnlicensed;
 
     @CommandLine.Option(
+            names = "--dlc",
+            description = "Include/exclude DLCs",
+            negatable = true)
+    @Getter(NONE)
+    private Boolean allowDlc;
+
+    @CommandLine.Option(
+            names = "--update",
+            description = "Include/exclude software update entries",
+            negatable = true)
+    @Getter(NONE)
+    private Boolean allowUpdate;
+
+    @CommandLine.Option(
             names = "--no-all",
             description = "Exclude all the above")
     @Getter(NONE)
@@ -198,5 +217,51 @@ public final class FilteringOptions {
 
     public boolean isAllowUnlicensed() {
         return reallySet(allowUnlicensed);
+    }
+
+    public boolean isAllowDlc() {
+        return reallySet(allowDlc);
+    }
+
+    public boolean isAllowUpdate() {
+        return reallySet(allowUpdate);
+    }
+
+    public Filter toFilter() throws IOException {
+        Filter.FilterBuilder builder = Filter.builder();
+        builder.includeRegions(ImmutableSet.copyOf(includeRegions));
+        builder.excludeRegions(ImmutableSet.copyOf(excludeRegions));
+        builder.includeLanguages(ImmutableSet.copyOf(includeLanguages));
+        builder.excludeLanguages(ImmutableSet.copyOf(excludeLanguages));
+        builder.allowProto(isAllowProto());
+        builder.allowBeta(isAllowBeta());
+        builder.allowDemo(isAllowDemo());
+        builder.allowSample(isAllowSample());
+        builder.allowBios(isAllowBios());
+        ImmutableSet.Builder<Pattern> excludesBuilder = ImmutableSet.builder();
+        if (!isAllowProgram()) {
+            excludesBuilder.add(Patterns.PROGRAM);
+        }
+        if (!isAllowChip()) {
+            excludesBuilder.add(Patterns.ENHANCEMENT_CHIP);
+        }
+        if (!isAllowPirate()) {
+            excludesBuilder.add(Patterns.PIRATE);
+        }
+        if (!isAllowPromo()) {
+            excludesBuilder.add(Patterns.PROMO);
+        }
+        if (!isAllowUnlicensed()) {
+            excludesBuilder.add(Patterns.UNLICENSED);
+        }
+        if (!isAllowDlc()) {
+            excludesBuilder.add(Patterns.DLC);
+        }
+        if (!isAllowUpdate()) {
+            excludesBuilder.add(Patterns.UPDATE);
+        }
+        excludesBuilder.addAll(combine(excludes, excludesFiles));
+        builder.excludes(excludesBuilder.build());
+        return builder.build();
     }
 }

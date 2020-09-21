@@ -2,8 +2,10 @@ package io.github.datromtool.cli.option;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.cli.converter.LowerCaseConverter;
 import io.github.datromtool.cli.converter.UpperCaseConverter;
+import io.github.datromtool.data.SortingPreference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +13,13 @@ import lombok.NoArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 import picocli.CommandLine;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
+import static io.github.datromtool.util.ArgumentUtils.combine;
 import static lombok.AccessLevel.PRIVATE;
 
 @Data
@@ -97,5 +101,20 @@ public final class SortingOptions {
             names = "--prefer-parents",
             description = "Prefer parents regardless of versioning")
     boolean preferParents = false;
+
+    public SortingPreference toSortingPreference() throws IOException {
+        return SortingPreference.builder()
+                .regions(ImmutableSet.copyOf(regions))
+                .languages(ImmutableSet.copyOf(languages))
+                .prefers(ImmutableSet.copyOf(combine(prefers, prefersFiles)))
+                .avoids(ImmutableSet.copyOf(combine(avoids, avoidsFiles)))
+                .prioritizeLanguages(prioritizeLanguages)
+                .earlyVersions(earlyVersions)
+                .earlyRevisions(earlyRevisions)
+                .earlyPrereleases(earlyPrereleases)
+                .preferPrereleases(preferPrereleases)
+                .preferParents(preferParents)
+                .build();
+    }
 
 }

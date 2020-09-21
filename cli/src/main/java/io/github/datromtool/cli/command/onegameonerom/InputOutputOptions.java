@@ -1,8 +1,9 @@
 package io.github.datromtool.cli.command.onegameonerom;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.collect.ImmutableList;
 import io.github.datromtool.cli.ArchiveCompletionCandidates;
-import io.github.datromtool.cli.converter.ArchiveCompletionConverter;
+import io.github.datromtool.cli.converter.ArchiveTypeConverter;
 import io.github.datromtool.io.ArchiveType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import lombok.extern.jackson.Jacksonized;
 import picocli.CommandLine;
 
 import java.nio.file.Path;
+import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static lombok.AccessLevel.PRIVATE;
@@ -24,27 +26,35 @@ import static lombok.AccessLevel.PRIVATE;
 @JsonInclude(NON_DEFAULT)
 public final class InputOutputOptions {
 
-    @CommandLine.Option(
-            names = {"-i", "--input-dir"},
-            paramLabel = "PATH",
-            description = "Base directory for scanning ROM files")
-    private Path inputDir;
+    public static final String INPUT_DIR_OPTION = "--input-dir";
+    public static final String OUTPUT_DIR_OPTION = "--output-dir";
+    public static final String ARCHIVE_FORMAT_OPTION = "--archive";
+    public static final String FORCE_SUBFOLDER_OPTION = "--force-subfolder";
 
     @CommandLine.Option(
-            names = {"-o", "--output-dir"},
+            names = {"-i", INPUT_DIR_OPTION},
+            paramLabel = "PATH",
+            description = "Base directory for scanning ROM files")
+    private List<Path> inputDirs = ImmutableList.of();
+
+    @CommandLine.Option(
+            names = {"-o", OUTPUT_DIR_OPTION},
             paramLabel = "PATH",
             description = "Output directory for the resulting files")
     private Path outputDir;
 
     @CommandLine.Option(
-            names = {"--af", "--archive-format"},
+            names = {"-a", ARCHIVE_FORMAT_OPTION},
             paramLabel = "FORMAT",
-            description = "Output archive format (Default: ${DEFAULT-VALUE})\n"
-                    + "Valid values: ${COMPLETION-CANDIDATES}",
-            converter = ArchiveCompletionConverter.class,
+            description = "Archive format for output. Options: ${COMPLETION-CANDIDATES}",
+            converter = ArchiveTypeConverter.class,
             completionCandidates = ArchiveCompletionCandidates.class,
-            showDefaultValue = CommandLine.Help.Visibility.NEVER,
-            defaultValue = "NONE")
-    private ArchiveType outputFormat;
+            showDefaultValue = CommandLine.Help.Visibility.NEVER)
+    private ArchiveType archiveType = ArchiveType.NONE;
+
+    @CommandLine.Option(
+            names = FORCE_SUBFOLDER_OPTION,
+            description = "Create subfolders even for entries with one file")
+    private boolean forceSubfolder;
 
 }
