@@ -1,7 +1,9 @@
 package io.github.datromtool;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import io.github.datromtool.data.Filter;
+import io.github.datromtool.data.Pair;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.PostFilter;
 import io.github.datromtool.domain.datafile.Game;
@@ -11,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -183,6 +186,14 @@ public final class GameFilterer {
             }
         }
         return ImmutableList.copyOf(input);
+    }
+
+    public ImmutableMap<String, ImmutableList<ParsedGame>> postFilter(
+            Map<String, ? extends Collection<ParsedGame>> input) {
+        return input.entrySet().stream()
+                .map(e -> Pair.of(e.getKey(), postFilter(e.getValue())))
+                .filter(p -> !p.getRight().isEmpty())
+                .collect(ImmutableMap.toImmutableMap(Pair::getLeft, Pair::getRight));
     }
 
 }

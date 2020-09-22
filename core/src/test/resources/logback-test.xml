@@ -9,10 +9,10 @@
         </encoder>
     </appender>
 
-    <root level="info">
+    <root level="INFO">
         <appender-ref ref="STDERR"/>
     </root>
 
-    <logger name="com.github.junrar.Archive" level="error"/>
+    <logger name="com.github.junrar.Archive" level="ERROR"/>
 
 </configuration>

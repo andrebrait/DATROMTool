@@ -6,6 +6,6 @@ public final class LowerCaseConverter implements CommandLine.ITypeConverter<Stri
 
     @Override
     public String convert(String value) {
-        return value.toLowerCase();
+        return value.trim().toLowerCase();
     }
 }

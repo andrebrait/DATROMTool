@@ -17,8 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -72,13 +72,15 @@ class FileScannerParameters {
 
     public static FileScannerParameters forDatWithDetector(
             @Nonnull AppConfig appConfig,
-            @Nonnull Datafile datafile,
-            @Nullable Detector detector) {
+            @Nonnull List<Datafile> datafiles,
+            @Nonnull List<Detector> detectors) {
         final int maxBuffer = appConfig.getScanner().getMaxBufferSize();
         final int bufferSize;
         final long maxRomSize;
         final boolean useLazyDetector;
-        final ImmutableSet<ArchiveType> alsoScanArchives = datafile.getGames().stream()
+        final ImmutableSet<ArchiveType> alsoScanArchives = datafiles.stream()
+                .map(Datafile::getGames)
+                .flatMap(Collection::stream)
                 .map(Game::getRoms)
                 .flatMap(Collection::stream)
                 .filter(r -> r.getSize() != null)
@@ -86,17 +88,21 @@ class FileScannerParameters {
                 .map(ArchiveType::parse)
                 .filter(at -> at != ArchiveType.NONE)
                 .collect(ImmutableSet.toImmutableSet());
-        final long minRomSize = datafile.getGames().stream()
+        final long minRomSize = datafiles.stream()
+                .map(Datafile::getGames)
+                .flatMap(Collection::stream)
                 .map(Game::getRoms)
                 .flatMap(Collection::stream)
                 .filter(r -> r.getSize() != null)
                 .mapToLong(Rom::getSize)
                 .min()
                 .orElse(0);
-        if (detector == null) {
+        if (detectors.isEmpty()) {
             bufferSize = DEFAULT_BUFFER_SIZE;
             useLazyDetector = false;
-            maxRomSize = datafile.getGames().stream()
+            maxRomSize = datafiles.stream()
+                    .map(Datafile::getGames)
+                    .flatMap(Collection::stream)
                     .map(Game::getRoms)
                     .flatMap(Collection::stream)
                     .filter(r -> r.getSize() != null)
@@ -104,19 +110,23 @@ class FileScannerParameters {
                     .max()
                     .orElse(Long.MAX_VALUE);
         } else {
-            long maxStartOffset = detector.getRules()
-                    .stream()
+            long maxStartOffset = detectors.stream()
+                    .map(Detector::getRules)
+                    .flatMap(Collection::stream)
                     .filter(r -> r.getStartOffset() != null)
                     .mapToLong(Rule::getStartOffset)
                     .max()
                     .orElse(0);
-            long minEndOffset = detector.getRules()
-                    .stream()
+            long minEndOffset = detectors.stream()
+                    .map(Detector::getRules)
+                    .flatMap(Collection::stream)
                     .filter(r -> r.getEndOffset() != null)
                     .mapToLong(Rule::getEndOffset)
                     .min()
                     .orElse(Long.MAX_VALUE);
-            long maxUnheaderedSize = datafile.getGames().stream()
+            long maxUnheaderedSize = datafiles.stream()
+                    .map(Datafile::getGames)
+                    .flatMap(Collection::stream)
                     .map(Game::getRoms)
                     .flatMap(Collection::stream)
                     .filter(r -> r.getSize() != null)
@@ -132,24 +142,28 @@ class FileScannerParameters {
             maxStartOffset = max(maxStartOffset, 0);
             minEndOffset = min(minEndOffset, maxUnheaderedSize);
             maxRomSize = maxUnheaderedSize + maxStartOffset + (maxUnheaderedSize - minEndOffset);
-            if (detector.getRules()
-                    .stream()
+            if (detectors.stream()
+                    .map(Detector::getRules)
+                    .flatMap(Collection::stream)
                     .map(Rule::getOperation)
                     .allMatch(BinaryOperation.NONE::equals)) {
-                long minTestOffset = detector.getRules()
-                        .stream()
+                long minTestOffset = detectors.stream()
+                        .map(Detector::getRules)
+                        .flatMap(Collection::stream)
                         .flatMap(Rule::getAllBinaryTest)
                         .mapToLong(BinaryTest::getOffset)
                         .min()
                         .orElse(0);
-                long minInitialOffset = detector.getRules()
-                        .stream()
+                long minInitialOffset = detectors.stream()
+                        .map(Detector::getRules)
+                        .flatMap(Collection::stream)
                         .mapToLong(Rule::getStartOffset)
                         .min()
                         .orElse(0);
                 if (minTestOffset >= 0 && minInitialOffset >= 0) {
-                    long maxTestOffset = detector.getRules()
-                            .stream()
+                    long maxTestOffset = detectors.stream()
+                            .map(Detector::getRules)
+                            .flatMap(Collection::stream)
                             .flatMap(Rule::getAllBinaryTest)
                             .mapToLong(t -> t.getOffset() + t.getValue().length)
                             .max()

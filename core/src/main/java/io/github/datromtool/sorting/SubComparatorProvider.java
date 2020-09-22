@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 class SubComparatorProvider {
 
-    public final static SubComparatorProvider INSTANCE = new SubComparatorProvider();
+    final static SubComparatorProvider INSTANCE = new SubComparatorProvider();
 
     public ImmutableList<SubComparator> toList(@Nonnull SortingPreference sortingPreference) {
         ImmutableList.Builder<SubComparator> subComparatorsBuilder = ImmutableList.builder();

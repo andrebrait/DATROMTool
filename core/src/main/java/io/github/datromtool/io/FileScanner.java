@@ -10,7 +10,6 @@ import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.detector.Rule;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import lombok.Value;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -30,6 +29,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -51,23 +51,23 @@ public final class FileScanner {
             ThreadLocal.withInitial(DigestUtils::getSha1Digest);
 
     private final int numThreads;
-    private final Detector detector;
+    private final ImmutableList<Detector> detectors;
     private final Listener listener;
     private final FileScannerParameters fileScannerParameters;
     private final ThreadLocal<byte[]> threadLocalBuffer;
 
     public FileScanner(
-            @NonNull AppConfig appConfig,
-            @Nullable Datafile datafile,
-            @Nullable Detector detector,
+            @Nonnull AppConfig appConfig,
+            @Nonnull List<Datafile> datafiles,
+            @Nonnull List<Detector> detectors,
             @Nullable Listener listener) {
         this.numThreads = appConfig.getScanner().getThreads();
-        this.detector = detector;
+        this.detectors = ImmutableList.copyOf(detectors);
         this.listener = listener;
-        if (datafile == null) {
+        if (datafiles.isEmpty()) {
             this.fileScannerParameters = withDefaults();
         } else {
-            this.fileScannerParameters = forDatWithDetector(appConfig, datafile, detector);
+            this.fileScannerParameters = forDatWithDetector(appConfig, datafiles, detectors);
         }
         this.threadLocalBuffer =
                 ThreadLocal.withInitial(() -> new byte[fileScannerParameters.getBufferSize()]);
@@ -146,7 +146,7 @@ public final class FileScanner {
         }
     }
 
-    public ImmutableList<Result> scan(Path directory) throws Exception {
+    public ImmutableList<Result> scan(List<Path> directories) {
         ExecutorService executorService = Executors.newFixedThreadPool(
                 numThreads,
                 new IndexedThreadFactory(logger, "SCANNER"));
@@ -158,7 +158,13 @@ public final class FileScanner {
         }
         try {
             ImmutableList.Builder<FileMetadata> pathsBuilder = ImmutableList.builder();
-            Files.walkFileTree(directory, new AppendingFileVisitor(pathsBuilder::add));
+            for (Path directory : directories) {
+                try {
+                    Files.walkFileTree(directory, new AppendingFileVisitor(pathsBuilder::add));
+                } catch (Exception e) {
+                    logger.error("Could not scan '{}'", directory, e);
+                }
+            }
             ImmutableList<FileMetadata> paths = pathsBuilder.build();
             if (listener != null) {
                 listener.reportTotalItems(paths.size());
@@ -171,7 +177,7 @@ public final class FileScanner {
                     .flatMap(FileScanner::streamResults)
                     .collect(ImmutableList.toImmutableList());
         } catch (Exception e) {
-            logger.error("Could not scan '{}'", directory, e);
+            logger.error("Could not scan '{}'", directories, e);
             throw e;
         } finally {
             executorService.shutdownNow();
@@ -467,7 +473,7 @@ public final class FileScanner {
         md5.reset();
         sha1.reset();
         long totalRead;
-        if (size <= buffer.length && detector != null) {
+        if (size <= buffer.length && detectors != null) {
             totalRead = readAllAtOnce(path, index, size, function, crc32, md5, sha1, buffer);
         } else {
             totalRead = readInSteps(path, index, size, function, crc32, md5, sha1, buffer);
@@ -498,23 +504,30 @@ public final class FileScanner {
         // Apply logic to detect headers
         // This is the only time we're going to read the file anyway
         // We can safely redefine the buffer variable here
-        for (Rule r : detector.getRules()) {
-            try {
-                byte[] newBuffer = r.apply(buffer, toInt(totalRead), size);
-                // Identity check is enough here
-                if (newBuffer != buffer) {
-                    logger.info(
-                            "Detected header using '{}' for '{}'",
-                            detector.getName(),
-                            path);
-                    buffer = newBuffer;
-                    break;
+        for (Detector detector : detectors) {
+            boolean detected = false;
+            for (Rule rule : detector.getRules()) {
+                try {
+                    byte[] newBuffer = rule.apply(buffer, toInt(totalRead), size);
+                    // Identity check is enough here
+                    if (newBuffer != buffer) {
+                        detected = true;
+                        buffer = newBuffer;
+                        break;
+                    }
+                } catch (Exception e) {
+                    logger.error("Error while processing rule for '{}'", path, e);
+                    if (listener != null) {
+                        listener.reportFailure(path, index, "Error while processing rule", e);
+                    }
                 }
-            } catch (Exception e) {
-                logger.error("Error while processing rule for '{}'", path, e);
-                if (listener != null) {
-                    listener.reportFailure(path, index, "Error while processing rule", e);
-                }
+            }
+            if (detected) {
+                logger.info(
+                        "Detected header using '{}' for '{}'",
+                        detector.getName(),
+                        path);
+                break;
             }
         }
         int endRead = toInt(Math.min(totalRead, buffer.length));
@@ -541,7 +554,7 @@ public final class FileScanner {
         long endOffset = size;
         int bytesRead;
         int bytesLeft;
-        if (detector != null && fileScannerParameters.isUseLazyDetector()) {
+        if (!detectors.isEmpty() && fileScannerParameters.isUseLazyDetector()) {
             long startOffset = 0;
             // Read as much as possible to the buffer and check headers
             while ((bytesLeft = toInt(buffer.length - totalRead)) > 0
@@ -549,30 +562,41 @@ public final class FileScanner {
                 totalRead += bytesRead;
             }
             // Apply logic to detect headers
-            for (Rule r : detector.getRules()) {
-                try {
-                    if (r.test(buffer, toInt(totalRead), size)) {
-                        startOffset = Math.max(r.getStartOffset(), startOffset);
-                        long currEndOffset = r.getEndOffset();
-                        if (currEndOffset < 0) {
-                            currEndOffset += size;
+            for (Detector detector : detectors) {
+                boolean detected = false;
+                for (Rule rule : detector.getRules()) {
+                    try {
+                        if (rule.test(buffer, toInt(totalRead), size)) {
+                            detected = true;
+                            startOffset = Math.max(rule.getStartOffset(), startOffset);
+                            long currEndOffset = rule.getEndOffset();
+                            if (currEndOffset < 0) {
+                                currEndOffset += size;
+                            }
+                            endOffset = Math.min(currEndOffset, endOffset);
+                            // The file is smaller than the detected header portion
+                            if (startOffset > endOffset) {
+                                startOffset = 0;
+                                endOffset = size;
+                            }
                         }
-                        endOffset = Math.min(currEndOffset, endOffset);
-                        // The file is smaller than the detected header portion
-                        if (startOffset > endOffset) {
-                            startOffset = 0;
-                            endOffset = size;
+                    } catch (Exception e) {
+                        logger.error("Error while processing rule for '{}'", path, e);
+                        if (listener != null) {
+                            listener.reportFailure(
+                                    path,
+                                    index,
+                                    "Error while processing rule",
+                                    e);
                         }
                     }
-                } catch (Exception e) {
-                    logger.error("Error while processing rule for '{}'", path, e);
-                    if (listener != null) {
-                        listener.reportFailure(
-                                path,
-                                index,
-                                "Error while processing rule",
-                                e);
-                    }
+                }
+                if (detected) {
+                    logger.info(
+                            "Detected header using '{}' for '{}'",
+                            detector.getName(),
+                            path);
+                    break;
                 }
             }
             totalRead = Math.min(totalRead, endOffset) - startOffset;

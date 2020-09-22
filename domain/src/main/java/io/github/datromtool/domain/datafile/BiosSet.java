@@ -37,7 +37,7 @@ public class BiosSet {
 
     @NonNull
     @Builder.Default
-    @JacksonXmlProperty(isAttribute = true)
+    @JacksonXmlProperty(localName = "default", isAttribute = true)
     @JsonProperty(value = "default", defaultValue = "no")
     YesNo isDefault = YesNo.NO;
 

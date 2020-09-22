@@ -59,9 +59,14 @@ class FileScannerTest {
     }
 
     @Test
-    void testScan_defaultSettings() throws Exception {
-        FileScanner fileScanner = new FileScanner(AppConfig.builder().build(), null, null, null);
-        ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
+    void testScan_defaultSettings() {
+        FileScanner fileScanner = new FileScanner(
+                AppConfig.builder().build(),
+                ImmutableList.of(),
+                ImmutableList.of(),
+                null);
+        ImmutableList<FileScanner.Result> results =
+                fileScanner.scan(ImmutableList.of(testDataSource));
         assertFalse(results.isEmpty());
         assertEquals(crc32sums.size() * 17, results.size());
         for (FileScanner.Result i : results) {
@@ -80,13 +85,14 @@ class FileScannerTest {
     }
 
     @Test
-    void testScan_minSizeLimit() throws Exception {
+    void testScan_minSizeLimit() {
         FileScanner fileScanner = new FileScanner(
                 AppConfig.builder().build(),
-                buildDatafile(64 * 1024L, 64 * 1024L * 1024L),
-                null,
+                ImmutableList.of(buildDatafile(64 * 1024L, 64 * 1024L * 1024L)),
+                ImmutableList.of(),
                 null);
-        ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
+        ImmutableList<FileScanner.Result> results =
+                fileScanner.scan(ImmutableList.of(testDataSource));
         assertFalse(results.isEmpty());
         assertEquals((crc32sums.size() - 4) * 17, results.size());
         for (FileScanner.Result i : results) {
@@ -105,13 +111,14 @@ class FileScannerTest {
     }
 
     @Test
-    void testScan_maxSizeLimit() throws Exception {
+    void testScan_maxSizeLimit() {
         FileScanner fileScanner = new FileScanner(
                 AppConfig.builder().build(),
-                buildDatafile(16 * 1024L, 768 * 1024L),
-                null,
+                ImmutableList.of(buildDatafile(16 * 1024L, 768 * 1024L)),
+                ImmutableList.of(),
                 null);
-        ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
+        ImmutableList<FileScanner.Result> results =
+                fileScanner.scan(ImmutableList.of(testDataSource));
         assertFalse(results.isEmpty());
         assertEquals((crc32sums.size() - 4) * 17, results.size());
         for (FileScanner.Result i : results) {
@@ -130,13 +137,14 @@ class FileScannerTest {
     }
 
     @Test
-    void testScan_minAndmaxSizeLimit() throws Exception {
+    void testScan_minAndmaxSizeLimit() {
         FileScanner fileScanner = new FileScanner(
                 AppConfig.builder().build(),
-                buildDatafile(64 * 1024L, 768 * 1024L),
-                null,
+                ImmutableList.of(buildDatafile(64 * 1024L, 768 * 1024L)),
+                ImmutableList.of(),
                 null);
-        ImmutableList<FileScanner.Result> results = fileScanner.scan(testDataSource);
+        ImmutableList<FileScanner.Result> results =
+                fileScanner.scan(ImmutableList.of(testDataSource));
         assertFalse(results.isEmpty());
         assertEquals((crc32sums.size() - 8) * 17, results.size());
         for (FileScanner.Result i : results) {

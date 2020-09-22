@@ -1,5 +1,6 @@
 package io.github.datromtool.sorting;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.SortingPreference;
@@ -15,10 +16,15 @@ public final class GameComparator implements Comparator<ParsedGame> {
 
     private final ImmutableList<SubComparator> subComparators;
 
-    public GameComparator(
+    public GameComparator(@Nonnull SortingPreference sortingPreference) {
+        this.subComparators = SubComparatorProvider.INSTANCE.toList(sortingPreference);
+    }
+
+    @VisibleForTesting
+    GameComparator(
             @Nonnull SubComparatorProvider provider,
             @Nonnull SortingPreference sortingPreference) {
-        subComparators = provider.toList(sortingPreference);
+        this.subComparators = provider.toList(sortingPreference);
     }
 
     @Override

@@ -56,9 +56,13 @@ class FileCopierTest {
     }
 
     @Test
-    void testCopy() throws Exception {
-        FileScanner fs = new FileScanner(AppConfig.builder().build(), null, null, null);
-        ImmutableList<FileScanner.Result> results = fs.scan(testDataSource);
+    void testCopy() {
+        FileScanner fs = new FileScanner(
+                AppConfig.builder().build(),
+                ImmutableList.of(),
+                ImmutableList.of(),
+                null);
+        ImmutableList<FileScanner.Result> results = fs.scan(ImmutableList.of(testDataSource));
         Map<Path, List<FileScanner.Result>> resultsForArchive =
                 results.stream().collect(Collectors.groupingBy(FileScanner.Result::getPath));
         ImmutableSet<FileCopier.CopyDefinition> copyDefinitions = resultsForArchive.entrySet()
@@ -92,6 +96,6 @@ class FileCopierTest {
                 }).collect(ImmutableSet.toImmutableSet());
         FileCopier fc = new FileCopier(AppConfig.builder().build(), false, null);
         fc.copy(copyDefinitions);
-        ImmutableList<FileScanner.Result> afterCopy = fs.scan(tempDir);
+        ImmutableList<FileScanner.Result> afterCopy = fs.scan(ImmutableList.of(tempDir));
     }
 }

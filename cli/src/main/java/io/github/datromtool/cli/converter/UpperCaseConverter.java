@@ -6,6 +6,6 @@ public final class UpperCaseConverter implements CommandLine.ITypeConverter<Stri
 
     @Override
     public String convert(String value) {
-        return value.toUpperCase();
+        return value.trim().toUpperCase();
     }
 }
