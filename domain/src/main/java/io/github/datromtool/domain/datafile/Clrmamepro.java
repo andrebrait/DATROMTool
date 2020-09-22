@@ -28,6 +28,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class Clrmamepro {
 
     @JacksonXmlProperty(localName = "header", isAttribute = true)
+    @JsonProperty("header")
     String headerFile;
 
     @NonNull
