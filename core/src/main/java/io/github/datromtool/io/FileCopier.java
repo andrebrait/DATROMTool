@@ -57,6 +57,7 @@ public final class FileCopier {
     @Value
     public static class CopyDefinition {
 
+        @NonNull
         ArchiveType fromType;
         @NonNull
         Path from;

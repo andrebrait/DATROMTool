@@ -10,6 +10,7 @@ import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.detector.Rule;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.Value;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -44,17 +45,11 @@ public final class FileScanner {
 
     private static final Logger logger = LoggerFactory.getLogger(FileScanner.class);
 
-    private final ThreadLocal<CRC32> threadLocalCrc32 = ThreadLocal.withInitial(CRC32::new);
-    private final ThreadLocal<MessageDigest> threadLocalMd5 =
-            ThreadLocal.withInitial(DigestUtils::getMd5Digest);
-    private final ThreadLocal<MessageDigest> threadLocalSha1 =
-            ThreadLocal.withInitial(DigestUtils::getSha1Digest);
-
     private final int numThreads;
     private final ImmutableList<Detector> detectors;
     private final Listener listener;
     private final FileScannerParameters fileScannerParameters;
-    private final ThreadLocal<byte[]> threadLocalBuffer;
+    private final ThreadLocal<ThreadLocalDataHolder> threadLocalData;
 
     public FileScanner(
             @Nonnull AppConfig appConfig,
@@ -69,8 +64,20 @@ public final class FileScanner {
         } else {
             this.fileScannerParameters = forDatWithDetector(appConfig, datafiles, detectors);
         }
-        this.threadLocalBuffer =
-                ThreadLocal.withInitial(() -> new byte[fileScannerParameters.getBufferSize()]);
+        this.threadLocalData =
+                ThreadLocal.withInitial(() -> new ThreadLocalDataHolder(fileScannerParameters));
+    }
+
+    @Value
+    private static class ThreadLocalDataHolder {
+        byte[] buffer;
+        CRC32 crc32 = new CRC32();
+        MessageDigest md5 = DigestUtils.getMd5Digest();
+        MessageDigest sha1 = DigestUtils.getSha1Digest();
+
+        private ThreadLocalDataHolder(FileScannerParameters fileScannerParameters) {
+            this.buffer = new byte[fileScannerParameters.getBufferSize()];
+        }
     }
 
     @Value
@@ -80,16 +87,21 @@ public final class FileScanner {
         @Value
         @AllArgsConstructor(access = AccessLevel.PRIVATE)
         public static class Digest {
-
+            @NonNull
             String crc;
+            @NonNull
             String md5;
+            @NonNull
             String sha1;
         }
 
+        @NonNull
         ArchiveType archiveType;
+        @NonNull
         Path path;
         long size;
         long unheaderedSize;
+        @NonNull
         Digest digest;
         String archivePath;
     }
@@ -97,7 +109,7 @@ public final class FileScanner {
     @Value
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     private static class ProcessingResult {
-
+        @NonNull
         Result.Digest digest;
         long unheaderedSize;
     }
@@ -105,7 +117,7 @@ public final class FileScanner {
     @Value
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     private static class FileMetadata {
-
+        @NonNull
         Path path;
         long size;
     }
@@ -465,10 +477,11 @@ public final class FileScanner {
             long size,
             TriFunction<byte[], Integer, Integer, Integer, IOException> function)
             throws IOException {
-        CRC32 crc32 = threadLocalCrc32.get();
-        MessageDigest md5 = threadLocalMd5.get();
-        MessageDigest sha1 = threadLocalSha1.get();
-        byte[] buffer = threadLocalBuffer.get();
+        ThreadLocalDataHolder threadLocalDataHolder = threadLocalData.get();
+        CRC32 crc32 = threadLocalDataHolder.getCrc32();
+        MessageDigest md5 = threadLocalDataHolder.getMd5();
+        MessageDigest sha1 = threadLocalDataHolder.getSha1();
+        byte[] buffer = threadLocalDataHolder.getBuffer();
         crc32.reset();
         md5.reset();
         sha1.reset();

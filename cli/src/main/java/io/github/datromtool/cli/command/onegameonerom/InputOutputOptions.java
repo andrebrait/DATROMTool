@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.jackson.Jacksonized;
 import picocli.CommandLine;
 
@@ -43,6 +44,7 @@ public final class InputOutputOptions {
             description = "Output directory for the resulting files")
     private Path outputDir;
 
+    @NonNull
     @CommandLine.Option(
             names = {"-a", ARCHIVE_FORMAT_OPTION},
             paramLabel = "FORMAT",

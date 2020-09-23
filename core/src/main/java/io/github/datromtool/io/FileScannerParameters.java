@@ -23,6 +23,7 @@ import java.util.List;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.lang.Math.toIntExact;
+import static java.util.Objects.requireNonNull;
 
 @Value
 @AllArgsConstructor(access = AccessLevel.NONE)
@@ -46,14 +47,14 @@ class FileScannerParameters {
             long minRomSize,
             long maxRomSize,
             boolean useLazyDetector,
-            ImmutableSet<ArchiveType> alsoScanArchives) {
+            @Nonnull ImmutableSet<ArchiveType> alsoScanArchives) {
         this.bufferSize = bufferSize;
         this.minRomSize = minRomSize;
         this.maxRomSize = maxRomSize;
         this.minRomSizeStr = makeRomSizeStr(minRomSize);
         this.maxRomSizeStr = makeRomSizeStr(maxRomSize);
         this.useLazyDetector = useLazyDetector;
-        this.alsoScanArchives = alsoScanArchives;
+        this.alsoScanArchives = requireNonNull(alsoScanArchives);
     }
 
     private static String makeRomSizeStr(long size) {

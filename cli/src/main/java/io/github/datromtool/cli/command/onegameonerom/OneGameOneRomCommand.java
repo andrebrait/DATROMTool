@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.GameFilterer;
 import io.github.datromtool.GameParser;
 import io.github.datromtool.GameSorter;
@@ -23,8 +24,10 @@ import io.github.datromtool.domain.datafile.Clrmamepro;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.domain.datafile.Header;
+import io.github.datromtool.domain.datafile.Rom;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.io.ArchiveType;
+import io.github.datromtool.io.FileCopier;
 import io.github.datromtool.io.FileScanner;
 import io.github.datromtool.sorting.GameComparator;
 import io.github.datromtool.util.ArgumentException;
@@ -37,15 +40,18 @@ import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
 import picocli.CommandLine;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
@@ -180,7 +186,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
         ImmutableMap<String, ImmutableList<ParsedGame>> postFilteredGamesByParent =
                 gameFilterer.postFilter(filteredGamesByParent);
         if (inputOutputOptions == null) {
-            printTopItems(postFilteredGamesByParent);
+            printTopItems(postFilteredGamesByParent.values().asList());
         } else if (!inputOutputOptions.getInputDirs().isEmpty()) {
             ImmutableList<Detector> detectors = loadDetectors(datafiles);
             AppConfig appConfig = SerializationHelper.getInstance().loadAppConfig();
@@ -191,56 +197,178 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                     new CommandLineScannerProgressBar());
             ImmutableList<FileScanner.Result> scanResults =
                     scanner.scan(inputOutputOptions.getInputDirs());
-            ImmutableMap<Pair<Long, String>, FileScanner.Result> resultsForCrc = scanResults
-                    .stream()
-                    .collect(ImmutableMap.toImmutableMap(
-                            o -> Pair.of(o.getUnheaderedSize(), o.getDigest().getCrc()),
-                            Function.identity()));
-            ImmutableMap<String, FileScanner.Result> resultsForMd5 = scanResults.stream()
-                    .collect(ImmutableMap.toImmutableMap(
-                            o -> o.getDigest().getMd5(),
-                            Function.identity()));
-            ImmutableMap<String, FileScanner.Result> resultsForSha1 = scanResults.stream()
-                    .collect(ImmutableMap.toImmutableMap(
-                            o -> o.getDigest().getSha1(),
-                            Function.identity()));
-            ImmutableMap<String, ImmutableList<ParsedGame>> presentGames =
+            ImmutableMap<Pair<Long, String>, ImmutableList<FileScanner.Result>> resultsForCrc =
+                    scanResults
+                            .stream()
+                            .collect(Collectors.collectingAndThen(
+                                    Collectors.groupingBy(
+                                            o -> Pair.of(
+                                                    o.getUnheaderedSize(),
+                                                    o.getDigest().getCrc()),
+                                            ImmutableList.toImmutableList()),
+                                    ImmutableMap::copyOf));
+            ImmutableMap<String, ImmutableList<FileScanner.Result>> resultsForMd5 =
+                    scanResults.stream()
+                            .collect(Collectors.collectingAndThen(
+                                    Collectors.groupingBy(
+                                            o -> o.getDigest().getMd5(),
+                                            ImmutableList.toImmutableList()),
+                                    ImmutableMap::copyOf));
+            ImmutableMap<String, ImmutableList<FileScanner.Result>> resultsForSha1 =
+                    scanResults.stream()
+                            .collect(Collectors.collectingAndThen(
+                                    Collectors.groupingBy(
+                                            o -> o.getDigest().getSha1(),
+                                            ImmutableList.toImmutableList()),
+                                    ImmutableMap::copyOf));
+            ImmutableMap<String,
+                    ImmutableList<Pair<ParsedGame, ImmutableList<Pair<Rom, FileScanner.Result>>>>>
+                    presentGames =
                     postFilteredGamesByParent.entrySet().stream()
                             .map(e -> Pair.of(
                                     e.getKey(),
                                     e.getValue().stream()
-                                            .filter(pg -> isPresentInScannedFiles(
-                                                    resultsForCrc,
-                                                    resultsForMd5,
-                                                    resultsForSha1,
-                                                    pg))
+                                            .map(pg -> Pair.of(
+                                                    pg,
+                                                    getResults(
+                                                            resultsForCrc,
+                                                            resultsForMd5,
+                                                            resultsForSha1,
+                                                            pg)))
+                                            .filter(p -> !p.getRight().isEmpty())
                                             .collect(ImmutableList.toImmutableList())))
                             .filter(p -> !p.getRight().isEmpty())
                             .collect(ImmutableMap.toImmutableMap(Pair::getLeft, Pair::getRight));
             if (inputOutputOptions.getOutputDir() == null) {
-                printTopItems(presentGames);
+                printTopItems(presentGames.values()
+                        .stream()
+                        .map(l -> l.stream()
+                                .map(Pair::getLeft)
+                                .collect(ImmutableList.toImmutableList()))
+                        .collect(ImmutableList.toImmutableList()));
+            } else {
+                try {
+                    Files.createDirectories(inputOutputOptions.getOutputDir());
+                } catch (IOException e) {
+                    throw new CommandLine.ParameterException(
+                            commandSpec.commandLine(),
+                            String.format(
+                                    "Could not create output directory: %s",
+                                    e.getMessage()),
+                            e);
+                }
+                ImmutableList<FileCopier.CopyDefinition> copyDefinitions = presentGames.values()
+                        .stream()
+                        .map(Collection::stream)
+                        .map(Stream::findFirst)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .map(p -> {
+                            ImmutableMap<Path, ImmutableList<FileScanner.Result>> resultsPerFile =
+                                    p.getRight().stream()
+                                            .collect(Collectors.collectingAndThen(
+                                                    Collectors.groupingBy(
+                                                            FileScanner.Result::getPath,
+                                                            ImmutableList.toImmutableList()),
+                                                    ImmutableMap::copyOf));
+                            return resultsPerFile.entrySet().stream()
+                                    .map(e -> FileCopier.CopyDefinition.builder()
+                                            .from(e.getKey())
+                                            .fromType(e.getValue()
+                                                    .iterator()
+                                                    .next()
+                                                    .getArchiveType())
+                                            .archiveCopyDefinitions(e.getValue().stream()
+                                                    .map(FileScanner.Result::getArchivePath)
+                                                    .filter(Objects::nonNull)
+                                                    .map(s -> FileCopier.ArchiveCopyDefinition.builder()
+                                                            .source(s)
+                                                            .destination(pg))
+                                                    .collect(ImmutableSet.toImmutableSet())))
+                        })
             }
         }
         return 0;
     }
 
     // TODO Move this to core and add logging. Extract almost everything from this class to core.
-    private boolean isPresentInScannedFiles(
-            ImmutableMap<Pair<Long, String>, FileScanner.Result> resultsForCrc,
-            ImmutableMap<String, FileScanner.Result> resultsForMd5,
-            ImmutableMap<String, FileScanner.Result> resultsForSha1,
-            ParsedGame pg) {
-        return pg.getGame()
+    private ImmutableList<Pair<Rom, FileScanner.Result>> getResults(
+            Map<Pair<Long, String>, ? extends List<FileScanner.Result>> resultsForCrc,
+            Map<String, ? extends List<FileScanner.Result>> resultsForMd5,
+            Map<String, ? extends List<FileScanner.Result>> resultsForSha1,
+            ParsedGame parsedGame) {
+        ImmutableList<Pair<Rom, ImmutableList<FileScanner.Result>>> results = parsedGame.getGame()
                 .getRoms()
                 .stream()
-                .allMatch(r -> resultsForSha1.containsKey(r.getSha1())
-                        || resultsForMd5.containsKey(r.getMd5())
-                        || resultsForCrc.containsKey(Pair.of(r.getSize(), r.getCrc())));
+                .map(r -> Pair.of(
+                        r,
+                        getResultFromMaps(
+                                resultsForCrc,
+                                resultsForMd5,
+                                resultsForSha1,
+                                r)))
+                .filter(p -> !p.getRight().isEmpty())
+                .collect(ImmutableList.toImmutableList());
+        if (results.size() < parsedGame.getGame().getRoms().size()) {
+            // TODO Log a warning (not all files were found)
+            return ImmutableList.of();
+        }
+        // TODO Prefer all from the same archive or all uncompressed
+        // FIXME FILTER HERE
+        ImmutableList<Pair<Rom, FileScanner.Result>> filteredResults =
+                results.stream()
+                        .map(p -> Pair.of(p.getLeft(), p.getRight().iterator().next()))
+                        .collect(ImmutableList.toImmutableList());
+        // TODO If the destination is uncompressed, prefer uncompressed as much as possible
+        if (inputOutputOptions.getArchiveType() != ArchiveType.NONE) {
+            if (isMultipleOriginTypes(filteredResults) || isFromMultipleArchives(filteredResults)) {
+                // TODO Log a warning (cannot merge several archives into one)
+                return ImmutableList.of();
+            }
+        }
+        return results;
     }
 
-    private void printTopItems(ImmutableMap<String, ImmutableList<ParsedGame>> postFilteredGamesByParent) {
-        postFilteredGamesByParent.values()
-                .stream()
+    private static boolean isMultipleOriginTypes(
+            ImmutableList<Pair<Rom, FileScanner.Result>> results) {
+        return results.stream()
+                .map(Pair::getRight)
+                .map(FileScanner.Result::getArchiveType)
+                .distinct()
+                .count() > 1;
+    }
+
+    private static boolean isFromMultipleArchives(
+            ImmutableList<Pair<Rom, FileScanner.Result>> results) {
+        return results.stream()
+                .map(Pair::getRight)
+                .filter(r -> r.getArchiveType() != ArchiveType.NONE)
+                .map(FileScanner.Result::getPath)
+                .distinct()
+                .count() > 1;
+    }
+
+    @Nullable
+    private static ImmutableList<FileScanner.Result> getResultFromMaps(
+            Map<Pair<Long, String>, ? extends List<FileScanner.Result>> resultsForCrc,
+            Map<String, ? extends List<FileScanner.Result>> resultsForMd5,
+            Map<String, ? extends List<FileScanner.Result>> resultsForSha1,
+            Rom rom) {
+        List<FileScanner.Result> results = resultsForSha1.get(rom.getSha1());
+        if (results == null) {
+            results = resultsForMd5.get(rom.getMd5());
+        }
+        if (results == null) {
+            results = resultsForCrc.get(Pair.of(rom.getSize(), rom.getCrc()));
+        }
+        if (results == null) {
+            return ImmutableList.of();
+        }
+        return ImmutableList.copyOf(results);
+    }
+
+    private static void printTopItems(List<? extends List<ParsedGame>> postFilteredGamesByParent) {
+        postFilteredGamesByParent.stream()
                 .map(Collection::stream)
                 .map(Stream::findFirst)
                 .filter(Optional::isPresent)
@@ -275,7 +403,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                 }).collect(ImmutableList.toImmutableList());
     }
 
-    private ImmutableList<Detector> loadDetectors(ImmutableList<Datafile> datafiles) {
+    private ImmutableList<Detector> loadDetectors(List<Datafile> datafiles) {
         return datafiles.stream()
                 .map(Datafile::getHeader)
                 .filter(Objects::nonNull)
