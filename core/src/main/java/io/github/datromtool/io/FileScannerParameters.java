@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -87,7 +88,7 @@ class FileScannerParameters {
                 .filter(r -> r.getSize() != null)
                 .map(Rom::getName)
                 .map(ArchiveType::parse)
-                .filter(at -> at != ArchiveType.NONE)
+                .filter(Objects::nonNull)
                 .collect(ImmutableSet.toImmutableSet());
         final long minRomSize = datafiles.stream()
                 .map(Datafile::getGames)

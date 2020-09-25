@@ -31,6 +31,7 @@ public final class InputOutputOptions {
     public static final String OUTPUT_DIR_OPTION = "--output-dir";
     public static final String ARCHIVE_FORMAT_OPTION = "--archive";
     public static final String FORCE_SUBFOLDER_OPTION = "--force-subfolder";
+    public static final String ALPHABETICAL_OPTION = "--alphabetical";
 
     @CommandLine.Option(
             names = {"-i", INPUT_DIR_OPTION},
@@ -52,7 +53,12 @@ public final class InputOutputOptions {
             converter = ArchiveTypeConverter.class,
             completionCandidates = ArchiveCompletionCandidates.class,
             showDefaultValue = CommandLine.Help.Visibility.NEVER)
-    private ArchiveType archiveType = ArchiveType.NONE;
+    private ArchiveType archiveType;
+
+    @CommandLine.Option(
+            names = ALPHABETICAL_OPTION,
+            description = "Put the resulting files in subfolders based on their names")
+    private boolean alphabetical;
 
     @CommandLine.Option(
             names = FORCE_SUBFOLDER_OPTION,

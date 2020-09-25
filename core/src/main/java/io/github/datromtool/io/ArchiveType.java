@@ -10,6 +10,8 @@ import org.apache.commons.compress.compressors.gzip.GzipUtils;
 import org.apache.commons.compress.compressors.lzma.LZMAUtils;
 import org.apache.commons.compress.compressors.xz.XZUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Predicate;
@@ -21,7 +23,6 @@ import static java.util.regex.Pattern.compile;
 @AllArgsConstructor
 public enum ArchiveType {
 
-    NONE(ImmutableList.of(), false, s -> false),
     ZIP(ImmutableList.of("zip"), true, s -> Constants.ZIP.matcher(s).find()),
     RAR(ImmutableList.of("rar"), false, s -> Constants.RAR.matcher(s).find()),
     SEVEN_ZIP(
@@ -58,23 +59,26 @@ public enum ArchiveType {
     private final boolean availableAsOutput;
     private final Predicate<String> predicate;
 
+    @Nullable
     public static ArchiveType parse(Path file) {
         if (Files.isDirectory(file)) {
-            return NONE;
+            return null;
         }
         String fileName = file.getFileName().toString();
         return parse(fileName);
     }
 
+    @Nullable
     public static ArchiveType parse(String fileName) {
         for (ArchiveType value : ArchiveType.values()) {
             if (value.predicate.test(fileName)) {
                 return value;
             }
         }
-        return NONE;
+        return null;
     }
 
+    @Nonnull
     public static ArchiveType fromNameOrAlias(String s) {
         for (ArchiveType value : ArchiveType.values()) {
             if (value.name().equals(s)) {
@@ -90,8 +94,13 @@ public enum ArchiveType {
                 s));
     }
 
+    public String getFileExtension() {
+        return aliases.iterator().next();
+    }
+
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     private static final class Constants {
+
         private static final Pattern ZIP = compile("\\.zip$", CASE_INSENSITIVE);
         private static final Pattern RAR = compile("\\.rar$", CASE_INSENSITIVE);
         private static final Pattern SEVEN_ZIP = compile("\\.7z$", CASE_INSENSITIVE);

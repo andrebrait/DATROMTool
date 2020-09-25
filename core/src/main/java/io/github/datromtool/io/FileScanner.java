@@ -8,6 +8,7 @@ import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.detector.Rule;
+import io.github.datromtool.util.ArchiveUtils;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -95,7 +96,6 @@ public final class FileScanner {
             String sha1;
         }
 
-        @NonNull
         ArchiveType archiveType;
         @NonNull
         Path path;
@@ -239,43 +239,45 @@ public final class FileScanner {
             ImmutableList.Builder<Result> builder = ImmutableList.builder();
             boolean scanned = false;
             ArchiveType archiveType = ArchiveType.parse(file);
-            try {
-                switch (archiveType) {
-                    case ZIP:
-                        scanZip(file, index, builder);
-                        scanned = true;
-                        break;
-                    case RAR:
-                        scanRar(file, index, builder);
-                        scanned = true;
-                        break;
-                    case SEVEN_ZIP:
-                        scanSevenZip(file, index, builder);
-                        scanned = true;
-                        break;
-                    case TAR:
-                    case TAR_BZ2:
-                    case TAR_GZ:
-                    case TAR_LZ4:
-                    case TAR_LZMA:
-                    case TAR_XZ:
-                        scanTar(archiveType, file, index, builder);
-                        scanned = true;
-                        break;
+            if (archiveType != null) {
+                try {
+                    switch (archiveType) {
+                        case ZIP:
+                            scanZip(file, index, builder);
+                            scanned = true;
+                            break;
+                        case RAR:
+                            scanRar(file, index, builder);
+                            scanned = true;
+                            break;
+                        case SEVEN_ZIP:
+                            scanSevenZip(file, index, builder);
+                            scanned = true;
+                            break;
+                        case TAR:
+                        case TAR_BZ2:
+                        case TAR_GZ:
+                        case TAR_LZ4:
+                        case TAR_LZMA:
+                        case TAR_XZ:
+                            scanTar(archiveType, file, index, builder);
+                            scanned = true;
+                            break;
+                    }
+                } catch (UnsupportedRarV5Exception e) {
+                    logger.error(
+                            "Unexpected error while reading archive '{}' detected as {}. "
+                                    + "Reason: RAR5 is not supported yet",
+                            file,
+                            archiveType);
+                    scanned = true;
+                } catch (Exception e) {
+                    logger.error(
+                            "Unexpected error while reading archive '{}' detected as {}",
+                            file,
+                            archiveType,
+                            e);
                 }
-            } catch (UnsupportedRarV5Exception e) {
-                logger.error(
-                        "Unexpected error while reading archive '{}' detected as {}. "
-                                + "Reason: RAR5 is not supported yet",
-                        file,
-                        archiveType);
-                scanned = true;
-            } catch (Exception e) {
-                logger.error(
-                        "Unexpected error while reading archive '{}' detected as {}",
-                        file,
-                        archiveType,
-                        e);
             }
             if (!scanned || fileScannerParameters.getAlsoScanArchives().contains(archiveType)) {
                 scanFile(fileMetadata, file, index, builder);
@@ -311,7 +313,7 @@ public final class FileScanner {
                         size,
                         inputStream::read);
                 builder.add(new Result(
-                        ArchiveType.NONE,
+                        null,
                         file,
                         size,
                         processingResult.getUnheaderedSize(),

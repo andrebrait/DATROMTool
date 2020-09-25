@@ -1,10 +1,12 @@
-package io.github.datromtool.io;
+package io.github.datromtool.util;
 
 import com.github.junrar.Archive;
 import com.github.junrar.exception.BadRarArchiveException;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.rarfile.FileHeader;
 import com.google.common.collect.ImmutableList;
+import io.github.datromtool.io.ArchiveType;
+import io.github.datromtool.io.UnrarArchiveEntry;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
@@ -144,14 +146,28 @@ public final class ArchiveUtils {
     private static final Pattern RAR_LIST =
             Pattern.compile("^\\s*\\S+\\s+([0-9]+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S.+\\S)\\s*$");
 
+    private static volatile Boolean isUnrarAvailableCache;
+
     public static boolean isUnrarAvailable() {
-        ProcessBuilder pb = new ProcessBuilder("unrar", "-inul");
-        try {
-            Process process = pb.start();
-            return process.waitFor() == 0;
-        } catch (IOException | InterruptedException e) {
-            logger.error("Could not check if 'unrar' is available", e);
-            return false;
+        Boolean value = isUnrarAvailableCache;
+        if (value != null) {
+            return value;
+        }
+        synchronized (ArgumentUtils.class) {
+            value = isUnrarAvailableCache;
+            if (value != null) {
+                return value;
+            }
+            ProcessBuilder pb = new ProcessBuilder("unrar", "-inul");
+            try {
+                Process process = pb.start();
+                value = process.waitFor() == 0;
+            } catch (IOException | InterruptedException e) {
+                logger.error("Could not check if 'unrar' is available", e);
+                value = false;
+            }
+            isUnrarAvailableCache = value;
+            return value;
         }
     }
 
@@ -214,8 +230,12 @@ public final class ArchiveUtils {
                 .filter(e -> !desiredEntryNames.contains(e.getName()))
                 .map(UnrarArchiveEntry::getName)
                 .collect(ImmutableList.toImmutableList());
-        ProcessBuilder pb =
-                new ProcessBuilder("unrar", "p", "-inul", "-x@", path.toAbsolutePath().toString());
+        ProcessBuilder pb = new ProcessBuilder(
+                "unrar",
+                "p",
+                "-inul",
+                "-x@",
+                path.normalize().toAbsolutePath().toString());
         try {
             Process process = pb.start();
             BufferedWriter writer =

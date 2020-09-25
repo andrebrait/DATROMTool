@@ -22,11 +22,6 @@ public final class CommandLineCopierProgressBar implements FileCopier.Listener {
     }
 
     @Override
-    public void reportSkip(Path path, Path destination, int thread, String message) {
-
-    }
-
-    @Override
     public void reportFailure(
             Path path,
             Path destination,

@@ -5,7 +5,9 @@ import com.github.junrar.exception.UnsupportedRarV5Exception;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.config.AppConfig;
+import io.github.datromtool.util.ArchiveUtils;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
 import org.apache.commons.compress.archivers.ArchiveEntry;
@@ -28,44 +30,97 @@ import java.io.OutputStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
+import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 
 public final class FileCopier {
 
     private static final Logger logger = LoggerFactory.getLogger(FileCopier.class);
 
     private static final int BUFFER_SIZE = 32 * 1024; // 32KB per thread
+    private static final Path EMPTY_PATH = Paths.get("");
 
-    @Builder
-    @Value
-    public static class ArchiveCopyDefinition {
+    public static abstract class Spec {
 
-        @NonNull
-        String source;
-        @NonNull
-        String destination;
+        private Spec() {
+        }
     }
 
     @Builder
     @Value
-    public static class CopyDefinition {
+    public static class InternalCopySpec<K, T> {
+
+        @NonNull
+        K from;
+        @NonNull
+        T to;
+    }
+
+    @Builder
+    @Value
+    @EqualsAndHashCode(callSuper = false)
+    public static class CopySpec extends Spec {
+
+        @NonNull
+        Path from;
+        @NonNull
+        Path to;
+    }
+
+    @Builder
+    @Value
+    @EqualsAndHashCode(callSuper = false)
+    public static class ExtractionSpec extends Spec {
 
         @NonNull
         ArchiveType fromType;
         @NonNull
         Path from;
+
+        @NonNull
+        ImmutableSet<InternalCopySpec<String, Path>> internalCopySpecs;
+    }
+
+    @Builder
+    @Value
+    @EqualsAndHashCode(callSuper = false)
+    public static class CompressionSpec extends Spec {
+
+        @NonNull
+        ArchiveType toType;
         @NonNull
         Path to;
+
         @NonNull
-        @Builder.Default
-        ImmutableSet<ArchiveCopyDefinition> archiveCopyDefinitions = ImmutableSet.of();
+        ImmutableSet<InternalCopySpec<Path, String>> internalCopySpecs;
+    }
+
+    @Builder
+    @Value
+    @EqualsAndHashCode(callSuper = false)
+    public static class ArchiveCopySpec extends Spec {
+
+        @NonNull
+        ArchiveType fromType;
+        @NonNull
+        ArchiveType toType;
+        @NonNull
+        Path from;
+        @NonNull
+        Path to;
+
+        @NonNull
+        ImmutableSet<InternalCopySpec<String, String>> internalCopySpecs;
     }
 
     public interface Listener {
@@ -73,8 +128,6 @@ public final class FileCopier {
         void reportStart(Path path, Path destination, int thread);
 
         void reportProgress(Path path, Path destination, int thread, int percentage, long speed);
-
-        void reportSkip(Path path, Path destination, int thread, String message);
 
         void reportFailure(
                 Path path,
@@ -84,8 +137,6 @@ public final class FileCopier {
                 Throwable cause);
 
         void reportFinish(Path path, Path destination, int thread);
-
-
     }
 
     private final int numThreads;
@@ -104,7 +155,7 @@ public final class FileCopier {
     private final ThreadLocal<byte[]> threadLocalBuffer =
             ThreadLocal.withInitial(() -> new byte[BUFFER_SIZE]);
 
-    public void copy(Set<CopyDefinition> copyDefinitions) {
+    public void copy(Set<? extends Spec> definitions) {
         ExecutorService executorService = Executors.newFixedThreadPool(
                 numThreads,
                 new IndexedThreadFactory(logger, "COPIER"));
@@ -114,8 +165,8 @@ public final class FileCopier {
         if (!XZUtils.isXZCompressionAvailable()) {
             logger.warn("XZ compression support is disabled");
         }
-        copyDefinitions.stream()
-                .map(cd -> executorService.submit(() -> copy(cd)))
+        definitions.stream()
+                .map(d -> executorService.submit(() -> copy(d)))
                 .collect(ImmutableList.toImmutableList())
                 .forEach(this::waitForCompletion);
         executorService.shutdownNow();
@@ -129,97 +180,78 @@ public final class FileCopier {
         }
     }
 
-    private void copy(CopyDefinition copyDefinition) {
-        int index = ((IndexedThread) Thread.currentThread()).getIndex();
+    private void copy(Spec spec) {
+        if (spec instanceof CopySpec) {
+            copy((CopySpec) spec);
+        } else if (spec instanceof ExtractionSpec) {
+            copy((ExtractionSpec) spec);
+        } else if (spec instanceof CompressionSpec) {
+            copy((CompressionSpec) spec);
+        } else if (spec instanceof ArchiveCopySpec) {
+            copy((ArchiveCopySpec) spec);
+        } else {
+            throw new InvalidParameterException("Cannot handle " + spec);
+        }
+    }
+
+    private static int getThreadIndex() {
+        return ((IndexedThread) Thread.currentThread()).getIndex();
+    }
+
+    private <K, T> ImmutableList<T> transform(Collection<K> o, Function<K, T> f) {
+        return o.stream().map(f).collect(ImmutableList.toImmutableList());
+    }
+
+    private void copy(CopySpec spec) {
+        int index = getThreadIndex();
         if (listener != null) {
-            listener.reportStart(copyDefinition.getFrom(), copyDefinition.getTo(), index);
+            listener.reportStart(spec.getFrom(), spec.getTo(), index);
         }
         try {
-            if (copyDefinition.getArchiveCopyDefinitions().isEmpty()) {
-                try (InputStream inputStream = Files.newInputStream(copyDefinition.getFrom())) {
-                    try (OutputStream outputStream =
-                            Files.newOutputStream(copyDefinition.getTo())) {
-                        copyWithProgress(
-                                index,
-                                Files.size(copyDefinition.getFrom()),
-                                copyDefinition.getFrom(),
-                                copyDefinition.getTo(),
-                                inputStream::read,
-                                outputStream::write);
-                    }
+            try (InputStream inputStream = Files.newInputStream(spec.getFrom())) {
+                try (OutputStream outputStream = Files.newOutputStream(spec.getTo())) {
+                    copyWithProgress(
+                            index,
+                            Files.size(spec.getFrom()),
+                            spec.getFrom(),
+                            spec.getTo(),
+                            inputStream::read,
+                            outputStream::write);
                 }
-                Files.setLastModifiedTime(
-                        copyDefinition.getTo(),
-                        Files.getLastModifiedTime(copyDefinition.getFrom()));
-            } else {
-                extractOrCompress(copyDefinition, index);
             }
-        } catch (UnsupportedRarV5Exception e) {
-            logger.error(
-                    "Unexpected error while copying '{}' to '{}'. "
-                            + "Reason: RAR5 is not supported yet",
-                    copyDefinition.getFrom(),
-                    copyDefinition.getTo());
-            if (listener != null) {
-                listener.reportFailure(
-                        copyDefinition.getFrom(),
-                        copyDefinition.getTo(),
-                        index,
-                        "Could not read archive. Reason: RAR5 is not supported yet",
-                        e);
-            }
+            Files.setLastModifiedTime(spec.getTo(), Files.getLastModifiedTime(spec.getFrom()));
         } catch (Exception e) {
-            logger.error(
-                    "Unexpected error while copying '{}' to '{}'",
-                    copyDefinition.getFrom(),
-                    copyDefinition.getTo(),
-                    e);
+            logger.error("Could not copy '{}' to '{}'", spec.getFrom(), spec.getTo(), e);
             if (listener != null) {
                 listener.reportFailure(
-                        copyDefinition.getFrom(),
-                        copyDefinition.getTo(),
+                        spec.getFrom(),
+                        spec.getTo(),
                         index,
-                        "Unexpected error while copying files",
+                        "Could not copy files",
                         e);
             }
         } finally {
             if (listener != null) {
-                listener.reportFinish(copyDefinition.getFrom(), copyDefinition.getTo(), index);
+                listener.reportFinish(spec.getFrom(), spec.getTo(), index);
             }
         }
     }
 
-    private void extractOrCompress(CopyDefinition copyDefinition, int index)
-            throws Exception {
-        ArchiveType fromType = copyDefinition.getFromType() != null
-                ? copyDefinition.getFromType()
-                : ArchiveType.parse(copyDefinition.getFrom());
-        ArchiveType toType = ArchiveType.parse(copyDefinition.getTo());
-        if (fromType == ArchiveType.NONE && toType == ArchiveType.NONE) {
-            logger.error(
-                    "Expected either '{}' or '{}' to be a recognized type of archive",
-                    copyDefinition.getFrom(),
-                    copyDefinition.getTo());
-            if (listener != null) {
-                listener.reportSkip(
-                        copyDefinition.getFrom(),
-                        copyDefinition.getTo(),
-                        index,
-                        "Expected to be a supported type of archive");
-            }
-            return;
+    private void copy(ExtractionSpec spec) {
+        int index = getThreadIndex();
+        if (listener != null) {
+            listener.reportStart(spec.getFrom(), EMPTY_PATH, index);
         }
-        if (toType == ArchiveType.NONE) {
-            // Extract from an archive to uncompressed files
-            switch (fromType) {
+        try {
+            switch (spec.getFromType()) {
                 case ZIP:
-                    extractZipEntries(copyDefinition, index);
+                    extractZipEntries(spec, index);
                     return;
                 case RAR:
-                    extractRarEntries(copyDefinition, index);
+                    extractRarEntries(spec, index);
                     return;
                 case SEVEN_ZIP:
-                    extractSevenZipEntries(copyDefinition, index);
+                    extractSevenZipEntries(spec, index);
                     return;
                 case TAR:
                 case TAR_BZ2:
@@ -227,18 +259,49 @@ public final class FileCopier {
                 case TAR_LZ4:
                 case TAR_LZMA:
                 case TAR_XZ:
-                    extractTarEntries(fromType, copyDefinition, index);
+                    extractTarEntries(spec, index);
             }
-        } else if (fromType == ArchiveType.NONE) {
-            // Compress files to an archive
-            switch (toType) {
+        } catch (UnsupportedRarV5Exception e) {
+            logger.error("Could not extract '{}'. RAR5 is not supported yet", spec.getFrom());
+            if (listener != null) {
+                listener.reportFailure(
+                        spec.getFrom(),
+                        EMPTY_PATH,
+                        index,
+                        "Could not extract archive. RAR5 is not supported yet",
+                        e);
+            }
+        } catch (Exception e) {
+            logger.error("Could not extract '{}'", spec.getFrom(), e);
+            if (listener != null) {
+                listener.reportFailure(
+                        spec.getFrom(),
+                        EMPTY_PATH,
+                        index,
+                        "Could not extract archive",
+                        e);
+            }
+        } finally {
+            if (listener != null) {
+                listener.reportFinish(spec.getFrom(), EMPTY_PATH, index);
+            }
+        }
+    }
+
+    private void copy(CompressionSpec spec) {
+        int index = getThreadIndex();
+        if (listener != null) {
+            listener.reportStart(EMPTY_PATH, spec.getTo(), index);
+        }
+        try {
+            switch (spec.getToType()) {
                 case ZIP:
-                    compressZipEntries(copyDefinition, index);
+                    compressZipEntries(spec, index);
                     return;
                 case RAR:
                     throw new UnsupportedOperationException("RAR compression is not supported");
                 case SEVEN_ZIP:
-                    compressSevenZipEntries(copyDefinition, index);
+                    compressSevenZipEntries(spec, index);
                     return;
                 case TAR:
                 case TAR_BZ2:
@@ -246,43 +309,94 @@ public final class FileCopier {
                 case TAR_LZ4:
                 case TAR_LZMA:
                 case TAR_XZ:
-                    compressTarEntries(toType, copyDefinition, index);
+                    compressTarEntries(spec, index);
             }
-        } else {
-            // Copy files from an archive to another
-            switch (fromType) {
-                case ZIP:
-                    fromZipToArchive(toType, copyDefinition, index);
-                    return;
-                case RAR:
-                    fromRarToArchive(toType, copyDefinition, index);
-                    return;
-                case SEVEN_ZIP:
-                    fromSevenZipToArchive(toType, copyDefinition, index);
-                    return;
-                case TAR:
-                case TAR_BZ2:
-                case TAR_GZ:
-                case TAR_LZ4:
-                case TAR_LZMA:
-                case TAR_XZ:
-                    fromTarToArchive(fromType, toType, copyDefinition, index);
+        } catch (Exception e) {
+            logger.error("Could not compress files to '{}'", spec.getTo(), e);
+            if (listener != null) {
+                listener.reportFailure(
+                        EMPTY_PATH,
+                        spec.getTo(),
+                        index,
+                        "Could not compress files",
+                        e);
+            }
+        } finally {
+            if (listener != null) {
+                listener.reportFinish(EMPTY_PATH, spec.getTo(), index);
             }
         }
     }
 
-    private void extractZipEntries(CopyDefinition copyDefinition, int index) throws IOException {
-        ArchiveUtils.readZip(copyDefinition.getFrom(), (zipFile, zipArchiveEntry) -> {
+    private void copy(ArchiveCopySpec spec) {
+        int index = getThreadIndex();
+        if (listener != null) {
+            listener.reportStart(spec.getFrom(), spec.getTo(), index);
+        }
+        try {
+            switch (spec.getFromType()) {
+                case ZIP:
+                    fromZipToArchive(spec, index);
+                    return;
+                case RAR:
+                    fromRarToArchive(spec, index);
+                    return;
+                case SEVEN_ZIP:
+                    fromSevenZipToArchive(spec, index);
+                    return;
+                case TAR:
+                case TAR_BZ2:
+                case TAR_GZ:
+                case TAR_LZ4:
+                case TAR_LZMA:
+                case TAR_XZ:
+                    fromTarToArchive(spec, index);
+            }
+        } catch (UnsupportedRarV5Exception e) {
+            logger.error(
+                    "Could not copy contents of '{}' to '{}'. RAR5 is not supported yet",
+                    spec.getFrom(),
+                    spec.getTo());
+            if (listener != null) {
+                listener.reportFailure(
+                        spec.getFrom(),
+                        spec.getTo(),
+                        index,
+                        "Could not copy contents of archive. RAR5 is not supported yet",
+                        e);
+            }
+        } catch (Exception e) {
+            logger.error(
+                    "Could not copy contents of '{}' to '{}'",
+                    spec.getFrom(),
+                    spec.getTo(),
+                    e);
+            if (listener != null) {
+                listener.reportFailure(
+                        spec.getFrom(),
+                        spec.getTo(),
+                        index,
+                        "Could not copy contents of archive",
+                        e);
+            }
+        } finally {
+            if (listener != null) {
+                listener.reportFinish(spec.getFrom(), spec.getTo(), index);
+            }
+        }
+    }
+
+    private void extractZipEntries(ExtractionSpec spec, int index) throws IOException {
+        ArchiveUtils.readZip(spec.getFrom(), (zipFile, zipArchiveEntry) -> {
             String name = zipArchiveEntry.getName();
-            ArchiveCopyDefinition archiveCopyDefinition =
-                    findArchiveCopyDefinition(copyDefinition, name);
-            if (archiveCopyDefinition == null) {
+            InternalCopySpec<String, Path> internal = findInternalSpec(spec, name);
+            if (internal == null) {
                 return;
             }
             try (InputStream inputStream = zipFile.getInputStream(zipArchiveEntry)) {
-                Path to = copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
+                Path to = internal.getTo();
                 try (OutputStream outputStream = Files.newOutputStream(to)) {
-                    Path source = copyDefinition.getFrom().resolve(name);
+                    Path source = spec.getFrom().resolve(name);
                     long size = zipArchiveEntry.getSize();
                     copyWithProgress(
                             index,
@@ -306,21 +420,18 @@ public final class FileCopier {
         });
     }
 
-    private void extractRarEntries(CopyDefinition copyDefinition, int index)
-            throws Exception {
+    private void extractRarEntries(ExtractionSpec spec, int index) throws Exception {
         try {
-            ArchiveUtils.readRar(copyDefinition.getFrom(), (archive, fileHeader) -> {
-                String name = fileHeader.getFileName();
-                ArchiveCopyDefinition archiveCopyDefinition =
-                        findArchiveCopyDefinition(copyDefinition, name);
-                if (archiveCopyDefinition == null) {
+            ArchiveUtils.readRar(spec.getFrom(), (archive, fileHeader) -> {
+                String name = fileHeader.getFileName().replace('\\', '/');
+                InternalCopySpec<String, Path> internal = findInternalSpec(spec, name);
+                if (internal == null) {
                     return;
                 }
                 try (InputStream inputStream = archive.getInputStream(fileHeader)) {
-                    Path to =
-                            copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
+                    Path to = internal.getTo();
                     try (OutputStream outputStream = Files.newOutputStream(to)) {
-                        Path source = copyDefinition.getFrom().resolve(name);
+                        Path source = spec.getFrom().resolve(name);
                         long size = fileHeader.getFullUnpackSize();
                         copyWithProgress(
                                 index,
@@ -344,32 +455,29 @@ public final class FileCopier {
             });
         } catch (UnsupportedRarV5Exception e) {
             if (ArchiveUtils.isUnrarAvailable()) {
-                extractRarEntriesWithUnrar(copyDefinition, index);
+                extractRarEntriesWithUnrar(spec, index);
             } else {
                 throw e;
             }
         }
     }
 
-    private void extractRarEntriesWithUnrar(CopyDefinition copyDefinition, int index)
-            throws Exception {
-        ImmutableSet<String> desiredEntryNames = copyDefinition.getArchiveCopyDefinitions().stream()
-                .map(ArchiveCopyDefinition::getSource)
+    private void extractRarEntriesWithUnrar(ExtractionSpec spec, int index) throws Exception {
+        ImmutableSet<String> desiredEntryNames = spec.getInternalCopySpecs().stream()
+                .map(InternalCopySpec::getFrom)
                 .collect(ImmutableSet.toImmutableSet());
         ArchiveUtils.readRarWithUnrar(
-                copyDefinition.getFrom(),
+                spec.getFrom(),
                 desiredEntryNames,
                 (entry, processInputStream) -> {
                     String name = entry.getName();
-                    ArchiveCopyDefinition archiveCopyDefinition =
-                            findArchiveCopyDefinition(copyDefinition, name);
-                    if (archiveCopyDefinition == null) {
+                    InternalCopySpec<String, Path> internal = findInternalSpec(spec, name);
+                    if (internal == null) {
                         return;
                     }
-                    Path to =
-                            copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
+                    Path to = internal.getTo();
                     try (OutputStream outputStream = Files.newOutputStream(to)) {
-                        Path source = copyDefinition.getFrom().resolve(name);
+                        Path source = spec.getFrom().resolve(name);
                         long size = entry.getSize();
                         copyWithProgress(
                                 index,
@@ -390,18 +498,16 @@ public final class FileCopier {
                 });
     }
 
-    private void extractSevenZipEntries(CopyDefinition copyDefinition, int index)
-            throws IOException {
-        ArchiveUtils.readSevenZip(copyDefinition.getFrom(), (sevenZFile, sevenZArchiveEntry) -> {
+    private void extractSevenZipEntries(ExtractionSpec spec, int index) throws IOException {
+        ArchiveUtils.readSevenZip(spec.getFrom(), (sevenZFile, sevenZArchiveEntry) -> {
             String name = sevenZArchiveEntry.getName();
-            ArchiveCopyDefinition archiveCopyDefinition =
-                    findArchiveCopyDefinition(copyDefinition, name);
-            if (archiveCopyDefinition == null) {
+            InternalCopySpec<String, Path> internal = findInternalSpec(spec, name);
+            if (internal == null) {
                 return;
             }
-            Path to = copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
+            Path to = internal.getTo();
             try (OutputStream outputStream = Files.newOutputStream(to)) {
-                Path source = copyDefinition.getFrom().resolve(name);
+                Path source = spec.getFrom().resolve(name);
                 long size = sevenZArchiveEntry.getSize();
                 copyWithProgress(index, size, source, to, sevenZFile::read, outputStream::write);
             } catch (FileAlreadyExistsException e) {
@@ -420,24 +526,19 @@ public final class FileCopier {
         });
     }
 
-    private void extractTarEntries(
-            ArchiveType archiveType,
-            CopyDefinition copyDefinition,
-            int index) throws IOException {
+    private void extractTarEntries(ExtractionSpec spec, int index) throws IOException {
         ArchiveUtils.readTar(
-                archiveType,
-                copyDefinition.getFrom(),
+                spec.getFromType(),
+                spec.getFrom(),
                 (tarArchiveEntry, tarArchiveInputStream) -> {
                     String name = tarArchiveEntry.getName();
-                    ArchiveCopyDefinition archiveCopyDefinition =
-                            findArchiveCopyDefinition(copyDefinition, name);
-                    if (archiveCopyDefinition == null) {
+                    InternalCopySpec<String, Path> internal = findInternalSpec(spec, name);
+                    if (internal == null) {
                         return;
                     }
-                    Path to =
-                            copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
+                    Path to = internal.getTo();
                     try (OutputStream outputStream = Files.newOutputStream(to)) {
-                        Path source = copyDefinition.getFrom().resolve(name);
+                        Path source = spec.getFrom().resolve(name);
                         long size = tarArchiveEntry.getRealSize();
                         copyWithProgress(
                                 index,
@@ -459,18 +560,16 @@ public final class FileCopier {
                 });
     }
 
-    private void compressZipEntries(CopyDefinition copyDefinition, int index) throws IOException {
+    private void compressZipEntries(CompressionSpec spec, int index) throws IOException {
         try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
-            for (ArchiveCopyDefinition archiveCopyDefinition :
-                    copyDefinition.getArchiveCopyDefinitions()) {
-                Path source = copyDefinition.getFrom().resolve(archiveCopyDefinition.getSource());
+                new ZipArchiveOutputStream(spec.getTo().toFile())) {
+            for (InternalCopySpec<Path, String> internal : spec.getInternalCopySpecs()) {
+                Path source = internal.getFrom();
                 try (InputStream inputStream = Files.newInputStream(source)) {
                     ArchiveEntry archiveEntry = zipArchiveOutputStream.createArchiveEntry(
                             source.toFile(),
-                            archiveCopyDefinition.getDestination());
-                    Path destination =
-                            copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
+                            internal.getTo());
+                    Path destination = spec.getTo().resolve(internal.getTo());
                     zipArchiveOutputStream.putArchiveEntry(archiveEntry);
                     copyWithProgress(
                             index,
@@ -485,24 +584,19 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void compressSevenZipEntries(CopyDefinition copyDefinition, int index)
-            throws IOException {
-        try (SevenZOutputFile sevenZOutputFile =
-                new SevenZOutputFile(copyDefinition.getTo().toFile())) {
-            for (ArchiveCopyDefinition archiveCopyDefinition :
-                    copyDefinition.getArchiveCopyDefinitions()) {
-                Path source = copyDefinition.getFrom().resolve(archiveCopyDefinition.getSource());
+    private void compressSevenZipEntries(CompressionSpec spec, int index) throws IOException {
+        try (SevenZOutputFile sevenZOutputFile = new SevenZOutputFile(spec.getTo().toFile())) {
+            for (InternalCopySpec<Path, String> internal : spec.getInternalCopySpecs()) {
+                Path source = internal.getFrom();
                 try (InputStream inputStream = Files.newInputStream(source)) {
-                    SevenZArchiveEntry archiveEntry = sevenZOutputFile.createArchiveEntry(
-                            source.toFile(),
-                            archiveCopyDefinition.getDestination());
-                    Path destination =
-                            copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
+                    SevenZArchiveEntry archiveEntry =
+                            sevenZOutputFile.createArchiveEntry(source.toFile(), internal.getTo());
+                    Path destination = spec.getTo().resolve(internal.getFrom());
                     sevenZOutputFile.putArchiveEntry(archiveEntry);
                     copyWithProgress(
                             index,
@@ -517,64 +611,55 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void compressTarEntries(
-            ArchiveType archiveType,
-            CopyDefinition copyDefinition,
-            int index) throws IOException {
-        OutputStream outputStream =
-                ArchiveUtils.outputStreamForTar(archiveType, copyDefinition.getTo());
+    private void compressTarEntries(CompressionSpec spec, int index) throws IOException {
+        OutputStream outputStream = ArchiveUtils.outputStreamForTar(spec.getToType(), spec.getTo());
         if (outputStream == null) {
             return;
         }
-        try (TarArchiveOutputStream tarArchiveOutputStream =
-                new TarArchiveOutputStream(outputStream)) {
-            for (ArchiveCopyDefinition archiveCopyDefinition :
-                    copyDefinition.getArchiveCopyDefinitions()) {
-                Path source = copyDefinition.getFrom().resolve(archiveCopyDefinition.getSource());
+        try (TarArchiveOutputStream tarOutputStream = new TarArchiveOutputStream(outputStream)) {
+            for (InternalCopySpec<Path, String> internal : spec.getInternalCopySpecs()) {
+                Path source = internal.getFrom();
                 try (InputStream inputStream = Files.newInputStream(source)) {
-                    ArchiveEntry archiveEntry = tarArchiveOutputStream.createArchiveEntry(
-                            source.toFile(),
-                            archiveCopyDefinition.getDestination());
-                    Path destination =
-                            copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
-                    tarArchiveOutputStream.putArchiveEntry(archiveEntry);
+                    ArchiveEntry archiveEntry =
+                            tarOutputStream.createArchiveEntry(source.toFile(), internal.getTo());
+                    Path destination = spec.getTo().resolve(internal.getTo());
+                    tarOutputStream.putArchiveEntry(archiveEntry);
                     copyWithProgress(
                             index,
                             Files.size(source),
                             source,
                             destination,
                             inputStream::read,
-                            tarArchiveOutputStream::write);
-                    tarArchiveOutputStream.closeArchiveEntry();
+                            tarOutputStream::write);
+                    tarOutputStream.closeArchiveEntry();
                 }
             }
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromZipToArchive(ArchiveType toType, CopyDefinition copyDefinition, int index)
-            throws IOException {
-        switch (toType) {
+    private void fromZipToArchive(ArchiveCopySpec spec, int index) throws IOException {
+        switch (spec.getToType()) {
             case ZIP:
                 if (allowRawZipCopy) {
-                    fromZipToZipRaw(copyDefinition, index);
+                    fromZipToZipRaw(spec, index);
                 } else {
-                    fromZipToZip(copyDefinition, index);
+                    fromZipToZip(spec, index);
                 }
                 return;
             case RAR:
                 throw new UnsupportedOperationException("RAR compression is not supported");
             case SEVEN_ZIP:
-                fromZipToSevenZip(copyDefinition, index);
+                fromZipToSevenZip(spec, index);
                 return;
             case TAR:
             case TAR_BZ2:
@@ -582,20 +667,19 @@ public final class FileCopier {
             case TAR_LZ4:
             case TAR_LZMA:
             case TAR_XZ:
-                fromZipToTar(toType, copyDefinition, index);
+                fromZipToTar(spec, index);
         }
     }
 
-    private void fromRarToArchive(ArchiveType toType, CopyDefinition copyDefinition, int index)
-            throws Exception {
-        switch (toType) {
+    private void fromRarToArchive(ArchiveCopySpec spec, int index) throws Exception {
+        switch (spec.getToType()) {
             case ZIP:
-                fromRarToZip(copyDefinition, index);
+                fromRarToZip(spec, index);
                 return;
             case RAR:
                 throw new UnsupportedOperationException("RAR compression is not supported");
             case SEVEN_ZIP:
-                fromRarToSevenZip(copyDefinition, index);
+                fromRarToSevenZip(spec, index);
                 return;
             case TAR:
             case TAR_BZ2:
@@ -603,22 +687,19 @@ public final class FileCopier {
             case TAR_LZ4:
             case TAR_LZMA:
             case TAR_XZ:
-                fromRarToTar(toType, copyDefinition, index);
+                fromRarToTar(spec, index);
         }
     }
 
-    private void fromSevenZipToArchive(
-            ArchiveType toType,
-            CopyDefinition copyDefinition,
-            int index) throws IOException {
-        switch (toType) {
+    private void fromSevenZipToArchive(ArchiveCopySpec spec, int index) throws IOException {
+        switch (spec.getToType()) {
             case ZIP:
-                fromSevenZipToZip(copyDefinition, index);
+                fromSevenZipToZip(spec, index);
                 return;
             case RAR:
                 throw new UnsupportedOperationException("RAR compression is not supported");
             case SEVEN_ZIP:
-                fromSevenZipToSevenZip(copyDefinition, index);
+                fromSevenZipToSevenZip(spec, index);
                 return;
             case TAR:
             case TAR_BZ2:
@@ -626,24 +707,19 @@ public final class FileCopier {
             case TAR_LZ4:
             case TAR_LZMA:
             case TAR_XZ:
-                fromSevenZipToTar(toType, copyDefinition, index);
+                fromSevenZipToTar(spec, index);
         }
     }
 
-    private void fromTarToArchive(
-            ArchiveType fromType,
-            ArchiveType toType,
-            CopyDefinition copyDefinition,
-            int index)
-            throws IOException {
-        switch (toType) {
+    private void fromTarToArchive(ArchiveCopySpec spec, int index) throws IOException {
+        switch (spec.getToType()) {
             case ZIP:
-                fromTarToZip(fromType, copyDefinition, index);
+                fromTarToZip(spec, index);
                 return;
             case RAR:
                 throw new UnsupportedOperationException("RAR compression is not supported");
             case SEVEN_ZIP:
-                fromTarToSevenZip(fromType, copyDefinition, index);
+                fromTarToSevenZip(spec, index);
                 return;
             case TAR:
             case TAR_BZ2:
@@ -651,36 +727,30 @@ public final class FileCopier {
             case TAR_LZ4:
             case TAR_LZMA:
             case TAR_XZ:
-                fromTarToTar(fromType, toType, copyDefinition, index);
+                fromTarToTar(spec, index);
         }
     }
 
-    private void fromZipToZipRaw(CopyDefinition copyDefinition, int index) throws IOException {
+    private void fromZipToZipRaw(ArchiveCopySpec spec, int index) throws IOException {
         try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
-            ArchiveUtils.readZip(copyDefinition.getFrom(), (zipFile, zipArchiveEntry) -> {
+                new ZipArchiveOutputStream(spec.getTo().toFile())) {
+            ArchiveUtils.readZip(spec.getFrom(), (zipFile, zipArchiveEntry) -> {
                 String name = zipArchiveEntry.getName();
-                ArchiveCopyDefinition archiveCopyDefinition =
-                        findArchiveCopyDefinition(copyDefinition, name);
-                if (archiveCopyDefinition == null) {
+                InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                if (internal == null) {
                     return;
                 }
-                Path source = copyDefinition.getFrom().resolve(name);
-                Path to = copyDefinition.getTo().resolve(name);
-                if (!name.equals(archiveCopyDefinition.getDestination())) {
+                Path source = spec.getFrom().resolve(name);
+                Path to = spec.getTo().resolve(name);
+                if (!name.equals(internal.getTo())) {
                     logger.warn(
                             "Cannot rename files inside ZIPs when using raw copy. "
                                     + "Writing '{}' as '{}'",
-                            copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination()),
+                            spec.getTo().resolve(internal.getTo()),
                             to);
                 }
                 if (listener != null) {
-                    listener.reportProgress(
-                            source,
-                            to,
-                            index,
-                            0,
-                            0);
+                    listener.reportProgress(source, to, index, 0, 0);
                 }
                 long start = System.nanoTime();
                 zipArchiveOutputStream.addRawArchiveEntry(
@@ -700,21 +770,20 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromZipToZip(CopyDefinition copyDefinition, int index) throws IOException {
+    private void fromZipToZip(ArchiveCopySpec spec, int index) throws IOException {
         try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
+                new ZipArchiveOutputStream(spec.getTo().toFile())) {
             ArchiveUtils.readZip(
-                    copyDefinition.getFrom(),
+                    spec.getFrom(),
                     (zipFile, zipArchiveEntry) -> {
                         String name = zipArchiveEntry.getName();
-                        ArchiveCopyDefinition archiveCopyDefinition =
-                                findArchiveCopyDefinition(copyDefinition, name);
-                        if (archiveCopyDefinition == null) {
+                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        if (internal == null) {
                             return;
                         }
                         try (InputStream inputStream = zipFile.getInputStream(zipArchiveEntry)) {
@@ -722,8 +791,8 @@ public final class FileCopier {
                                     index,
                                     inputStream::read,
                                     zipArchiveOutputStream,
-                                    copyDefinition,
-                                    archiveCopyDefinition,
+                                    spec,
+                                    internal,
                                     name,
                                     zipArchiveEntry.getCreationTime(),
                                     zipArchiveEntry.getLastModifiedTime(),
@@ -734,21 +803,19 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromZipToSevenZip(CopyDefinition copyDefinition, int index) throws IOException {
-        try (SevenZOutputFile sevenZOutputFile =
-                new SevenZOutputFile(copyDefinition.getTo().toFile())) {
+    private void fromZipToSevenZip(ArchiveCopySpec spec, int index) throws IOException {
+        try (SevenZOutputFile sevenZOutputFile = new SevenZOutputFile(spec.getTo().toFile())) {
             ArchiveUtils.readZip(
-                    copyDefinition.getFrom(),
+                    spec.getFrom(),
                     (zipFile, zipArchiveEntry) -> {
                         String name = zipArchiveEntry.getName();
-                        ArchiveCopyDefinition archiveCopyDefinition =
-                                findArchiveCopyDefinition(copyDefinition, name);
-                        if (archiveCopyDefinition == null) {
+                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        if (internal == null) {
                             return;
                         }
                         try (InputStream inputStream = zipFile.getInputStream(zipArchiveEntry)) {
@@ -756,8 +823,8 @@ public final class FileCopier {
                                     index,
                                     inputStream::read,
                                     sevenZOutputFile,
-                                    copyDefinition,
-                                    archiveCopyDefinition,
+                                    spec,
+                                    internal,
                                     name,
                                     toDate(zipArchiveEntry.getCreationTime()),
                                     toDate(zipArchiveEntry.getLastModifiedTime()),
@@ -768,38 +835,32 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromZipToTar(
-            ArchiveType archiveType,
-            CopyDefinition copyDefinition,
-            int index) throws IOException {
-        OutputStream outputStream =
-                ArchiveUtils.outputStreamForTar(archiveType, copyDefinition.getTo());
+    private void fromZipToTar(ArchiveCopySpec spec, int index) throws IOException {
+        OutputStream outputStream = ArchiveUtils.outputStreamForTar(spec.getToType(), spec.getTo());
         if (outputStream == null) {
             return;
         }
-        try (TarArchiveOutputStream tarArchiveOutputStream =
-                new TarArchiveOutputStream(outputStream)) {
+        try (TarArchiveOutputStream tarOutputStream = new TarArchiveOutputStream(outputStream)) {
             ArchiveUtils.readZip(
-                    copyDefinition.getFrom(),
+                    spec.getFrom(),
                     (zipFile, zipArchiveEntry) -> {
                         String name = zipArchiveEntry.getName();
-                        ArchiveCopyDefinition archiveCopyDefinition =
-                                findArchiveCopyDefinition(copyDefinition, name);
-                        if (archiveCopyDefinition == null) {
+                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        if (internal == null) {
                             return;
                         }
                         try (InputStream inputStream = zipFile.getInputStream(zipArchiveEntry)) {
                             toTar(
                                     index,
                                     inputStream::read,
-                                    tarArchiveOutputStream,
-                                    copyDefinition,
-                                    archiveCopyDefinition,
+                                    tarOutputStream,
+                                    spec,
+                                    internal,
                                     name,
                                     toDate(zipArchiveEntry.getLastModifiedTime()),
                                     zipArchiveEntry.getSize());
@@ -808,21 +869,20 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromRarToZip(CopyDefinition copyDefinition, int index) throws Exception {
+    private void fromRarToZip(ArchiveCopySpec spec, int index) throws Exception {
         try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
+                new ZipArchiveOutputStream(spec.getTo().toFile())) {
             ArchiveUtils.readRar(
-                    copyDefinition.getFrom(),
+                    spec.getFrom(),
                     (archive, fileHeader) -> {
-                        String name = fileHeader.getFileName();
-                        ArchiveCopyDefinition archiveCopyDefinition =
-                                findArchiveCopyDefinition(copyDefinition, name);
-                        if (archiveCopyDefinition == null) {
+                        String name = fileHeader.getFileName().replace('\\', '/');;
+                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        if (internal == null) {
                             return;
                         }
                         try (InputStream inputStream = archive.getInputStream(fileHeader)) {
@@ -830,8 +890,8 @@ public final class FileCopier {
                                     index,
                                     inputStream::read,
                                     zipArchiveOutputStream,
-                                    copyDefinition,
-                                    archiveCopyDefinition,
+                                    spec,
+                                    internal,
                                     name,
                                     from(fileHeader.getCTime()),
                                     from(fileHeader.getMTime()),
@@ -843,32 +903,28 @@ public final class FileCopier {
             throw e;
         } catch (UnsupportedRarV5Exception e) {
             if (ArchiveUtils.isUnrarAvailable()) {
-                fromRarWithUnrarToZip(copyDefinition, index);
+                fromRarWithUnrarToZip(spec, index);
             } else {
-                Files.delete(copyDefinition.getTo());
+                Files.delete(spec.getTo());
                 throw e;
             }
         } catch (IOException | RarException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromRarWithUnrarToZip(CopyDefinition copyDefinition, int index) throws Exception {
+    private void fromRarWithUnrarToZip(ArchiveCopySpec spec, int index) throws Exception {
         try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
-            ImmutableSet<String> desiredEntryNames =
-                    copyDefinition.getArchiveCopyDefinitions().stream()
-                            .map(ArchiveCopyDefinition::getSource)
-                            .collect(ImmutableSet.toImmutableSet());
+                new ZipArchiveOutputStream(spec.getTo().toFile())) {
+            ImmutableSet<String> desiredEntryNames = getInternalSources(spec);
             ArchiveUtils.readRarWithUnrar(
-                    copyDefinition.getFrom(),
+                    spec.getFrom(),
                     desiredEntryNames,
                     (entry, processInputStream) -> {
                         String name = entry.getName();
-                        ArchiveCopyDefinition archiveCopyDefinition =
-                                findArchiveCopyDefinition(copyDefinition, name);
-                        if (archiveCopyDefinition == null) {
+                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        if (internal == null) {
                             return;
                         }
                         FileTime time = from(entry.getModificationTime());
@@ -876,8 +932,8 @@ public final class FileCopier {
                                 index,
                                 processInputStream::read,
                                 zipArchiveOutputStream,
-                                copyDefinition,
-                                archiveCopyDefinition,
+                                spec,
+                                internal,
                                 name,
                                 time,
                                 time,
@@ -887,21 +943,19 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException | RarException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromRarToSevenZip(CopyDefinition copyDefinition, int index) throws Exception {
-        try (SevenZOutputFile sevenZOutputFile =
-                new SevenZOutputFile(copyDefinition.getTo().toFile())) {
+    private void fromRarToSevenZip(ArchiveCopySpec spec, int index) throws Exception {
+        try (SevenZOutputFile sevenZOutputFile = new SevenZOutputFile(spec.getTo().toFile())) {
             ArchiveUtils.readRar(
-                    copyDefinition.getFrom(),
+                    spec.getFrom(),
                     (archive, fileHeader) -> {
-                        String name = fileHeader.getFileName();
-                        ArchiveCopyDefinition archiveCopyDefinition =
-                                findArchiveCopyDefinition(copyDefinition, name);
-                        if (archiveCopyDefinition == null) {
+                        String name = fileHeader.getFileName().replace('\\', '/');
+                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        if (internal == null) {
                             return;
                         }
                         try (InputStream inputStream = archive.getInputStream(fileHeader)) {
@@ -909,8 +963,8 @@ public final class FileCopier {
                                     index,
                                     inputStream::read,
                                     sevenZOutputFile,
-                                    copyDefinition,
-                                    archiveCopyDefinition,
+                                    spec,
+                                    internal,
                                     name,
                                     fileHeader.getCTime(),
                                     fileHeader.getMTime(),
@@ -922,33 +976,27 @@ public final class FileCopier {
             throw e;
         } catch (UnsupportedRarV5Exception e) {
             if (ArchiveUtils.isUnrarAvailable()) {
-                fromRarWithUnrarToSevenZip(copyDefinition, index);
+                fromRarWithUnrarToSevenZip(spec, index);
             } else {
-                Files.delete(copyDefinition.getTo());
+                Files.delete(spec.getTo());
                 throw e;
             }
         } catch (IOException | RarException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromRarWithUnrarToSevenZip(CopyDefinition copyDefinition, int index)
-            throws Exception {
-        try (SevenZOutputFile sevenZOutputFile =
-                new SevenZOutputFile(copyDefinition.getTo().toFile())) {
-            ImmutableSet<String> desiredEntryNames =
-                    copyDefinition.getArchiveCopyDefinitions().stream()
-                            .map(ArchiveCopyDefinition::getSource)
-                            .collect(ImmutableSet.toImmutableSet());
+    private void fromRarWithUnrarToSevenZip(ArchiveCopySpec spec, int index) throws Exception {
+        try (SevenZOutputFile sevenZOutputFile = new SevenZOutputFile(spec.getTo().toFile())) {
+            ImmutableSet<String> desiredEntryNames = getInternalSources(spec);
             ArchiveUtils.readRarWithUnrar(
-                    copyDefinition.getFrom(),
+                    spec.getFrom(),
                     desiredEntryNames,
                     (entry, processInputStream) -> {
                         String name = entry.getName();
-                        ArchiveCopyDefinition archiveCopyDefinition =
-                                findArchiveCopyDefinition(copyDefinition, name);
-                        if (archiveCopyDefinition == null) {
+                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        if (internal == null) {
                             return;
                         }
                         Date time = toDate(entry.getModificationTime());
@@ -956,8 +1004,8 @@ public final class FileCopier {
                                 index,
                                 processInputStream::read,
                                 sevenZOutputFile,
-                                copyDefinition,
-                                archiveCopyDefinition,
+                                spec,
+                                internal,
                                 name,
                                 time,
                                 time,
@@ -967,36 +1015,32 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException | RarException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromRarToTar(ArchiveType archiveType, CopyDefinition copyDefinition, int index)
-            throws Exception {
-        OutputStream outputStream =
-                ArchiveUtils.outputStreamForTar(archiveType, copyDefinition.getTo());
+    private void fromRarToTar(ArchiveCopySpec spec, int index) throws Exception {
+        OutputStream outputStream = ArchiveUtils.outputStreamForTar(spec.getToType(), spec.getTo());
         if (outputStream == null) {
             return;
         }
-        try (TarArchiveOutputStream tarArchiveOutputStream =
-                new TarArchiveOutputStream(outputStream)) {
+        try (TarArchiveOutputStream tarOutputStream = new TarArchiveOutputStream(outputStream)) {
             ArchiveUtils.readRar(
-                    copyDefinition.getFrom(),
+                    spec.getFrom(),
                     (archive, fileHeader) -> {
-                        String name = fileHeader.getFileName();
-                        ArchiveCopyDefinition archiveCopyDefinition =
-                                findArchiveCopyDefinition(copyDefinition, name);
-                        if (archiveCopyDefinition == null) {
+                        String name = fileHeader.getFileName().replace('\\', '/');
+                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        if (internal == null) {
                             return;
                         }
                         try (InputStream inputStream = archive.getInputStream(fileHeader)) {
                             toTar(
                                     index,
                                     inputStream::read,
-                                    tarArchiveOutputStream,
-                                    copyDefinition,
-                                    archiveCopyDefinition,
+                                    tarOutputStream,
+                                    spec,
+                                    internal,
                                     name,
                                     fileHeader.getMTime(),
                                     fileHeader.getFullUnpackSize());
@@ -1006,48 +1050,41 @@ public final class FileCopier {
             throw e;
         } catch (UnsupportedRarV5Exception e) {
             if (ArchiveUtils.isUnrarAvailable()) {
-                fromRarWithUnrarToTar(archiveType, copyDefinition, index);
+                fromRarWithUnrarToTar(spec, index);
             } else {
-                Files.delete(copyDefinition.getTo());
+                Files.delete(spec.getTo());
                 throw e;
             }
         } catch (IOException | RarException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
     private void fromRarWithUnrarToTar(
-            ArchiveType archiveType,
-            CopyDefinition copyDefinition,
+            ArchiveCopySpec spec,
             int index) throws Exception {
-        OutputStream outputStream =
-                ArchiveUtils.outputStreamForTar(archiveType, copyDefinition.getTo());
+        OutputStream outputStream = ArchiveUtils.outputStreamForTar(spec.getToType(), spec.getTo());
         if (outputStream == null) {
             return;
         }
-        try (TarArchiveOutputStream tarArchiveOutputStream =
-                new TarArchiveOutputStream(outputStream)) {
-            ImmutableSet<String> desiredEntryNames =
-                    copyDefinition.getArchiveCopyDefinitions().stream()
-                            .map(ArchiveCopyDefinition::getSource)
-                            .collect(ImmutableSet.toImmutableSet());
+        try (TarArchiveOutputStream tarOutputStream = new TarArchiveOutputStream(outputStream)) {
+            ImmutableSet<String> desiredEntryNames = getInternalSources(spec);
             ArchiveUtils.readRarWithUnrar(
-                    copyDefinition.getFrom(),
+                    spec.getFrom(),
                     desiredEntryNames,
                     (entry, processInputStream) -> {
                         String name = entry.getName();
-                        ArchiveCopyDefinition archiveCopyDefinition =
-                                findArchiveCopyDefinition(copyDefinition, name);
-                        if (archiveCopyDefinition == null) {
+                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        if (internal == null) {
                             return;
                         }
                         toTar(
                                 index,
                                 processInputStream::read,
-                                tarArchiveOutputStream,
-                                copyDefinition,
-                                archiveCopyDefinition,
+                                tarOutputStream,
+                                spec,
+                                internal,
                                 name,
                                 toDate(entry.getModificationTime()),
                                 entry.getSize());
@@ -1055,21 +1092,21 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException | RarException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromSevenZipToZip(CopyDefinition copyDefinition, int index) throws IOException {
+    private void fromSevenZipToZip(ArchiveCopySpec spec, int index) throws IOException {
         try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
+                new ZipArchiveOutputStream(spec.getTo().toFile())) {
             ArchiveUtils.readSevenZip(
-                    copyDefinition.getFrom(),
+                    spec.getFrom(),
                     (sevenZFile, sevenZArchiveEntry) -> toZip(
                             index,
                             sevenZFile::read,
                             zipArchiveOutputStream,
-                            copyDefinition,
+                            spec,
                             sevenZArchiveEntry.getName(),
                             sevenZArchiveEntry.getHasCreationDate()
                                     ? from(sevenZArchiveEntry.getCreationDate())
@@ -1084,22 +1121,21 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromSevenZipToSevenZip(CopyDefinition copyDefinition, int index)
-            throws IOException {
+    private void fromSevenZipToSevenZip(ArchiveCopySpec spec, int index) throws IOException {
         try (SevenZOutputFile sevenZOutputFile =
-                new SevenZOutputFile(copyDefinition.getTo().toFile())) {
+                new SevenZOutputFile(spec.getTo().toFile())) {
             ArchiveUtils.readSevenZip(
-                    copyDefinition.getFrom(),
+                    spec.getFrom(),
                     (sevenZFile, sevenZArchiveEntry) -> toSevenZip(
                             index,
                             sevenZFile::read,
                             sevenZOutputFile,
-                            copyDefinition,
+                            spec,
                             sevenZArchiveEntry.getName(),
                             sevenZArchiveEntry.getHasCreationDate()
                                     ? sevenZArchiveEntry.getCreationDate()
@@ -1114,29 +1150,24 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromSevenZipToTar(
-            ArchiveType archiveType,
-            CopyDefinition copyDefinition,
-            int index) throws IOException {
-        OutputStream outputStream =
-                ArchiveUtils.outputStreamForTar(archiveType, copyDefinition.getTo());
+    private void fromSevenZipToTar(ArchiveCopySpec spec, int index) throws IOException {
+        OutputStream outputStream = ArchiveUtils.outputStreamForTar(spec.getToType(), spec.getTo());
         if (outputStream == null) {
             return;
         }
-        try (TarArchiveOutputStream tarArchiveOutputStream =
-                new TarArchiveOutputStream(outputStream)) {
+        try (TarArchiveOutputStream tarOutputStream = new TarArchiveOutputStream(outputStream)) {
             ArchiveUtils.readSevenZip(
-                    copyDefinition.getFrom(),
+                    spec.getFrom(),
                     (sevenZFile, sevenZArchiveEntry) -> toTar(
                             index,
                             sevenZFile::read,
-                            tarArchiveOutputStream,
-                            copyDefinition,
+                            tarOutputStream,
+                            spec,
                             sevenZArchiveEntry.getName(),
                             sevenZArchiveEntry.getHasLastModifiedDate()
                                     ? sevenZArchiveEntry.getLastModifiedDate()
@@ -1145,23 +1176,23 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromTarToZip(ArchiveType archiveType, CopyDefinition copyDefinition, int index)
+    private void fromTarToZip(ArchiveCopySpec spec, int index)
             throws IOException {
         try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(copyDefinition.getTo().toFile())) {
+                new ZipArchiveOutputStream(spec.getTo().toFile())) {
             ArchiveUtils.readTar(
-                    archiveType,
-                    copyDefinition.getFrom(),
+                    spec.getFromType(),
+                    spec.getFrom(),
                     (tarArchiveEntry, tarArchiveInputStream) -> toZip(
                             index,
                             tarArchiveInputStream::read,
                             zipArchiveOutputStream,
-                            copyDefinition,
+                            spec,
                             tarArchiveEntry.getName(),
                             null,
                             from(tarArchiveEntry.getLastModifiedDate()),
@@ -1170,26 +1201,21 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromTarToSevenZip(
-            ArchiveType archiveType,
-            CopyDefinition copyDefinition,
-            int index)
-            throws IOException {
-        try (SevenZOutputFile sevenZOutputFile =
-                new SevenZOutputFile(copyDefinition.getTo().toFile())) {
+    private void fromTarToSevenZip(ArchiveCopySpec spec, int index) throws IOException {
+        try (SevenZOutputFile sevenZOutputFile = new SevenZOutputFile(spec.getTo().toFile())) {
             ArchiveUtils.readTar(
-                    archiveType,
-                    copyDefinition.getFrom(),
+                    spec.getFromType(),
+                    spec.getFrom(),
                     (tarArchiveEntry, tarArchiveInputStream) -> toSevenZip(
                             index,
                             tarArchiveInputStream::read,
                             sevenZOutputFile,
-                            copyDefinition,
+                            spec,
                             tarArchiveEntry.getName(),
                             null,
                             tarArchiveEntry.getLastModifiedDate(),
@@ -1198,48 +1224,47 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
     }
 
-    private void fromTarToTar(
-            ArchiveType fromType,
-            ArchiveType toType,
-            CopyDefinition copyDefinition,
-            int index)
-            throws IOException {
-        OutputStream outputStream =
-                ArchiveUtils.outputStreamForTar(toType, copyDefinition.getTo());
+    private void fromTarToTar(ArchiveCopySpec spec, int index) throws IOException {
+        OutputStream outputStream = ArchiveUtils.outputStreamForTar(spec.getToType(), spec.getTo());
         if (outputStream == null) {
             return;
         }
-        try (TarArchiveOutputStream tarArchiveOutputStream =
-                new TarArchiveOutputStream(outputStream)) {
+        try (TarArchiveOutputStream tarOutputStream = new TarArchiveOutputStream(outputStream)) {
             ArchiveUtils.readTar(
-                    fromType,
-                    copyDefinition.getFrom(),
+                    spec.getFromType(),
+                    spec.getFrom(),
                     (tarArchiveEntry, tarArchiveInputStream) -> toTar(
                             index,
                             tarArchiveInputStream::read,
-                            tarArchiveOutputStream,
-                            copyDefinition,
+                            tarOutputStream,
+                            spec,
                             tarArchiveEntry.getName(),
                             tarArchiveEntry.getLastModifiedDate(),
                             tarArchiveEntry.getRealSize()));
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(copyDefinition.getTo());
+            Files.delete(spec.getTo());
             throw e;
         }
+    }
+
+    private static ImmutableSet<String> getInternalSources(ArchiveCopySpec spec) {
+        return spec.getInternalCopySpecs().stream()
+                .map(InternalCopySpec::getFrom)
+                .collect(ImmutableSet.toImmutableSet());
     }
 
     private void toZip(
             int index,
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
             ZipArchiveOutputStream zipArchiveOutputStream,
-            CopyDefinition copyDefinition,
+            ArchiveCopySpec spec,
             String name,
             @Nullable FileTime creationTime,
             @Nullable FileTime lastModifiedTime,
@@ -1250,8 +1275,8 @@ public final class FileCopier {
                 index,
                 readFunction,
                 zipArchiveOutputStream,
-                copyDefinition,
-                findArchiveCopyDefinition(copyDefinition, name),
+                spec,
+                findInternalSpec(spec, name),
                 name,
                 creationTime,
                 lastModifiedTime,
@@ -1263,19 +1288,19 @@ public final class FileCopier {
             int index,
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
             ZipArchiveOutputStream zipArchiveOutputStream,
-            CopyDefinition copyDefinition,
-            @Nullable ArchiveCopyDefinition archiveCopyDefinition,
+            ArchiveCopySpec spec,
+            @Nullable InternalCopySpec<String, String> internal,
             String name,
             @Nullable FileTime creationTime,
             @Nullable FileTime lastModifiedTime,
             @Nullable FileTime lastAccessTime,
             long size)
             throws IOException {
-        if (archiveCopyDefinition == null) {
+        if (internal == null) {
             return;
         }
-        Path to = copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
-        ZipArchiveEntry zae = new ZipArchiveEntry(archiveCopyDefinition.getDestination());
+        Path to = spec.getTo().resolve(internal.getTo());
+        ZipArchiveEntry zae = new ZipArchiveEntry(internal.getTo());
         zae.setSize(size);
         if (creationTime != null) {
             zae.setCreationTime(creationTime);
@@ -1286,7 +1311,7 @@ public final class FileCopier {
         if (lastAccessTime != null) {
             zae.setLastAccessTime(lastAccessTime);
         }
-        Path source = copyDefinition.getFrom().resolve(name);
+        Path source = spec.getFrom().resolve(name);
         zipArchiveOutputStream.putArchiveEntry(zae);
         copyWithProgress(
                 index,
@@ -1302,7 +1327,7 @@ public final class FileCopier {
             int index,
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
             SevenZOutputFile sevenZOutputFile,
-            CopyDefinition copyDefinition,
+            ArchiveCopySpec spec,
             String name,
             @Nullable Date creationDate,
             @Nullable Date lastModifiedDate,
@@ -1313,8 +1338,8 @@ public final class FileCopier {
                 index,
                 readFunction,
                 sevenZOutputFile,
-                copyDefinition,
-                findArchiveCopyDefinition(copyDefinition, name),
+                spec,
+                findInternalSpec(spec, name),
                 name,
                 creationDate,
                 lastModifiedDate,
@@ -1326,20 +1351,20 @@ public final class FileCopier {
             int index,
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
             SevenZOutputFile sevenZOutputFile,
-            CopyDefinition copyDefinition,
-            @Nullable ArchiveCopyDefinition archiveCopyDefinition,
+            ArchiveCopySpec spec,
+            @Nullable InternalCopySpec<String, String> internal,
             String name,
             @Nullable Date creationDate,
             @Nullable Date lastModifiedDate,
             @Nullable Date lastAccessDate,
             long size)
             throws IOException {
-        if (archiveCopyDefinition == null) {
+        if (internal == null) {
             return;
         }
-        Path to = copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
+        Path to = spec.getTo().resolve(internal.getTo());
         SevenZArchiveEntry zae = new SevenZArchiveEntry();
-        zae.setName(archiveCopyDefinition.getDestination());
+        zae.setName(internal.getTo());
         zae.setSize(size);
         if (creationDate != null) {
             zae.setCreationDate(creationDate);
@@ -1350,7 +1375,7 @@ public final class FileCopier {
         if (lastAccessDate != null) {
             zae.setLastModifiedDate(lastAccessDate);
         }
-        Path source = copyDefinition.getFrom().resolve(name);
+        Path source = spec.getFrom().resolve(name);
         sevenZOutputFile.putArchiveEntry(zae);
         copyWithProgress(
                 index,
@@ -1365,8 +1390,8 @@ public final class FileCopier {
     private void toTar(
             int index,
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
-            TarArchiveOutputStream tarArchiveOutputStream,
-            CopyDefinition copyDefinition,
+            TarArchiveOutputStream tarOutputStream,
+            ArchiveCopySpec spec,
             String name,
             @Nullable Date lastModifiedDate,
             long size)
@@ -1374,9 +1399,9 @@ public final class FileCopier {
         toTar(
                 index,
                 readFunction,
-                tarArchiveOutputStream,
-                copyDefinition,
-                findArchiveCopyDefinition(copyDefinition, name),
+                tarOutputStream,
+                spec,
+                findInternalSpec(spec, name),
                 name,
                 lastModifiedDate,
                 size);
@@ -1385,32 +1410,32 @@ public final class FileCopier {
     private void toTar(
             int index,
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
-            TarArchiveOutputStream tarArchiveOutputStream,
-            CopyDefinition copyDefinition,
-            @Nullable ArchiveCopyDefinition archiveCopyDefinition,
+            TarArchiveOutputStream tarOutputStream,
+            ArchiveCopySpec spec,
+            @Nullable InternalCopySpec<String, String> internal,
             String name,
             @Nullable Date lastModifiedDate,
             long size)
             throws IOException {
-        if (archiveCopyDefinition == null) {
+        if (internal == null) {
             return;
         }
-        Path to = copyDefinition.getTo().resolve(archiveCopyDefinition.getDestination());
-        TarArchiveEntry zae = new TarArchiveEntry(archiveCopyDefinition.getDestination());
+        Path to = spec.getTo().resolve(internal.getTo());
+        TarArchiveEntry zae = new TarArchiveEntry(internal.getTo());
         zae.setSize(size);
         if (lastModifiedDate != null) {
             zae.setModTime(lastModifiedDate);
         }
-        Path source = copyDefinition.getFrom().resolve(name);
-        tarArchiveOutputStream.putArchiveEntry(zae);
+        Path source = spec.getFrom().resolve(name);
+        tarOutputStream.putArchiveEntry(zae);
         copyWithProgress(
                 index,
                 size,
                 source,
                 to,
                 readFunction,
-                tarArchiveOutputStream::write);
-        tarArchiveOutputStream.closeArchiveEntry();
+                tarOutputStream::write);
+        tarOutputStream.closeArchiveEntry();
     }
 
     @Nullable
@@ -1436,13 +1461,22 @@ public final class FileCopier {
     }
 
     @Nullable
-    private ArchiveCopyDefinition findArchiveCopyDefinition(
-            CopyDefinition copyDefinition,
-            String name) {
-        return copyDefinition
-                .getArchiveCopyDefinitions()
+    private InternalCopySpec<String, Path> findInternalSpec(ExtractionSpec spec, String name) {
+        return findInternalSpec(spec.getInternalCopySpecs(), name);
+    }
+
+    @Nullable
+    private InternalCopySpec<String, String> findInternalSpec(ArchiveCopySpec spec, String name) {
+        return findInternalSpec(spec.getInternalCopySpecs(), name);
+    }
+
+    @Nullable
+    private <K, T> InternalCopySpec<K, T> findInternalSpec(
+            Collection<InternalCopySpec<K, T>> collection,
+            K name) {
+        return collection
                 .stream()
-                .filter(ad -> ad.getSource().equals(name))
+                .filter(ad -> ad.getFrom().equals(name))
                 .findFirst()
                 .orElse(null);
     }

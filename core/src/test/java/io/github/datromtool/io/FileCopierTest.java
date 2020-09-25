@@ -16,6 +16,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
@@ -28,7 +29,7 @@ class FileCopierTest {
 
     @BeforeEach
     void setup() throws Exception {
-        tempDir = Files.createTempDirectory("datromtool_copy_test");
+        tempDir = Files.createTempDirectory("datromtool_copy_test_");
         String testDir = System.getenv("DATROMTOOL_TEST_DIR");
         if (testDir == null && Files.isDirectory(Paths.get(TEST_DATA_FOLDER))) {
             testDir = TEST_DATA_FOLDER;
@@ -40,8 +41,8 @@ class FileCopierTest {
     void tearDown() throws Exception {
         Files.walkFileTree(tempDir, new SimpleFileVisitor<Path>() {
             @Override
-            public FileVisitResult visitFile(
-                    Path file, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                    throws IOException {
                 Files.delete(file);
                 return super.visitFile(file, attrs);
             }
@@ -65,37 +66,57 @@ class FileCopierTest {
         ImmutableList<FileScanner.Result> results = fs.scan(ImmutableList.of(testDataSource));
         Map<Path, List<FileScanner.Result>> resultsForArchive =
                 results.stream().collect(Collectors.groupingBy(FileScanner.Result::getPath));
-        ImmutableSet<FileCopier.CopyDefinition> copyDefinitions = resultsForArchive.entrySet()
+        ImmutableSet<FileCopier.Spec> specs = resultsForArchive.entrySet()
                 .stream()
                 .map(e -> {
                     ArchiveType archiveType = e.getValue()
                             .stream()
                             .map(FileScanner.Result::getArchiveType)
-                            .filter(at -> at != ArchiveType.NONE)
+                            .filter(Objects::nonNull)
                             .findFirst()
-                            .orElse(ArchiveType.NONE);
-                    return FileCopier.CopyDefinition.builder()
+                            .orElse(null);
+                    if (archiveType == null) {
+                        return FileCopier.CopySpec.builder()
+                                .from(e.getKey())
+                                .to(tempDir.resolve(e.getKey().getFileName()))
+                                .build();
+                    }
+                    if (archiveType == ArchiveType.RAR) {
+                        return FileCopier.ArchiveCopySpec.builder()
+                                .from(e.getKey())
+                                .fromType(archiveType)
+                                .to(tempDir.resolve(e.getKey()
+                                        .getFileName()
+                                        .toString()
+                                        .replaceFirst("(?i)\\.rar$", ".rar.zip")))
+                                .toType(ArchiveType.ZIP)
+                                .internalCopySpecs(e.getValue().stream()
+                                        .map(FileScanner.Result::getArchivePath)
+                                        .map(p -> FileCopier.InternalCopySpec.<String,
+                                                String>builder()
+                                                .from(p)
+                                                .to(p)
+                                                .build())
+                                        .collect(ImmutableSet.toImmutableSet()))
+                                .build();
+                    }
+                    return FileCopier.ArchiveCopySpec.builder()
                             .from(e.getKey())
-                            .to(tempDir.resolve(e.getKey()
-                                    .getFileName()
-                                    .toString()
-                                    .replaceFirst("(?i)\\.rar$", ".rar.zip")))
                             .fromType(archiveType)
-                            .archiveCopyDefinitions(
-                                    archiveType == ArchiveType.NONE
-                                            ? ImmutableSet.of()
-                                            : e.getValue().stream()
-                                                    .map(i -> FileCopier.ArchiveCopyDefinition.builder()
-                                                            .source(i.getArchivePath())
-                                                            .destination(Paths.get(i.getArchivePath())
-                                                                    .getFileName()
-                                                                    .toString())
-                                                            .build()
-                                                    ).collect(ImmutableSet.toImmutableSet()))
+                            .to(tempDir.resolve(e.getKey().getFileName()))
+                            .toType(archiveType)
+                            .internalCopySpecs(e.getValue().stream()
+                                    .map(FileScanner.Result::getArchivePath)
+                                    .map(p -> FileCopier.InternalCopySpec.<String,
+                                            String>builder()
+                                            .from(p)
+                                            .to(p)
+                                            .build())
+                                    .collect(ImmutableSet.toImmutableSet()))
                             .build();
                 }).collect(ImmutableSet.toImmutableSet());
         FileCopier fc = new FileCopier(AppConfig.builder().build(), false, null);
-        fc.copy(copyDefinitions);
+        fc.copy(specs);
         ImmutableList<FileScanner.Result> afterCopy = fs.scan(ImmutableList.of(tempDir));
     }
 }
