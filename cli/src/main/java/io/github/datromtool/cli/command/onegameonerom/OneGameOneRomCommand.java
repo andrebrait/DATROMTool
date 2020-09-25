@@ -359,10 +359,8 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                             .internalSpecs(list.stream()
                                     .map(p -> {
                                         Rom rom = p.getLeft();
-                                        FileScanner.Result result =
-                                                p.getRight();
-                                        return FileCopier.ArchiveCopySpec.InternalSpec
-                                                .builder()
+                                        FileScanner.Result result = p.getRight();
+                                        return FileCopier.ArchiveCopySpec.InternalSpec.builder()
                                                 .from(result.getArchivePath())
                                                 .to(rom.getName())
                                                 .build();
@@ -386,8 +384,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                             .map(p -> {
                                 Rom rom = p.getLeft();
                                 FileScanner.Result result = p.getRight();
-                                return FileCopier.CompressionSpec.InternalSpec
-                                        .builder()
+                                return FileCopier.CompressionSpec.InternalSpec.builder()
                                         .from(result.getPath())
                                         .to(rom.getName())
                                         .build();
