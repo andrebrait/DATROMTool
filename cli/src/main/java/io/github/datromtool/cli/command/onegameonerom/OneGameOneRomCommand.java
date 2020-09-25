@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.GameFilterer;
 import io.github.datromtool.GameParser;
 import io.github.datromtool.GameSorter;
@@ -13,6 +14,7 @@ import io.github.datromtool.cli.GitVersionProvider;
 import io.github.datromtool.cli.option.FilteringOptions;
 import io.github.datromtool.cli.option.PostFilteringOptions;
 import io.github.datromtool.cli.option.SortingOptions;
+import io.github.datromtool.cli.progressbar.CommandLineCopierProgressBar;
 import io.github.datromtool.cli.progressbar.CommandLineScannerProgressBar;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.data.Filter;
@@ -26,6 +28,7 @@ import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.domain.datafile.Header;
 import io.github.datromtool.domain.datafile.Rom;
 import io.github.datromtool.domain.detector.Detector;
+import io.github.datromtool.io.ArchiveType;
 import io.github.datromtool.io.FileCopier;
 import io.github.datromtool.io.FileScanner;
 import io.github.datromtool.sorting.GameComparator;
@@ -256,31 +259,147 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                                 .collect(ImmutableList.toImmutableList()))
                         .collect(ImmutableList.toImmutableList()));
             } else {
-                ImmutableList<FileCopier.Spec> specs = presentGames.values().stream()
+                ImmutableSet<FileCopier.Spec> specs = presentGames.values().stream()
                         .map(Collection::stream)
                         .map(Stream::findFirst)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
-                        .flatMap(p -> {
-                            Game game = p.getLeft().getGame();
-                            Path baseDir = inputOutputOptions.getOutputDir();
-                            if (inputOutputOptions.isAlphabetical()) {
-                                String firstLetter = game.getName().substring(0, 1).toUpperCase();
-                                if (Patterns.ALPHABETICAL.matcher(firstLetter).matches()) {
-                                    baseDir = baseDir.resolve(firstLetter);
-                                } else {
-                                    baseDir = baseDir.resolve("#");
-                                }
+                        .flatMap(pair -> {
+                            Game game = pair.getLeft().getGame();
+                            Path baseDir = createBaseDirectory(game);
+                            ImmutableList<Pair<Rom, FileScanner.Result>> results = pair.getRight();
+                            Map<Path, List<Pair<Rom, FileScanner.Result>>> perFile = results
+                                    .stream()
+                                    .collect(Collectors.groupingBy(p -> p.getRight().getPath()));
+                            ArchiveType toType = inputOutputOptions.getArchiveType();
+                            if (toType == null) {
+                                // Simple copy/extraction
+                                return perFile.entrySet().stream()
+                                        .flatMap(e -> {
+                                            Path from = e.getKey();
+                                            List<Pair<Rom, FileScanner.Result>> list = e.getValue();
+                                            ArchiveType fromType = list.stream()
+                                                    .map(Pair::getRight)
+                                                    .map(FileScanner.Result::getArchiveType)
+                                                    .filter(Objects::nonNull)
+                                                    .findFirst()
+                                                    .orElse(null);
+                                            if (fromType == null) {
+                                                // Simple copy
+                                                return list.stream()
+                                                        .map(Pair::getLeft)
+                                                        .map(rom -> FileCopier.CopySpec.builder()
+                                                                .from(from)
+                                                                .to(baseDir.resolve(rom.getName()))
+                                                                .build());
+                                            } else {
+                                                // Extraction
+                                                return Stream.of(FileCopier.ExtractionSpec.builder()
+                                                        .from(from)
+                                                        .fromType(fromType)
+                                                        .internalCopySpecs(list.stream()
+                                                                .map(p -> {
+                                                                    Rom rom = p.getLeft();
+                                                                    FileScanner.Result result =
+                                                                            p.getRight();
+                                                                    return FileCopier.InternalCopySpec.
+                                                                            <String, Path>builder()
+                                                                            .from(result.getArchivePath())
+                                                                            .to(baseDir.resolve(rom.getName()))
+                                                                            .build();
+                                                                })
+                                                                .collect(ImmutableSet.toImmutableSet()))
+                                                        .build());
+                                            }
+                                        });
+                            } else {
+                                // Compression/archive copy
+                                Path to = baseDir.resolve(String.format(
+                                        "%s.%s",
+                                        game.getName(),
+                                        toType.getFileExtension()));
+                                Stream<FileCopier.ArchiveCopySpec> archiveCopies = perFile
+                                        .entrySet().stream()
+                                        .map(e -> {
+                                            Path from = e.getKey();
+                                            List<Pair<Rom, FileScanner.Result>> list = e.getValue();
+                                            ArchiveType fromType = list.stream()
+                                                    .map(Pair::getRight)
+                                                    .map(FileScanner.Result::getArchiveType)
+                                                    .filter(Objects::nonNull)
+                                                    .findFirst()
+                                                    .orElse(null);
+                                            // Skip compressions
+                                            if (fromType == null) {
+                                                return null;
+                                            }
+                                            return FileCopier.ArchiveCopySpec.builder()
+                                                    .from(from)
+                                                    .fromType(fromType)
+                                                    .to(to)
+                                                    .toType(toType)
+                                                    .internalCopySpecs(list.stream()
+                                                            .map(p -> {
+                                                                Rom rom = p.getLeft();
+                                                                FileScanner.Result result =
+                                                                        p.getRight();
+                                                                return FileCopier.InternalCopySpec.
+                                                                        <String, String>builder()
+                                                                        .from(result.getArchivePath())
+                                                                        .to(rom.getName())
+                                                                        .build();
+                                                            })
+                                                            .collect(ImmutableSet.toImmutableSet()))
+                                                    .build();
+                                        }).filter(Objects::nonNull);
+                                List<Pair<Rom, FileScanner.Result>> forCompression = results
+                                        .stream()
+                                        .filter(p -> p.getRight().getArchiveType() == null)
+                                        .collect(Collectors.toList());
+                                Stream<FileCopier.CompressionSpec> compressions =
+                                        Stream.of(FileCopier.CompressionSpec.builder()
+                                                .to(to)
+                                                .toType(toType)
+                                                .internalCopySpecs(forCompression.stream()
+                                                        .map(p -> {
+                                                            Rom rom = p.getLeft();
+                                                            FileScanner.Result result =
+                                                                    p.getRight();
+                                                            return FileCopier.InternalCopySpec.
+                                                                    <Path, String>builder()
+                                                                    .from(result.getPath())
+                                                                    .to(rom.getName())
+                                                                    .build();
+                                                        })
+                                                        .collect(ImmutableSet.toImmutableSet()))
+                                                .build());
+                                return Stream.concat(archiveCopies, compressions);
                             }
-                            if (inputOutputOptions.isForceSubfolder()
-                                    || game.getRoms().size() > 1) {
-                                baseDir = baseDir.resolve(game.getName());
-                            }
-                            Path dir = baseDir;
-                        });
+                        }).collect(ImmutableSet.toImmutableSet());
+                FileCopier fileCopier =
+                        new FileCopier(appConfig, false, new CommandLineCopierProgressBar());
+                fileCopier.copy(specs);
             }
         }
         return 0;
+    }
+
+    public Path createBaseDirectory(Game game) {
+        Path baseDir = inputOutputOptions.getOutputDir();
+        if (inputOutputOptions.isAlphabetical()) {
+            String firstLetter = game.getName().substring(0, 1).toLowerCase();
+            if (Patterns.ALPHABETICAL.matcher(firstLetter).matches()) {
+                baseDir = baseDir.resolve(firstLetter);
+            } else {
+                baseDir = baseDir.resolve("#");
+            }
+        }
+        if (inputOutputOptions.isForceSubfolder()
+                || game.getRoms().size() > 1) {
+            baseDir = baseDir.resolve(game.getName());
+        }
+        createDirectory(baseDir);
+        return baseDir;
     }
 
     public void createDirectory(Path path) {
