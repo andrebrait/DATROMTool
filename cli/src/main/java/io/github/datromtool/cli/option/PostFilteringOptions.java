@@ -5,11 +5,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.data.PostFilter;
 import io.github.datromtool.util.ArgumentException;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.jackson.Jacksonized;
 import picocli.CommandLine;
 
 import java.io.IOException;
@@ -19,13 +16,9 @@ import java.util.regex.Pattern;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static io.github.datromtool.util.ArgumentUtils.combine;
-import static lombok.AccessLevel.PRIVATE;
 
 @Data
-@Jacksonized
-@Builder(toBuilder = true)
 @NoArgsConstructor
-@AllArgsConstructor(access = PRIVATE)
 @JsonInclude(NON_DEFAULT)
 public final class PostFilteringOptions {
 

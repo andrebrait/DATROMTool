@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.util.ArchiveUtils;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -35,13 +37,11 @@ import java.nio.file.attribute.FileTime;
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.function.Function;
 
 public final class FileCopier {
 
@@ -58,16 +58,7 @@ public final class FileCopier {
 
     @Builder
     @Value
-    public static class InternalCopySpec<K, T> {
-
-        @NonNull
-        K from;
-        @NonNull
-        T to;
-    }
-
-    @Builder
-    @Value
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @EqualsAndHashCode(callSuper = false)
     public static class CopySpec extends Spec {
 
@@ -79,36 +70,70 @@ public final class FileCopier {
 
     @Builder
     @Value
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @EqualsAndHashCode(callSuper = false)
     public static class ExtractionSpec extends Spec {
 
+        @Builder
+        @Value
+        @AllArgsConstructor(access = AccessLevel.PRIVATE)
+        public static class InternalSpec {
+
+            @NonNull
+            String from;
+            @NonNull
+            Path to;
+        }
+
         @NonNull
         ArchiveType fromType;
         @NonNull
         Path from;
-
         @NonNull
-        ImmutableSet<InternalCopySpec<String, Path>> internalCopySpecs;
+        ImmutableSet<InternalSpec> internalSpecs;
     }
 
     @Builder
     @Value
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @EqualsAndHashCode(callSuper = false)
     public static class CompressionSpec extends Spec {
 
+        @Builder
+        @Value
+        @AllArgsConstructor(access = AccessLevel.PRIVATE)
+        public static class InternalSpec {
+
+            @NonNull
+            Path from;
+            @NonNull
+            String to;
+        }
+
         @NonNull
         ArchiveType toType;
         @NonNull
         Path to;
-
         @NonNull
-        ImmutableSet<InternalCopySpec<Path, String>> internalCopySpecs;
+        ImmutableSet<InternalSpec> internalSpecs;
     }
 
     @Builder
     @Value
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @EqualsAndHashCode(callSuper = false)
     public static class ArchiveCopySpec extends Spec {
+
+        @Builder
+        @Value
+        @AllArgsConstructor(access = AccessLevel.PRIVATE)
+        public static class InternalSpec {
+
+            @NonNull
+            String from;
+            @NonNull
+            String to;
+        }
 
         @NonNull
         ArchiveType fromType;
@@ -118,9 +143,8 @@ public final class FileCopier {
         Path from;
         @NonNull
         Path to;
-
         @NonNull
-        ImmutableSet<InternalCopySpec<String, String>> internalCopySpecs;
+        ImmutableSet<InternalSpec> internalSpecs;
     }
 
     public interface Listener {
@@ -196,10 +220,6 @@ public final class FileCopier {
 
     private static int getThreadIndex() {
         return ((IndexedThread) Thread.currentThread()).getIndex();
-    }
-
-    private <K, T> ImmutableList<T> transform(Collection<K> o, Function<K, T> f) {
-        return o.stream().map(f).collect(ImmutableList.toImmutableList());
     }
 
     private void copy(CopySpec spec) {
@@ -389,7 +409,7 @@ public final class FileCopier {
     private void extractZipEntries(ExtractionSpec spec, int index) throws IOException {
         ArchiveUtils.readZip(spec.getFrom(), (zipFile, zipArchiveEntry) -> {
             String name = zipArchiveEntry.getName();
-            InternalCopySpec<String, Path> internal = findInternalSpec(spec, name);
+            ExtractionSpec.InternalSpec internal = findInternalSpec(spec, name);
             if (internal == null) {
                 return;
             }
@@ -424,7 +444,7 @@ public final class FileCopier {
         try {
             ArchiveUtils.readRar(spec.getFrom(), (archive, fileHeader) -> {
                 String name = fileHeader.getFileName().replace('\\', '/');
-                InternalCopySpec<String, Path> internal = findInternalSpec(spec, name);
+                ExtractionSpec.InternalSpec internal = findInternalSpec(spec, name);
                 if (internal == null) {
                     return;
                 }
@@ -463,15 +483,15 @@ public final class FileCopier {
     }
 
     private void extractRarEntriesWithUnrar(ExtractionSpec spec, int index) throws Exception {
-        ImmutableSet<String> desiredEntryNames = spec.getInternalCopySpecs().stream()
-                .map(InternalCopySpec::getFrom)
+        ImmutableSet<String> desiredEntryNames = spec.getInternalSpecs().stream()
+                .map(ExtractionSpec.InternalSpec::getFrom)
                 .collect(ImmutableSet.toImmutableSet());
         ArchiveUtils.readRarWithUnrar(
                 spec.getFrom(),
                 desiredEntryNames,
                 (entry, processInputStream) -> {
                     String name = entry.getName();
-                    InternalCopySpec<String, Path> internal = findInternalSpec(spec, name);
+                    ExtractionSpec.InternalSpec internal = findInternalSpec(spec, name);
                     if (internal == null) {
                         return;
                     }
@@ -501,7 +521,7 @@ public final class FileCopier {
     private void extractSevenZipEntries(ExtractionSpec spec, int index) throws IOException {
         ArchiveUtils.readSevenZip(spec.getFrom(), (sevenZFile, sevenZArchiveEntry) -> {
             String name = sevenZArchiveEntry.getName();
-            InternalCopySpec<String, Path> internal = findInternalSpec(spec, name);
+            ExtractionSpec.InternalSpec internal = findInternalSpec(spec, name);
             if (internal == null) {
                 return;
             }
@@ -532,7 +552,7 @@ public final class FileCopier {
                 spec.getFrom(),
                 (tarArchiveEntry, tarArchiveInputStream) -> {
                     String name = tarArchiveEntry.getName();
-                    InternalCopySpec<String, Path> internal = findInternalSpec(spec, name);
+                    ExtractionSpec.InternalSpec internal = findInternalSpec(spec, name);
                     if (internal == null) {
                         return;
                     }
@@ -563,7 +583,7 @@ public final class FileCopier {
     private void compressZipEntries(CompressionSpec spec, int index) throws IOException {
         try (ZipArchiveOutputStream zipArchiveOutputStream =
                 new ZipArchiveOutputStream(spec.getTo().toFile())) {
-            for (InternalCopySpec<Path, String> internal : spec.getInternalCopySpecs()) {
+            for (CompressionSpec.InternalSpec internal : spec.getInternalSpecs()) {
                 Path source = internal.getFrom();
                 try (InputStream inputStream = Files.newInputStream(source)) {
                     ArchiveEntry archiveEntry = zipArchiveOutputStream.createArchiveEntry(
@@ -591,7 +611,7 @@ public final class FileCopier {
 
     private void compressSevenZipEntries(CompressionSpec spec, int index) throws IOException {
         try (SevenZOutputFile sevenZOutputFile = new SevenZOutputFile(spec.getTo().toFile())) {
-            for (InternalCopySpec<Path, String> internal : spec.getInternalCopySpecs()) {
+            for (CompressionSpec.InternalSpec internal : spec.getInternalSpecs()) {
                 Path source = internal.getFrom();
                 try (InputStream inputStream = Files.newInputStream(source)) {
                     SevenZArchiveEntry archiveEntry =
@@ -622,7 +642,7 @@ public final class FileCopier {
             return;
         }
         try (TarArchiveOutputStream tarOutputStream = new TarArchiveOutputStream(outputStream)) {
-            for (InternalCopySpec<Path, String> internal : spec.getInternalCopySpecs()) {
+            for (CompressionSpec.InternalSpec internal : spec.getInternalSpecs()) {
                 Path source = internal.getFrom();
                 try (InputStream inputStream = Files.newInputStream(source)) {
                     ArchiveEntry archiveEntry =
@@ -736,7 +756,7 @@ public final class FileCopier {
                 new ZipArchiveOutputStream(spec.getTo().toFile())) {
             ArchiveUtils.readZip(spec.getFrom(), (zipFile, zipArchiveEntry) -> {
                 String name = zipArchiveEntry.getName();
-                InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
                 if (internal == null) {
                     return;
                 }
@@ -782,7 +802,7 @@ public final class FileCopier {
                     spec.getFrom(),
                     (zipFile, zipArchiveEntry) -> {
                         String name = zipArchiveEntry.getName();
-                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
                         if (internal == null) {
                             return;
                         }
@@ -814,7 +834,7 @@ public final class FileCopier {
                     spec.getFrom(),
                     (zipFile, zipArchiveEntry) -> {
                         String name = zipArchiveEntry.getName();
-                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
                         if (internal == null) {
                             return;
                         }
@@ -850,7 +870,7 @@ public final class FileCopier {
                     spec.getFrom(),
                     (zipFile, zipArchiveEntry) -> {
                         String name = zipArchiveEntry.getName();
-                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
                         if (internal == null) {
                             return;
                         }
@@ -880,8 +900,8 @@ public final class FileCopier {
             ArchiveUtils.readRar(
                     spec.getFrom(),
                     (archive, fileHeader) -> {
-                        String name = fileHeader.getFileName().replace('\\', '/');;
-                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        String name = fileHeader.getFileName().replace('\\', '/');
+                        ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
                         if (internal == null) {
                             return;
                         }
@@ -923,7 +943,7 @@ public final class FileCopier {
                     desiredEntryNames,
                     (entry, processInputStream) -> {
                         String name = entry.getName();
-                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
                         if (internal == null) {
                             return;
                         }
@@ -954,7 +974,7 @@ public final class FileCopier {
                     spec.getFrom(),
                     (archive, fileHeader) -> {
                         String name = fileHeader.getFileName().replace('\\', '/');
-                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
                         if (internal == null) {
                             return;
                         }
@@ -995,7 +1015,7 @@ public final class FileCopier {
                     desiredEntryNames,
                     (entry, processInputStream) -> {
                         String name = entry.getName();
-                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
                         if (internal == null) {
                             return;
                         }
@@ -1030,7 +1050,7 @@ public final class FileCopier {
                     spec.getFrom(),
                     (archive, fileHeader) -> {
                         String name = fileHeader.getFileName().replace('\\', '/');
-                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
                         if (internal == null) {
                             return;
                         }
@@ -1075,7 +1095,7 @@ public final class FileCopier {
                     desiredEntryNames,
                     (entry, processInputStream) -> {
                         String name = entry.getName();
-                        InternalCopySpec<String, String> internal = findInternalSpec(spec, name);
+                        ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
                         if (internal == null) {
                             return;
                         }
@@ -1255,8 +1275,8 @@ public final class FileCopier {
     }
 
     private static ImmutableSet<String> getInternalSources(ArchiveCopySpec spec) {
-        return spec.getInternalCopySpecs().stream()
-                .map(InternalCopySpec::getFrom)
+        return spec.getInternalSpecs().stream()
+                .map(ArchiveCopySpec.InternalSpec::getFrom)
                 .collect(ImmutableSet.toImmutableSet());
     }
 
@@ -1289,7 +1309,7 @@ public final class FileCopier {
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
             ZipArchiveOutputStream zipArchiveOutputStream,
             ArchiveCopySpec spec,
-            @Nullable InternalCopySpec<String, String> internal,
+            @Nullable ArchiveCopySpec.InternalSpec internal,
             String name,
             @Nullable FileTime creationTime,
             @Nullable FileTime lastModifiedTime,
@@ -1352,7 +1372,7 @@ public final class FileCopier {
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
             SevenZOutputFile sevenZOutputFile,
             ArchiveCopySpec spec,
-            @Nullable InternalCopySpec<String, String> internal,
+            @Nullable ArchiveCopySpec.InternalSpec internal,
             String name,
             @Nullable Date creationDate,
             @Nullable Date lastModifiedDate,
@@ -1412,7 +1432,7 @@ public final class FileCopier {
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
             TarArchiveOutputStream tarOutputStream,
             ArchiveCopySpec spec,
-            @Nullable InternalCopySpec<String, String> internal,
+            @Nullable ArchiveCopySpec.InternalSpec internal,
             String name,
             @Nullable Date lastModifiedDate,
             long size)
@@ -1461,21 +1481,16 @@ public final class FileCopier {
     }
 
     @Nullable
-    private InternalCopySpec<String, Path> findInternalSpec(ExtractionSpec spec, String name) {
-        return findInternalSpec(spec.getInternalCopySpecs(), name);
+    private ExtractionSpec.InternalSpec findInternalSpec(ExtractionSpec spec, String name) {
+        return spec.getInternalSpecs().stream()
+                .filter(ad -> ad.getFrom().equals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     @Nullable
-    private InternalCopySpec<String, String> findInternalSpec(ArchiveCopySpec spec, String name) {
-        return findInternalSpec(spec.getInternalCopySpecs(), name);
-    }
-
-    @Nullable
-    private <K, T> InternalCopySpec<K, T> findInternalSpec(
-            Collection<InternalCopySpec<K, T>> collection,
-            K name) {
-        return collection
-                .stream()
+    private ArchiveCopySpec.InternalSpec findInternalSpec(ArchiveCopySpec spec, String name) {
+        return spec.getInternalSpecs().stream()
                 .filter(ad -> ad.getFrom().equals(name))
                 .findFirst()
                 .orElse(null);

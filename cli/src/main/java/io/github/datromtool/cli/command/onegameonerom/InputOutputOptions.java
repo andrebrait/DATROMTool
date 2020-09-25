@@ -5,25 +5,18 @@ import com.google.common.collect.ImmutableList;
 import io.github.datromtool.cli.ArchiveCompletionCandidates;
 import io.github.datromtool.cli.converter.ArchiveTypeConverter;
 import io.github.datromtool.io.ArchiveType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.extern.jackson.Jacksonized;
 import picocli.CommandLine;
 
 import java.nio.file.Path;
 import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
-import static lombok.AccessLevel.PRIVATE;
 
 @Data
-@Jacksonized
-@Builder(toBuilder = true)
 @NoArgsConstructor
-@AllArgsConstructor(access = PRIVATE)
 @JsonInclude(NON_DEFAULT)
 public final class InputOutputOptions {
 

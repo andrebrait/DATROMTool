@@ -33,13 +33,10 @@ import io.github.datromtool.io.FileCopier;
 import io.github.datromtool.io.FileScanner;
 import io.github.datromtool.sorting.GameComparator;
 import io.github.datromtool.util.ArgumentException;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.extern.jackson.Jacksonized;
 import picocli.CommandLine;
 
 import javax.annotation.Nullable;
@@ -63,13 +60,9 @@ import static io.github.datromtool.cli.command.onegameonerom.InputOutputOptions.
 import static io.github.datromtool.cli.command.onegameonerom.InputOutputOptions.INPUT_DIR_OPTION;
 import static io.github.datromtool.cli.command.onegameonerom.InputOutputOptions.OUTPUT_DIR_OPTION;
 import static lombok.AccessLevel.NONE;
-import static lombok.AccessLevel.PRIVATE;
 
 @Data
-@Jacksonized
-@Builder(toBuilder = true)
 @NoArgsConstructor
-@AllArgsConstructor(access = PRIVATE)
 @JsonInclude(NON_DEFAULT)
 @CommandLine.Command(
         name = "1g1r",
@@ -79,7 +72,6 @@ import static lombok.AccessLevel.PRIVATE;
         versionProvider = GitVersionProvider.class,
         mixinStandardHelpOptions = true)
 public final class OneGameOneRomCommand implements Callable<Integer> {
-
 
     @CommandLine.Spec
     @JsonIgnore
@@ -297,13 +289,13 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                                                 return Stream.of(FileCopier.ExtractionSpec.builder()
                                                         .from(from)
                                                         .fromType(fromType)
-                                                        .internalCopySpecs(list.stream()
+                                                        .internalSpecs(list.stream()
                                                                 .map(p -> {
                                                                     Rom rom = p.getLeft();
                                                                     FileScanner.Result result =
                                                                             p.getRight();
-                                                                    return FileCopier.InternalCopySpec.
-                                                                            <String, Path>builder()
+                                                                    return FileCopier.ExtractionSpec.InternalSpec
+                                                                            .builder()
                                                                             .from(result.getArchivePath())
                                                                             .to(baseDir.resolve(rom.getName()))
                                                                             .build();
@@ -338,13 +330,13 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                                                     .fromType(fromType)
                                                     .to(to)
                                                     .toType(toType)
-                                                    .internalCopySpecs(list.stream()
+                                                    .internalSpecs(list.stream()
                                                             .map(p -> {
                                                                 Rom rom = p.getLeft();
                                                                 FileScanner.Result result =
                                                                         p.getRight();
-                                                                return FileCopier.InternalCopySpec.
-                                                                        <String, String>builder()
+                                                                return FileCopier.ArchiveCopySpec.InternalSpec
+                                                                        .builder()
                                                                         .from(result.getArchivePath())
                                                                         .to(rom.getName())
                                                                         .build();
@@ -360,13 +352,13 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                                         Stream.of(FileCopier.CompressionSpec.builder()
                                                 .to(to)
                                                 .toType(toType)
-                                                .internalCopySpecs(forCompression.stream()
+                                                .internalSpecs(forCompression.stream()
                                                         .map(p -> {
                                                             Rom rom = p.getLeft();
                                                             FileScanner.Result result =
                                                                     p.getRight();
-                                                            return FileCopier.InternalCopySpec.
-                                                                    <Path, String>builder()
+                                                            return FileCopier.CompressionSpec.InternalSpec
+                                                                    .builder()
                                                                     .from(result.getPath())
                                                                     .to(rom.getName())
                                                                     .build();
