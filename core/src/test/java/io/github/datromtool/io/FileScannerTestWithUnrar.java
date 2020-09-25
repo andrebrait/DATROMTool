@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static java.util.Objects.requireNonNull;
 
 @EnabledIf(
-        value = "io.github.datromtool.io.ArchiveUtils#isUnrarAvailable",
+        value = "io.github.datromtool.util.ArchiveUtils#isUnrarAvailable",
         disabledReason = "'unrar' is not available")
 class FileScannerTestWithUnrar {
 
