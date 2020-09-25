@@ -404,8 +404,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                 baseDir = baseDir.resolve("#");
             }
         }
-        if (inputOutputOptions.isForceSubfolder()
-                || game.getRoms().size() > 1) {
+        if (inputOutputOptions.isForceSubfolder() || game.getRoms().size() > 1) {
             baseDir = baseDir.resolve(game.getName());
         }
         createDirectory(baseDir);
