@@ -266,106 +266,15 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                             ArchiveType toType = inputOutputOptions.getArchiveType();
                             if (toType == null) {
                                 // Simple copy/extraction
-                                return perFile.entrySet().stream()
-                                        .flatMap(e -> {
-                                            Path from = e.getKey();
-                                            List<Pair<Rom, FileScanner.Result>> list = e.getValue();
-                                            ArchiveType fromType = list.stream()
-                                                    .map(Pair::getRight)
-                                                    .map(FileScanner.Result::getArchiveType)
-                                                    .filter(Objects::nonNull)
-                                                    .findFirst()
-                                                    .orElse(null);
-                                            if (fromType == null) {
-                                                // Simple copy
-                                                return list.stream()
-                                                        .map(Pair::getLeft)
-                                                        .map(rom -> FileCopier.CopySpec.builder()
-                                                                .from(from)
-                                                                .to(baseDir.resolve(rom.getName()))
-                                                                .build());
-                                            } else {
-                                                // Extraction
-                                                return Stream.of(FileCopier.ExtractionSpec.builder()
-                                                        .from(from)
-                                                        .fromType(fromType)
-                                                        .internalSpecs(list.stream()
-                                                                .map(p -> {
-                                                                    Rom rom = p.getLeft();
-                                                                    FileScanner.Result result =
-                                                                            p.getRight();
-                                                                    return FileCopier.ExtractionSpec.InternalSpec
-                                                                            .builder()
-                                                                            .from(result.getArchivePath())
-                                                                            .to(baseDir.resolve(rom.getName()))
-                                                                            .build();
-                                                                })
-                                                                .collect(ImmutableSet.toImmutableSet()))
-                                                        .build());
-                                            }
-                                        });
+                                return simpleCopyOrExtractionStream(baseDir, perFile);
                             } else {
                                 // Compression/archive copy
-                                Path to = baseDir.resolve(String.format(
-                                        "%s.%s",
-                                        game.getName(),
-                                        toType.getFileExtension()));
-                                Stream<FileCopier.ArchiveCopySpec> archiveCopies = perFile
-                                        .entrySet().stream()
-                                        .map(e -> {
-                                            Path from = e.getKey();
-                                            List<Pair<Rom, FileScanner.Result>> list = e.getValue();
-                                            ArchiveType fromType = list.stream()
-                                                    .map(Pair::getRight)
-                                                    .map(FileScanner.Result::getArchiveType)
-                                                    .filter(Objects::nonNull)
-                                                    .findFirst()
-                                                    .orElse(null);
-                                            // Skip compressions
-                                            if (fromType == null) {
-                                                return null;
-                                            }
-                                            return FileCopier.ArchiveCopySpec.builder()
-                                                    .from(from)
-                                                    .fromType(fromType)
-                                                    .to(to)
-                                                    .toType(toType)
-                                                    .internalSpecs(list.stream()
-                                                            .map(p -> {
-                                                                Rom rom = p.getLeft();
-                                                                FileScanner.Result result =
-                                                                        p.getRight();
-                                                                return FileCopier.ArchiveCopySpec.InternalSpec
-                                                                        .builder()
-                                                                        .from(result.getArchivePath())
-                                                                        .to(rom.getName())
-                                                                        .build();
-                                                            })
-                                                            .collect(ImmutableSet.toImmutableSet()))
-                                                    .build();
-                                        }).filter(Objects::nonNull);
-                                List<Pair<Rom, FileScanner.Result>> forCompression = results
-                                        .stream()
-                                        .filter(p -> p.getRight().getArchiveType() == null)
-                                        .collect(Collectors.toList());
-                                Stream<FileCopier.CompressionSpec> compressions =
-                                        Stream.of(FileCopier.CompressionSpec.builder()
-                                                .to(to)
-                                                .toType(toType)
-                                                .internalSpecs(forCompression.stream()
-                                                        .map(p -> {
-                                                            Rom rom = p.getLeft();
-                                                            FileScanner.Result result =
-                                                                    p.getRight();
-                                                            return FileCopier.CompressionSpec.InternalSpec
-                                                                    .builder()
-                                                                    .from(result.getPath())
-                                                                    .to(rom.getName())
-                                                                    .build();
-                                                        })
-                                                        .collect(ImmutableSet.toImmutableSet()))
-                                                .build());
-                                return Stream.concat(archiveCopies, compressions);
+                                return compressionOrArchiveCopyStream(
+                                        game,
+                                        baseDir,
+                                        results,
+                                        perFile,
+                                        toType);
                             }
                         }).collect(ImmutableSet.toImmutableSet());
                 FileCopier fileCopier =
@@ -374,6 +283,118 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             }
         }
         return 0;
+    }
+
+    public Stream<FileCopier.Spec> simpleCopyOrExtractionStream(
+            Path baseDir,
+            Map<Path, List<Pair<Rom, FileScanner.Result>>> perFile) {
+        return perFile.entrySet().stream()
+                .flatMap(e -> {
+                    Path from = e.getKey();
+                    List<Pair<Rom, FileScanner.Result>> list = e.getValue();
+                    ArchiveType fromType = list.stream()
+                            .map(Pair::getRight)
+                            .map(FileScanner.Result::getArchiveType)
+                            .filter(Objects::nonNull)
+                            .findFirst()
+                            .orElse(null);
+                    if (fromType == null) {
+                        // Simple copy
+                        return list.stream()
+                                .map(Pair::getLeft)
+                                .map(rom -> FileCopier.CopySpec.builder()
+                                        .from(from)
+                                        .to(baseDir.resolve(rom.getName()))
+                                        .build());
+                    } else {
+                        // Extraction
+                        return Stream.of(FileCopier.ExtractionSpec.builder()
+                                .from(from)
+                                .fromType(fromType)
+                                .internalSpecs(list.stream()
+                                        .map(p -> {
+                                            Rom rom = p.getLeft();
+                                            FileScanner.Result result = p.getRight();
+                                            return FileCopier.ExtractionSpec.InternalSpec.builder()
+                                                    .from(result.getArchivePath())
+                                                    .to(baseDir.resolve(rom.getName()))
+                                                    .build();
+                                        }).collect(ImmutableSet.toImmutableSet()))
+                                .build());
+                    }
+                });
+    }
+
+    public Stream<FileCopier.Spec> compressionOrArchiveCopyStream(
+            Game game,
+            Path baseDir,
+            ImmutableList<Pair<Rom, FileScanner.Result>> results,
+            Map<Path, List<Pair<Rom, FileScanner.Result>>> perFile,
+            ArchiveType toType) {
+        Path to = baseDir.resolve(String.format(
+                "%s.%s",
+                game.getName(),
+                toType.getFileExtension()));
+        Stream<FileCopier.ArchiveCopySpec> archiveCopies = perFile
+                .entrySet().stream()
+                .map(e -> {
+                    Path from = e.getKey();
+                    List<Pair<Rom, FileScanner.Result>> list = e.getValue();
+                    ArchiveType fromType = list.stream()
+                            .map(Pair::getRight)
+                            .map(FileScanner.Result::getArchiveType)
+                            .filter(Objects::nonNull)
+                            .findFirst()
+                            .orElse(null);
+                    // Skip compressions
+                    if (fromType == null) {
+                        return null;
+                    }
+                    // Only archive copy
+                    return FileCopier.ArchiveCopySpec.builder()
+                            .from(from)
+                            .fromType(fromType)
+                            .to(to)
+                            .toType(toType)
+                            .internalSpecs(list.stream()
+                                    .map(p -> {
+                                        Rom rom = p.getLeft();
+                                        FileScanner.Result result =
+                                                p.getRight();
+                                        return FileCopier.ArchiveCopySpec.InternalSpec
+                                                .builder()
+                                                .from(result.getArchivePath())
+                                                .to(rom.getName())
+                                                .build();
+                                    })
+                                    .collect(ImmutableSet.toImmutableSet()))
+                            .build();
+                }).filter(Objects::nonNull);
+        List<Pair<Rom, FileScanner.Result>> forCompression = results
+                .stream()
+                .filter(p -> p.getRight().getArchiveType() == null)
+                .collect(Collectors.toList());
+        Stream<FileCopier.CompressionSpec> compressions;
+        if (forCompression.isEmpty()) {
+            compressions = Stream.empty();
+        } else {
+            // Only compression
+            compressions = Stream.of(FileCopier.CompressionSpec.builder()
+                    .to(to)
+                    .toType(toType)
+                    .internalSpecs(forCompression.stream()
+                            .map(p -> {
+                                Rom rom = p.getLeft();
+                                FileScanner.Result result = p.getRight();
+                                return FileCopier.CompressionSpec.InternalSpec
+                                        .builder()
+                                        .from(result.getPath())
+                                        .to(rom.getName())
+                                        .build();
+                            }).collect(ImmutableSet.toImmutableSet()))
+                    .build());
+        }
+        return Stream.concat(archiveCopies, compressions);
     }
 
     public Path createBaseDirectory(Game game) {
