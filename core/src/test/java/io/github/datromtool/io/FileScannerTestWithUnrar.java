@@ -2,7 +2,7 @@ package io.github.datromtool.io;
 
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.config.AppConfig;
-import io.github.datromtool.data.Pair;
+import io.github.datromtool.data.CrcKey;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.domain.datafile.Rom;
@@ -32,7 +32,7 @@ class FileScannerTestWithUnrar {
     private static final String TEST_DATA_FOLDER = "../test-data";
     private Path testDataSource;
 
-    private Map<String, Pair<Long, String>> crc32sums;
+    private Map<String, CrcKey> crc32sums;
     private Map<String, String> md5sums;
     private Map<String, String> sha1sums;
 
@@ -46,7 +46,7 @@ class FileScannerTestWithUnrar {
         crc32sums = Files.readAllLines(testDataSource.getParent().resolve("CRC32SUMS")).stream()
                 .map(s -> s.split("\\s+"))
                 .peek(s -> s[2] = Paths.get(s[2]).getFileName().toString())
-                .collect(Collectors.toMap(s -> s[2], s -> Pair.of(Long.parseLong(s[1]), s[0])));
+                .collect(Collectors.toMap(s -> s[2], s -> CrcKey.of(Long.parseLong(s[1]), s[0])));
         md5sums = Files.readAllLines(testDataSource.getParent().resolve("MD5SUMS")).stream()
                 .map(s -> s.split("\\s+"))
                 .peek(s -> s[1] = Paths.get(s[1]).getFileName().toString())
@@ -71,10 +71,10 @@ class FileScannerTestWithUnrar {
         for (FileScanner.Result i : results) {
             assertEquals(i.getUnheaderedSize(), i.getSize());
             String filename = getFilename(i);
-            Pair<Long, String> crc32 = crc32sums.get(filename);
+            CrcKey crc32 = crc32sums.get(filename);
             assertNotNull(crc32);
-            assertEquals((long) crc32.getLeft(), i.getSize());
-            assertEquals(crc32.getRight(), i.getDigest().getCrc());
+            assertEquals((long) crc32.getSize(), i.getSize());
+            assertEquals(crc32.getCrc(), i.getDigest().getCrc());
             assertEquals(md5sums.get(filename), i.getDigest().getMd5());
             assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
         }
@@ -94,10 +94,10 @@ class FileScannerTestWithUnrar {
         for (FileScanner.Result i : results) {
             assertEquals(i.getUnheaderedSize(), i.getSize());
             String filename = getFilename(i);
-            Pair<Long, String> crc32 = crc32sums.get(filename);
+            CrcKey crc32 = crc32sums.get(filename);
             assertNotNull(crc32);
-            assertEquals((long) crc32.getLeft(), i.getSize());
-            assertEquals(crc32.getRight(), i.getDigest().getCrc());
+            assertEquals((long) crc32.getSize(), i.getSize());
+            assertEquals(crc32.getCrc(), i.getDigest().getCrc());
             assertEquals(md5sums.get(filename), i.getDigest().getMd5());
             assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
         }
@@ -117,10 +117,10 @@ class FileScannerTestWithUnrar {
         for (FileScanner.Result i : results) {
             assertEquals(i.getUnheaderedSize(), i.getSize());
             String filename = getFilename(i);
-            Pair<Long, String> crc32 = crc32sums.get(filename);
+            CrcKey crc32 = crc32sums.get(filename);
             assertNotNull(crc32);
-            assertEquals((long) crc32.getLeft(), i.getSize());
-            assertEquals(crc32.getRight(), i.getDigest().getCrc());
+            assertEquals((long) crc32.getSize(), i.getSize());
+            assertEquals(crc32.getCrc(), i.getDigest().getCrc());
             assertEquals(md5sums.get(filename), i.getDigest().getMd5());
             assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
         }
@@ -140,10 +140,10 @@ class FileScannerTestWithUnrar {
         for (FileScanner.Result i : results) {
             assertEquals(i.getUnheaderedSize(), i.getSize());
             String filename = getFilename(i);
-            Pair<Long, String> crc32 = crc32sums.get(filename);
+            CrcKey crc32 = crc32sums.get(filename);
             assertNotNull(crc32);
-            assertEquals((long) crc32.getLeft(), i.getSize());
-            assertEquals(crc32.getRight(), i.getDigest().getCrc());
+            assertEquals((long) crc32.getSize(), i.getSize());
+            assertEquals(crc32.getCrc(), i.getDigest().getCrc());
             assertEquals(md5sums.get(filename), i.getDigest().getMd5());
             assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
         }

@@ -17,6 +17,7 @@ import io.github.datromtool.cli.option.SortingOptions;
 import io.github.datromtool.cli.progressbar.CommandLineCopierProgressBar;
 import io.github.datromtool.cli.progressbar.CommandLineScannerProgressBar;
 import io.github.datromtool.config.AppConfig;
+import io.github.datromtool.data.CrcKey;
 import io.github.datromtool.data.Filter;
 import io.github.datromtool.data.Pair;
 import io.github.datromtool.data.ParsedGame;
@@ -201,12 +202,12 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                     new CommandLineScannerProgressBar());
             ImmutableList<FileScanner.Result> scanResults =
                     scanner.scan(inputOutputOptions.getInputDirs());
-            ImmutableMap<Pair<Long, String>, ImmutableList<FileScanner.Result>> resultsForCrc =
+            ImmutableMap<CrcKey, ImmutableList<FileScanner.Result>> resultsForCrc =
                     scanResults
                             .stream()
                             .collect(Collectors.collectingAndThen(
                                     Collectors.groupingBy(
-                                            o -> Pair.of(
+                                            o -> CrcKey.of(
                                                     o.getUnheaderedSize(),
                                                     o.getDigest().getCrc()),
                                             ImmutableList.toImmutableList()),
@@ -426,7 +427,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
 
     // TODO Move this to core and add logging. Extract almost everything from this class to core.
     private ImmutableList<Pair<Rom, FileScanner.Result>> getResults(
-            Map<Pair<Long, String>, ? extends List<FileScanner.Result>> resultsForCrc,
+            Map<CrcKey, ? extends List<FileScanner.Result>> resultsForCrc,
             Map<String, ? extends List<FileScanner.Result>> resultsForMd5,
             Map<String, ? extends List<FileScanner.Result>> resultsForSha1,
             ParsedGame parsedGame) {
@@ -483,16 +484,19 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
 
     @Nullable
     private static ImmutableList<FileScanner.Result> getResultFromMaps(
-            Map<Pair<Long, String>, ? extends List<FileScanner.Result>> resultsForCrc,
+            Map<CrcKey, ? extends List<FileScanner.Result>> resultsForCrc,
             Map<String, ? extends List<FileScanner.Result>> resultsForMd5,
             Map<String, ? extends List<FileScanner.Result>> resultsForSha1,
             Rom rom) {
-        List<FileScanner.Result> results = resultsForSha1.get(rom.getSha1());
-        if (results == null) {
+        List<FileScanner.Result> results = null;
+        if (rom.getSha1() != null) {
+            results = resultsForSha1.get(rom.getSha1());
+        }
+        if (results == null && rom.getMd5() != null) {
             results = resultsForMd5.get(rom.getMd5());
         }
-        if (results == null) {
-            results = resultsForCrc.get(Pair.of(rom.getSize(), rom.getCrc()));
+        if (results == null && rom.getCrc() != null) {
+            results = resultsForCrc.get(CrcKey.of(rom.getSize(), rom.getCrc()));
         }
         if (results == null) {
             return ImmutableList.of();
