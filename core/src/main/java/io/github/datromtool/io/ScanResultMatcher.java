@@ -102,11 +102,15 @@ public final class ScanResultMatcher {
     public ImmutableList<Match> match(
             @Nonnull ParsedGame parsedGame,
             @Nullable ArchiveType archiveType) {
+        int totalRoms = parsedGame.getGame().getRoms().size();
+        if (totalRoms == 0) {
+            return ImmutableList.of();
+        }
         ImmutableList<MatchSet> matchSets = parsedGame.getGame().getRoms().stream()
                 .map(r -> new MatchSet(r, match(r)))
                 .filter(s -> !s.getResults().isEmpty())
                 .collect(ImmutableList.toImmutableList());
-        if (matchSets.size() < parsedGame.getGame().getRoms().size()) {
+        if (matchSets.size() < totalRoms) {
             log.warn("Skipping '{}' due to missing files", parsedGame.getGame().getName());
             return ImmutableList.of();
         }
@@ -118,7 +122,7 @@ public final class ScanResultMatcher {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(ImmutableList.toImmutableList());
-        if (uncompressedMatches.size() >= parsedGame.getGame().getRoms().size()) {
+        if (uncompressedMatches.size() >= totalRoms) {
             return uncompressedMatches;
         }
         ImmutableMap<Path, ImmutableList<Match>> matchesPerArchive = matchSets.stream()
@@ -145,7 +149,7 @@ public final class ScanResultMatcher {
                     .build();
         }
         return matchesPerArchive.values().stream()
-                .filter(l -> l.size() >= parsedGame.getGame().getRoms().size())
+                .filter(l -> l.size() >= totalRoms)
                 .findFirst()
                 .orElseGet(() -> {
                     log.warn(
