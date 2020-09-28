@@ -43,12 +43,14 @@ public enum ArchiveType {
                     && Constants.TAR.matcher(GzipUtils.getUncompressedFilename(s)).find()),
     TAR_LZ4(ImmutableList.of("tar.lz4"), true, s -> Constants.TAR_LZ4.matcher(s).find()),
     TAR_LZMA(
-            ImmutableList.of("tar.lzma"), LZMAUtils.isLZMACompressionAvailable(),
+            ImmutableList.of("tar.lzma"),
+            LZMAUtils.isLZMACompressionAvailable(),
             s -> LZMAUtils.isLZMACompressionAvailable()
                     && LZMAUtils.isCompressedFilename(s)
                     && Constants.TAR.matcher(LZMAUtils.getUncompressedFilename(s)).find()),
     TAR_XZ(
-            ImmutableList.of("tar.xz"), XZUtils.isXZCompressionAvailable(),
+            ImmutableList.of("tar.xz"),
+            XZUtils.isXZCompressionAvailable(),
             s -> XZUtils.isXZCompressionAvailable()
                     && XZUtils.isCompressedFilename(s)
                     && Constants.TAR.matcher(XZUtils.getUncompressedFilename(s)).find());
