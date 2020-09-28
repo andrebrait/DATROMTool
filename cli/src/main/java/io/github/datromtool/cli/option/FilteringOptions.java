@@ -77,6 +77,13 @@ public final class FilteringOptions {
     private List<Path> excludesFiles = ImmutableList.of();
 
     @CommandLine.Option(
+            names = "--bad",
+            description = "Include/exclude bad dumps",
+            negatable = true)
+    @Getter(NONE)
+    private Boolean allowBad;
+
+    @CommandLine.Option(
             names = "--proto",
             description = "Include/exclude prototype entries",
             negatable = true)
@@ -173,6 +180,10 @@ public final class FilteringOptions {
                 : condition == null || condition;
     }
 
+    public boolean isAllowBad() {
+        return reallySet(allowBad);
+    }
+
     public boolean isAllowProto() {
         return reallySet(allowProto);
     }
@@ -233,6 +244,9 @@ public final class FilteringOptions {
         builder.allowSample(isAllowSample());
         builder.allowBios(isAllowBios());
         ImmutableSet.Builder<Pattern> excludesBuilder = ImmutableSet.builder();
+        if (!isAllowBad()) {
+            excludesBuilder.add(Patterns.BAD);
+        }
         if (!isAllowProgram()) {
             excludesBuilder.add(Patterns.PROGRAM);
         }
