@@ -9,8 +9,7 @@ import io.github.datromtool.data.PostFilter;
 import io.github.datromtool.domain.datafile.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.Map;
@@ -20,10 +19,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @RequiredArgsConstructor
 public final class GameFilterer {
-
-    private final static Logger logger = LoggerFactory.getLogger(GameFilterer.class);
 
     @NonNull
     private final Filter filter;
@@ -32,8 +30,8 @@ public final class GameFilterer {
     private final PostFilter postFilter;
 
     public ImmutableList<ParsedGame> filter(Collection<ParsedGame> input) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(
+        if (log.isDebugEnabled()) {
+            log.debug(
                     "Starting filtering {} with {}",
                     input.stream()
                             .map(ParsedGame::getGame)
@@ -53,8 +51,8 @@ public final class GameFilterer {
                 .filter(this::filterExcludeLanguage)
                 .filter(this::filterExcludes)
                 .collect(ImmutableList.toImmutableList());
-        if (logger.isDebugEnabled()) {
-            logger.debug(
+        if (log.isDebugEnabled()) {
+            log.debug(
                     "Finished filtering {}",
                     result.stream()
                             .map(ParsedGame::getGame)
@@ -67,7 +65,7 @@ public final class GameFilterer {
     private boolean filterBioses(ParsedGame p) {
         boolean result = filter.isAllowBios() || !p.isBios();
         if (!result) {
-            logger.debug("BIOS filter removed '{}'", p.getGame().getName());
+            log.debug("BIOS filter removed '{}'", p.getGame().getName());
         }
         return result;
     }
@@ -75,7 +73,7 @@ public final class GameFilterer {
     private boolean filterProto(ParsedGame p) {
         boolean result = filter.isAllowProto() || p.getProto().isEmpty();
         if (!result) {
-            logger.debug("Proto filter removed '{}'", p.getGame().getName());
+            log.debug("Proto filter removed '{}'", p.getGame().getName());
         }
         return result;
     }
@@ -83,7 +81,7 @@ public final class GameFilterer {
     private boolean filterBeta(ParsedGame p) {
         boolean result = filter.isAllowBeta() || p.getBeta().isEmpty();
         if (!result) {
-            logger.debug("Beta filter removed '{}'", p.getGame().getName());
+            log.debug("Beta filter removed '{}'", p.getGame().getName());
         }
         return result;
     }
@@ -91,7 +89,7 @@ public final class GameFilterer {
     private boolean filterDemo(ParsedGame p) {
         boolean result = filter.isAllowDemo() || p.getDemo().isEmpty();
         if (!result) {
-            logger.debug("Demo filter removed '{}'", p.getGame().getName());
+            log.debug("Demo filter removed '{}'", p.getGame().getName());
         }
         return result;
     }
@@ -99,7 +97,7 @@ public final class GameFilterer {
     private boolean filterSample(ParsedGame p) {
         boolean result = filter.isAllowSample() || p.getSample().isEmpty();
         if (!result) {
-            logger.debug("Sample filter removed '{}'", p.getGame().getName());
+            log.debug("Sample filter removed '{}'", p.getGame().getName());
         }
         return result;
     }
@@ -107,7 +105,7 @@ public final class GameFilterer {
     private boolean filterIncludeRegion(ParsedGame p) {
         boolean result = containsAny(p::getRegionsStream, filter.getIncludeRegions());
         if (!result) {
-            logger.debug("Region filter removed '{}'", p.getGame().getName());
+            log.debug("Region filter removed '{}'", p.getGame().getName());
         }
         return result;
     }
@@ -115,7 +113,7 @@ public final class GameFilterer {
     private boolean filterIncludeLanguage(ParsedGame p) {
         boolean result = containsAny(p::getLanguagesStream, filter.getIncludeLanguages());
         if (!result) {
-            logger.debug("Language filter removed '{}'", p.getGame().getName());
+            log.debug("Language filter removed '{}'", p.getGame().getName());
         }
         return result;
     }
@@ -123,7 +121,7 @@ public final class GameFilterer {
     private boolean filterExcludeRegion(ParsedGame p) {
         boolean result = containsNone(p::getRegionsStream, filter.getExcludeRegions());
         if (!result) {
-            logger.debug("Region exclusion filter removed '{}'", p.getGame().getName());
+            log.debug("Region exclusion filter removed '{}'", p.getGame().getName());
         }
         return result;
     }
@@ -131,7 +129,7 @@ public final class GameFilterer {
     private boolean filterExcludeLanguage(ParsedGame p) {
         boolean result = containsNone(p::getLanguagesStream, filter.getExcludeLanguages());
         if (!result) {
-            logger.debug("Language exclusion filter removed '{}'", p.getGame().getName());
+            log.debug("Language exclusion filter removed '{}'", p.getGame().getName());
         }
         return result;
     }
@@ -153,14 +151,14 @@ public final class GameFilterer {
                 .map(e -> e.matcher(p.getGame().getName()))
                 .noneMatch(Matcher::find);
         if (!result) {
-            logger.debug("Excludes filter removed '{}'", p.getGame().getName());
+            log.debug("Excludes filter removed '{}'", p.getGame().getName());
         }
         return result;
     }
 
     public ImmutableList<ParsedGame> postFilter(Collection<ParsedGame> input) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(
+        if (log.isDebugEnabled()) {
+            log.debug(
                     "Starting post-filtering {} with {}",
                     input.stream()
                             .map(ParsedGame::getGame)
@@ -174,8 +172,8 @@ public final class GameFilterer {
                     .map(Game::getName)
                     .map(exclude::matcher)
                     .anyMatch(Matcher::find)) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug(
+                if (log.isDebugEnabled()) {
+                    log.debug(
                             "Post-filter exclusions removed {}",
                             input.stream()
                                     .map(ParsedGame::getGame)

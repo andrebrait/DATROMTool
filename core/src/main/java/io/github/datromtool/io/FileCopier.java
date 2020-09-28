@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
@@ -21,8 +22,6 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.compressors.lzma.LZMAUtils;
 import org.apache.commons.compress.compressors.xz.XZUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,9 +42,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+@Slf4j
 public final class FileCopier {
-
-    private static final Logger logger = LoggerFactory.getLogger(FileCopier.class);
 
     private static final int BUFFER_SIZE = 32 * 1024; // 32KB per thread
     private static final Path EMPTY_PATH = Paths.get("");
@@ -182,12 +180,12 @@ public final class FileCopier {
     public void copy(Set<? extends Spec> definitions) {
         ExecutorService executorService = Executors.newFixedThreadPool(
                 numThreads,
-                new IndexedThreadFactory(logger, "COPIER"));
+                new IndexedThreadFactory(log, "COPIER"));
         if (!LZMAUtils.isLZMACompressionAvailable()) {
-            logger.warn("LZMA compression support is disabled");
+            log.warn("LZMA compression support is disabled");
         }
         if (!XZUtils.isXZCompressionAvailable()) {
-            logger.warn("XZ compression support is disabled");
+            log.warn("XZ compression support is disabled");
         }
         definitions.stream()
                 .map(d -> executorService.submit(() -> copy(d)))
@@ -200,7 +198,7 @@ public final class FileCopier {
         try {
             future.get();
         } catch (Exception e) {
-            logger.error("Unexpected exception thrown", e);
+            log.error("Unexpected exception thrown", e);
         }
     }
 
@@ -241,7 +239,7 @@ public final class FileCopier {
             }
             Files.setLastModifiedTime(spec.getTo(), Files.getLastModifiedTime(spec.getFrom()));
         } catch (Exception e) {
-            logger.error("Could not copy '{}' to '{}'", spec.getFrom(), spec.getTo(), e);
+            log.error("Could not copy '{}' to '{}'", spec.getFrom(), spec.getTo(), e);
             if (listener != null) {
                 listener.reportFailure(
                         spec.getFrom(),
@@ -282,7 +280,7 @@ public final class FileCopier {
                     extractTarEntries(spec, index);
             }
         } catch (UnsupportedRarV5Exception e) {
-            logger.error("Could not extract '{}'. RAR5 is not supported yet", spec.getFrom());
+            log.error("Could not extract '{}'. RAR5 is not supported yet", spec.getFrom());
             if (listener != null) {
                 listener.reportFailure(
                         spec.getFrom(),
@@ -292,7 +290,7 @@ public final class FileCopier {
                         e);
             }
         } catch (Exception e) {
-            logger.error("Could not extract '{}'", spec.getFrom(), e);
+            log.error("Could not extract '{}'", spec.getFrom(), e);
             if (listener != null) {
                 listener.reportFailure(
                         spec.getFrom(),
@@ -332,7 +330,7 @@ public final class FileCopier {
                     compressTarEntries(spec, index);
             }
         } catch (Exception e) {
-            logger.error("Could not compress files to '{}'", spec.getTo(), e);
+            log.error("Could not compress files to '{}'", spec.getTo(), e);
             if (listener != null) {
                 listener.reportFailure(
                         EMPTY_PATH,
@@ -373,7 +371,7 @@ public final class FileCopier {
                     fromTarToArchive(spec, index);
             }
         } catch (UnsupportedRarV5Exception e) {
-            logger.error(
+            log.error(
                     "Could not copy contents of '{}' to '{}'. RAR5 is not supported yet",
                     spec.getFrom(),
                     spec.getTo());
@@ -386,7 +384,7 @@ public final class FileCopier {
                         e);
             }
         } catch (Exception e) {
-            logger.error(
+            log.error(
                     "Could not copy contents of '{}' to '{}'",
                     spec.getFrom(),
                     spec.getTo(),
@@ -763,7 +761,7 @@ public final class FileCopier {
                 Path source = spec.getFrom().resolve(name);
                 Path to = spec.getTo().resolve(name);
                 if (!name.equals(internal.getTo())) {
-                    logger.warn(
+                    log.warn(
                             "Cannot rename files inside ZIPs when using raw copy. "
                                     + "Writing '{}' as '{}'",
                             spec.getTo().resolve(internal.getTo()),

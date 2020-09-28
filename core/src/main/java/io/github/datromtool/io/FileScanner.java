@@ -13,12 +13,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.compress.compressors.lzma.LZMAUtils;
 import org.apache.commons.compress.compressors.xz.XZUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,9 +41,8 @@ import java.util.zip.CRC32;
 import static io.github.datromtool.io.FileScannerParameters.forDatWithDetector;
 import static io.github.datromtool.io.FileScannerParameters.withDefaults;
 
+@Slf4j
 public final class FileScanner {
-
-    private static final Logger logger = LoggerFactory.getLogger(FileScanner.class);
 
     private final int numThreads;
     private final ImmutableList<Detector> detectors;
@@ -153,7 +151,7 @@ public final class FileScanner {
 
         @Override
         public FileVisitResult visitFileFailed(Path file, IOException exc) {
-            logger.warn("Failed to scan '{}'", file, exc);
+            log.warn("Failed to scan '{}'", file, exc);
             return FileVisitResult.SKIP_SUBTREE;
         }
     }
@@ -161,12 +159,12 @@ public final class FileScanner {
     public ImmutableList<Result> scan(List<Path> directories) {
         ExecutorService executorService = Executors.newFixedThreadPool(
                 numThreads,
-                new IndexedThreadFactory(logger, "SCANNER"));
+                new IndexedThreadFactory(log, "SCANNER"));
         if (!LZMAUtils.isLZMACompressionAvailable()) {
-            logger.warn("LZMA compression support is disabled");
+            log.warn("LZMA compression support is disabled");
         }
         if (!XZUtils.isXZCompressionAvailable()) {
-            logger.warn("XZ compression support is disabled");
+            log.warn("XZ compression support is disabled");
         }
         try {
             ImmutableList.Builder<FileMetadata> pathsBuilder = ImmutableList.builder();
@@ -174,7 +172,7 @@ public final class FileScanner {
                 try {
                     Files.walkFileTree(directory, new AppendingFileVisitor(pathsBuilder::add));
                 } catch (Exception e) {
-                    logger.error("Could not scan '{}'", directory, e);
+                    log.error("Could not scan '{}'", directory, e);
                 }
             }
             ImmutableList<FileMetadata> paths = pathsBuilder.build();
@@ -189,7 +187,7 @@ public final class FileScanner {
                     .flatMap(FileScanner::streamResults)
                     .collect(ImmutableList.toImmutableList());
         } catch (Exception e) {
-            logger.error("Could not scan '{}'", directories, e);
+            log.error("Could not scan '{}'", directories, e);
             throw e;
         } finally {
             executorService.shutdownNow();
@@ -200,14 +198,14 @@ public final class FileScanner {
         try {
             return future.get().stream();
         } catch (Exception e) {
-            logger.error("Unexpected exception thrown", e);
+            log.error("Unexpected exception thrown", e);
             return Stream.empty();
         }
     }
 
     private boolean shouldSkip(Path path, int index, long size) {
         if (size < fileScannerParameters.getMinRomSize()) {
-            logger.info(
+            log.info(
                     "File is smaller than minimum ROM size of {}. Skip calculation of hashes: '{}'",
                     fileScannerParameters.getMinRomSizeStr(),
                     path);
@@ -217,7 +215,7 @@ public final class FileScanner {
             return true;
         }
         if (size > fileScannerParameters.getMaxRomSize()) {
-            logger.info(
+            log.info(
                     "File is larger than maximum ROM size of {}. Skip calculation of hashes: '{}'",
                     fileScannerParameters.getMaxRomSizeStr(),
                     path);
@@ -265,14 +263,14 @@ public final class FileScanner {
                             break;
                     }
                 } catch (UnsupportedRarV5Exception e) {
-                    logger.error(
+                    log.error(
                             "Unexpected error while reading archive '{}' detected as {}. "
                                     + "Reason: RAR5 is not supported yet",
                             file,
                             archiveType);
                     scanned = true;
                 } catch (Exception e) {
-                    logger.error(
+                    log.error(
                             "Unexpected error while reading archive '{}' detected as {}",
                             file,
                             archiveType,
@@ -287,7 +285,7 @@ public final class FileScanner {
             }
             return builder.build();
         } catch (Exception e) {
-            logger.error("Could not read file '{}'", file, e);
+            log.error("Could not read file '{}'", file, e);
             if (listener != null) {
                 listener.reportFailure(file, index, "Could not read the file", e);
             }
@@ -531,14 +529,14 @@ public final class FileScanner {
                         break;
                     }
                 } catch (Exception e) {
-                    logger.error("Error while processing rule for '{}'", path, e);
+                    log.error("Error while processing rule for '{}'", path, e);
                     if (listener != null) {
                         listener.reportFailure(path, index, "Error while processing rule", e);
                     }
                 }
             }
             if (detected) {
-                logger.info(
+                log.info(
                         "Detected header using '{}' for '{}'",
                         detector.getName(),
                         path);
@@ -596,7 +594,7 @@ public final class FileScanner {
                             }
                         }
                     } catch (Exception e) {
-                        logger.error("Error while processing rule for '{}'", path, e);
+                        log.error("Error while processing rule for '{}'", path, e);
                         if (listener != null) {
                             listener.reportFailure(
                                     path,
@@ -607,7 +605,7 @@ public final class FileScanner {
                     }
                 }
                 if (detected) {
-                    logger.info(
+                    log.info(
                             "Detected header using '{}' for '{}'",
                             detector.getName(),
                             path);

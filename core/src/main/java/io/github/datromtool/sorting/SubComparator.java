@@ -4,8 +4,7 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.data.ParsedGame;
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -16,10 +15,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @Getter
 public abstract class SubComparator implements Comparator<ParsedGame> {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     final static class ReversedSubComparator extends SubComparator {
 
@@ -63,7 +61,7 @@ public abstract class SubComparator implements Comparator<ParsedGame> {
 
     private int computeMatches(ParsedGame parsedGame, ImmutableCollection<Pattern> patterns) {
         int matches = countMatches(parsedGame.getGame().getName(), patterns);
-        logger.trace(
+        log.trace(
                 "Obtained {} matches in patterns list {} for '{}'",
                 matches,
                 patterns,
@@ -93,7 +91,7 @@ public abstract class SubComparator implements Comparator<ParsedGame> {
             Function<ParsedGame, Stream<T>> streamFunction,
             ImmutableCollection<T> collection) {
         int smallestIndex = smallestIndex(parsedGame, streamFunction, collection.asList());
-        logger.trace(
+        log.trace(
                 "Smallest index {} found in list {} for '{}'",
                 smallestIndex,
                 collection,

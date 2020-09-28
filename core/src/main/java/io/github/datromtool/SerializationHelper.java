@@ -17,8 +17,7 @@ import io.github.datromtool.data.RegionData;
 import io.github.datromtool.domain.detector.Detector;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,11 +27,10 @@ import java.nio.file.Paths;
 
 import static lombok.AccessLevel.PRIVATE;
 
+@Slf4j
 @Getter
 @NoArgsConstructor(access = PRIVATE)
 public final class SerializationHelper {
-
-    private final static Logger logger = LoggerFactory.getLogger(SerializationHelper.class);
 
     private final static Path PROGRAM_FOLDER_PATH =
             Paths.get(System.getProperty("user.home")).resolve(".DATROMTool");
@@ -134,7 +132,7 @@ public final class SerializationHelper {
             try {
                 return loadYaml(REGION_DATA_PATH, RegionData.class);
             } catch (Exception e) {
-                logger.error("Could not load custom region config from file", e);
+                log.error("Could not load custom region config from file", e);
             }
         }
         return loadYaml(
@@ -152,7 +150,7 @@ public final class SerializationHelper {
             try {
                 return loadXml(path, Detector.class);
             } catch (Exception e) {
-                logger.error("Could not load detector from file", e);
+                log.error("Could not load detector from file", e);
             }
         }
         return loadXml(
@@ -169,7 +167,7 @@ public final class SerializationHelper {
             try {
                 return loadYaml(APP_CONFIG_PATH, AppConfig.class);
             } catch (Exception e) {
-                logger.error("Could not load application configuration from file", e);
+                log.error("Could not load application configuration from file", e);
             }
         }
         return AppConfig.builder().build();

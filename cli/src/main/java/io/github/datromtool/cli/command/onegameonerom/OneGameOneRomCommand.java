@@ -17,7 +17,6 @@ import io.github.datromtool.cli.option.SortingOptions;
 import io.github.datromtool.cli.progressbar.CommandLineCopierProgressBar;
 import io.github.datromtool.cli.progressbar.CommandLineScannerProgressBar;
 import io.github.datromtool.config.AppConfig;
-import io.github.datromtool.data.CrcKey;
 import io.github.datromtool.data.Filter;
 import io.github.datromtool.data.Pair;
 import io.github.datromtool.data.ParsedGame;
@@ -27,11 +26,11 @@ import io.github.datromtool.domain.datafile.Clrmamepro;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.domain.datafile.Header;
-import io.github.datromtool.domain.datafile.Rom;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.io.ArchiveType;
 import io.github.datromtool.io.FileCopier;
 import io.github.datromtool.io.FileScanner;
+import io.github.datromtool.io.ScanResultMatcher;
 import io.github.datromtool.sorting.GameComparator;
 import io.github.datromtool.util.ArgumentException;
 import lombok.Data;
@@ -40,7 +39,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import picocli.CommandLine;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -100,6 +98,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
+        ArchiveType toType = inputOutputOptions.getArchiveType();
         if (inputOutputOptions != null) {
             if (inputOutputOptions.getOutputDir() != null
                     && inputOutputOptions.getInputDirs().isEmpty()) {
@@ -118,7 +117,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                                 ALPHABETICAL_OPTION,
                                 OUTPUT_DIR_OPTION));
             }
-            if (inputOutputOptions.getArchiveType() != null) {
+            if (toType != null) {
                 if (inputOutputOptions.getOutputDir() == null) {
                     throw new CommandLine.ParameterException(
                             commandSpec.commandLine(),
@@ -202,32 +201,9 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                     new CommandLineScannerProgressBar());
             ImmutableList<FileScanner.Result> scanResults =
                     scanner.scan(inputOutputOptions.getInputDirs());
-            ImmutableMap<CrcKey, ImmutableList<FileScanner.Result>> resultsForCrc =
-                    scanResults
-                            .stream()
-                            .collect(Collectors.collectingAndThen(
-                                    Collectors.groupingBy(
-                                            o -> CrcKey.of(
-                                                    o.getUnheaderedSize(),
-                                                    o.getDigest().getCrc()),
-                                            ImmutableList.toImmutableList()),
-                                    ImmutableMap::copyOf));
-            ImmutableMap<String, ImmutableList<FileScanner.Result>> resultsForMd5 =
-                    scanResults.stream()
-                            .collect(Collectors.collectingAndThen(
-                                    Collectors.groupingBy(
-                                            o -> o.getDigest().getMd5(),
-                                            ImmutableList.toImmutableList()),
-                                    ImmutableMap::copyOf));
-            ImmutableMap<String, ImmutableList<FileScanner.Result>> resultsForSha1 =
-                    scanResults.stream()
-                            .collect(Collectors.collectingAndThen(
-                                    Collectors.groupingBy(
-                                            o -> o.getDigest().getSha1(),
-                                            ImmutableList.toImmutableList()),
-                                    ImmutableMap::copyOf));
+            ScanResultMatcher matcher = new ScanResultMatcher(scanResults);
             ImmutableMap<String,
-                    ImmutableList<Pair<ParsedGame, ImmutableList<Pair<Rom, FileScanner.Result>>>>>
+                    ImmutableList<Pair<ParsedGame, ImmutableList<ScanResultMatcher.Match>>>>
                     presentGames =
                     postFilteredGamesByParent.entrySet().stream()
                             .map(e -> Pair.of(
@@ -235,11 +211,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                                     e.getValue().stream()
                                             .map(pg -> Pair.of(
                                                     pg,
-                                                    getResults(
-                                                            resultsForCrc,
-                                                            resultsForMd5,
-                                                            resultsForSha1,
-                                                            pg)))
+                                                    matcher.match(pg, toType)))
                                             .filter(p -> !p.getRight().isEmpty())
                                             .collect(ImmutableList.toImmutableList())))
                             .filter(p -> !p.getRight().isEmpty())
@@ -260,11 +232,9 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                         .flatMap(pair -> {
                             Game game = pair.getLeft().getGame();
                             Path baseDir = createBaseDirectory(game);
-                            ImmutableList<Pair<Rom, FileScanner.Result>> results = pair.getRight();
-                            Map<Path, List<Pair<Rom, FileScanner.Result>>> perFile = results
-                                    .stream()
-                                    .collect(Collectors.groupingBy(p -> p.getRight().getPath()));
-                            ArchiveType toType = inputOutputOptions.getArchiveType();
+                            ImmutableList<ScanResultMatcher.Match> results = pair.getRight();
+                            Map<Path, List<ScanResultMatcher.Match>> perFile = results.stream()
+                                    .collect(Collectors.groupingBy(p -> p.getResult().getPath()));
                             if (toType == null) {
                                 // Simple copy/extraction
                                 return simpleCopyOrExtractionStream(baseDir, perFile);
@@ -288,13 +258,13 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
 
     public Stream<FileCopier.Spec> simpleCopyOrExtractionStream(
             Path baseDir,
-            Map<Path, List<Pair<Rom, FileScanner.Result>>> perFile) {
+            Map<Path, List<ScanResultMatcher.Match>> perFile) {
         return perFile.entrySet().stream()
                 .flatMap(e -> {
                     Path from = e.getKey();
-                    List<Pair<Rom, FileScanner.Result>> list = e.getValue();
+                    List<ScanResultMatcher.Match> list = e.getValue();
                     ArchiveType fromType = list.stream()
-                            .map(Pair::getRight)
+                            .map(ScanResultMatcher.Match::getResult)
                             .map(FileScanner.Result::getArchiveType)
                             .filter(Objects::nonNull)
                             .findFirst()
@@ -302,7 +272,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                     if (fromType == null) {
                         // Simple copy
                         return list.stream()
-                                .map(Pair::getLeft)
+                                .map(ScanResultMatcher.Match::getRom)
                                 .map(rom -> FileCopier.CopySpec.builder()
                                         .from(from)
                                         .to(baseDir.resolve(rom.getName()))
@@ -313,14 +283,11 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                                 .from(from)
                                 .fromType(fromType)
                                 .internalSpecs(list.stream()
-                                        .map(p -> {
-                                            Rom rom = p.getLeft();
-                                            FileScanner.Result result = p.getRight();
-                                            return FileCopier.ExtractionSpec.InternalSpec.builder()
-                                                    .from(result.getArchivePath())
-                                                    .to(baseDir.resolve(rom.getName()))
-                                                    .build();
-                                        }).collect(ImmutableSet.toImmutableSet()))
+                                        .map(m -> FileCopier.ExtractionSpec.InternalSpec.builder()
+                                                .from(m.getResult().getArchivePath())
+                                                .to(baseDir.resolve(m.getRom().getName()))
+                                                .build())
+                                        .collect(ImmutableSet.toImmutableSet()))
                                 .build());
                     }
                 });
@@ -329,8 +296,8 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
     public Stream<FileCopier.Spec> compressionOrArchiveCopyStream(
             Game game,
             Path baseDir,
-            ImmutableList<Pair<Rom, FileScanner.Result>> results,
-            Map<Path, List<Pair<Rom, FileScanner.Result>>> perFile,
+            ImmutableList<ScanResultMatcher.Match> results,
+            Map<Path, List<ScanResultMatcher.Match>> perFile,
             ArchiveType toType) {
         Path to = baseDir.resolve(String.format(
                 "%s.%s",
@@ -340,9 +307,9 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                 .entrySet().stream()
                 .map(e -> {
                     Path from = e.getKey();
-                    List<Pair<Rom, FileScanner.Result>> list = e.getValue();
+                    List<ScanResultMatcher.Match> list = e.getValue();
                     ArchiveType fromType = list.stream()
-                            .map(Pair::getRight)
+                            .map(ScanResultMatcher.Match::getResult)
                             .map(FileScanner.Result::getArchiveType)
                             .filter(Objects::nonNull)
                             .findFirst()
@@ -358,20 +325,16 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                             .to(to)
                             .toType(toType)
                             .internalSpecs(list.stream()
-                                    .map(p -> {
-                                        Rom rom = p.getLeft();
-                                        FileScanner.Result result = p.getRight();
-                                        return FileCopier.ArchiveCopySpec.InternalSpec.builder()
-                                                .from(result.getArchivePath())
-                                                .to(rom.getName())
-                                                .build();
-                                    })
+                                    .map(m -> FileCopier.ArchiveCopySpec.InternalSpec.builder()
+                                            .from(m.getResult().getArchivePath())
+                                            .to(m.getRom().getName())
+                                            .build())
                                     .collect(ImmutableSet.toImmutableSet()))
                             .build();
                 }).filter(Objects::nonNull);
-        List<Pair<Rom, FileScanner.Result>> forCompression = results
+        List<ScanResultMatcher.Match> forCompression = results
                 .stream()
-                .filter(p -> p.getRight().getArchiveType() == null)
+                .filter(m -> m.getResult().getArchiveType() == null)
                 .collect(Collectors.toList());
         Stream<FileCopier.CompressionSpec> compressions;
         if (forCompression.isEmpty()) {
@@ -382,14 +345,11 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                     .to(to)
                     .toType(toType)
                     .internalSpecs(forCompression.stream()
-                            .map(p -> {
-                                Rom rom = p.getLeft();
-                                FileScanner.Result result = p.getRight();
-                                return FileCopier.CompressionSpec.InternalSpec.builder()
-                                        .from(result.getPath())
-                                        .to(rom.getName())
-                                        .build();
-                            }).collect(ImmutableSet.toImmutableSet()))
+                            .map(p -> FileCopier.CompressionSpec.InternalSpec.builder()
+                                    .from(p.getResult().getPath())
+                                    .to(p.getRom().getName())
+                                    .build())
+                            .collect(ImmutableSet.toImmutableSet()))
                     .build());
         }
         return Stream.concat(archiveCopies, compressions);
@@ -423,85 +383,6 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                             e.getMessage()),
                     e);
         }
-    }
-
-    // TODO Move this to core and add logging. Extract almost everything from this class to core.
-    private ImmutableList<Pair<Rom, FileScanner.Result>> getResults(
-            Map<CrcKey, ? extends List<FileScanner.Result>> resultsForCrc,
-            Map<String, ? extends List<FileScanner.Result>> resultsForMd5,
-            Map<String, ? extends List<FileScanner.Result>> resultsForSha1,
-            ParsedGame parsedGame) {
-        ImmutableList<Pair<Rom, ImmutableList<FileScanner.Result>>> results = parsedGame.getGame()
-                .getRoms()
-                .stream()
-                .map(r -> Pair.of(
-                        r,
-                        getResultFromMaps(
-                                resultsForCrc,
-                                resultsForMd5,
-                                resultsForSha1,
-                                r)))
-                .filter(p -> !p.getRight().isEmpty())
-                .collect(ImmutableList.toImmutableList());
-        if (results.size() < parsedGame.getGame().getRoms().size()) {
-            // TODO Log a warning (not all files were found)
-            return ImmutableList.of();
-        }
-        // TODO Prefer all from the same archive or all uncompressed
-        // FIXME FILTER HERE
-        ImmutableList<Pair<Rom, FileScanner.Result>> filteredResults =
-                results.stream()
-                        .map(p -> Pair.of(p.getLeft(), p.getRight().iterator().next()))
-                        .collect(ImmutableList.toImmutableList());
-        // TODO If the destination is uncompressed, prefer uncompressed as much as possible
-        if (inputOutputOptions.getArchiveType() != null) {
-            if (isMultipleOriginTypes(filteredResults) || isFromMultipleArchives(filteredResults)) {
-                // TODO Log a warning (cannot merge several archives into one)
-                return ImmutableList.of();
-            }
-        }
-        return filteredResults;
-    }
-
-    private static boolean isMultipleOriginTypes(
-            ImmutableList<Pair<Rom, FileScanner.Result>> results) {
-        return results.stream()
-                .map(Pair::getRight)
-                .map(FileScanner.Result::getArchiveType)
-                .distinct()
-                .count() > 1;
-    }
-
-    private static boolean isFromMultipleArchives(
-            ImmutableList<Pair<Rom, FileScanner.Result>> results) {
-        return results.stream()
-                .map(Pair::getRight)
-                .filter(r -> r.getArchiveType() != null)
-                .map(FileScanner.Result::getPath)
-                .distinct()
-                .count() > 1;
-    }
-
-    @Nullable
-    private static ImmutableList<FileScanner.Result> getResultFromMaps(
-            Map<CrcKey, ? extends List<FileScanner.Result>> resultsForCrc,
-            Map<String, ? extends List<FileScanner.Result>> resultsForMd5,
-            Map<String, ? extends List<FileScanner.Result>> resultsForSha1,
-            Rom rom) {
-        List<FileScanner.Result> results = null;
-        if (rom.getSha1() != null) {
-            results = resultsForSha1.get(rom.getSha1());
-        }
-        if (results == null && rom.getMd5() != null) {
-            results = resultsForMd5.get(rom.getMd5());
-        }
-        if (results == null && rom.getCrc() != null) {
-            results = resultsForCrc.get(CrcKey.of(rom.getSize(), rom.getCrc()));
-        }
-        if (results == null) {
-            return ImmutableList.of();
-        }
-        return ImmutableList.copyOf(results);
     }
 
     private static void printTopItems(List<? extends List<ParsedGame>> postFilteredGamesByParent) {

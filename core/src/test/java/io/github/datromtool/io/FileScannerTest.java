@@ -47,7 +47,7 @@ class FileScannerTest {
         crc32sums = Files.readAllLines(testDataSource.getParent().resolve("CRC32SUMS")).stream()
                 .map(s -> s.split("\\s+"))
                 .peek(s -> s[2] = Paths.get(s[2]).getFileName().toString())
-                .collect(Collectors.toMap(s -> s[2], s -> CrcKey.of(Long.parseLong(s[1]), s[0])));
+                .collect(Collectors.toMap(s -> s[2], s -> CrcKey.from(Long.parseLong(s[1]), s[0])));
         md5sums = Files.readAllLines(testDataSource.getParent().resolve("MD5SUMS")).stream()
                 .map(s -> s.split("\\s+"))
                 .peek(s -> s[1] = Paths.get(s[1]).getFileName().toString())

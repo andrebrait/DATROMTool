@@ -9,6 +9,7 @@ import io.github.datromtool.io.ArchiveType;
 import io.github.datromtool.io.UnrarArchiveEntry;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -25,8 +26,6 @@ import org.apache.commons.compress.compressors.lzma.LZMACompressorInputStream;
 import org.apache.commons.compress.compressors.lzma.LZMACompressorOutputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -47,10 +46,9 @@ import java.util.stream.Stream;
 
 import static java.nio.file.StandardOpenOption.CREATE;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ArchiveUtils {
-
-    private static final Logger logger = LoggerFactory.getLogger(ArchiveUtils.class);
 
     @Nullable
     public static InputStream inputStreamForTar(ArchiveType archiveType, Path file)
@@ -163,7 +161,7 @@ public final class ArchiveUtils {
                 Process process = pb.start();
                 value = process.waitFor() == 0;
             } catch (IOException | InterruptedException e) {
-                logger.error("Could not check if 'unrar' is available", e);
+                log.error("Could not check if 'unrar' is available", e);
                 value = false;
             }
             isUnrarAvailableCache = value;
@@ -177,7 +175,7 @@ public final class ArchiveUtils {
             Process process = pb.start();
             return process.waitFor() == 0;
         } catch (IOException | InterruptedException e) {
-            logger.error("'unrar' could not test file '{}'", path, e);
+            log.error("'unrar' could not test file '{}'", path, e);
             return false;
         }
     }
@@ -208,11 +206,11 @@ public final class ArchiveUtils {
                     .collect(ImmutableList.toImmutableList());
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                logger.error("Unexpected error while running 'unrar'. Exit code: {}", exitCode);
+                log.error("Unexpected error while running 'unrar'. Exit code: {}", exitCode);
             }
             return fileList;
         } catch (InterruptedException e) {
-            logger.error("'unrar' could not list contents of file '{}'", path, e);
+            log.error("'unrar' could not list contents of file '{}'", path, e);
             return ImmutableList.of();
         }
     }
@@ -252,10 +250,10 @@ public final class ArchiveUtils {
             }
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                logger.error("Unexpected error while running 'unrar'. Exit code: {}", exitCode);
+                log.error("Unexpected error while running 'unrar'. Exit code: {}", exitCode);
             }
         } catch (InterruptedException e) {
-            logger.error("'unrar' could not read contents of file '{}'", path, e);
+            log.error("'unrar' could not read contents of file '{}'", path, e);
         }
     }
 
@@ -303,7 +301,7 @@ public final class ArchiveUtils {
                 }
             }
         } else {
-            logger.warn("Unsupported TAR archive compression for '{}'", file);
+            log.warn("Unsupported TAR archive compression for '{}'", file);
         }
     }
 

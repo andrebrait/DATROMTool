@@ -7,8 +7,7 @@ import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.sorting.GameComparator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -16,22 +15,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 public final class GameSorter {
-
-    private final static Logger logger = LoggerFactory.getLogger(GameSorter.class);
 
     @NonNull
     private final GameComparator comparator;
 
     public ImmutableMap<String, ImmutableList<ParsedGame>> sortAndGroupByParent(
             Collection<ParsedGame> parsedGames) {
-        Map<String, List<ParsedGame>> groupedByParent = parsedGames.stream()
+        return parsedGames.stream()
                 .collect(Collectors.groupingBy(
                         ParsedGame::getParentName,
                         LinkedHashMap::new,
-                        Collectors.toList()));
-        return groupedByParent.entrySet().stream()
+                        Collectors.toList()))
+                .entrySet()
+                .stream()
                 .filter(e -> !e.getValue().isEmpty())
                 .peek(e -> sortList(comparator, e))
                 .collect(ImmutableMap.toImmutableMap(
@@ -40,8 +39,8 @@ public final class GameSorter {
     }
 
     private void sortList(GameComparator comparator, Map.Entry<String, List<ParsedGame>> e) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(
+        if (log.isDebugEnabled()) {
+            log.debug(
                     "Sorting entries for '{}': {}",
                     e.getKey(),
                     e.getValue()
@@ -51,8 +50,8 @@ public final class GameSorter {
                             .collect(Collectors.toList()));
         }
         e.getValue().sort(comparator);
-        if (logger.isDebugEnabled()) {
-            logger.debug(
+        if (log.isDebugEnabled()) {
+            log.debug(
                     "Finished sorting entries for '{}': {}",
                     e.getKey(),
                     e.getValue()

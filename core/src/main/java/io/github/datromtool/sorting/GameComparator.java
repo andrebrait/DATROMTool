@@ -4,15 +4,13 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.SortingPreference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
 import java.util.Comparator;
 
+@Slf4j
 public final class GameComparator implements Comparator<ParsedGame> {
-
-    private final static Logger logger = LoggerFactory.getLogger(GameComparator.class);
 
     private final ImmutableList<SubComparator> subComparators;
 
@@ -32,7 +30,7 @@ public final class GameComparator implements Comparator<ParsedGame> {
         for (SubComparator subComparator : subComparators) {
             int result = subComparator.compare(o1, o2);
             if (result != 0) {
-                logger.debug(
+                log.debug(
                         "Under criteria '{}', '{}' is preferred over '{}'",
                         subComparator.getCriteria(),
                         result < 0 ? o1.getGame().getName() : o2.getGame().getName(),
@@ -40,7 +38,7 @@ public final class GameComparator implements Comparator<ParsedGame> {
                 return result;
             }
         }
-        logger.debug(
+        log.debug(
                 "'{}' and '{}' are equal under every criteria",
                 o1.getGame().getName(),
                 o2.getGame().getName());

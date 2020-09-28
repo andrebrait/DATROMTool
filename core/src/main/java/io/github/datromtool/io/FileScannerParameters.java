@@ -13,8 +13,7 @@ import io.github.datromtool.domain.detector.enumerations.BinaryOperation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -26,11 +25,10 @@ import static java.lang.Math.min;
 import static java.lang.Math.toIntExact;
 import static java.util.Objects.requireNonNull;
 
+@Slf4j
 @Value
 @AllArgsConstructor(access = AccessLevel.NONE)
 class FileScannerParameters {
-
-    private static final Logger logger = LoggerFactory.getLogger(FileScannerParameters.class);
 
     public static final int DEFAULT_BUFFER_SIZE = 32 * 1024; // 32KB
     public static final int MAX_BUFFER_NO_WARNING = 64 * 1024 * 1024; // 64MB
@@ -185,18 +183,18 @@ class FileScannerParameters {
             ByteUnit unit = ByteUnit.getUnit(bufferSize);
             String bufferSizeStr = String.format("%.02f", unit.convert(bufferSize));
             if (bufferSize > MAX_BUFFER_NO_WARNING) {
-                logger.warn(
+                log.warn(
                         "Using a bigger I/O buffer size of {} {} due to header detection",
                         bufferSizeStr,
                         unit.getSymbol());
                 if (bufferSize == maxBuffer) {
-                    logger.warn(
+                    log.warn(
                             "Disabling header detection for ROMs larger than {} {}",
                             bufferSizeStr,
                             unit.getSymbol());
                 }
             } else {
-                logger.info("Using I/O buffer size of {} {}", bufferSizeStr, unit.getSymbol());
+                log.info("Using I/O buffer size of {} {}", bufferSizeStr, unit.getSymbol());
             }
         }
         return new FileScannerParameters(
