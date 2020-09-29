@@ -28,8 +28,10 @@ import java.util.stream.Collectors;
 public final class ScanResultMatcher {
 
     private static final Comparator<FileScanner.Result> ARCHIVE_TYPE_COMPARATOR =
-            Comparator.comparing(FileScanner.Result::getArchiveType)
-                    .thenComparing(FileScanner.Result::getPath);
+            Comparator.comparing(
+                    FileScanner.Result::getArchiveType,
+                    Comparator.nullsFirst(Comparator.naturalOrder())
+            ).thenComparing(FileScanner.Result::getPath);
 
     @Value
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
