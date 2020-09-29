@@ -33,7 +33,17 @@ public final class ScanResultMatcher {
 
     @Value
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class Match {
+    public static class GameMatchList {
+
+        @NonNull
+        ParsedGame parsedGame;
+        @NonNull
+        ImmutableList<RomMatch> romMatches;
+    }
+
+    @Value
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class RomMatch {
 
         @NonNull
         Rom rom;
@@ -42,7 +52,7 @@ public final class ScanResultMatcher {
     }
 
     @Value
-    private static class MatchSet {
+    private static class RomMatchList {
 
         @NonNull
         Rom rom;
@@ -78,7 +88,7 @@ public final class ScanResultMatcher {
     }
 
     @Nonnull
-    private ImmutableList<FileScanner.Result> match(Rom rom) {
+    public ImmutableList<FileScanner.Result> match(Rom rom) {
         ImmutableList<FileScanner.Result> results = null;
         if (rom.getSha1() != null) {
             results = resultsForSha1.get(rom.getSha1());
@@ -99,37 +109,37 @@ public final class ScanResultMatcher {
     }
 
     @Nonnull
-    public ImmutableList<Match> match(
+    public ImmutableList<RomMatch> match(
             @Nonnull ParsedGame parsedGame,
             @Nullable ArchiveType archiveType) {
         int totalRoms = parsedGame.getGame().getRoms().size();
         if (totalRoms == 0) {
             return ImmutableList.of();
         }
-        ImmutableList<MatchSet> matchSets = parsedGame.getGame().getRoms().stream()
-                .map(r -> new MatchSet(r, match(r)))
+        ImmutableList<RomMatchList> romMatchLists = parsedGame.getGame().getRoms().stream()
+                .map(r -> new RomMatchList(r, match(r)))
                 .filter(s -> !s.getResults().isEmpty())
                 .collect(ImmutableList.toImmutableList());
-        if (matchSets.size() < totalRoms) {
+        if (romMatchLists.size() < totalRoms) {
             log.warn("Skipping '{}' due to missing files", parsedGame.getGame().getName());
             return ImmutableList.of();
         }
-        ImmutableList<Match> uncompressedMatches = matchSets.stream()
+        ImmutableList<RomMatch> uncompressedRomMatches = romMatchLists.stream()
                 .map(s -> s.getResults().stream()
                         .filter(r -> r.getArchiveType() == null)
                         .findFirst()
-                        .map(o -> new Match(s.getRom(), o)))
+                        .map(o -> new RomMatch(s.getRom(), o)))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(ImmutableList.toImmutableList());
-        if (uncompressedMatches.size() >= totalRoms) {
-            return uncompressedMatches;
+        if (uncompressedRomMatches.size() >= totalRoms) {
+            return uncompressedRomMatches;
         }
-        ImmutableMap<Path, ImmutableList<Match>> matchesPerArchive = matchSets.stream()
+        ImmutableMap<Path, ImmutableList<RomMatch>> matchesPerArchive = romMatchLists.stream()
                 .flatMap(s -> s.getResults()
                         .stream()
                         .filter(r -> r.getArchiveType() != null)
-                        .map(r -> Pair.of(r.getPath(), new Match(s.getRom(), r))))
+                        .map(r -> Pair.of(r.getPath(), new RomMatch(s.getRom(), r))))
                 .collect(Collectors.groupingBy(
                         Pair::getLeft,
                         LinkedHashMap::new,
@@ -139,12 +149,12 @@ public final class ScanResultMatcher {
                 .sorted(Comparator.comparing(e -> -e.getValue().size()))
                 .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, Map.Entry::getValue));
         if (archiveType == null) {
-            Iterator<Match> remaining = matchesPerArchive.values().stream()
+            Iterator<RomMatch> remaining = matchesPerArchive.values().stream()
                     .flatMap(Collection::stream)
-                    .filter(m -> !uncompressedMatches.contains(m))
+                    .filter(m -> !uncompressedRomMatches.contains(m))
                     .iterator();
-            return ImmutableList.<Match>builder()
-                    .addAll(uncompressedMatches)
+            return ImmutableList.<RomMatch>builder()
+                    .addAll(uncompressedRomMatches)
                     .addAll(remaining)
                     .build();
         }
@@ -157,6 +167,21 @@ public final class ScanResultMatcher {
                             parsedGame.getGame().getName());
                     return ImmutableList.of();
                 });
+    }
+
+    @Nonnull
+    public ImmutableMap<String, ImmutableList<GameMatchList>> match(
+            Map<String, ? extends Collection<ParsedGame>> gamesByParent,
+            ArchiveType toType) {
+        return gamesByParent.entrySet().stream()
+                .map(e -> Pair.of(
+                        e.getKey(),
+                        e.getValue().stream()
+                                .map(pg -> new GameMatchList(pg, match(pg, toType)))
+                                .filter(m -> !m.getRomMatches().isEmpty())
+                                .collect(ImmutableList.toImmutableList())))
+                .filter(p -> !p.getRight().isEmpty())
+                .collect(ImmutableMap.toImmutableMap(Pair::getLeft, Pair::getRight));
     }
 
 }

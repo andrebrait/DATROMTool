@@ -24,42 +24,50 @@ public final class GameSorter {
 
     public ImmutableMap<String, ImmutableList<ParsedGame>> sortAndGroupByParent(
             Collection<ParsedGame> parsedGames) {
-        return parsedGames.stream()
-                .collect(Collectors.groupingBy(
-                        ParsedGame::getParentName,
-                        LinkedHashMap::new,
-                        Collectors.toList()))
+        return groupByParent(parsedGames)
                 .entrySet()
                 .stream()
                 .filter(e -> !e.getValue().isEmpty())
-                .peek(e -> sortList(comparator, e))
+                .peek(GameSorter::logBeforeSorting)
+                .peek(e -> e.getValue().sort(comparator))
+                .peek(GameSorter::logAfterSorting)
                 .collect(ImmutableMap.toImmutableMap(
                         Map.Entry::getKey,
                         e -> ImmutableList.copyOf(e.getValue())));
     }
 
-    private void sortList(GameComparator comparator, Map.Entry<String, List<ParsedGame>> e) {
+    private static Map<String, List<ParsedGame>> groupByParent(Collection<ParsedGame> parsedGames) {
+        return parsedGames.stream()
+                .collect(Collectors.groupingBy(
+                        ParsedGame::getParentName,
+                        LinkedHashMap::new,
+                        Collectors.toList()));
+    }
+
+    private static void logBeforeSorting(Map.Entry<String, ? extends Collection<ParsedGame>> e) {
         if (log.isDebugEnabled()) {
             log.debug(
                     "Sorting entries for '{}': {}",
                     e.getKey(),
-                    e.getValue()
-                            .stream()
-                            .map(ParsedGame::getGame)
-                            .map(Game::getName)
-                            .collect(Collectors.toList()));
+                    toGamesList(e));
         }
-        e.getValue().sort(comparator);
+    }
+
+    private static void logAfterSorting(Map.Entry<String, ? extends Collection<ParsedGame>> e) {
         if (log.isDebugEnabled()) {
             log.debug(
                     "Finished sorting entries for '{}': {}",
                     e.getKey(),
-                    e.getValue()
-                            .stream()
-                            .map(ParsedGame::getGame)
-                            .map(Game::getName)
-                            .collect(Collectors.toList()));
+                    toGamesList(e));
         }
+    }
+
+    private static List<String> toGamesList(Map.Entry<String, ? extends Collection<ParsedGame>> e) {
+        return e.getValue()
+                .stream()
+                .map(ParsedGame::getGame)
+                .map(Game::getName)
+                .collect(Collectors.toList());
     }
 
 }

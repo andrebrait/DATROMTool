@@ -24,7 +24,7 @@ public final class InputOutputOptions {
     public static final String OUTPUT_DIR_OPTION = "--output-dir";
     public static final String ARCHIVE_FORMAT_OPTION = "--archive";
     public static final String FORCE_SUBFOLDER_OPTION = "--force-subfolder";
-    public static final String ALPHABETICAL_OPTION = "--alphabetical";
+    public static final String GROUP_BY_FIRST_LETTER_OPTION = "--group-by-first-letter";
 
     @CommandLine.Option(
             names = {"-i", INPUT_DIR_OPTION},
@@ -49,9 +49,9 @@ public final class InputOutputOptions {
     private ArchiveType archiveType;
 
     @CommandLine.Option(
-            names = ALPHABETICAL_OPTION,
-            description = "Put the resulting files in subfolders based on their names")
-    private boolean alphabetical;
+            names = GROUP_BY_FIRST_LETTER_OPTION,
+            description = "Group resulting files in subfolders based on their names")
+    private boolean groupByFirstLetter;
 
     @CommandLine.Option(
             names = FORCE_SUBFOLDER_OPTION,
