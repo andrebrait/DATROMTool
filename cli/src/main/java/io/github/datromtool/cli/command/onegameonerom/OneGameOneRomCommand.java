@@ -38,6 +38,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import picocli.CommandLine;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -302,35 +304,29 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                 "%s.%s",
                 game.getName(),
                 toType.getFileExtension()));
-        Stream<FileCopier.ArchiveCopySpec> archiveCopies = matchesPerFile
+        Stream<FileCopier.ArchiveCopySpec> archiveCopies =
+                buildArchiveCopySpecs(matchesPerFile, toType, to);
+        Stream<FileCopier.CompressionSpec> compressions =
+                buildCompressionSpecs(matches, toType, to);
+        return Stream.concat(archiveCopies, compressions);
+    }
+
+    @Nonnull
+    private static Stream<FileCopier.ArchiveCopySpec> buildArchiveCopySpecs(
+            Map<Path, ? extends Collection<ScanResultMatcher.RomMatch>> matchesPerFile,
+            ArchiveType toType,
+            Path to) {
+        return matchesPerFile
                 .entrySet().stream()
-                .map(e -> {
-                    Path from = e.getKey();
-                    Collection<ScanResultMatcher.RomMatch> list = e.getValue();
-                    ArchiveType fromType = list.stream()
-                            .map(ScanResultMatcher.RomMatch::getResult)
-                            .map(FileScanner.Result::getArchiveType)
-                            .filter(Objects::nonNull)
-                            .findFirst()
-                            .orElse(null);
-                    // Skip compressions
-                    if (fromType == null) {
-                        return null;
-                    }
-                    // Only archive copy
-                    return FileCopier.ArchiveCopySpec.builder()
-                            .from(from)
-                            .fromType(fromType)
-                            .to(to)
-                            .toType(toType)
-                            .internalSpecs(list.stream()
-                                    .map(m -> FileCopier.ArchiveCopySpec.InternalSpec.builder()
-                                            .from(m.getResult().getArchivePath())
-                                            .to(m.getRom().getName())
-                                            .build())
-                                    .collect(ImmutableSet.toImmutableSet()))
-                            .build();
-                }).filter(Objects::nonNull);
+                .map(e -> buildArchiveCopySpec(toType, to, e))
+                .filter(Objects::nonNull);
+    }
+
+    @Nonnull
+    private static Stream<FileCopier.CompressionSpec> buildCompressionSpecs(
+            Collection<ScanResultMatcher.RomMatch> matches,
+            ArchiveType toType,
+            Path to) {
         List<ScanResultMatcher.RomMatch> forCompression = matches
                 .stream()
                 .filter(m -> m.getResult().getArchiveType() == null)
@@ -351,7 +347,39 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                             .collect(ImmutableSet.toImmutableSet()))
                     .build());
         }
-        return Stream.concat(archiveCopies, compressions);
+        return compressions;
+    }
+
+    @Nullable
+    private static FileCopier.ArchiveCopySpec buildArchiveCopySpec(
+            ArchiveType toType,
+            Path to,
+            Map.Entry<Path, ? extends Collection<ScanResultMatcher.RomMatch>> e) {
+        Path from = e.getKey();
+        Collection<ScanResultMatcher.RomMatch> list = e.getValue();
+        ArchiveType fromType = list.stream()
+                .map(ScanResultMatcher.RomMatch::getResult)
+                .map(FileScanner.Result::getArchiveType)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
+        // Skip compressions
+        if (fromType == null) {
+            return null;
+        }
+        // Only archive copy
+        return FileCopier.ArchiveCopySpec.builder()
+                .from(from)
+                .fromType(fromType)
+                .to(to)
+                .toType(toType)
+                .internalSpecs(list.stream()
+                        .map(m -> FileCopier.ArchiveCopySpec.InternalSpec.builder()
+                                .from(m.getResult().getArchivePath())
+                                .to(m.getRom().getName())
+                                .build())
+                        .collect(ImmutableSet.toImmutableSet()))
+                .build();
     }
 
     private Path createBaseDirectory(Game game) {
