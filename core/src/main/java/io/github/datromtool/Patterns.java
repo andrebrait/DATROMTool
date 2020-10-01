@@ -16,7 +16,6 @@ public final class Patterns {
 
     @SuppressWarnings("RegExpUnexpectedAnchor")
     public final static Pattern NO_MATCH = compile("a^");
-    public final static Pattern ALPHABETICAL = compile("^[a-z]+$", CASE_INSENSITIVE);
 
     /*
      * Parsing regions and languages

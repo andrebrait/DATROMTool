@@ -4,15 +4,13 @@ import io.github.datromtool.cli.ArchiveCompletionCandidates;
 import io.github.datromtool.io.ArchiveType;
 import picocli.CommandLine;
 
-import java.util.stream.StreamSupport;
-
 public final class ArchiveTypeConverter implements CommandLine.ITypeConverter<ArchiveType> {
 
     @Override
     public ArchiveType convert(String value) {
         String actualValue = value.startsWith(".") ? value.replaceFirst("^\\.+", "") : value;
         ArchiveCompletionCandidates candidates = new ArchiveCompletionCandidates();
-        String found = StreamSupport.stream(candidates.spliterator(), false)
+        String found = candidates.getCandidatesStream()
                 .filter(actualValue::equalsIgnoreCase)
                 .findFirst()
                 .orElseThrow(() -> new CommandLine.TypeConversionException(

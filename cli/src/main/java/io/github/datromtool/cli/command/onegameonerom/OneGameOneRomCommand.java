@@ -2,18 +2,21 @@ package io.github.datromtool.cli.command.onegameonerom;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.GameFilterer;
 import io.github.datromtool.GameParser;
 import io.github.datromtool.GameSorter;
-import io.github.datromtool.Patterns;
 import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.cli.GitVersionProvider;
+import io.github.datromtool.cli.OutputMode;
+import io.github.datromtool.cli.command.onegameonerom.InputOutputOptions.OutputOptions;
 import io.github.datromtool.cli.option.FilteringOptions;
 import io.github.datromtool.cli.option.PostFilteringOptions;
 import io.github.datromtool.cli.option.SortingOptions;
+import io.github.datromtool.cli.option.TextOptions;
 import io.github.datromtool.cli.progressbar.CommandLineCopierProgressBar;
 import io.github.datromtool.cli.progressbar.CommandLineScannerProgressBar;
 import io.github.datromtool.config.AppConfig;
@@ -45,6 +48,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -54,11 +58,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
-import static io.github.datromtool.cli.command.onegameonerom.InputOutputOptions.ARCHIVE_FORMAT_OPTION;
-import static io.github.datromtool.cli.command.onegameonerom.InputOutputOptions.FORCE_SUBFOLDER_OPTION;
-import static io.github.datromtool.cli.command.onegameonerom.InputOutputOptions.GROUP_BY_FIRST_LETTER_OPTION;
-import static io.github.datromtool.cli.command.onegameonerom.InputOutputOptions.INPUT_DIR_OPTION;
-import static io.github.datromtool.cli.command.onegameonerom.InputOutputOptions.OUTPUT_DIR_OPTION;
 import static lombok.AccessLevel.NONE;
 
 @Data
@@ -85,8 +84,11 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             paramLabel = "DAT_FILE")
     private List<Path> datFiles = ImmutableList.of();
 
-    @CommandLine.ArgGroup(heading = "Input/output options\n", exclusive = false)
+    @CommandLine.ArgGroup(heading = "Input options\n", exclusive = false)
     private InputOutputOptions inputOutputOptions;
+
+    @CommandLine.ArgGroup(heading = "Text output options\n", exclusive = false)
+    private TextOptions textOptions;
 
     @CommandLine.ArgGroup(heading = "Filtering options\n", exclusive = false)
     private FilteringOptions filteringOptions;
@@ -99,44 +101,17 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        ArchiveType toType = inputOutputOptions.getArchiveType();
-        if (inputOutputOptions != null) {
-            if (inputOutputOptions.getOutputDir() != null
-                    && inputOutputOptions.getInputDirs().isEmpty()) {
-                throw new CommandLine.ParameterException(
-                        commandSpec.commandLine(),
-                        String.format(
-                                "Option %s requires %s",
-                                OUTPUT_DIR_OPTION,
-                                INPUT_DIR_OPTION));
-            }
-            if (inputOutputOptions.getOutputDir() == null && inputOutputOptions.isGroupByFirstLetter()) {
-                throw new CommandLine.ParameterException(
-                        commandSpec.commandLine(),
-                        String.format(
-                                "Option %s requires %s",
-                                GROUP_BY_FIRST_LETTER_OPTION,
-                                OUTPUT_DIR_OPTION));
-            }
-            if (toType != null) {
-                if (inputOutputOptions.getOutputDir() == null) {
-                    throw new CommandLine.ParameterException(
-                            commandSpec.commandLine(),
-                            String.format(
-                                    "Option %s requires %s",
-                                    ARCHIVE_FORMAT_OPTION,
-                                    OUTPUT_DIR_OPTION));
-                }
-                if (inputOutputOptions.isForceSubfolder()) {
-                    throw new CommandLine.ParameterException(
-                            commandSpec.commandLine(),
-                            String.format(
-                                    "Option %s cannot be used with %s",
-                                    FORCE_SUBFOLDER_OPTION,
-                                    ARCHIVE_FORMAT_OPTION));
-                }
-            }
+        if (textOptions != null && outputOptions().isPresent()) {
+            throw new CommandLine.ParameterException(
+                    commandSpec.commandLine(),
+                    "Cannot use text and file output options at the same time");
         }
+        ArchiveType toType = fileGroupingOptions()
+                .map(OutputOptions.GroupingOptions::getArchiveType)
+                .orElse(null);
+        Path outputDir = outputOptions()
+                .map(OutputOptions::getOutputDir)
+                .orElse(null);
         Filter filter;
         PostFilter postFilter;
         SortingPreference sortingPreference;
@@ -159,23 +134,16 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                             e.getCause().getClass().getSimpleName(),
                             e.getCause().getMessage()),
                     e);
-        } catch (NoSuchFileException e) {
-            throw new CommandLine.ParameterException(
-                    commandSpec.commandLine(),
-                    String.format(
-                            "Could not process arguments: File not found: %s",
-                            e.getMessage()),
-                    e);
-        } catch (IOException e) {
-            throw new CommandLine.ParameterException(
-                    commandSpec.commandLine(),
-                    String.format(
-                            "Could not process arguments: %s: %s",
-                            e.getClass().getSimpleName(),
-                            e.getMessage()),
-                    e);
         }
         ImmutableList<Datafile> datafiles = loadDatFiles();
+        if (textOptions != null
+                && textOptions.getOutputMode() != null
+                && datafiles.size() > 1
+                && detectorsStream(datafiles).distinct().count() > 1) {
+            throw new CommandLine.ParameterException(
+                    commandSpec.commandLine(),
+                    "Cannot combine multiple DATs with different header detectors");
+        }
         GameParser gameParser = new GameParser(
                 SerializationHelper.getInstance().loadRegionData(),
                 GameParser.DivergenceDetection.ONE_WAY);
@@ -190,8 +158,22 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                 gameSorter.sortAndGroupByParent(filtered);
         ImmutableMap<String, ImmutableList<ParsedGame>> postFilteredGamesByParent =
                 gameFilterer.postFilter(filteredGamesByParent);
-        if (inputOutputOptions == null) {
-            printTopItems(postFilteredGamesByParent.values());
+        if (inputOutputOptions == null && textOptions == null) {
+            printTopItems(
+                    parsedGameStream(postFilteredGamesByParent),
+                    null);
+        } else if (inputOutputOptions == null) {
+            Path outputFile = textOptions.getOutputFile();
+            OutputMode mode = textOptions.getOutputMode();
+            if (mode == null) {
+                printTopItems(parsedGameStream(postFilteredGamesByParent), outputFile);
+            } else {
+                printTopItems(
+                        datafiles.get(0),
+                        mode,
+                        parsedGameStream(postFilteredGamesByParent),
+                        outputFile);
+            }
         } else if (!inputOutputOptions.getInputDirs().isEmpty()) {
             ImmutableList<Detector> detectors = loadDetectors(datafiles);
             AppConfig appConfig = SerializationHelper.getInstance().loadAppConfig();
@@ -205,10 +187,35 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             ScanResultMatcher matcher = new ScanResultMatcher(scanResults);
             ImmutableMap<String, ImmutableList<ScanResultMatcher.GameMatchList>> presentGames =
                     matcher.match(postFilteredGamesByParent, toType);
-            if (inputOutputOptions.getOutputDir() == null) {
-                printTopItems(presentGames);
+            if (outputDir == null) {
+                if (textOptions == null) {
+                    printTopItems(parsedScannedGameStream(presentGames), null);
+                } else {
+                    Path outputFile = textOptions.getOutputFile();
+                    OutputMode mode = textOptions.getOutputMode();
+                    if (mode == null) {
+                        printTopItems(parsedScannedGameStream(presentGames), outputFile);
+                    } else {
+                        printTopItems(
+                                datafiles.get(0),
+                                mode,
+                                parsedScannedGameStream(presentGames),
+                                outputFile);
+                    }
+                }
             } else {
-                ImmutableSet<FileCopier.Spec> specs = createCopySpecs(toType, presentGames);
+                boolean isAlphabetic = outputOptions()
+                        .map(OutputOptions::isAlphabetic)
+                        .orElse(false);
+                boolean isForceSubfolder = fileGroupingOptions()
+                        .map(OutputOptions.GroupingOptions::isForceSubfolder)
+                        .orElse(false);
+                ImmutableSet<FileCopier.Spec> specs = createCopySpecs(
+                        toType,
+                        presentGames,
+                        outputDir,
+                        isAlphabetic,
+                        isForceSubfolder);
                 FileCopier fileCopier =
                         new FileCopier(appConfig, false, new CommandLineCopierProgressBar());
                 fileCopier.copy(specs);
@@ -217,19 +224,117 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
         return 0;
     }
 
-    private void printTopItems(
+    private Stream<Stream<ParsedGame>> parsedScannedGameStream(
             Map<String, ? extends Collection<ScanResultMatcher.GameMatchList>> presentGames) {
-        printTopItems(presentGames.values()
-                .stream()
-                .map(l -> l.stream()
-                        .map(ScanResultMatcher.GameMatchList::getParsedGame)
-                        .collect(ImmutableList.toImmutableList()))
-                .collect(ImmutableList.toImmutableList()));
+        return presentGames.values().stream()
+                .map(Collection::stream)
+                .map(s -> s.map(ScanResultMatcher.GameMatchList::getParsedGame));
+    }
+
+    private Stream<Stream<ParsedGame>> parsedGameStream(
+            Map<String, ? extends Collection<ParsedGame>> map) {
+        return map.values().stream().map(Collection::stream);
+    }
+
+    private Optional<OutputOptions> outputOptions() {
+        return Optional.ofNullable(inputOutputOptions)
+                .map(InputOutputOptions::getOutputOptions);
+    }
+
+    private Optional<OutputOptions.GroupingOptions> fileGroupingOptions() {
+        return outputOptions()
+                .map(OutputOptions::getGroupingOptions);
+    }
+
+    private void printTopItems(
+            @Nonnull Datafile datafile,
+            @Nonnull OutputMode mode,
+            @Nonnull Stream<Stream<ParsedGame>> parsedGameStream,
+            @Nullable Path outputFile) {
+        Stream<Game> gameStream = parsedGameStream
+                .map(Stream::findFirst)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(ParsedGame::getGame)
+                .sorted(Comparator.comparing(Game::getName))
+                .map(g -> g.withCloneOf(null));
+        Header header = datafile.getHeader();
+        ImmutableList<Game> games = gameStream.collect(ImmutableList.toImmutableList());
+        if (header != null) {
+            header = header.withName(String.format("%s (1G1R)", header.getName()))
+                    .withDescription(String.format("%s (1G1R)", header.getDescription()));
+        }
+        Datafile newDat = datafile.withHeader(header).withGames(games);
+        ImmutableList<String> output;
+        try {
+            SerializationHelper helper = SerializationHelper.getInstance();
+            switch (mode) {
+                case XML:
+                    output = helper.writeAsXml(newDat);
+                    break;
+                case JSON:
+                    output = ImmutableList.of(helper.getJsonMapper().writeValueAsString(newDat));
+                    break;
+                case YAML:
+                    output = helper.writeAsYaml(newDat);
+                    break;
+                default:
+                    throw new IllegalArgumentException(String.format(
+                            "Cannot handle mode %s",
+                            mode));
+            }
+        } catch (JsonProcessingException e) {
+            throw new CommandLine.ExecutionException(
+                    commandSpec.commandLine(),
+                    String.format("Could not write to output file: %s", e.getMessage()),
+                    e);
+        }
+        if (outputFile == null) {
+            output.forEach(System.out::println);
+        } else {
+            createDirectory(outputFile.getParent());
+            try {
+                Files.write(outputFile, output);
+            } catch (IOException e) {
+                throw new CommandLine.ExecutionException(
+                        commandSpec.commandLine(),
+                        String.format("Could not write to output file: %s", e.getMessage()),
+                        e);
+            }
+        }
+    }
+
+    private void printTopItems(
+            @Nonnull Stream<Stream<ParsedGame>> postFilteredGamesByParent,
+            @Nullable Path outputFile) {
+        Stream<String> gameStream = postFilteredGamesByParent
+                .map(Stream::findFirst)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(ParsedGame::getGame)
+                .map(Game::getName)
+                .sorted();
+        if (outputFile == null) {
+            gameStream.forEach(System.out::println);
+        } else {
+            createDirectory(outputFile.getParent());
+            try {
+                Files.write(outputFile, gameStream.collect(Collectors.toList()));
+            } catch (IOException e) {
+                throw new CommandLine.ExecutionException(
+                        commandSpec.commandLine(),
+                        String.format("Could not create output file: %s", e.getMessage()),
+                        e);
+            }
+        }
     }
 
     private ImmutableSet<FileCopier.Spec> createCopySpecs(
             ArchiveType toType,
-            ImmutableMap<String, ImmutableList<ScanResultMatcher.GameMatchList>> presentGames) {
+            ImmutableMap<String, ImmutableList<ScanResultMatcher.GameMatchList>> presentGames,
+            Path outputDir,
+            boolean isAlphabetic,
+            boolean isForceSubfolder) {
         return presentGames.values().stream()
                 .map(Collection::stream)
                 .map(Stream::findFirst)
@@ -237,7 +342,8 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                 .map(Optional::get)
                 .flatMap(gameMatchList -> {
                     Game game = gameMatchList.getParsedGame().getGame();
-                    Path baseDir = createBaseDirectory(game);
+                    Path baseDir =
+                            createBaseDirectory(game, outputDir, isAlphabetic, isForceSubfolder);
                     ImmutableList<ScanResultMatcher.RomMatch> matches =
                             gameMatchList.getRomMatches();
                     Map<Path, List<ScanResultMatcher.RomMatch>> perFile = matches.stream()
@@ -382,47 +488,39 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                 .build();
     }
 
-    private Path createBaseDirectory(Game game) {
-        Path baseDir = inputOutputOptions.getOutputDir();
-        if (inputOutputOptions.isGroupByFirstLetter()) {
-            String firstLetter = game.getName().substring(0, 1).toLowerCase();
-            if (Patterns.ALPHABETICAL.matcher(firstLetter).matches()) {
-                baseDir = baseDir.resolve(firstLetter);
+    private Path createBaseDirectory(
+            Game game,
+            Path baseDir,
+            boolean isAlphabetic,
+            boolean isForceSubfolder) {
+        if (isAlphabetic) {
+            char firstLetter = game.getName().toLowerCase().charAt(0);
+            if (firstLetter >= 'a' && firstLetter < 'z') {
+                baseDir = baseDir.resolve(String.valueOf(firstLetter));
             } else {
                 baseDir = baseDir.resolve("#");
             }
         }
-        if (inputOutputOptions.isForceSubfolder() || game.getRoms().size() > 1) {
+        if (isForceSubfolder || game.getRoms().size() > 1) {
             baseDir = baseDir.resolve(game.getName());
         }
         createDirectory(baseDir);
         return baseDir;
     }
 
-    private void createDirectory(Path path) {
+    private void createDirectory(@Nullable Path path) {
         try {
-            Files.createDirectories(path);
+            if (path != null) {
+                Files.createDirectories(path);
+            }
         } catch (IOException e) {
-            throw new CommandLine.ParameterException(
+            throw new CommandLine.ExecutionException(
                     commandSpec.commandLine(),
                     String.format(
                             "Could not create output directory: %s",
                             e.getMessage()),
                     e);
         }
-    }
-
-    private static void printTopItems(
-            Collection<? extends Collection<ParsedGame>> postFilteredGamesByParent) {
-        postFilteredGamesByParent.stream()
-                .map(Collection::stream)
-                .map(Stream::findFirst)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(ParsedGame::getGame)
-                .map(Game::getName)
-                .sorted()
-                .forEach(System.out::println);
     }
 
     private ImmutableList<Datafile> loadDatFiles() {
@@ -438,7 +536,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                                         e.getMessage()),
                                 e);
                     } catch (IOException e) {
-                        throw new CommandLine.ParameterException(
+                        throw new CommandLine.ExecutionException(
                                 commandSpec.commandLine(),
                                 String.format(
                                         "Could not load DAT: %s: %s",
@@ -450,13 +548,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
     }
 
     private ImmutableList<Detector> loadDetectors(List<Datafile> datafiles) {
-        return datafiles.stream()
-                .map(Datafile::getHeader)
-                .filter(Objects::nonNull)
-                .map(Header::getClrmamepro)
-                .filter(Objects::nonNull)
-                .map(Clrmamepro::getHeaderFile)
-                .filter(Objects::nonNull)
+        return detectorsStream(datafiles)
                 .map(name -> {
                     try {
                         return SerializationHelper.getInstance().loadDetector(name);
@@ -468,7 +560,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                                         e.getMessage()),
                                 e);
                     } catch (Exception e) {
-                        throw new CommandLine.ParameterException(
+                        throw new CommandLine.ExecutionException(
                                 commandSpec.commandLine(),
                                 String.format(
                                         "Could not load detector file: %s: %s",
@@ -477,6 +569,16 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                                 e);
                     }
                 }).collect(ImmutableList.toImmutableList());
+    }
+
+    private Stream<String> detectorsStream(List<Datafile> datafiles) {
+        return datafiles.stream()
+                .map(Datafile::getHeader)
+                .filter(Objects::nonNull)
+                .map(Header::getClrmamepro)
+                .filter(Objects::nonNull)
+                .map(Clrmamepro::getHeaderFile)
+                .filter(Objects::nonNull);
     }
 
 }

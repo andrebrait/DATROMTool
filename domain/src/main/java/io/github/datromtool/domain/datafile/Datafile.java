@@ -13,12 +13,14 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
+import lombok.With;
 import lombok.extern.jackson.Jacksonized;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static lombok.AccessLevel.PRIVATE;
 
 @JsonPropertyOrder({"header", "games"})
+@With
 @Value
 @Jacksonized
 @Builder(toBuilder = true)

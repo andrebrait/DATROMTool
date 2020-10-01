@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import picocli.CommandLine;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -20,42 +21,74 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 @JsonInclude(NON_DEFAULT)
 public final class InputOutputOptions {
 
-    public static final String INPUT_DIR_OPTION = "--input-dir";
-    public static final String OUTPUT_DIR_OPTION = "--output-dir";
-    public static final String ARCHIVE_FORMAT_OPTION = "--archive";
-    public static final String FORCE_SUBFOLDER_OPTION = "--force-subfolder";
-    public static final String GROUP_BY_FIRST_LETTER_OPTION = "--group-by-first-letter";
+    //FIXME this doesn't work
+    @CommandLine.Spec(CommandLine.Spec.Target.MIXEE)
+    private CommandLine.Model.CommandSpec spec;
 
-    @CommandLine.Option(
-            names = {"-i", INPUT_DIR_OPTION},
-            paramLabel = "PATH",
-            description = "Base directory for scanning ROM files")
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(NON_DEFAULT)
+    public static class OutputOptions {
+
+
+        @Data
+        @NoArgsConstructor
+        @JsonInclude(NON_DEFAULT)
+        public static class GroupingOptions {
+
+            @NonNull
+            @CommandLine.Option(
+                    names = "--archive",
+                    paramLabel = "FORMAT",
+                    description = "Archive format for output (default: uncompressed). "
+                            + "Options: ${COMPLETION-CANDIDATES}",
+                    converter = ArchiveTypeConverter.class,
+                    completionCandidates = ArchiveCompletionCandidates.class,
+                    showDefaultValue = CommandLine.Help.Visibility.NEVER)
+            private ArchiveType archiveType;
+
+            @CommandLine.Option(
+                    names = "--force-subfolder",
+                    description = "Create subfolders even for entries with one file")
+            private boolean forceSubfolder;
+        }
+
+        @CommandLine.Option(
+                names = "--out-dir",
+                paramLabel = "PATH",
+                description = "Output directory for the resulting files",
+                required = true)
+        private Path outputDir;
+
+        @CommandLine.Option(
+                names = "--alphabetic",
+                description = "Group resulting files in subfolders based on their names")
+        private boolean alphabetic;
+
+        @CommandLine.ArgGroup
+        private GroupingOptions groupingOptions;
+
+    }
+
     private List<Path> inputDirs = ImmutableList.of();
 
     @CommandLine.Option(
-            names = {"-o", OUTPUT_DIR_OPTION},
+            names = "--in-dir",
             paramLabel = "PATH",
-            description = "Output directory for the resulting files")
-    private Path outputDir;
+            description = "Base directory for scanning ROM files",
+            required = true)
+    public void setInputDirs(List<Path> inputDirs) {
+        for (Path dir : inputDirs) {
+            if (!Files.isDirectory(dir)) {
+                throw new CommandLine.ParameterException(
+                        spec.commandLine(),
+                        String.format("Cannot access'%s': no such directory", dir));
+            }
+        }
+        this.inputDirs = inputDirs;
+    }
 
-    @NonNull
-    @CommandLine.Option(
-            names = {"-a", ARCHIVE_FORMAT_OPTION},
-            paramLabel = "FORMAT",
-            description = "Archive format for output. Options: ${COMPLETION-CANDIDATES}",
-            converter = ArchiveTypeConverter.class,
-            completionCandidates = ArchiveCompletionCandidates.class,
-            showDefaultValue = CommandLine.Help.Visibility.NEVER)
-    private ArchiveType archiveType;
-
-    @CommandLine.Option(
-            names = GROUP_BY_FIRST_LETTER_OPTION,
-            description = "Group resulting files in subfolders based on their names")
-    private boolean groupByFirstLetter;
-
-    @CommandLine.Option(
-            names = FORCE_SUBFOLDER_OPTION,
-            description = "Create subfolders even for entries with one file")
-    private boolean forceSubfolder;
+    @CommandLine.ArgGroup(heading = "File output options\n", exclusive = false)
+    private OutputOptions outputOptions;
 
 }

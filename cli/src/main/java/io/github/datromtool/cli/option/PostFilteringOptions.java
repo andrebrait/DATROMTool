@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import picocli.CommandLine;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -34,10 +33,9 @@ public final class PostFilteringOptions {
             description = "Read exclusion expressions from a file")
     private List<Path> postExcludesFiles = ImmutableList.of();
 
-    public PostFilter toPostFilter() throws ArgumentException, IOException {
+    public PostFilter toPostFilter() throws ArgumentException {
         return PostFilter.builder()
                 .excludes(ImmutableSet.copyOf(combine(postExcludes, postExcludesFiles)))
                 .build();
     }
-
 }

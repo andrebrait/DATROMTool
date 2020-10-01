@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import picocli.CommandLine;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -29,7 +28,7 @@ import static lombok.AccessLevel.NONE;
 public final class FilteringOptions {
 
     @CommandLine.Option(
-            names = {"--ir", "--include-regions"},
+            names = "--include-regions",
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
             description = "Include only entries with the given region codes",
@@ -38,7 +37,7 @@ public final class FilteringOptions {
     private List<String> includeRegions = ImmutableList.of();
 
     @CommandLine.Option(
-            names = {"--il", "--include-languages"},
+            names = "--include-languages",
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
             converter = LowerCaseConverter.class,
@@ -47,7 +46,7 @@ public final class FilteringOptions {
     private List<String> includeLanguages = ImmutableList.of();
 
     @CommandLine.Option(
-            names = {"--er", "--exclude-regions"},
+            names = "--exclude-regions",
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
             converter = UpperCaseConverter.class,
@@ -56,7 +55,7 @@ public final class FilteringOptions {
     private List<String> excludeRegions = ImmutableList.of();
 
     @CommandLine.Option(
-            names = {"--el", "--exclude-languages"},
+            names = "--exclude-languages",
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
             converter = LowerCaseConverter.class,
@@ -232,7 +231,7 @@ public final class FilteringOptions {
         return reallySet(allowUpdate);
     }
 
-    public Filter toFilter() throws ArgumentException, IOException {
+    public Filter toFilter() throws ArgumentException {
         Filter.FilterBuilder builder = Filter.builder();
         builder.includeRegions(ImmutableSet.copyOf(includeRegions));
         builder.excludeRegions(ImmutableSet.copyOf(excludeRegions));

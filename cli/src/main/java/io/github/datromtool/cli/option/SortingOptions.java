@@ -11,7 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import picocli.CommandLine;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -25,7 +24,7 @@ import static io.github.datromtool.util.ArgumentUtils.combine;
 public final class SortingOptions {
 
     @CommandLine.Option(
-            names = {"--sr", "--sort-regions"},
+            names = "--sort-regions",
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
             converter = UpperCaseConverter.class,
@@ -34,7 +33,7 @@ public final class SortingOptions {
     private List<String> regions = ImmutableList.of();
 
     @CommandLine.Option(
-            names = {"--sl", "--sort-languages"},
+            names = "--sort-languages",
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
             converter = LowerCaseConverter.class,
@@ -96,7 +95,7 @@ public final class SortingOptions {
             description = "Prefer parents regardless of versioning")
     boolean preferParents = false;
 
-    public SortingPreference toSortingPreference() throws ArgumentException, IOException {
+    public SortingPreference toSortingPreference() throws ArgumentException {
         return SortingPreference.builder()
                 .regions(ImmutableSet.copyOf(regions))
                 .languages(ImmutableSet.copyOf(languages))
@@ -110,5 +109,4 @@ public final class SortingOptions {
                 .preferParents(preferParents)
                 .build();
     }
-
 }
