@@ -111,6 +111,7 @@ public enum ArchiveType {
         private static final String RAR = "rar";
         private static final String SEVEN_ZIP = "7z";
         private static final String TAR = "tar";
+        private static final String TAR_SEVEN_ZIP = "tar.7z";
         private static final String TAR_BZ2 = "tar.bz2";
         private static final String TAR_GZ = "tar.gz";
         private static final String TAR_LZ4 = "tar.lz4";
@@ -125,7 +126,7 @@ public enum ArchiveType {
         private static final Pattern RAR_PATTERN = toPattern(RAR);
         private static final Pattern SEVEN_ZIP_PATTERN = toPattern(SEVEN_ZIP);
         private static final Pattern TAR_PATTERN = toPattern(TAR);
-        private static final Pattern TAR_7Z_PATTERN = toPattern(SEVEN_ZIP);
+        private static final Pattern TAR_7Z_PATTERN = toPattern(TAR_SEVEN_ZIP);
         private static final Pattern TAR_LZ4_PATTERN = toPattern(TAR_LZ4);
     }
 }
