@@ -499,7 +499,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             boolean isForceSubfolder) {
         if (isAlphabetic) {
             char firstLetter = game.getName().toLowerCase().charAt(0);
-            if (firstLetter >= 'a' && firstLetter < 'z') {
+            if (firstLetter >= 'a' && firstLetter <= 'z') {
                 baseDir = baseDir.resolve(String.valueOf(firstLetter));
             } else {
                 baseDir = baseDir.resolve("#");
