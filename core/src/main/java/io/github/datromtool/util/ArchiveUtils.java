@@ -151,7 +151,7 @@ public final class ArchiveUtils {
         if (value != null) {
             return value;
         }
-        synchronized (ArgumentUtils.class) {
+        synchronized (ArchiveUtils.class) {
             value = isUnrarAvailableCache;
             if (value != null) {
                 return value;

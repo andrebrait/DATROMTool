@@ -5,21 +5,20 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.Patterns;
-import io.github.datromtool.cli.converter.LowerCaseConverter;
-import io.github.datromtool.cli.converter.UpperCaseConverter;
+import io.github.datromtool.cli.argument.PatternsFileArgument;
+import io.github.datromtool.cli.converter.TrimmingLowerCaseConverter;
+import io.github.datromtool.cli.converter.TrimmingUpperCaseConverter;
 import io.github.datromtool.data.Filter;
-import io.github.datromtool.util.ArgumentException;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import picocli.CommandLine;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
-import static io.github.datromtool.util.ArgumentUtils.combine;
+import static io.github.datromtool.cli.util.ArgumentUtils.merge;
 import static lombok.AccessLevel.NONE;
 
 @Data
@@ -32,7 +31,7 @@ public final class FilteringOptions {
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
             description = "Include only entries with the given region codes",
-            converter = UpperCaseConverter.class,
+            converter = TrimmingUpperCaseConverter.class,
             paramLabel = "REGION")
     private List<String> includeRegions = ImmutableList.of();
 
@@ -40,7 +39,7 @@ public final class FilteringOptions {
             names = "--include-languages",
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
-            converter = LowerCaseConverter.class,
+            converter = TrimmingLowerCaseConverter.class,
             description = "Include only entries with the given language codes",
             paramLabel = "LANGUAGE")
     private List<String> includeLanguages = ImmutableList.of();
@@ -49,7 +48,7 @@ public final class FilteringOptions {
             names = "--exclude-regions",
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
-            converter = UpperCaseConverter.class,
+            converter = TrimmingUpperCaseConverter.class,
             description = "Exclude all entries with the given region codes",
             paramLabel = "REGION")
     private List<String> excludeRegions = ImmutableList.of();
@@ -58,7 +57,7 @@ public final class FilteringOptions {
             names = "--exclude-languages",
             split = "\\s*,\\s*",
             splitSynopsisLabel = ",",
-            converter = LowerCaseConverter.class,
+            converter = TrimmingLowerCaseConverter.class,
             description = "Exclude all entries with the given language codes",
             paramLabel = "LANGUAGE")
     private List<String> excludeLanguages = ImmutableList.of();
@@ -73,7 +72,7 @@ public final class FilteringOptions {
             names = "--excludes-file",
             paramLabel = "PATH",
             description = "Read exclusion expressions from a file")
-    private List<Path> excludesFiles = ImmutableList.of();
+    private List<PatternsFileArgument> excludesFiles = ImmutableList.of();
 
     @CommandLine.Option(
             names = "--bad",
@@ -231,7 +230,7 @@ public final class FilteringOptions {
         return reallySet(allowUpdate);
     }
 
-    public Filter toFilter() throws ArgumentException {
+    public Filter toFilter() {
         Filter.FilterBuilder builder = Filter.builder();
         builder.includeRegions(ImmutableSet.copyOf(includeRegions));
         builder.excludeRegions(ImmutableSet.copyOf(excludeRegions));
@@ -267,8 +266,7 @@ public final class FilteringOptions {
         if (!isAllowUpdate()) {
             excludesBuilder.add(Patterns.UPDATE);
         }
-        excludesBuilder.addAll(combine(excludes, excludesFiles));
-        builder.excludes(excludesBuilder.build());
+        builder.excludes(merge(excludes, excludesFiles));
         return builder.build();
     }
 }

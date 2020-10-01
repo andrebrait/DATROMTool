@@ -1,9 +1,8 @@
 package io.github.datromtool.cli.option;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.github.datromtool.cli.OutputMode;
-import io.github.datromtool.cli.OutputModeCompletionCandidates;
 import io.github.datromtool.cli.converter.OutputModeConverter;
+import io.github.datromtool.io.OutputMode;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import picocli.CommandLine;
@@ -28,7 +27,6 @@ public final class TextOptions {
             paramLabel = "MODE",
             description = "Output mode (default: print each entry's name). "
                     + "Options: ${COMPLETION-CANDIDATES}",
-            converter = OutputModeConverter.class,
-            completionCandidates = OutputModeCompletionCandidates.class)
+            completionCandidates = OutputModeConverter.class)
     private OutputMode outputMode;
 }

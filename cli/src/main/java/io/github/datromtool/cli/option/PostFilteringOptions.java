@@ -2,19 +2,17 @@ package io.github.datromtool.cli.option;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import io.github.datromtool.cli.argument.PatternsFileArgument;
 import io.github.datromtool.data.PostFilter;
-import io.github.datromtool.util.ArgumentException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import picocli.CommandLine;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
-import static io.github.datromtool.util.ArgumentUtils.combine;
+import static io.github.datromtool.cli.util.ArgumentUtils.merge;
 
 @Data
 @NoArgsConstructor
@@ -31,11 +29,11 @@ public final class PostFilteringOptions {
             names = "--post-excludes-file",
             paramLabel = "PATH",
             description = "Read exclusion expressions from a file")
-    private List<Path> postExcludesFiles = ImmutableList.of();
+    private List<PatternsFileArgument> postExcludesFiles = ImmutableList.of();
 
-    public PostFilter toPostFilter() throws ArgumentException {
+    public PostFilter toPostFilter() {
         return PostFilter.builder()
-                .excludes(ImmutableSet.copyOf(combine(postExcludes, postExcludesFiles)))
+                .excludes(merge(postExcludes, postExcludesFiles))
                 .build();
     }
 }
