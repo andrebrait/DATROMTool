@@ -2,6 +2,7 @@ package io.github.datromtool.cli.option;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.datromtool.cli.converter.OutputModeConverter;
+import io.github.datromtool.data.TextOutput;
 import io.github.datromtool.io.OutputMode;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,4 +30,11 @@ public final class TextOptions {
                     + "Options: ${COMPLETION-CANDIDATES}",
             completionCandidates = OutputModeConverter.class)
     private OutputMode outputMode;
+
+    public TextOutput toTextOutput() {
+        return TextOutput.builder()
+                .outputFile(outputFile)
+                .outputMode(outputMode)
+                .build();
+    }
 }

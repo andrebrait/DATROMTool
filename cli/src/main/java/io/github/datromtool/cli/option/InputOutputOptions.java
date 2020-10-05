@@ -1,9 +1,10 @@
-package io.github.datromtool.cli.command.onegameonerom;
+package io.github.datromtool.cli.option;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.cli.converter.ArchiveTypeConverter;
 import io.github.datromtool.cli.converter.ExistingDirectoryConverter;
+import io.github.datromtool.data.FileInputOutput;
 import io.github.datromtool.io.ArchiveType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -73,5 +74,21 @@ public final class InputOutputOptions {
 
     @CommandLine.ArgGroup(heading = "File output options\n", exclusive = false)
     private OutputOptions outputOptions;
+
+    public FileInputOutput toFileInputOutput() {
+        FileInputOutput.FileInputOutputBuilder fileInputOutputBuilder = FileInputOutput.builder()
+                .inputDirs(inputDirs);
+        if (outputOptions != null) {
+            fileInputOutputBuilder = fileInputOutputBuilder
+                    .outputDir(outputOptions.getOutputDir())
+                    .alphabetic(outputOptions.isAlphabetic());
+            if (outputOptions.getGroupingOptions() != null) {
+                fileInputOutputBuilder = fileInputOutputBuilder
+                        .archiveType(outputOptions.getGroupingOptions().getArchiveType())
+                        .forceSubfolder(outputOptions.getGroupingOptions().isForceSubfolder());
+            }
+        }
+        return fileInputOutputBuilder.build();
+    }
 
 }

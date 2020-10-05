@@ -113,7 +113,7 @@ public final class ScanResultMatcher {
     @Nonnull
     public ImmutableList<RomMatch> match(
             @Nonnull ParsedGame parsedGame,
-            @Nullable ArchiveType archiveType) {
+            @Nullable ArchiveType toType) {
         int totalRoms = parsedGame.getGame().getRoms().size();
         if (totalRoms == 0) {
             return ImmutableList.of();
@@ -150,7 +150,7 @@ public final class ScanResultMatcher {
                 .stream()
                 .sorted(Comparator.comparing(e -> -e.getValue().size()))
                 .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, Map.Entry::getValue));
-        if (archiveType == null) {
+        if (toType == null) {
             Iterator<RomMatch> remaining = matchesPerArchive.values().stream()
                     .flatMap(Collection::stream)
                     .filter(m -> !uncompressedRomMatches.contains(m))

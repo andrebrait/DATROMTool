@@ -1,4 +1,4 @@
-package io.github.datromtool.cli.command.onegameonerom;
+package io.github.datromtool.cli.command;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -12,8 +12,9 @@ import io.github.datromtool.GameSorter;
 import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.cli.GitVersionProvider;
 import io.github.datromtool.cli.argument.DatafileArgument;
-import io.github.datromtool.cli.command.onegameonerom.InputOutputOptions.OutputOptions;
 import io.github.datromtool.cli.option.FilteringOptions;
+import io.github.datromtool.cli.option.InputOutputOptions;
+import io.github.datromtool.cli.option.InputOutputOptions.OutputOptions;
 import io.github.datromtool.cli.option.PostFilteringOptions;
 import io.github.datromtool.cli.option.SortingOptions;
 import io.github.datromtool.cli.option.TextOptions;

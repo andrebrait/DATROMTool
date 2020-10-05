@@ -2,7 +2,7 @@ package io.github.datromtool.cli;
 
 import io.github.datromtool.cli.argument.DatafileArgument;
 import io.github.datromtool.cli.argument.PatternsFileArgument;
-import io.github.datromtool.cli.command.onegameonerom.OneGameOneRomCommand;
+import io.github.datromtool.cli.command.OneGameOneRomCommand;
 import io.github.datromtool.cli.converter.ArchiveTypeConverter;
 import io.github.datromtool.cli.converter.DatafileConverter;
 import io.github.datromtool.cli.converter.OutputModeConverter;
