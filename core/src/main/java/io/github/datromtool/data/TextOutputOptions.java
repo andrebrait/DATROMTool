@@ -1,7 +1,8 @@
 package io.github.datromtool.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.github.datromtool.io.OutputMode;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
@@ -13,8 +14,9 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @Jacksonized
 @Value
 @Builder(toBuilder = true)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonInclude(NON_NULL)
-public class TextOutput {
+public class TextOutputOptions {
 
     Path outputFile;
     OutputMode outputMode;

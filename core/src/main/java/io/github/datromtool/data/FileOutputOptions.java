@@ -1,27 +1,24 @@
 package io.github.datromtool.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.google.common.collect.ImmutableList;
 import io.github.datromtool.io.ArchiveType;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
 import java.nio.file.Path;
-import java.util.List;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Jacksonized
 @Value
 @Builder(toBuilder = true)
-@NoArgsConstructor(force = true)
-@JsonInclude(NON_DEFAULT)
-public class FileInputOutput {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@JsonInclude(NON_NULL)
+public class FileOutputOptions {
 
-    @Builder.Default
-    List<Path> inputDirs = ImmutableList.of();
     Path outputDir;
     boolean alphabetic;
     ArchiveType archiveType;

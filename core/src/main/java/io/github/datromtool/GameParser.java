@@ -183,10 +183,11 @@ public final class GameParser {
     }
 
     private boolean shouldLogDivergences(Set<?> detected, Set<?> provided) {
-        return (detection == DivergenceDetection.ALWAYS && !provided.equals(detected))
+        return detection != DivergenceDetection.IGNORE
+                && ((detection == DivergenceDetection.ALWAYS && !provided.equals(detected))
                 || (!detected.isEmpty() && !provided.isEmpty()
                 && ((detection == DivergenceDetection.ONE_WAY && !provided.containsAll(detected))
-                || (detection == DivergenceDetection.TWO_WAY && !provided.equals(detected))));
+                || (detection == DivergenceDetection.TWO_WAY && !provided.equals(detected)))));
     }
 
     private static ImmutableList<Long> detectProto(Game game) {

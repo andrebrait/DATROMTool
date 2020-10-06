@@ -1,4 +1,4 @@
-package io.github.datromtool.io;
+package io.github.datromtool.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

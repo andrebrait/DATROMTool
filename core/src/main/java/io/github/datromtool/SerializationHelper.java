@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -145,7 +146,7 @@ public final class SerializationHelper {
         return loadYaml(path, RegionData.class);
     }
 
-    public RegionData loadRegionData() throws Exception {
+    public RegionData loadRegionData() throws IOException, URISyntaxException {
         if (REGION_DATA_PATH.toFile().isFile()) {
             try {
                 return loadYaml(REGION_DATA_PATH, RegionData.class);
@@ -162,7 +163,7 @@ public final class SerializationHelper {
         return loadXml(path, Detector.class);
     }
 
-    public Detector loadDetector(String name) throws Exception {
+    public Detector loadDetector(String name) throws IOException, URISyntaxException {
         Path path = DETECTORS_PATH.resolve(name);
         if (path.toFile().isFile()) {
             try {

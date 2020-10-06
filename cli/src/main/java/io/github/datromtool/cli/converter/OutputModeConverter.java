@@ -2,7 +2,7 @@ package io.github.datromtool.cli.converter;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.UnmodifiableIterator;
-import io.github.datromtool.io.OutputMode;
+import io.github.datromtool.data.OutputMode;
 import picocli.CommandLine;
 
 import javax.annotation.Nonnull;

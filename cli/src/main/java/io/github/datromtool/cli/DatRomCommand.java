@@ -7,8 +7,8 @@ import io.github.datromtool.cli.converter.ArchiveTypeConverter;
 import io.github.datromtool.cli.converter.DatafileConverter;
 import io.github.datromtool.cli.converter.OutputModeConverter;
 import io.github.datromtool.cli.converter.PatternsFileConverter;
+import io.github.datromtool.data.OutputMode;
 import io.github.datromtool.io.ArchiveType;
-import io.github.datromtool.io.OutputMode;
 import picocli.CommandLine;
 
 @CommandLine.Command(

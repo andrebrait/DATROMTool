@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 import static java.lang.Math.max;
@@ -72,8 +71,8 @@ class FileScannerParameters {
 
     public static FileScannerParameters forDatWithDetector(
             @Nonnull AppConfig appConfig,
-            @Nonnull List<Datafile> datafiles,
-            @Nonnull List<Detector> detectors) {
+            @Nonnull Collection<Datafile> datafiles,
+            @Nonnull Collection<Detector> detectors) {
         final int maxBuffer = appConfig.getScanner().getMaxBufferSize();
         final int bufferSize;
         final long maxRomSize;
