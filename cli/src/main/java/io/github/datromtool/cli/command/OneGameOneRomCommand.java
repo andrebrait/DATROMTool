@@ -132,7 +132,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             log.debug("Got execution exception", e);
             throw new CommandLine.ParameterException(
                     commandSpec.commandLine(),
-                    String.format("Execution error: %s", e.getMessage()));
+                    String.format("Execution error: %s: %s", e.getMessage(), e.getCause()));
         }
         return 0;
     }

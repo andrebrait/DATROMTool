@@ -11,9 +11,8 @@ import javax.xml.validation.Validator;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -29,15 +28,16 @@ public final class XMLValidator {
     }
 
     private static void validateDat(byte[] xml, String xsd) throws Exception {
-        validate(xml, Paths.get(ClassLoader.getSystemResource(xsd).toURI()));
+        validate(xml, ClassLoader.getSystemResource(xsd));
     }
 
-    private static void validate(byte[] xml, Path xsd) throws Exception {
+    private static void validate(byte[] xml, URL url) throws Exception {
         // create a SchemaFactory capable of understanding WXS schemas
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
         // load a WXS schema, represented by a Schema instance
-        try (BufferedReader xsdReader = Files.newBufferedReader(xsd)) {
+        try (BufferedReader xsdReader =
+                new BufferedReader(new InputStreamReader(url.openStream()))) {
             Source schemaFile = new StreamSource(xsdReader);
             Schema schema = factory.newSchema(schemaFile);
 

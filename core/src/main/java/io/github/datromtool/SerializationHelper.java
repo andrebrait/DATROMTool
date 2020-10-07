@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,8 +54,8 @@ public final class SerializationHelper {
 
     private static Properties loadProperties() {
         Properties gitProps = new Properties();
-        try {
-            gitProps.load(ClassLoader.getSystemResourceAsStream("git.properties"));
+        try (InputStream stream = ClassLoader.getSystemResource("git.properties").openStream()) {
+            gitProps.load(stream);
         } catch (IOException e) {
             log.error("Could not load version information", e);
         }
@@ -142,49 +142,63 @@ public final class SerializationHelper {
         return yamlMapper.readValue(inputStream, tClass);
     }
 
-    public RegionData loadRegionData(Path path) throws Exception {
+    public RegionData loadRegionData(Path path) throws IOException {
         return loadYaml(path, RegionData.class);
     }
 
-    public RegionData loadRegionData() throws IOException, URISyntaxException {
-        if (REGION_DATA_PATH.toFile().isFile()) {
+    public RegionData loadRegionData(URL url) throws IOException {
+        try (InputStream stream = url.openStream()) {
+            return loadYaml(stream, RegionData.class);
+        }
+    }
+
+    public RegionData loadRegionData() throws IOException {
+        if (Files.isRegularFile(REGION_DATA_PATH)) {
             try {
-                return loadYaml(REGION_DATA_PATH, RegionData.class);
+                return loadRegionData(REGION_DATA_PATH);
             } catch (Exception e) {
                 log.error("Could not load custom region config from file", e);
             }
         }
-        return loadYaml(
-                Paths.get(ClassLoader.getSystemResource("region-data.yaml").toURI()),
-                RegionData.class);
+        return loadRegionData(ClassLoader.getSystemResource("region-data.yaml"));
     }
 
     public Detector loadDetector(Path path) throws IOException {
         return loadXml(path, Detector.class);
     }
 
-    public Detector loadDetector(String name) throws IOException, URISyntaxException {
+    public Detector loadDetector(URL url) throws IOException {
+        try (InputStream stream = url.openStream()) {
+            return loadXml(stream, Detector.class);
+        }
+    }
+
+    public Detector loadDetector(String name) throws IOException {
         Path path = DETECTORS_PATH.resolve(name);
-        if (path.toFile().isFile()) {
+        if (Files.isRegularFile(path)) {
             try {
-                return loadXml(path, Detector.class);
+                return loadDetector(path);
             } catch (Exception e) {
                 log.error("Could not load detector from file", e);
             }
         }
-        return loadXml(
-                Paths.get(ClassLoader.getSystemResource("detectors/" + name).toURI()),
-                Detector.class);
+        return loadDetector(ClassLoader.getSystemResource("detectors/" + name));
     }
 
     public AppConfig loadAppConfig(Path path) throws IOException {
         return loadYaml(path, AppConfig.class);
     }
 
+    public AppConfig loadAppConfig(URL url) throws IOException {
+        try (InputStream stream = url.openStream()) {
+            return loadYaml(stream, AppConfig.class);
+        }
+    }
+
     public AppConfig loadAppConfig() {
-        if (APP_CONFIG_PATH.toFile().isFile()) {
+        if (Files.isRegularFile(APP_CONFIG_PATH)) {
             try {
-                return loadYaml(APP_CONFIG_PATH, AppConfig.class);
+                return loadAppConfig(APP_CONFIG_PATH);
             } catch (Exception e) {
                 log.error("Could not load application configuration from file", e);
             }

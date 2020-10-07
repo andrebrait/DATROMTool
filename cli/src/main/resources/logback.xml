@@ -20,7 +20,7 @@
         </encoder>
     </appender>
 
-    <root level="${logging.level:-INFO}">
+    <root level="${log.level:-INFO}">
         <appender-ref ref="STDERR"/>
         <appender-ref ref="FILE"/>
     </root>

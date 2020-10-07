@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.Value;
+import lombok.With;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -37,6 +38,7 @@ import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 
 import static io.github.datromtool.io.FileScannerParameters.forDatWithDetector;
 import static io.github.datromtool.io.FileScannerParameters.withDefaults;
@@ -79,6 +81,7 @@ public final class FileScanner {
         }
     }
 
+    @With(value = AccessLevel.PACKAGE)
     @Value
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Result {
@@ -122,6 +125,8 @@ public final class FileScanner {
 
     public interface Listener {
 
+        void init(int totalThreads);
+
         void reportTotalItems(int totalItems);
 
         void reportStart(Path path, int thread);
@@ -133,6 +138,8 @@ public final class FileScanner {
         void reportFailure(Path path, int thread, String message, Throwable cause);
 
         void reportFinish(Path path, int thread);
+
+        void reportAllFinished();
 
     }
 
@@ -177,15 +184,20 @@ public final class FileScanner {
             }
             ImmutableList<FileMetadata> paths = pathsBuilder.build();
             if (listener != null) {
+                listener.init(numThreads);
                 listener.reportTotalItems(paths.size());
             }
-            return paths.stream()
+            ImmutableList<Result> results = paths.stream()
                     .sorted(Comparator.comparingLong(fm -> -fm.getSize()))
                     .map(fm -> executorService.submit(() -> scanFile(fm)))
                     .collect(ImmutableList.toImmutableList())
                     .stream()
                     .flatMap(FileScanner::streamResults)
                     .collect(ImmutableList.toImmutableList());
+            if (listener != null) {
+                listener.reportAllFinished();
+            }
+            return results;
         } catch (Exception e) {
             log.error("Could not scan '{}'", directories, e);
             throw e;
@@ -478,7 +490,7 @@ public final class FileScanner {
             TriFunction<byte[], Integer, Integer, Integer, IOException> function)
             throws IOException {
         ThreadLocalDataHolder threadLocalDataHolder = threadLocalData.get();
-        CRC32 crc32 = threadLocalDataHolder.getCrc32();
+        Checksum crc32 = threadLocalDataHolder.getCrc32();
         MessageDigest md5 = threadLocalDataHolder.getMd5();
         MessageDigest sha1 = threadLocalDataHolder.getSha1();
         byte[] buffer = threadLocalDataHolder.getBuffer();
@@ -504,7 +516,10 @@ public final class FileScanner {
             int index,
             long size,
             TriFunction<byte[], Integer, Integer, Integer, IOException> function,
-            CRC32 crc32, MessageDigest md5, MessageDigest sha1, byte[] buffer) throws IOException {
+            Checksum crc32,
+            MessageDigest md5,
+            MessageDigest sha1,
+            byte[] buffer) throws IOException {
         long totalRead = 0;
         long start = System.nanoTime();
         int bytesRead;
@@ -560,7 +575,10 @@ public final class FileScanner {
             int index,
             long size,
             TriFunction<byte[], Integer, Integer, Integer, IOException> function,
-            CRC32 crc32, MessageDigest md5, MessageDigest sha1, byte[] buffer) throws IOException {
+            Checksum crc32,
+            MessageDigest md5,
+            MessageDigest sha1,
+            byte[] buffer) throws IOException {
         long totalRead = 0;
         long start = System.nanoTime();
         int reportedPercentage = 0;

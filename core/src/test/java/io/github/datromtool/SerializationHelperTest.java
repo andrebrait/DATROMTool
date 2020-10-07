@@ -243,8 +243,7 @@ class SerializationHelperTest {
     @Test
     void testLoadAppConfig() throws Exception {
         AppConfig config = SerializationHelper.getInstance()
-                .loadAppConfig(Paths.get(ClassLoader.getSystemResource("config-test.yaml")
-                        .toURI()));
+                .loadAppConfig(ClassLoader.getSystemResource("config-test.yaml"));
         assertNotNull(config);
         assertNotNull(config.getScanner());
         assertEquals(4, (int) config.getScanner().getThreads());
@@ -261,8 +260,7 @@ class SerializationHelperTest {
     @Test
     void testLoadRegionData() throws Exception {
         RegionData regionData = SerializationHelper.getInstance()
-                .loadRegionData(Paths.get(ClassLoader.getSystemResource("region-data-test.yaml")
-                        .toURI()));
+                .loadRegionData(ClassLoader.getSystemResource("region-data-test.yaml"));
         assertNotNull(regionData);
         assertNotNull(regionData.getRegions());
         assertEquals(2, regionData.getRegions().size());

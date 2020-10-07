@@ -14,10 +14,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static java.util.Objects.requireNonNull;
 
@@ -116,5 +119,31 @@ class FileCopierTest {
         FileCopier fc = new FileCopier(AppConfig.builder().build(), false, null);
         fc.copy(specs);
         ImmutableList<FileScanner.Result> afterCopy = fs.scan(ImmutableList.of(tempDir));
+        assertEquals(results.size(), afterCopy.size());
+        assertAllResultsAreEqual(results, afterCopy);
+    }
+
+    private void assertAllResultsAreEqual(
+            Collection<FileScanner.Result> results,
+            Collection<FileScanner.Result> afterCopy) {
+        for (FileScanner.Result r : results) {
+            String filename = r.getPath().getFileName().toString();
+            if (r.getArchiveType() == ArchiveType.RAR) {
+                filename = filename.replaceFirst("(?i)\\.rar", ".zip");
+            }
+            for (FileScanner.Result r2 : afterCopy) {
+                if (r2.getPath().endsWith(filename)) {
+                    FileScanner.Result pathlessResult = r.withPath(Paths.get(""));
+                    FileScanner.Result pathlessResult2 = r2.withPath(Paths.get(""));
+                    if (r.getArchiveType() == ArchiveType.RAR) {
+                        assertEquals(
+                                pathlessResult.withArchiveType(ArchiveType.ZIP),
+                                pathlessResult2);
+                    } else {
+                        assertEquals(pathlessResult, pathlessResult2);
+                    }
+                }
+            }
+        }
     }
 }

@@ -4,15 +4,22 @@ import io.github.datromtool.io.FileCopier;
 
 import java.nio.file.Path;
 
-public final class CommandLineCopierProgressBar implements FileCopier.Listener {
+public class CommandLineCopierProgressBar implements FileCopier.Listener {
+
+    private int numThreads;
 
     @Override
-    public void reportStart(Path path, Path destination, int thread) {
+    public synchronized void init(int numThreads) {
+        this.numThreads = numThreads;
+    }
+
+    @Override
+    public synchronized void reportStart(Path path, Path destination, int thread) {
 
     }
 
     @Override
-    public void reportProgress(
+    public synchronized void reportProgress(
             Path path,
             Path destination,
             int thread,
@@ -22,7 +29,7 @@ public final class CommandLineCopierProgressBar implements FileCopier.Listener {
     }
 
     @Override
-    public void reportFailure(
+    public synchronized void reportFailure(
             Path path,
             Path destination,
             int thread,
@@ -32,7 +39,12 @@ public final class CommandLineCopierProgressBar implements FileCopier.Listener {
     }
 
     @Override
-    public void reportFinish(Path path, Path destination, int thread) {
+    public synchronized void reportFinish(Path path, Path destination, int thread) {
+
+    }
+
+    @Override
+    public synchronized void reportAllFinished() {
 
     }
 }

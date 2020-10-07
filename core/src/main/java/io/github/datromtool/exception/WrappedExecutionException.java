@@ -1,12 +1,13 @@
 package io.github.datromtool.exception;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+public final class WrappedExecutionException extends RuntimeException {
 
-@Getter
-@RequiredArgsConstructor
-public class WrappedExecutionException extends RuntimeException {
+    public WrappedExecutionException(ExecutionException cause) {
+        super(cause);
+    }
 
-    private final ExecutionException wrapped;
-
+    @Override
+    public ExecutionException getCause() {
+        return (ExecutionException) super.getCause();
+    }
 }

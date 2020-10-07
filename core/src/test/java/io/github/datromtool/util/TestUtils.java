@@ -18,8 +18,7 @@ public final class TestUtils {
 
     public static RegionData loadRegionData() throws Exception {
         return SerializationHelper.getInstance()
-                .loadRegionData(Paths.get(ClassLoader.getSystemResource("region-data.yaml")
-                        .toURI()));
+                .loadRegionData(ClassLoader.getSystemResource("region-data.yaml"));
     }
 
     public static Game createGame(String s) {

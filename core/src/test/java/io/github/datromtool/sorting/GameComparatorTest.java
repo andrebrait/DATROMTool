@@ -9,7 +9,6 @@ import io.github.datromtool.data.SortingPreference;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
@@ -30,8 +29,7 @@ class GameComparatorTest {
     @BeforeAll
     static void beforeAll() throws Exception {
         regionData = SerializationHelper.getInstance()
-                .loadRegionData(Paths.get(ClassLoader.getSystemResource("region-data.yaml")
-                        .toURI()));
+                .loadRegionData(ClassLoader.getSystemResource("region-data.yaml"));
     }
 
     @Test

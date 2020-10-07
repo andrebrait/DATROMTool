@@ -147,6 +147,8 @@ public final class FileCopier {
 
     public interface Listener {
 
+        void init(int numThreads);
+
         void reportStart(Path path, Path destination, int thread);
 
         void reportProgress(Path path, Path destination, int thread, int percentage, long speed);
@@ -159,6 +161,8 @@ public final class FileCopier {
                 Throwable cause);
 
         void reportFinish(Path path, Path destination, int thread);
+
+        void reportAllFinished();
     }
 
     private final int numThreads;
@@ -187,11 +191,17 @@ public final class FileCopier {
         if (!XZUtils.isXZCompressionAvailable()) {
             log.warn("XZ compression support is disabled");
         }
+        if (listener != null) {
+            listener.init(numThreads);
+        }
         definitions.stream()
                 .map(d -> executorService.submit(() -> copy(d)))
                 .collect(ImmutableList.toImmutableList())
                 .forEach(this::waitForCompletion);
         executorService.shutdownNow();
+        if (listener != null) {
+            listener.reportAllFinished();
+        }
     }
 
     private void waitForCompletion(Future<?> future) {

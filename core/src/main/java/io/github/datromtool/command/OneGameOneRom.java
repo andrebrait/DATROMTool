@@ -89,7 +89,7 @@ public final class OneGameOneRom {
         } catch (InvalidDatafileException e) {
             throw e;
         } catch (WrappedExecutionException e) {
-            throw e.getWrapped();
+            throw e.getCause();
         } catch (Exception e) {
             throw new ExecutionException("Unexpected error", e);
         }
@@ -134,13 +134,23 @@ public final class OneGameOneRom {
         } catch (InvalidDatafileException e) {
             throw e;
         } catch (WrappedExecutionException e) {
-            throw e.getWrapped();
+            throw e.getCause();
         } catch (Exception e) {
             throw new ExecutionException("Unexpected error", e);
         }
     }
 
-    private void sendToOutput(
+    private ImmutableMap<String, ImmutableList<ParsedGame>> filterAndGroup(
+            Collection<ParsedGame> parsedGames) {
+        GameFilterer gameFilterer = new GameFilterer(filter, postFilter);
+        GameSorter gameSorter = new GameSorter(new GameComparator(sortingPreference));
+        ImmutableList<ParsedGame> filtered = gameFilterer.filter(parsedGames);
+        ImmutableMap<String, ImmutableList<ParsedGame>> filteredGamesByParent =
+                gameSorter.sortAndGroupByParent(filtered);
+        return gameFilterer.postFilter(filteredGamesByParent);
+    }
+
+    private static void sendToOutput(
             @Nonnull Collection<Datafile> datafiles,
             @Nullable TextOutputOptions textOutputOptions,
             @Nonnull Consumer<Collection<String>> textOutputConsumer,
@@ -164,7 +174,7 @@ public final class OneGameOneRom {
             @Nonnull Collection<Path> inputDirs,
             @Nullable ArchiveType toType,
             @Nullable FileScanner.Listener fileScannerListener,
-            @Nonnull ImmutableMap<String, ImmutableList<ParsedGame>> filteredAndGrouped) {
+            @Nonnull Map<String, ? extends Collection<ParsedGame>> filteredAndGrouped) {
         ImmutableList<Detector> detectors = loadDetectors(datafiles);
         FileScanner scanner = new FileScanner(
                 appConfig,
@@ -176,12 +186,12 @@ public final class OneGameOneRom {
         return matcher.match(filteredAndGrouped, toType);
     }
 
-    private Stream<Stream<ParsedGame>> parsedGameStream(
+    private static Stream<Stream<ParsedGame>> parsedGameStream(
             Map<String, ? extends Collection<ParsedGame>> map) {
         return map.values().stream().map(Collection::stream);
     }
 
-    private Stream<Stream<ParsedGame>> parsedScannedGameStream(
+    private static Stream<Stream<ParsedGame>> parsedScannedGameStream(
             Map<String, ? extends Collection<ScanResultMatcher.GameMatchList>> presentGames) {
         return presentGames.values().stream()
                 .map(Collection::stream)
@@ -220,7 +230,7 @@ public final class OneGameOneRom {
         }
     }
 
-    private void validateDetectors(
+    private static void validateDetectors(
             @Nonnull Collection<Datafile> datafiles,
             @Nullable TextOutputOptions textOutputOptions)
             throws InvalidDatafileException {
@@ -251,16 +261,15 @@ public final class OneGameOneRom {
             @Nullable TextOutputOptions textOutputOptions,
             @Nonnull Consumer<Collection<String>> textOutputConsumer) throws ExecutionException {
         if (textOutputOptions == null) {
-            textOutputConsumer.accept(getSortedGameNames(filteredAndGrouped));
+            textOutputConsumer.accept(
+                    getSortedGameNames(filteredAndGrouped));
         } else if (textOutputOptions.getOutputMode() == null) {
             writeToOutput(
                     textOutputOptions.getOutputFile(),
                     getSortedGameNames(filteredAndGrouped));
         } else if (textOutputOptions.getOutputFile() == null) {
-            textOutputConsumer.accept(getDatOutput(
-                    datafile,
-                    textOutputOptions.getOutputMode(),
-                    filteredAndGrouped));
+            textOutputConsumer.accept(
+                    getDatOutput(datafile, textOutputOptions.getOutputMode(), filteredAndGrouped));
         } else {
             writeToOutput(
                     textOutputOptions.getOutputFile(),
@@ -356,17 +365,7 @@ public final class OneGameOneRom {
                 .filter(Objects::nonNull);
     }
 
-    private ImmutableMap<String, ImmutableList<ParsedGame>> filterAndGroup(
-            Collection<ParsedGame> parsedGames) {
-        GameFilterer gameFilterer = new GameFilterer(filter, postFilter);
-        GameSorter gameSorter = new GameSorter(new GameComparator(sortingPreference));
-        ImmutableList<ParsedGame> filtered = gameFilterer.filter(parsedGames);
-        ImmutableMap<String, ImmutableList<ParsedGame>> filteredGamesByParent =
-                gameSorter.sortAndGroupByParent(filtered);
-        return gameFilterer.postFilter(filteredGamesByParent);
-    }
-
-    private ImmutableSet<FileCopier.Spec> createCopySpecs(
+    private static ImmutableSet<FileCopier.Spec> createCopySpecs(
             @Nonnull FileOutputOptions fileOutputOptions,
             @Nonnull Map<String, ? extends List<ScanResultMatcher.GameMatchList>> presentGames) {
         return presentGames.values().stream()
@@ -378,7 +377,7 @@ public final class OneGameOneRom {
                 .collect(ImmutableSet.toImmutableSet());
     }
 
-    private Stream<FileCopier.Spec> buildSpecStream(
+    private static Stream<FileCopier.Spec> buildSpecStream(
             @Nonnull FileOutputOptions fileOutputOptions,
             @Nonnull ScanResultMatcher.GameMatchList gameMatchList) {
         try {
@@ -406,7 +405,7 @@ public final class OneGameOneRom {
         }
     }
 
-    private Stream<FileCopier.Spec> simpleCopyOrExtractionStream(
+    private static Stream<FileCopier.Spec> simpleCopyOrExtractionStream(
             Path baseDir,
             Map<Path, ? extends Collection<ScanResultMatcher.RomMatch>> matchesPerFile) {
         return matchesPerFile.entrySet().stream()
@@ -443,7 +442,7 @@ public final class OneGameOneRom {
                 });
     }
 
-    private Stream<FileCopier.Spec> compressionOrArchiveCopyStream(
+    private static Stream<FileCopier.Spec> compressionOrArchiveCopyStream(
             Game game,
             Path baseDir,
             Collection<ScanResultMatcher.RomMatch> matches,
