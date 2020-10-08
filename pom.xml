@@ -28,6 +28,7 @@
         <git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
         <mockito-core.version>3.5.13</mockito-core.version>
         <jline.version>3.16.0</jline.version>
+        <jansi.version>1.18</jansi.version>
     </properties>
 
     <modules>
@@ -53,8 +54,13 @@
             </dependency>
             <dependency>
                 <groupId>org.jline</groupId>
-                <artifactId>jline-terminal</artifactId>
+                <artifactId>jline-terminal-jansi</artifactId>
                 <version>${jline.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.fusesource.jansi</groupId>
+                <artifactId>jansi</artifactId>
+                <version>${jansi.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>

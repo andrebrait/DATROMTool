@@ -58,7 +58,11 @@
         </dependency>
         <dependency>
             <groupId>org.jline</groupId>
-            <artifactId>jline-terminal</artifactId>
+            <artifactId>jline-terminal-jansi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

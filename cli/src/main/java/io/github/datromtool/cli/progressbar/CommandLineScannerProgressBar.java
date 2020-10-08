@@ -1,65 +1,94 @@
 package io.github.datromtool.cli.progressbar;
 
-import com.google.common.base.Strings;
 import io.github.datromtool.ByteUnit;
 import io.github.datromtool.io.FileScanner;
+import lombok.extern.slf4j.Slf4j;
+import org.fusesource.jansi.Ansi;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLongArray;
 
 import static io.github.datromtool.cli.util.TerminalUtils.availableColumns;
 import static io.github.datromtool.cli.util.TerminalUtils.repeat;
 import static io.github.datromtool.cli.util.TerminalUtils.trimTo;
+import static org.fusesource.jansi.Ansi.ansi;
 
+@Slf4j
 public final class CommandLineScannerProgressBar implements FileScanner.Listener {
 
     private int numThreads;
     private int totalItems;
     private int totalItemsLength;
+    private AtomicLongArray averageReportedSpeed;
+    private Terminal terminal;
+    private PrintWriter writer;
     private final AtomicInteger current = new AtomicInteger();
-    private final ThreadLocal<Long> lastReportedSpeed = ThreadLocal.withInitial(() -> 0L);
+
+    private long getAverage(int thread) {
+        return averageReportedSpeed.get(thread - 1);
+    }
 
     private void printMainBar(int curr) {
-        String forPrint = "Scanning [%s%s] "
-                + Strings.padStart(Integer.toString(curr), totalItemsLength, ' ')
+        String forPrint = "Scanning [%s%s%s] "
+                + String.format("%" + totalItemsLength + "d", curr)
                 + "/"
-                + totalItems
-                + "\u001b[K"
-                + "\r";
-        int size = Math.max(0, Math.min(totalItems, availableColumns(forPrint, null) + 4));
+                + totalItems;
+        int size = Math.max(0, availableColumns(forPrint, terminal));
         int x = size * curr / totalItems;
-        System.err.printf(forPrint, repeat('#', x), repeat('.', (size - x)));
+        int lineDiff = numThreads + 1;
+        writer.print(ansi().reset()
+                .cursorDownLine(lineDiff)
+                .a(String.format(
+                        forPrint,
+                        repeat('=', x == size ? x : x - 1),
+                        repeat('>', x == size ? 0 : 1),
+                        repeat('.', size - x)))
+                .eraseLine()
+                .cursorUpLine(lineDiff));
     }
 
     private void printThread(int thread, String label, String item, int percentage, long speed) {
         ByteUnit unit = ByteUnit.getUnit(speed);
-        String speedStr = String.format("%.2f", unit.convert(speed)) + unit.getSymbol() + "/s";
+        String percetageStr = String.format("%3d", percentage);
+        String speedStr = String.format("%6.2f %2s/s", unit.convert(speed), unit.getSymbol());
         String forPrint = "Thread "
                 + thread
-                + " ("
-                + percentage
-                + "%|"
+                + " "
+                + percetageStr
+                + "% "
                 + speedStr
-                + "): "
+                + ": "
                 + label;
-        int diff = numThreads - thread + 1;
-        String s = "\r"
-                + "\u001b[" + diff + "A"
-                + forPrint
-                + trimTo(item, availableColumns(forPrint, null))
-                + "\u001b[K"
-                + "\r"
-                + "\u001b[" + diff + "B"
-                + "\r";
-        System.err.print(s);
+        writer.print(ansi().reset()
+                .cursorDownLine(thread)
+                .a(forPrint)
+                .a(trimTo(item, availableColumns(forPrint, terminal)))
+                .eraseLine()
+                .cursorUpLine(thread));
     }
 
     @Override
     public synchronized void init(int numThreads) {
-        this.numThreads = numThreads;
-        for (int i = 1; i <= numThreads; i++) {
-            System.err.println("Threads " + i + " (0%|0.00B/s): INITIALIZED");
+        try {
+            this.terminal = TerminalBuilder.terminal();
+            this.writer = terminal.writer();
+        } catch (IOException e) {
+            log.error("Error while creating terminal", e);
+            this.terminal = null;
+            this.writer = new PrintWriter(System.err);
         }
+        this.numThreads = numThreads;
+        this.averageReportedSpeed = new AtomicLongArray(numThreads);
+        Ansi ansi = ansi().reset().newline();
+        for (int i = 1; i <= numThreads; i++) {
+            ansi.a("Thread " + i + " (0%|0.00B/s): INITIALIZED").newline();
+        }
+        writer.print(ansi.cursorUpLine(numThreads + 1));
     }
 
     @Override
@@ -71,34 +100,47 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
 
     @Override
     public synchronized void reportStart(Path path, int thread) {
+        printThread(thread, "", path.toString(), 0, 0);
         printMainBar(current.incrementAndGet());
     }
 
     @Override
     public synchronized void reportProgress(Path path, int thread, int percentage, long speed) {
-        lastReportedSpeed.set(speed);
+        averageReportedSpeed.updateAndGet(thread - 1, v -> Math.round((v + speed) / 2.0));
         printThread(thread, "", path.toString(), percentage, speed);
     }
 
     @Override
     public synchronized void reportSkip(Path path, int thread, String message) {
-        printThread(thread, "SKIPPED", path.toString(), 0, lastReportedSpeed.get());
+        printThread(thread, "SKIPPED: ", path.toString(), 0, getAverage(thread));
     }
 
     @Override
     public synchronized void reportFailure(Path path, int thread, String message, Throwable cause) {
-        printThread(thread, "FAILED", path.toString(), 0, lastReportedSpeed.get());
+        printThread(thread, "FAILED: ", path.toString(), 0, getAverage(thread));
     }
 
     @Override
     public synchronized void reportFinish(Path path, int thread) {
-        printThread(thread, "FINISHED", "", 100, lastReportedSpeed.get());
+        printThread(thread, "FINISHED: ", path.toString(), 100, getAverage(thread));
     }
 
     @Override
     public synchronized void reportAllFinished() {
+        for (int i = 1; i <= numThreads; i++) {
+            printThread(i, "FINISHED", "", 100, getAverage(i));
+        }
         printMainBar(totalItems);
-        System.err.println();
-        System.err.println();
+        writer.print(ansi().reset()
+                .cursorDownLine(numThreads + 1)
+                .newline()
+                .newline());
+        try {
+            if (terminal != null) {
+                terminal.close();
+            }
+        } catch (IOException e) {
+            log.error("Error while closing terminal", e);
+        }
     }
 }
