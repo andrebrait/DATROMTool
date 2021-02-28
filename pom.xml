@@ -24,7 +24,7 @@
         <xz.version>1.8</xz.version>
         <commons-codec.version>1.15</commons-codec.version>
         <junrar.version>7.4.0</junrar.version>
-        <git-commit-id-plugin.version>4.0.2</git-commit-id-plugin.version>
+        <git-commit-id-plugin.version>4.0.3</git-commit-id-plugin.version>
         <mockito-core.version>3.8.0</mockito-core.version>
         <jline.version>3.19.0</jline.version>
         <jansi.version>2.3.1</jansi.version>
