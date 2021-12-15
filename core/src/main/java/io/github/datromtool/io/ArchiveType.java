@@ -1,6 +1,6 @@
 package io.github.datromtool.io;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,39 +14,39 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
-import static java.util.regex.Pattern.compile;
-import static java.util.regex.Pattern.quote;
+import static java.util.regex.Pattern.*;
 
 @AllArgsConstructor
 public enum ArchiveType {
 
-    @JsonProperty(Constants.ZIP)
-    ZIP(Constants.ZIP, true, s -> Constants.ZIP_PATTERN.matcher(s).find()),
-    @JsonProperty(Constants.RAR)
-    RAR(Constants.RAR, false, s -> Constants.RAR_PATTERN.matcher(s).find()),
-    @JsonProperty(Constants.SEVEN_ZIP)
+    ZIP(Constants.ZIP, true, ArchiveType::isZip),
+    RAR(Constants.RAR, false, ArchiveType::isRar),
     SEVEN_ZIP(Constants.SEVEN_ZIP, true, ArchiveType::isSevenZip),
-    @JsonProperty(Constants.TAR)
-    TAR(Constants.TAR, true, s -> Constants.TAR_PATTERN.matcher(s).find()),
-    @JsonProperty(Constants.TAR_BZ2)
+    TAR(Constants.TAR, true, ArchiveType::isTar),
     TAR_BZ2(Constants.TAR_BZ2, true, ArchiveType::isBzip2),
-    @JsonProperty(Constants.TAR_GZ)
     TAR_GZ(Constants.TAR_GZ, true, ArchiveType::isGzip),
-    @JsonProperty(Constants.TAR_LZ4)
-    TAR_LZ4(Constants.TAR_LZ4, true, s -> Constants.TAR_LZ4_PATTERN.matcher(s).find()),
-    @JsonProperty(Constants.TAR_LZMA)
+    TAR_LZ4(Constants.TAR_LZ4, true, ArchiveType::isLz4),
     TAR_LZMA(Constants.TAR_LZMA, LZMAUtils.isLZMACompressionAvailable(), ArchiveType::isTarLzma),
-    @JsonProperty(Constants.TAR_XZ)
     TAR_XZ(Constants.TAR_XZ, XZUtils.isXZCompressionAvailable(), ArchiveType::isTarXz);
+
+    private static boolean isZip(String s) {
+        return Constants.ZIP_PATTERN.matcher(s).find();
+    }
+
+    private static boolean isRar(String s) {
+        return Constants.RAR_PATTERN.matcher(s).find();
+    }
 
     private static boolean isSevenZip(String s) {
         return Constants.SEVEN_ZIP_PATTERN.matcher(s).find()
                 && !Constants.TAR_7Z_PATTERN.matcher(s).find();
+    }
+
+    private static boolean isTar(String s) {
+        return Constants.TAR_PATTERN.matcher(s).find();
     }
 
     private static boolean isBzip2(String s) {
@@ -57,6 +57,10 @@ public enum ArchiveType {
     private static boolean isGzip(String s) {
         return GzipUtils.isCompressedFilename(s)
                 && Constants.TAR_PATTERN.matcher(GzipUtils.getUncompressedFilename(s)).find();
+    }
+
+    private static boolean isLz4(String s) {
+        return Constants.TAR_LZ4_PATTERN.matcher(s).find();
     }
 
     private static boolean isTarLzma(String s) {
@@ -71,7 +75,7 @@ public enum ArchiveType {
                 && Constants.TAR_PATTERN.matcher(XZUtils.getUncompressedFilename(s)).find();
     }
 
-    @Getter
+    @Getter(onMethod_ = {@JsonValue})
     private final String alias;
     @Getter
     private final boolean availableAsOutput;
@@ -88,7 +92,7 @@ public enum ArchiveType {
 
     @Nullable
     public static ArchiveType parse(String fileName) {
-        for (ArchiveType value : ArchiveType.values()) {
+        for (ArchiveType value : values()) {
             if (value.predicate.test(fileName)) {
                 return value;
             }
@@ -98,10 +102,12 @@ public enum ArchiveType {
 
     @Nullable
     public static ArchiveType fromAlias(@Nonnull String alias) {
-        return Arrays.stream(values())
-                .filter(v -> v.getAlias().equals(alias))
-                .findFirst()
-                .orElse(null);
+        for (ArchiveType value : values()) {
+            if (value.getAlias().equals(alias)) {
+                return value;
+            }
+        }
+        return null;
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
