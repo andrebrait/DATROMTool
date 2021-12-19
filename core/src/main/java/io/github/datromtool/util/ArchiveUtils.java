@@ -28,20 +28,16 @@ import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
 
 import javax.annotation.Nullable;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.nio.file.StandardOpenOption.CREATE;
@@ -170,7 +166,7 @@ public final class ArchiveUtils {
     }
 
     private static boolean isRarFileOk(Path path) {
-        ProcessBuilder pb = new ProcessBuilder("unrar", "t", path.toAbsolutePath().toString());
+        ProcessBuilder pb = new ProcessBuilder("unrar", "t", path.toAbsolutePath().normalize().toString());
         try {
             Process process = pb.start();
             return process.waitFor() == 0;
@@ -188,14 +184,15 @@ public final class ArchiveUtils {
         if (!isRarFileOk(path)) {
             throw new BadRarArchiveException();
         }
-        ProcessBuilder pb = new ProcessBuilder("unrar", "l", path.toAbsolutePath().toString());
+        String[] arguments = {"unrar", "l", path.toAbsolutePath().normalize().toString()};
+        ProcessBuilder pb = new ProcessBuilder(arguments);
         try {
             Process process = pb.start();
             ImmutableList<UnrarArchiveEntry> fileList = readStdout(process)
                     .map(RAR_LIST::matcher)
                     .filter(Matcher::matches)
                     .map(m -> UnrarArchiveEntry.builder()
-                            .name(m.group(4))
+                            .name(m.group(4).replace('\\', '/'))
                             .size(Long.parseLong(m.group(1)))
                             .modificationTime(LocalDateTime.parse(String.format(
                                     "%sT%s:00",
@@ -206,7 +203,7 @@ public final class ArchiveUtils {
                     .collect(ImmutableList.toImmutableList());
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                log.error("Unexpected error while running 'unrar'. Exit code: {}", exitCode);
+                log.error("Unexpected error while running '{}'. Exit code: {}", String.join(" ", arguments), exitCode);
             }
             return fileList;
         } catch (InterruptedException e) {
@@ -225,15 +222,17 @@ public final class ArchiveUtils {
                 .filter(e -> desiredEntryNames.contains(e.getName()))
                 .collect(ImmutableList.toImmutableList());
         ImmutableList<String> exclusions = allEntries.stream()
-                .filter(e -> !desiredEntryNames.contains(e.getName()))
                 .map(UnrarArchiveEntry::getName)
+                .filter(name -> !desiredEntryNames.contains(name))
                 .collect(ImmutableList.toImmutableList());
-        ProcessBuilder pb = new ProcessBuilder(
+        String[] arguments = {
                 "unrar",
                 "p",
                 "-inul",
                 "-x@",
-                path.normalize().toAbsolutePath().toString());
+                path.toAbsolutePath().normalize().toString()
+        };
+        ProcessBuilder pb = new ProcessBuilder(arguments);
         try {
             Process process = pb.start();
             BufferedWriter writer =
@@ -250,7 +249,7 @@ public final class ArchiveUtils {
             }
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                log.error("Unexpected error while running 'unrar'. Exit code: {}", exitCode);
+                log.error("Unexpected error while running '{}'. Exit code: {}", String.join(" ", arguments), exitCode);
             }
         } catch (InterruptedException e) {
             log.error("'unrar' could not read contents of file '{}'", path, e);
@@ -258,7 +257,15 @@ public final class ArchiveUtils {
     }
 
     public static Stream<String> readStdout(Process process) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        return readStream(process.getInputStream());
+    }
+
+    public static Stream<String> readStderr(Process process) throws IOException {
+        return readStream(process.getErrorStream());
+    }
+
+    private static Stream<String> readStream(InputStream stream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         Stream.Builder<String> sb = Stream.builder();
         String currLine;
         while ((currLine = reader.readLine()) != null) {

@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 @DisabledIf(
         value = "io.github.datromtool.util.ArchiveUtils#isUnrarAvailable",
         disabledReason = "'unrar' is available")
-class FileScannerTest {
+class FileScannerTestWithoutUnrar {
 
     private static final String TEST_DATA_FOLDER = "../test-data";
     private Path testDataSource;

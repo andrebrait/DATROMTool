@@ -46,6 +46,9 @@ import static io.github.datromtool.io.FileScannerParameters.withDefaults;
 @Slf4j
 public final class FileScanner {
 
+    private static final Comparator<FileMetadata> FILE_SIZE_DESCENDING_COMPARATOR =
+            Comparator.comparingLong(FileMetadata::getSize).reversed();
+
     private final int numThreads;
     private final ImmutableList<Detector> detectors;
     private final Listener listener;
@@ -188,7 +191,7 @@ public final class FileScanner {
                 listener.reportTotalItems(paths.size());
             }
             ImmutableList<Result> results = paths.stream()
-                    .sorted(Comparator.comparingLong(fm -> -fm.getSize()))
+                    .sorted(FILE_SIZE_DESCENDING_COMPARATOR)
                     .map(fm -> executorService.submit(() -> scanFile(fm)))
                     .collect(ImmutableList.toImmutableList())
                     .stream()
@@ -339,7 +342,7 @@ public final class FileScanner {
             ImmutableList.Builder<Result> builder) throws IOException {
         ArchiveUtils.readZip(file, (zipFile, zipArchiveEntry) -> {
             long size = zipArchiveEntry.getSize();
-            String name = zipArchiveEntry.getName();
+            String name = zipArchiveEntry.getName().replace('\\', '/');
             Path entryPath = file.resolve(name);
             if (shouldSkip(entryPath, index, size)) {
                 return;
@@ -412,7 +415,7 @@ public final class FileScanner {
         }
         ArchiveUtils.readRarWithUnrar(file, desiredEntryNames, (entry, processInputStream) -> {
             long size = entry.getSize();
-            String name = entry.getName();
+            String name = entry.getName().replace('\\', '/');
             Path entryPath = file.resolve(name);
             ProcessingResult processingResult = process(
                     entryPath,
@@ -435,7 +438,7 @@ public final class FileScanner {
             ImmutableList.Builder<Result> builder) throws IOException {
         ArchiveUtils.readSevenZip(file, (sevenZFile, sevenZArchiveEntry) -> {
             long size = sevenZArchiveEntry.getSize();
-            String name = sevenZArchiveEntry.getName();
+            String name = sevenZArchiveEntry.getName().replace('\\', '/');
             Path entryPath = file.resolve(name);
             if (shouldSkip(entryPath, index, size)) {
                 return;
@@ -462,7 +465,7 @@ public final class FileScanner {
             ImmutableList.Builder<Result> builder) throws IOException {
         ArchiveUtils.readTar(archiveType, file, (tarArchiveEntry, tarArchiveInputStream) -> {
             long size = tarArchiveEntry.getRealSize();
-            String name = tarArchiveEntry.getName();
+            String name = tarArchiveEntry.getName().replace('\\', '/');
             Path entryPath = file.resolve(name);
             if (shouldSkip(entryPath, index, size)) {
                 return;

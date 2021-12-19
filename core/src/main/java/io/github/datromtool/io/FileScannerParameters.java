@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -58,7 +59,7 @@ class FileScannerParameters {
 
     private static String makeRomSizeStr(long size) {
         ByteUnit minRomSizeUnit = ByteUnit.getUnit(size);
-        return String.format("%.02f %s", minRomSizeUnit.convert(size), minRomSizeUnit.getSymbol());
+        return String.format(Locale.US, "%.02f %s", minRomSizeUnit.convert(size), minRomSizeUnit.getSymbol());
     }
 
     public static FileScannerParameters withDefaults() {
@@ -153,7 +154,7 @@ class FileScannerParameters {
                 bufferSize = toIntExact(max(min(maxRomSize, maxBuffer), DEFAULT_BUFFER_SIZE));
             }
             ByteUnit unit = ByteUnit.getUnit(bufferSize);
-            String bufferSizeStr = String.format("%.02f", unit.convert(bufferSize));
+            String bufferSizeStr = String.format(Locale.US, "%.02f", unit.convert(bufferSize));
             if (bufferSize > MAX_BUFFER_NO_WARNING) {
                 log.warn(
                         "Using a bigger I/O buffer size of {} {} due to header detection",
