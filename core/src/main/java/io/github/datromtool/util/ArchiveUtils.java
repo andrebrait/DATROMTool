@@ -32,26 +32,31 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.nio.file.Files.newInputStream;
 import static java.nio.file.StandardOpenOption.CREATE;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ArchiveUtils {
 
+    public static String normalizePath(String path) {
+        return path.indexOf('\\') > 0
+                ? path.replace('\\', '/')
+                : path;
+    }
+
     @Nullable
     public static InputStream inputStreamForTar(ArchiveType archiveType, Path file)
             throws IOException {
         switch (archiveType) {
             case TAR:
-                return Files.newInputStream(file);
+                return newInputStream(file);
             case TAR_BZ2:
                 return newBz2InputStream(file);
             case TAR_GZ:
@@ -68,23 +73,23 @@ public final class ArchiveUtils {
     }
 
     public static BZip2CompressorInputStream newBz2InputStream(Path file) throws IOException {
-        return new BZip2CompressorInputStream(Files.newInputStream(file));
+        return new BZip2CompressorInputStream(newInputStream(file));
     }
 
     public static GzipCompressorInputStream newGzipInputStream(Path file) throws IOException {
-        return new GzipCompressorInputStream(Files.newInputStream(file));
+        return new GzipCompressorInputStream(newInputStream(file));
     }
 
     public static FramedLZ4CompressorInputStream newLz4InputStream(Path file) throws IOException {
-        return new FramedLZ4CompressorInputStream(Files.newInputStream(file));
+        return new FramedLZ4CompressorInputStream(newInputStream(file));
     }
 
     public static LZMACompressorInputStream newLzmaInputStream(Path file) throws IOException {
-        return new LZMACompressorInputStream(Files.newInputStream(file));
+        return new LZMACompressorInputStream(newInputStream(file));
     }
 
     public static XZCompressorInputStream newXzInputStream(Path file) throws IOException {
-        return new XZCompressorInputStream(Files.newInputStream(file));
+        return new XZCompressorInputStream(newInputStream(file));
     }
 
     @Nullable
@@ -192,7 +197,7 @@ public final class ArchiveUtils {
                     .map(RAR_LIST::matcher)
                     .filter(Matcher::matches)
                     .map(m -> UnrarArchiveEntry.builder()
-                            .name(m.group(4).replace('\\', '/'))
+                            .name(normalizePath(m.group(4)))
                             .size(Long.parseLong(m.group(1)))
                             .modificationTime(LocalDateTime.parse(String.format(
                                     "%sT%s:00",
@@ -257,15 +262,7 @@ public final class ArchiveUtils {
     }
 
     public static Stream<String> readStdout(Process process) throws IOException {
-        return readStream(process.getInputStream());
-    }
-
-    public static Stream<String> readStderr(Process process) throws IOException {
-        return readStream(process.getErrorStream());
-    }
-
-    private static Stream<String> readStream(InputStream stream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         Stream.Builder<String> sb = Stream.builder();
         String currLine;
         while ((currLine = reader.readLine()) != null) {

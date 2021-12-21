@@ -9,11 +9,7 @@ import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.detector.Rule;
 import io.github.datromtool.util.ArchiveUtils;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
-import lombok.With;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -42,6 +38,7 @@ import java.util.zip.Checksum;
 
 import static io.github.datromtool.io.FileScannerParameters.forDatWithDetector;
 import static io.github.datromtool.io.FileScannerParameters.withDefaults;
+import static io.github.datromtool.util.ArchiveUtils.normalizePath;
 
 @Slf4j
 public final class FileScanner {
@@ -342,7 +339,7 @@ public final class FileScanner {
             ImmutableList.Builder<Result> builder) throws IOException {
         ArchiveUtils.readZip(file, (zipFile, zipArchiveEntry) -> {
             long size = zipArchiveEntry.getSize();
-            String name = zipArchiveEntry.getName().replace('\\', '/');
+            String name = normalizePath(zipArchiveEntry.getName());
             Path entryPath = file.resolve(name);
             if (shouldSkip(entryPath, index, size)) {
                 return;
@@ -371,7 +368,7 @@ public final class FileScanner {
         try {
             ArchiveUtils.readRar(file, (archive, fileHeader) -> {
                 long size = fileHeader.getFullUnpackSize();
-                String name = fileHeader.getFileName().replace('\\', '/');
+                String name = normalizePath(fileHeader.getFileName());
                 Path entryPath = file.resolve(name);
                 if (shouldSkip(entryPath, index, size)) {
                     return;
@@ -415,7 +412,7 @@ public final class FileScanner {
         }
         ArchiveUtils.readRarWithUnrar(file, desiredEntryNames, (entry, processInputStream) -> {
             long size = entry.getSize();
-            String name = entry.getName().replace('\\', '/');
+            String name = normalizePath(entry.getName());
             Path entryPath = file.resolve(name);
             ProcessingResult processingResult = process(
                     entryPath,
@@ -438,7 +435,7 @@ public final class FileScanner {
             ImmutableList.Builder<Result> builder) throws IOException {
         ArchiveUtils.readSevenZip(file, (sevenZFile, sevenZArchiveEntry) -> {
             long size = sevenZArchiveEntry.getSize();
-            String name = sevenZArchiveEntry.getName().replace('\\', '/');
+            String name = normalizePath(sevenZArchiveEntry.getName());
             Path entryPath = file.resolve(name);
             if (shouldSkip(entryPath, index, size)) {
                 return;
@@ -465,7 +462,7 @@ public final class FileScanner {
             ImmutableList.Builder<Result> builder) throws IOException {
         ArchiveUtils.readTar(archiveType, file, (tarArchiveEntry, tarArchiveInputStream) -> {
             long size = tarArchiveEntry.getRealSize();
-            String name = tarArchiveEntry.getName().replace('\\', '/');
+            String name = normalizePath(tarArchiveEntry.getName());
             Path entryPath = file.resolve(name);
             if (shouldSkip(entryPath, index, size)) {
                 return;

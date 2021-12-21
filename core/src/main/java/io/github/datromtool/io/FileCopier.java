@@ -6,12 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.util.ArchiveUtils;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
-import lombok.Value;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
@@ -41,6 +36,8 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import static io.github.datromtool.util.ArchiveUtils.normalizePath;
 
 @Slf4j
 public final class FileCopier {
@@ -451,7 +448,7 @@ public final class FileCopier {
     private void extractRarEntries(ExtractionSpec spec, int index) throws Exception {
         try {
             ArchiveUtils.readRar(spec.getFrom(), (archive, fileHeader) -> {
-                String name = fileHeader.getFileName().replace('\\', '/');
+                String name = normalizePath(fileHeader.getFileName());
                 ExtractionSpec.InternalSpec internal = findInternalSpec(spec, name);
                 if (internal == null) {
                     return;
@@ -908,7 +905,7 @@ public final class FileCopier {
             ArchiveUtils.readRar(
                     spec.getFrom(),
                     (archive, fileHeader) -> {
-                        String name = fileHeader.getFileName().replace('\\', '/');
+                        String name = normalizePath(fileHeader.getFileName());
                         ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
                         if (internal == null) {
                             return;
@@ -981,7 +978,7 @@ public final class FileCopier {
             ArchiveUtils.readRar(
                     spec.getFrom(),
                     (archive, fileHeader) -> {
-                        String name = fileHeader.getFileName().replace('\\', '/');
+                        String name = normalizePath(fileHeader.getFileName());
                         ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
                         if (internal == null) {
                             return;
@@ -1057,7 +1054,7 @@ public final class FileCopier {
             ArchiveUtils.readRar(
                     spec.getFrom(),
                     (archive, fileHeader) -> {
-                        String name = fileHeader.getFileName().replace('\\', '/');
+                        String name = normalizePath(fileHeader.getFileName());
                         ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
                         if (internal == null) {
                             return;

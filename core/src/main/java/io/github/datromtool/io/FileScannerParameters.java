@@ -21,9 +21,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
-import static java.lang.Math.toIntExact;
+import static java.lang.Math.*;
 import static java.util.Objects.requireNonNull;
 
 @Slf4j
@@ -80,13 +78,11 @@ class FileScannerParameters {
         final long maxRomSize;
         final boolean useLazyDetector;
         final ImmutableSet<ArchiveType> alsoScanArchives = toRomStream(datafiles)
-                .filter(r -> r.getSize() != null)
                 .map(Rom::getName)
                 .map(ArchiveType::parse)
                 .filter(Objects::nonNull)
                 .collect(ImmutableSet.toImmutableSet());
         final long minRomSize = toRomStream(datafiles)
-                .filter(r -> r.getSize() != null)
                 .mapToLong(Rom::getSize)
                 .min()
                 .orElse(0);
@@ -94,23 +90,19 @@ class FileScannerParameters {
             bufferSize = DEFAULT_BUFFER_SIZE;
             useLazyDetector = false;
             maxRomSize = toRomStream(datafiles)
-                    .filter(r -> r.getSize() != null)
                     .mapToLong(Rom::getSize)
                     .max()
                     .orElse(Long.MAX_VALUE);
         } else {
             long maxStartOffset = toRuleStream(detectors)
-                    .filter(r -> r.getStartOffset() != null)
                     .mapToLong(Rule::getStartOffset)
                     .max()
                     .orElse(0);
             long minEndOffset = toRuleStream(detectors)
-                    .filter(r -> r.getEndOffset() != null)
                     .mapToLong(Rule::getEndOffset)
                     .min()
                     .orElse(Long.MAX_VALUE);
             long maxUnheaderedSize = toRomStream(datafiles)
-                    .filter(r -> r.getSize() != null)
                     .mapToLong(Rom::getSize)
                     .max()
                     .orElse(Long.MAX_VALUE);
