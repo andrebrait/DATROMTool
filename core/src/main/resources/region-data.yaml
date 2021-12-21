@@ -1,82 +1,91 @@
 regions:
   - code: "ASI"
     pattern: "(?i)Asia"
-    languages: ["zh"] # TODO check if this is correct
+    languages: [ "zh" ] # TODO check if this is correct
   - code: "ARG"
     pattern: "(?i)Argentina"
-    languages: ["es"]
+    languages: [ "es" ]
   - code: "AUS"
     pattern: "(?i)Australia"
-    languages: ["en"]
+    languages: [ "en" ]
   - code: "BRA"
     pattern: "(?i)Brazil"
-    languages: ["pt"]
+    languages: [ "pt" ]
   - code: "CAN"
     pattern: "(?i)Canada"
-    languages: ["en", "fr"] # TODO check if this is correct
+    languages: [ "en", "fr" ] # TODO check if this is correct
   - code: "CHN"
-    pattern: "(?i)(?:China)|(?:Hong Kong)"
-    languages: ["zh"]
+    pattern: "(?i)China"
+    languages: [ "zh" ]
   - code: "DAN"
     pattern: "(?i)Denmark"
-    languages: ["da"]
+    languages: [ "da" ]
   - code: "EUR"
     pattern: "(?i)(?:Europe)|(?:World)"
-    languages: ["en"]
+    languages: [ "en" ]
   - code: "FRA"
     pattern: "(?i)France"
-    languages: ["fr"]
+    languages: [ "fr" ]
   - code: "FYN"
     pattern: "(?i)Finland"
-    languages: ["fi"]
+    languages: [ "fi" ]
   - code: "GER"
     pattern: "(?i)Germany"
-    languages: ["de"]
+    languages: [ "de" ]
   - code: "GRE"
     pattern: "(?i)Greece"
-    languages: ["el"]
-  - code: "HUN"
-    pattern: "(?i)Hungary"
-    languages: ["hu"]
-  - code: "ITA"
-    pattern: "(?i)Italy"
-    languages: ["it"]
-  - code: "JPN"
-    pattern: "(?i)(?:Japan)|(?:World)"
-    languages: ["ja"]
-  - code: "HOL"
-    pattern: "(?i)Netherlands"
-    languages: ["nl"]
+    languages: [ "el" ]
   - code: "HK"
     pattern: "(?i)Hong Kong"
-    languages: ["zh"] # TODO check if this is correct
+    languages: [ "zh" ] # TODO check if this is correct
+  - code: "HOL"
+    pattern: "(?i)Netherlands"
+    languages: [ "nl" ]
+  - code: "HUN"
+    pattern: "(?i)Hungary"
+    languages: [ "hu" ]
+  - code: "ITA"
+    pattern: "(?i)Italy"
+    languages: [ "it" ]
+  - code: "JPN"
+    pattern: "(?i)(?:Japan)|(?:World)"
+    languages: [ "ja" ]
   - code: "KOR"
     pattern: "(?i)Korea"
-    languages: ["ko"]
+    languages: [ "ko" ]
   - code: "MEX"
     pattern: "(?i)Mexico"
-    languages: ["es"]
+    languages: [ "es" ]
   - code: "NOR"
     pattern: "(?i)Norway"
-    languages: ["no"]
-  - code: "RUS"
-    pattern: "(?i)Russia"
-    languages: ["ru"]
+    languages: [ "no" ]
+  - code: "NZ"
+    pattern: "(?i)New Zealand"
+    languages: [ "en" ]
   - code: "POL"
     pattern: "(?i)Poland"
-    languages: ["pl"]
+    languages: [ "pl" ]
+  - code: "POR"
+    pattern: "(?i)Portugal"
+    languages: [ "pt" ]
+  - code: "RUS"
+    pattern: "(?i)Russia"
+    languages: [ "ru" ]
   - code: "SPA"
     pattern: "(?i)Spain"
-    languages: ["es"]
+    languages: [ "es" ]
   - code: "SWE"
     pattern: "(?i)Sweden"
-    languages: ["sv"]
-  - code: "UK"
-    pattern: "(?i)United Kingdom"
-    languages: ["en"]
-  - code: "USA"
-    pattern: "(?i)(?:USA)|(?:World)"
-    languages: ["en"]
+    languages: [ "sv" ]
   - code: "TAI"
     pattern: "(?i)Taiwan"
-    languages: ["zh"] # TODO check if this is correct
+    languages: [ "zh" ] # TODO check if this is correct
+  - code: "UK"
+    pattern: "(?i)United Kingdom"
+    languages: [ "en" ]
+  - code: "UKN"
+    pattern: "(?i)Unknown"
+    languages: [ "en" ]
+  - code: "USA"
+    pattern: "(?i)(?:USA)|(?:World)"
+    languages: [ "en" ]
