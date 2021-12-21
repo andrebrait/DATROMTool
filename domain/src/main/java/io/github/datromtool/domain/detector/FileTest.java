@@ -7,12 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import io.github.datromtool.domain.detector.enumerations.ComparisonOperator;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
@@ -44,7 +39,7 @@ public class FileTest extends Test {
 
     @JsonIgnore
     public long getSizeAsLong() {
-        return size != null ? Long.parseLong(size, 16) : 0;
+        return Long.parseLong(size, 16);
     }
 
     @Override

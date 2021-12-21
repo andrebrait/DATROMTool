@@ -22,6 +22,7 @@ import picocli.CommandLine;
         subcommands = {OneGameOneRomCommand.class})
 public final class DatRomCommand {
 
+    @SuppressWarnings("InstantiationOfUtilityClass")
     public static void main(String[] args) {
         CommandLine cmd = new CommandLine(new DatRomCommand());
         cmd.registerConverter(ArchiveType.class, new ArchiveTypeConverter());

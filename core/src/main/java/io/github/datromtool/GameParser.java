@@ -4,11 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.RegionData;
-import io.github.datromtool.domain.datafile.Datafile;
-import io.github.datromtool.domain.datafile.Disk;
-import io.github.datromtool.domain.datafile.Game;
-import io.github.datromtool.domain.datafile.Release;
-import io.github.datromtool.domain.datafile.Rom;
+import io.github.datromtool.domain.datafile.*;
 import io.github.datromtool.domain.datafile.enumerations.Status;
 import io.github.datromtool.domain.datafile.enumerations.YesNo;
 import lombok.NonNull;
@@ -102,7 +98,7 @@ public final class GameParser {
         }
         Set<RegionData.RegionDataEntry> provided = new LinkedHashSet<>();
         for (Release release : game.getReleases()) {
-            if (release.getRegion() != null && !release.getRegion().isEmpty()) {
+            if (!release.getRegion().isEmpty()) {
                 String code = release.getRegion().trim().toUpperCase();
                 RegionData.RegionDataEntry regionDataEntry = regionData.getRegions().stream()
                         .filter(e -> e.getCode().equals(code))

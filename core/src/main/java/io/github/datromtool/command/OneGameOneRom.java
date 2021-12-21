@@ -9,13 +9,7 @@ import io.github.datromtool.GameParser;
 import io.github.datromtool.GameSorter;
 import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.config.AppConfig;
-import io.github.datromtool.data.FileOutputOptions;
-import io.github.datromtool.data.Filter;
-import io.github.datromtool.data.OutputMode;
-import io.github.datromtool.data.ParsedGame;
-import io.github.datromtool.data.PostFilter;
-import io.github.datromtool.data.SortingPreference;
-import io.github.datromtool.data.TextOutputOptions;
+import io.github.datromtool.data.*;
 import io.github.datromtool.domain.datafile.Clrmamepro;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.datafile.Game;
@@ -36,16 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -198,8 +186,7 @@ public final class OneGameOneRom {
                 .map(s -> s.map(ScanResultMatcher.GameMatchList::getParsedGame));
     }
 
-    private static ImmutableList<ParsedGame> parseGames(Collection<Datafile> datafiles)
-            throws IOException, URISyntaxException {
+    private static ImmutableList<ParsedGame> parseGames(Collection<Datafile> datafiles) throws IOException {
         GameParser gameParser = new GameParser(
                 SerializationHelper.getInstance().loadRegionData(),
                 GameParser.DivergenceDetection.ONE_WAY);

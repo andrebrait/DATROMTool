@@ -15,12 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -98,7 +93,7 @@ public final class ScanResultMatcher {
         if (results == null && rom.getMd5() != null) {
             results = resultsForMd5.get(rom.getMd5());
         }
-        if (results == null && rom.getSize() != null && rom.getCrc() != null) {
+        if (results == null && rom.getCrc() != null) {
             results = resultsForCrc.get(CrcKey.from(rom));
         }
         if (results == null) {

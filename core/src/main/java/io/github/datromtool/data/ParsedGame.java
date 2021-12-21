@@ -6,11 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.data.RegionData.RegionDataEntry;
 import io.github.datromtool.domain.datafile.Game;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.Collection;
@@ -73,16 +69,13 @@ public class ParsedGame {
 
     @JsonIgnore
     public Stream<String> getRegionsStream() {
-        if (regionData == null) {
-            return Stream.empty();
-        }
         return regionData.getRegions().stream()
                 .map(RegionDataEntry::getCode);
     }
 
     @JsonIgnore
     public Stream<String> getLanguagesStream() {
-        if (regionData == null || !languages.isEmpty()) {
+        if (!languages.isEmpty()) {
             return languages.stream();
         }
         return regionData.getRegions().stream()
@@ -100,9 +93,6 @@ public class ParsedGame {
 
     @JsonIgnore
     public String getParentName() {
-        if (game == null) {
-            return "";
-        }
         if (parent) {
             return game.getName();
         }

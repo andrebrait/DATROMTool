@@ -29,7 +29,7 @@ public abstract class SubComparator implements Comparator<ParsedGame> {
         }
 
         @Override
-        public final int compare(ParsedGame o1, ParsedGame o2) {
+        public int compare(ParsedGame o1, ParsedGame o2) {
             return -delegate.compare(o1, o2);
         }
     }
