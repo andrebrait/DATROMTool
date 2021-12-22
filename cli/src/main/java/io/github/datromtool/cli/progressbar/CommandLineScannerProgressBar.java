@@ -13,11 +13,10 @@ import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLongArray;
 
-import static io.github.datromtool.cli.util.TerminalUtils.availableColumns;
-import static io.github.datromtool.cli.util.TerminalUtils.repeat;
-import static io.github.datromtool.cli.util.TerminalUtils.trimTo;
+import static io.github.datromtool.cli.util.TerminalUtils.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
+// FIXME: this is very slow
 @Slf4j
 public final class CommandLineScannerProgressBar implements FileScanner.Listener {
 
@@ -54,16 +53,13 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
 
     private void printThread(int thread, String label, String item, int percentage, long speed) {
         ByteUnit unit = ByteUnit.getUnit(speed);
-        String percetageStr = String.format("%3d", percentage);
-        String speedStr = String.format("%6.2f %2s/s", unit.convert(speed), unit.getSymbol());
-        String forPrint = "Thread "
-                + thread
-                + " "
-                + percetageStr
-                + "% "
-                + speedStr
-                + ": "
-                + label;
+        String forPrint = String.format(
+                "Thread %d (%3d%% %6.2f %2s/s): %s",
+                thread,
+                percentage,
+                unit.convert(speed),
+                unit.getSymbol(),
+                label);
         writer.print(ansi().reset()
                 .cursorDownLine(thread)
                 .a(forPrint)
@@ -86,7 +82,7 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
         this.averageReportedSpeed = new AtomicLongArray(numThreads);
         Ansi ansi = ansi().reset().newline();
         for (int i = 1; i <= numThreads; i++) {
-            ansi.a("Thread " + i + " (0%|0.00B/s): INITIALIZED").newline();
+            ansi.a("Thread " + i + " (  0%   0.00  B/s): INITIALIZED").newline();
         }
         writer.print(ansi.cursorUpLine(numThreads + 1));
     }
