@@ -14,32 +14,22 @@ public class CommandLineCopierProgressBar implements FileCopier.Listener {
     }
 
     @Override
-    public synchronized void reportStart(Path path, Path destination, int thread) {
+    public synchronized void reportStart(int thread, Path path, Path destination, long bytes) {
 
     }
 
     @Override
-    public synchronized void reportProgress(
-            Path path,
-            Path destination,
-            int thread,
-            int percentage,
-            long speed) {
+    public void reportBytesCopied(int thread, long bytes) {
 
     }
 
     @Override
-    public synchronized void reportFailure(
-            Path path,
-            Path destination,
-            int thread,
-            String message,
-            Throwable cause) {
+    public void reportFailure(int thread, Path source, Path destination, String message, Throwable cause) {
 
     }
 
     @Override
-    public synchronized void reportFinish(Path path, Path destination, int thread) {
+    public void reportFinish(int thread, Path source, Path destination) {
 
     }
 
@@ -47,4 +37,6 @@ public class CommandLineCopierProgressBar implements FileCopier.Listener {
     public synchronized void reportAllFinished() {
 
     }
+
+
 }

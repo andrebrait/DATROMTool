@@ -146,18 +146,13 @@ public final class FileCopier {
 
         void init(int numThreads);
 
-        void reportStart(Path path, Path destination, int thread);
+        void reportStart(int thread, Path source, Path destination, long bytes);
 
-        void reportProgress(Path path, Path destination, int thread, int percentage, long speed);
+        void reportBytesCopied(int thread, long bytes);
 
-        void reportFailure(
-                Path path,
-                Path destination,
-                int thread,
-                String message,
-                Throwable cause);
+        void reportFailure(int thread, Path source, Path destination, String message, Throwable cause);
 
-        void reportFinish(Path path, Path destination, int thread);
+        void reportFinish(int thread, Path source, Path destination);
 
         void reportAllFinished();
     }
@@ -230,7 +225,7 @@ public final class FileCopier {
     private void copy(CopySpec spec) {
         int index = getThreadIndex();
         if (listener != null) {
-            listener.reportStart(spec.getFrom(), spec.getTo(), index);
+            listener.reportStart(index, spec.getFrom(), spec.getTo(), 1);
         }
         try {
             try (InputStream inputStream = Files.newInputStream(spec.getFrom())) {
@@ -248,16 +243,11 @@ public final class FileCopier {
         } catch (Exception e) {
             log.error("Could not copy '{}' to '{}'", spec.getFrom(), spec.getTo(), e);
             if (listener != null) {
-                listener.reportFailure(
-                        spec.getFrom(),
-                        spec.getTo(),
-                        index,
-                        "Could not copy files",
-                        e);
+                listener.reportFailure(index, spec.getFrom(), spec.getTo(), "Could not copy files", e);
             }
         } finally {
             if (listener != null) {
-                listener.reportFinish(spec.getFrom(), spec.getTo(), index);
+                listener.reportFinish(index, spec.getFrom(), spec.getTo());
             }
         }
     }
@@ -265,7 +255,7 @@ public final class FileCopier {
     private void copy(ExtractionSpec spec) {
         int index = getThreadIndex();
         if (listener != null) {
-            listener.reportStart(spec.getFrom(), EMPTY_PATH, index);
+            listener.reportStart(index, spec.getFrom(), EMPTY_PATH, 1);
         }
         try {
             switch (spec.getFromType()) {
@@ -290,9 +280,9 @@ public final class FileCopier {
             log.error("Could not extract '{}'. RAR5 is not supported yet", spec.getFrom());
             if (listener != null) {
                 listener.reportFailure(
+                        index,
                         spec.getFrom(),
                         EMPTY_PATH,
-                        index,
                         "Could not extract archive. RAR5 is not supported yet",
                         e);
             }
@@ -300,15 +290,15 @@ public final class FileCopier {
             log.error("Could not extract '{}'", spec.getFrom(), e);
             if (listener != null) {
                 listener.reportFailure(
+                        index,
                         spec.getFrom(),
                         EMPTY_PATH,
-                        index,
                         "Could not extract archive",
                         e);
             }
         } finally {
             if (listener != null) {
-                listener.reportFinish(spec.getFrom(), EMPTY_PATH, index);
+                listener.reportFinish(index, spec.getFrom(), EMPTY_PATH);
             }
         }
     }
@@ -316,7 +306,7 @@ public final class FileCopier {
     private void copy(CompressionSpec spec) {
         int index = getThreadIndex();
         if (listener != null) {
-            listener.reportStart(EMPTY_PATH, spec.getTo(), index);
+            listener.reportStart(index, EMPTY_PATH, spec.getTo(), 1);
         }
         try {
             switch (spec.getToType()) {
@@ -339,16 +329,11 @@ public final class FileCopier {
         } catch (Exception e) {
             log.error("Could not compress files to '{}'", spec.getTo(), e);
             if (listener != null) {
-                listener.reportFailure(
-                        EMPTY_PATH,
-                        spec.getTo(),
-                        index,
-                        "Could not compress files",
-                        e);
+                listener.reportFailure(index, EMPTY_PATH, spec.getTo(), "Could not compress files", e);
             }
         } finally {
             if (listener != null) {
-                listener.reportFinish(EMPTY_PATH, spec.getTo(), index);
+                listener.reportFinish(index, EMPTY_PATH, spec.getTo());
             }
         }
     }
@@ -356,7 +341,7 @@ public final class FileCopier {
     private void copy(ArchiveCopySpec spec) {
         int index = getThreadIndex();
         if (listener != null) {
-            listener.reportStart(spec.getFrom(), spec.getTo(), index);
+            listener.reportStart(index, spec.getFrom(), spec.getTo(), 1);
         }
         try {
             switch (spec.getFromType()) {
@@ -384,9 +369,9 @@ public final class FileCopier {
                     spec.getTo());
             if (listener != null) {
                 listener.reportFailure(
+                        index,
                         spec.getFrom(),
                         spec.getTo(),
-                        index,
                         "Could not copy contents of archive. RAR5 is not supported yet",
                         e);
             }
@@ -397,16 +382,11 @@ public final class FileCopier {
                     spec.getTo(),
                     e);
             if (listener != null) {
-                listener.reportFailure(
-                        spec.getFrom(),
-                        spec.getTo(),
-                        index,
-                        "Could not copy contents of archive",
-                        e);
+                listener.reportFailure(index, spec.getFrom(), spec.getTo(), "Could not copy contents of archive", e);
             }
         } finally {
             if (listener != null) {
-                listener.reportFinish(spec.getFrom(), spec.getTo(), index);
+                listener.reportFinish(index, spec.getFrom(), spec.getTo());
             }
         }
     }
@@ -775,21 +755,13 @@ public final class FileCopier {
                             to);
                 }
                 if (listener != null) {
-                    listener.reportProgress(source, to, index, 0, 0);
+                    listener.reportStart(index, source, to, zipArchiveEntry.getSize());
                 }
-                long start = System.nanoTime();
                 zipArchiveOutputStream.addRawArchiveEntry(
                         zipArchiveEntry,
                         zipFile.getRawInputStream(zipArchiveEntry));
                 if (listener != null) {
-                    double secondsPassed = (System.nanoTime() - start) / 1E9d;
-                    long bytesPerSecond = Math.round(zipArchiveEntry.getSize() / secondsPassed);
-                    listener.reportProgress(
-                            source,
-                            to,
-                            index,
-                            100,
-                            bytesPerSecond);
+                    listener.reportBytesCopied(index, zipArchiveEntry.getSize());
                 }
             });
         } catch (FileAlreadyExistsException e) {
@@ -1508,10 +1480,11 @@ public final class FileCopier {
             Path destination,
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
             TriConsumer<byte[], Integer, Integer, IOException> writeConsumer) throws IOException {
+        if (listener != null) {
+            listener.reportStart(index, source, destination, size);
+        }
         byte[] buffer = threadLocalBuffer.get();
-        int reportedPercentage = 0;
         long totalRead = 0;
-        long start = System.nanoTime();
         int bytesRead;
         int remainingBytes;
         while ((remainingBytes = (int) Math.min(size - totalRead, buffer.length)) > 0
@@ -1519,14 +1492,7 @@ public final class FileCopier {
             totalRead += bytesRead;
             writeConsumer.accept(buffer, 0, bytesRead);
             if (listener != null) {
-                int percentage = (int) ((totalRead * 100d) / size);
-                if (reportedPercentage != percentage) {
-                    double secondsPassed = (System.nanoTime() - start) / 1E9d;
-                    long bytesPerSecond = Math.round(bytesRead / secondsPassed);
-                    listener.reportProgress(source, destination, index, percentage, bytesPerSecond);
-                    reportedPercentage = percentage;
-                }
-                start = System.nanoTime();
+                listener.reportBytesCopied(index, bytesRead);
             }
         }
     }

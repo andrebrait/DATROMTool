@@ -20,11 +20,11 @@ public enum ByteUnit {
         this.symbol = symbol;
     }
 
-    public double convert(long amount) {
-        return ((double) amount) / getSize();
+    public double convert(double amount) {
+        return amount / getSize();
     }
 
-    public static ByteUnit getUnit(long speed) {
+    public static ByteUnit getUnit(double speed) {
         ByteUnit[] values = values();
         for (int i = values.length - 1; i >= 0; i--) {
             ByteUnit unit = values[i];

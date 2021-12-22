@@ -39,6 +39,7 @@ import java.util.zip.Checksum;
 import static io.github.datromtool.io.FileScannerParameters.forDatWithDetector;
 import static io.github.datromtool.io.FileScannerParameters.withDefaults;
 import static io.github.datromtool.util.ArchiveUtils.normalizePath;
+import static java.lang.Math.toIntExact;
 
 @Slf4j
 public final class FileScanner {
@@ -125,19 +126,19 @@ public final class FileScanner {
 
     public interface Listener {
 
-        void init(int totalThreads);
+        void init(int numThreads);
 
         void reportTotalItems(int totalItems);
 
-        void reportStart(Path path, int thread);
+        void reportStart(int thread, Path path, long bytes);
 
-        void reportProgress(Path path, int thread, int percentage, long speed);
+        void reportBytesRead(int thread, long bytes);
 
-        void reportSkip(Path path, int thread, String message);
+        void reportSkip(int thread, Path path, String message);
 
-        void reportFailure(Path path, int thread, String message, Throwable cause);
+        void reportFailure(int thread, Path path, String message, Throwable cause);
 
-        void reportFinish(Path path, int thread);
+        void reportFinish(int thread, Path path);
 
         void reportAllFinished();
 
@@ -174,6 +175,9 @@ public final class FileScanner {
             log.warn("XZ compression support is disabled");
         }
         try {
+            if (listener != null) {
+                listener.init(numThreads);
+            }
             ImmutableList.Builder<FileMetadata> pathsBuilder = ImmutableList.builder();
             for (Path directory : directories) {
                 try {
@@ -184,7 +188,6 @@ public final class FileScanner {
             }
             ImmutableList<FileMetadata> paths = pathsBuilder.build();
             if (listener != null) {
-                listener.init(numThreads);
                 listener.reportTotalItems(paths.size());
             }
             ImmutableList<Result> results = paths.stream()
@@ -222,7 +225,7 @@ public final class FileScanner {
                     fileScannerParameters.getMinRomSizeStr(),
                     path);
             if (listener != null) {
-                listener.reportSkip(path, index, "File too small");
+                listener.reportSkip(index, path, "File too small");
             }
             return true;
         }
@@ -232,7 +235,7 @@ public final class FileScanner {
                     fileScannerParameters.getMaxRomSizeStr(),
                     path);
             if (listener != null) {
-                listener.reportSkip(path, index, "File too big");
+                listener.reportSkip(index, path, "File too big");
             }
             return true;
         }
@@ -243,7 +246,7 @@ public final class FileScanner {
         Path file = fileMetadata.getPath();
         int index = ((IndexedThread) Thread.currentThread()).getIndex();
         if (listener != null) {
-            listener.reportStart(file, index);
+            listener.reportStart(index, file, fileMetadata.getSize());
         }
         try {
             ImmutableList.Builder<Result> builder = ImmutableList.builder();
@@ -293,18 +296,18 @@ public final class FileScanner {
                 scanFile(fileMetadata, file, index, builder);
             }
             if (listener != null) {
-                listener.reportFinish(file, index);
+                listener.reportFinish(index, file);
             }
             return builder.build();
         } catch (Exception e) {
             log.error("Could not read file '{}'", file, e);
             if (listener != null) {
-                listener.reportFailure(file, index, "Could not read the file", e);
+                listener.reportFailure(index, file, "Could not read the file", e);
             }
             return ImmutableList.of();
         } finally {
             if (listener != null) {
-                listener.reportFinish(file, index);
+                listener.reportFinish(index, file);
             }
         }
     }
@@ -521,12 +524,11 @@ public final class FileScanner {
             MessageDigest sha1,
             byte[] buffer) throws IOException {
         long totalRead = 0;
-        long start = System.nanoTime();
         int bytesRead;
         int bytesLeft;
         // Read the whole entry to the buffer and check headers
-        while ((bytesLeft = toInt(Math.min(size - totalRead, buffer.length))) > 0
-                && (bytesRead = function.apply(buffer, toInt(totalRead), bytesLeft)) > -1) {
+        while ((bytesLeft = toIntExact(Math.min(size - totalRead, buffer.length))) > 0
+                && (bytesRead = function.apply(buffer, toIntExact(totalRead), bytesLeft)) > -1) {
             totalRead += bytesRead;
         }
         // Apply logic to detect headers
@@ -536,7 +538,7 @@ public final class FileScanner {
             boolean detected = false;
             for (Rule rule : detector.getRules()) {
                 try {
-                    byte[] newBuffer = rule.apply(buffer, toInt(totalRead), size);
+                    byte[] newBuffer = rule.apply(buffer, toIntExact(totalRead), size);
                     // Identity check is enough here
                     if (newBuffer != buffer) {
                         detected = true;
@@ -546,7 +548,7 @@ public final class FileScanner {
                 } catch (Exception e) {
                     log.error("Error while processing rule for '{}'", path, e);
                     if (listener != null) {
-                        listener.reportFailure(path, index, "Error while processing rule", e);
+                        listener.reportFailure(index, path, "Error while processing rule", e);
                     }
                 }
             }
@@ -558,14 +560,12 @@ public final class FileScanner {
                 break;
             }
         }
-        int endRead = toInt(Math.min(totalRead, buffer.length));
+        int endRead = toIntExact(Math.min(totalRead, buffer.length));
         crc32.update(buffer, 0, endRead);
         md5.update(buffer, 0, endRead);
         sha1.update(buffer, 0, endRead);
         if (listener != null) {
-            double secondsPassed = (System.nanoTime() - start) / 1E9d;
-            long bytesPerSecond = Math.round(totalRead / secondsPassed);
-            listener.reportProgress(path, index, 100, bytesPerSecond);
+            listener.reportBytesRead(index, totalRead);
         }
         return totalRead;
     }
@@ -580,16 +580,14 @@ public final class FileScanner {
             MessageDigest sha1,
             byte[] buffer) throws IOException {
         long totalRead = 0;
-        long start = System.nanoTime();
-        int reportedPercentage = 0;
         long endOffset = size;
         int bytesRead;
         int bytesLeft;
         if (!detectors.isEmpty() && fileScannerParameters.isUseLazyDetector()) {
             long startOffset = 0;
             // Read as much as possible to the buffer and check headers
-            while ((bytesLeft = toInt(buffer.length - totalRead)) > 0
-                    && (bytesRead = function.apply(buffer, toInt(totalRead), bytesLeft)) > -1) {
+            while ((bytesLeft = toIntExact(buffer.length - totalRead)) > 0
+                    && (bytesRead = function.apply(buffer, toIntExact(totalRead), bytesLeft)) > -1) {
                 totalRead += bytesRead;
             }
             // Apply logic to detect headers
@@ -597,7 +595,7 @@ public final class FileScanner {
                 boolean detected = false;
                 for (Rule rule : detector.getRules()) {
                     try {
-                        if (rule.test(buffer, toInt(totalRead), size)) {
+                        if (rule.test(buffer, toIntExact(totalRead), size)) {
                             detected = true;
                             startOffset = Math.max(rule.getStartOffset(), startOffset);
                             long currEndOffset = rule.getEndOffset();
@@ -615,8 +613,8 @@ public final class FileScanner {
                         log.error("Error while processing rule for '{}'", path, e);
                         if (listener != null) {
                             listener.reportFailure(
-                                    path,
                                     index,
+                                    path,
                                     "Error while processing rule",
                                     e);
                         }
@@ -631,49 +629,27 @@ public final class FileScanner {
                 }
             }
             totalRead = Math.min(totalRead, endOffset) - startOffset;
-            int startOffsetInt = toInt(startOffset);
-            int totalReadInt = toInt(totalRead);
+            int startOffsetInt = toIntExact(startOffset);
+            int totalReadInt = toIntExact(totalRead);
             crc32.update(buffer, startOffsetInt, totalReadInt);
             md5.update(buffer, startOffsetInt, totalReadInt);
             sha1.update(buffer, startOffsetInt, totalReadInt);
             if (listener != null) {
-                int percentage = toInt((totalRead * 100d) / size);
-                if (reportedPercentage != percentage) {
-                    double secondsPassed = (System.nanoTime() - start) / 1E9d;
-                    long bytesPerSecond = Math.round(totalRead / secondsPassed);
-                    listener.reportProgress(path, index, percentage, bytesPerSecond);
-                    reportedPercentage = percentage;
-                }
-                start = System.nanoTime();
+                listener.reportBytesRead(index, totalRead);
             }
         }
         // Regular reading until we get to the end offset
-        while ((bytesLeft = toInt(Math.min(endOffset - totalRead, buffer.length))) > 0
+        while ((bytesLeft = toIntExact(Math.min(endOffset - totalRead, buffer.length))) > 0
                 && (bytesRead = function.apply(buffer, 0, bytesLeft)) > -1) {
             totalRead += bytesRead;
             crc32.update(buffer, 0, bytesRead);
             md5.update(buffer, 0, bytesRead);
             sha1.update(buffer, 0, bytesRead);
             if (listener != null) {
-                int percentage = toInt((totalRead * 100d) / size);
-                if (reportedPercentage != percentage) {
-                    double secondsPassed = (System.nanoTime() - start) / 1E9d;
-                    long bytesPerSecond = Math.round(bytesRead / secondsPassed);
-                    listener.reportProgress(path, index, percentage, bytesPerSecond);
-                    reportedPercentage = percentage;
-                }
-                start = System.nanoTime();
+                listener.reportBytesRead(index, bytesRead);
             }
         }
         return totalRead;
-    }
-
-    private static int toInt(double a) {
-        return toInt((long) a);
-    }
-
-    private static int toInt(long a) {
-        return Math.toIntExact(a);
     }
 
     @FunctionalInterface
