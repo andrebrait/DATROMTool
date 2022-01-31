@@ -25,6 +25,7 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
 
     private static final String THREAD_FORMAT = "Thread %3d |%3d%%|%6.2f %2s/s|: %s";
     private static final long FRAME_TIME_MILLIS = Math.round(1_000L / 60.0d);
+    private static final String NEW_LINE = System.getProperty("line.separator");
 
     private int numThreads;
     private int totalItems;
@@ -133,7 +134,7 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
         writer.print(ansi()
                 .a("Scanning input directories...")
                 .eraseLine()
-                .newline()
+                .a(NEW_LINE)
                 .eraseLine());
         this.numThreads = numThreads;
         this.threadLineData = new LineData[numThreads];
@@ -141,11 +142,11 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
         this.current = new AtomicInteger();
         Ansi ansi = ansi();
         ansi.reset();
-        ansi.newline();
+        ansi.a(NEW_LINE);
         for (int i = 1; i <= numThreads; i++) {
             ansi.a(format(THREAD_FORMAT, i, 0, 0.0d, ByteUnit.BYTE.getSymbol(), "INITIALIZED"));
             ansi.eraseLine();
-            ansi.newline();
+            ansi.a(NEW_LINE);
         }
         ansi.cursorUpLine(numThreads + 1);
         writer.print(ansi);
@@ -214,8 +215,8 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
         writer.print(ansi()
                 .reset()
                 .cursorDownLine(numThreads + 1)
-                .newline()
-                .newline());
+                .a(NEW_LINE)
+                .a(NEW_LINE));
         try {
             if (terminal != null) {
                 terminal.close();

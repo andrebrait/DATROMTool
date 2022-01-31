@@ -106,6 +106,9 @@ public final class FileScanner {
         @NonNull
         Digest digest;
         String archivePath;
+        // TODO find a way to get exceptions here so it doesn't disturb the scan process CLI progress bars
+        // TODO do the same for the initial scan, also for copies
+        // Maybe redirect error and warning logs to a file?
     }
 
     @Value
