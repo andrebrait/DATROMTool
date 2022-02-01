@@ -23,7 +23,7 @@
         <jackson.version>2.13.1</jackson.version>
         <xz.version>1.9</xz.version>
         <commons-codec.version>1.15</commons-codec.version>
-        <junrar.version>7.4.0</junrar.version>
+        <junrar.version>7.4.1</junrar.version>
         <git-commit-id-plugin.version>4.0.5</git-commit-id-plugin.version>
         <mockito-core.version>4.2.0</mockito-core.version>
         <jline.version>3.21.0</jline.version>
