@@ -2,17 +2,14 @@ package io.github.datromtool.io;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import io.github.datromtool.ConfigDependantTest;
 import io.github.datromtool.config.AppConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
 import java.util.List;
@@ -22,37 +19,26 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static java.util.Objects.requireNonNull;
+class FileCopierTest extends ConfigDependantTest {
 
-class FileCopierTest {
-
-    private static final String TEST_DATA_FOLDER = "../test-data";
-    private Path testDataSource;
     private Path tempDir;
 
     @BeforeEach
     void setup() throws Exception {
         tempDir = Files.createTempDirectory("datromtool_copy_test_");
-        String testDir = System.getenv("DATROMTOOL_TEST_DIR");
-        if (testDir == null && Files.isDirectory(Paths.get(TEST_DATA_FOLDER))) {
-            testDir = TEST_DATA_FOLDER;
-        }
-        testDataSource = Paths.get(requireNonNull(testDir), "data", "files");
     }
 
     @AfterEach
     void tearDown() throws Exception {
         Files.walkFileTree(tempDir, new SimpleFileVisitor<Path>() {
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-                    throws IOException {
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 Files.delete(file);
                 return super.visitFile(file, attrs);
             }
 
             @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc)
-                    throws IOException {
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
                 Files.delete(dir);
                 return super.postVisitDirectory(dir, exc);
             }

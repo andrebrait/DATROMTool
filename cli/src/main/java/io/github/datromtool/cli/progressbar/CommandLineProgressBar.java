@@ -1,8 +1,10 @@
 package io.github.datromtool.cli.progressbar;
 
 import io.github.datromtool.ByteUnit;
+import io.github.datromtool.io.FileCopier;
 import io.github.datromtool.io.FileScanner;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fusesource.jansi.Ansi;
 import org.jline.terminal.Terminal;
@@ -21,12 +23,15 @@ import static java.lang.String.format;
 import static org.fusesource.jansi.Ansi.ansi;
 
 @Slf4j
-public final class CommandLineScannerProgressBar implements FileScanner.Listener {
+@RequiredArgsConstructor
+public final class CommandLineProgressBar implements FileScanner.Listener, FileCopier.Listener {
 
     private static final String THREAD_FORMAT = "Thread %3d |%3d%%|%6.2f %2s/s|: %s";
     private static final long FRAME_TIME_MILLIS = Math.round(1_000L / 60.0d);
     private static final String NEW_LINE = System.getProperty("line.separator");
 
+    private final String action;
+    private final String title;
     private int numThreads;
     private int totalItems;
     private LongAdder totalBytesRead;
@@ -39,7 +44,9 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
 
     @Data
     private final static class LineData {
-        private final Path path;
+        private final Path source;
+        @Nullable
+        private final Path destination;
         private final long totalBytes;
         private final long startInstant = System.nanoTime();
         private volatile String itemName;
@@ -53,14 +60,20 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
         public String getItemName() {
             String s = itemName;
             if (s == null) {
-                s = path.toString();
+                s = makeItemName();
                 itemName = s;
             }
             return s;
         }
+
+        public String makeItemName() {
+            return destination != null
+                    ? (source + " -> " + destination)
+                    : source.toString();
+        }
     }
 
-    private double getAverage(LineData lineData) {
+    private static double getAverage(LineData lineData) {
         return lineData.getTotalBytesRead() / secondsBetween(lineData.getStartInstant(), lineData.getEndInstant());
     }
 
@@ -107,7 +120,7 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
             lineData.setLastUpdatedColumns(availableColumns);
             return newItemName;
         } else if (lineData.getLastUpdatedColumns() != availableColumns) {
-            String newItemName = trimTo(lineData.getPath().toString(), availableColumns);
+            String newItemName = trimTo(lineData.makeItemName(), availableColumns);
             lineData.setItemName(newItemName);
             lineData.setLastUpdatedColumns(availableColumns);
             return newItemName;
@@ -116,7 +129,7 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
         }
     }
 
-    private boolean shouldPrint(LineData lineData, double percentage) {
+    private static boolean shouldPrint(LineData lineData, double percentage) {
         return lineData.getLastUpdatedPercentage() != percentage
                 && (System.nanoTime() - lineData.getLastUpdateTime()) / 1_000_000L > FRAME_TIME_MILLIS;
     }
@@ -132,7 +145,7 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
             this.writer = new PrintWriter(System.err);
         }
         writer.print(ansi()
-                .a("Scanning input directories...")
+                .a(title)
                 .eraseLine()
                 .a(NEW_LINE)
                 .eraseLine());
@@ -153,22 +166,15 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
     }
 
     @Override
-    public void reportTotalItems(int totalItems) {
-        this.totalItems = totalItems;
-        int totalItemsLength = (int) Math.floor(Math.log10(totalItems)) + 1;
-        this.mainBarPrint = "Scanning [%s%s%s] %" + totalItemsLength + "d/" + totalItems;
-        printMainBar(0);
-    }
-
-    @Override
-    public synchronized void reportStart(int thread, Path path, long bytes) {
-        threadLineData[thread - 1] = new LineData(path, bytes);
-        printThread(thread, "", path.toString(), 0, 0);
+    public synchronized void reportStart(int thread, Path source, @Nullable Path destination, long bytes) {
+        LineData lineData = new LineData(source, destination, bytes);
+        threadLineData[thread - 1] = lineData;
+        printThread(thread, "", lineData.getItemName(), 0, 0);
         printMainBar(current.incrementAndGet());
     }
 
     @Override
-    public void reportBytesRead(int thread, long bytes) {
+    public void reportBytesCopied(int thread, long bytes) {
         totalBytesRead.add(bytes);
         LineData lineData = threadLineData[thread - 1];
         long totalBytesRead = lineData.getTotalBytesRead() + bytes;
@@ -186,6 +192,38 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
     }
 
     @Override
+    public void reportFailure(int thread, Path source, Path destination, String message, Throwable cause) {
+        LineData lineData = threadLineData[thread - 1];
+        lineData.setEndInstant(System.nanoTime());
+        printThread(thread, "FAILED: ", lineData.getItemName(), 0, getAverage(lineData));
+    }
+
+    @Override
+    public void reportFinish(int thread, Path source, Path destination) {
+        LineData lineData = threadLineData[thread - 1];
+        lineData.setEndInstant(System.nanoTime());
+        printThread(thread, "FINISHED: ", lineData.getItemName(), 100, getAverage(lineData));
+    }
+
+    @Override
+    public void reportTotalItems(int totalItems) {
+        this.totalItems = totalItems;
+        int totalItemsLength = (int) Math.floor(Math.log10(totalItems)) + 1;
+        this.mainBarPrint = action + " [%s%s%s] %" + totalItemsLength + "d/" + totalItems;
+        printMainBar(0);
+    }
+
+    @Override
+    public void reportStart(int thread, Path path, long bytes) {
+        reportStart(thread, path, null, bytes);
+    }
+
+    @Override
+    public void reportBytesRead(int thread, long bytes) {
+        reportBytesCopied(thread, bytes);
+    }
+
+    @Override
     public void reportSkip(int thread, Path path, String message) {
         LineData lineData = threadLineData[thread - 1];
         lineData.setEndInstant(System.nanoTime());
@@ -194,16 +232,12 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
 
     @Override
     public void reportFailure(int thread, Path path, String message, Throwable cause) {
-        LineData lineData = threadLineData[thread - 1];
-        lineData.setEndInstant(System.nanoTime());
-        printThread(thread, "FAILED: ", path.toString(), 0, getAverage(lineData));
+        reportFailure(thread, path, null, message, cause);
     }
 
     @Override
     public void reportFinish(int thread, Path path) {
-        LineData lineData = threadLineData[thread - 1];
-        lineData.setEndInstant(System.nanoTime());
-        printThread(thread, "FINISHED: ", path.toString(), 100, getAverage(lineData));
+        reportFinish(thread, path, null);
     }
 
     @Override
@@ -226,7 +260,7 @@ public final class CommandLineScannerProgressBar implements FileScanner.Listener
         }
     }
 
-    private double secondsBetween(long start, long finish) {
+    private static double secondsBetween(long start, long finish) {
         return (finish - start) / 1E9d;
     }
 }

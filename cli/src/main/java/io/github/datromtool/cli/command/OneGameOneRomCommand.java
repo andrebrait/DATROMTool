@@ -5,13 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.cli.GitVersionProvider;
 import io.github.datromtool.cli.argument.DatafileArgument;
-import io.github.datromtool.cli.option.FilteringOptions;
-import io.github.datromtool.cli.option.InputOptions;
-import io.github.datromtool.cli.option.OutputOptions;
-import io.github.datromtool.cli.option.PostFilteringOptions;
-import io.github.datromtool.cli.option.SortingOptions;
-import io.github.datromtool.cli.progressbar.CommandLineCopierProgressBar;
-import io.github.datromtool.cli.progressbar.CommandLineScannerProgressBar;
+import io.github.datromtool.cli.option.*;
+import io.github.datromtool.cli.progressbar.CommandLineProgressBar;
 import io.github.datromtool.command.OneGameOneRom;
 import io.github.datromtool.data.Filter;
 import io.github.datromtool.data.PostFilter;
@@ -101,13 +96,15 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                 .map(DatafileArgument::getDatafile)
                 .collect(ImmutableList.toImmutableList());
         try {
+            CommandLineProgressBar fileScannerListener = new CommandLineProgressBar("Scanning", "Scanning input directories...");
             if (outputOptions != null && outputOptions.getFileOptions() != null) {
+                CommandLineProgressBar fileCopierListener = new CommandLineProgressBar("Copying", "Copying selected files...");
                 oneGameOneRom.generate(
                         realDataFiles,
                         inputOptions.getInputDirs(),
                         outputOptions.getFileOptions().toFileOutputOptions(),
-                        new CommandLineScannerProgressBar(),
-                        new CommandLineCopierProgressBar());
+                        fileScannerListener,
+                        fileCopierListener);
             } else {
                 TextOutputOptions textOutputOptions =
                         outputOptions != null && outputOptions.getTextOptions() != null
@@ -120,7 +117,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                         realDataFiles,
                         inputDirs,
                         textOutputOptions,
-                        new CommandLineScannerProgressBar(),
+                        fileScannerListener,
                         list -> list.forEach(System.out::println));
             }
         } catch (InvalidDatafileException e) {

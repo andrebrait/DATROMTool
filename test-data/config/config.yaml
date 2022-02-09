@@ -1,0 +1,5 @@
+scanner:
+  threads: 24
+  maxBufferSize: 32768
+copier:
+  threads: 12

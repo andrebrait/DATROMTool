@@ -1,0 +1,7 @@
+regions:
+  - code: "BRA"
+    pattern: "(?i)Brazil"
+    languages: [ "pt" ]
+  - code: "EUR"
+    pattern: "(?i)(?:Europe)|(?:World)"
+    languages: [ "en" ]

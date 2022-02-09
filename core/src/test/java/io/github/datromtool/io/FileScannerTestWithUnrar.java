@@ -1,6 +1,7 @@
 package io.github.datromtool.io;
 
 import com.google.common.collect.ImmutableList;
+import io.github.datromtool.ConfigDependantTest;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.data.CrcKey;
 import io.github.datromtool.domain.datafile.Datafile;
@@ -12,25 +13,17 @@ import org.junit.jupiter.api.condition.EnabledIf;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static io.github.datromtool.util.TestUtils.getFilename;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import static java.util.Objects.requireNonNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @EnabledIf(
         value = "io.github.datromtool.util.ArchiveUtils#isUnrarAvailable",
         disabledReason = "'unrar' is not available")
-class FileScannerTestWithUnrar {
-
-    private static final String TEST_DATA_FOLDER = "../test-data";
-    private Path testDataSource;
+class FileScannerTestWithUnrar extends ConfigDependantTest {
 
     private Map<String, CrcKey> crc32sums;
     private Map<String, String> md5sums;
@@ -38,11 +31,6 @@ class FileScannerTestWithUnrar {
 
     @BeforeEach
     void setup() throws IOException {
-        String testDir = System.getenv("DATROMTOOL_TEST_DIR");
-        if (testDir == null && Files.isDirectory(Paths.get(TEST_DATA_FOLDER))) {
-            testDir = TEST_DATA_FOLDER;
-        }
-        testDataSource = Paths.get(requireNonNull(testDir), "data", "files");
         crc32sums = Files.readAllLines(testDataSource.getParent().resolve("CRC32SUMS")).stream()
                 .map(s -> s.split("\\s+"))
                 .peek(s -> s[2] = Paths.get(s[2]).getFileName().toString())
