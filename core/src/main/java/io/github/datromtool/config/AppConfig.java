@@ -1,16 +1,13 @@
 package io.github.datromtool.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static lombok.AccessLevel.PRIVATE;
 
+@With
 @Value
 @Jacksonized
 @Builder(toBuilder = true)
@@ -19,13 +16,18 @@ import static lombok.AccessLevel.PRIVATE;
 @JsonInclude(NON_DEFAULT)
 public class AppConfig {
 
+    @With
     @Value
     @Jacksonized
     @Builder(toBuilder = true)
     @AllArgsConstructor(access = PRIVATE)
     @NoArgsConstructor(access = PRIVATE, force = true)
     @JsonInclude(NON_DEFAULT)
-    public static class FileScanner {
+    public static class FileScannerConfig {
+
+        @Builder.Default
+        @NonNull
+        Integer defaultBufferSize = 32 * 1024; // 32KB
 
         @Builder.Default
         @NonNull
@@ -34,29 +36,32 @@ public class AppConfig {
         @Builder.Default
         @NonNull
         Integer threads = Math.max(1, Runtime.getRuntime().availableProcessors() / 2);
-
     }
 
+    @With
     @Value
     @Jacksonized
     @Builder(toBuilder = true)
     @AllArgsConstructor(access = PRIVATE)
     @NoArgsConstructor(access = PRIVATE, force = true)
     @JsonInclude(NON_DEFAULT)
-    public static class FileCopier {
+    public static class FileCopierConfig {
+
+        @Builder.Default
+        @NonNull
+        Integer bufferSize = 32 * 1024; // 32KB
 
         @Builder.Default
         @NonNull
         Integer threads = Math.max(1, Runtime.getRuntime().availableProcessors() / 2);
-
     }
 
     @NonNull
     @Builder.Default
-    FileScanner scanner = FileScanner.builder().build();
+    AppConfig.FileScannerConfig scanner = FileScannerConfig.builder().build();
 
     @NonNull
     @Builder.Default
-    FileCopier copier = FileCopier.builder().build();
+    AppConfig.FileCopierConfig copier = FileCopierConfig.builder().build();
 
 }

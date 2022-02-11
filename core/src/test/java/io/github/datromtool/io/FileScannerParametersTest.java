@@ -17,16 +17,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import static io.github.datromtool.io.ArchiveType.RAR;
-import static io.github.datromtool.io.ArchiveType.SEVEN_ZIP;
-import static io.github.datromtool.io.ArchiveType.ZIP;
-import static io.github.datromtool.io.FileScannerParameters.DEFAULT_BUFFER_SIZE;
+import static io.github.datromtool.io.ArchiveType.*;
 import static io.github.datromtool.io.FileScannerParameters.forDatWithDetector;
 import static io.github.datromtool.io.FileScannerParameters.withDefaults;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class FileScannerParametersTest {
 
@@ -35,7 +29,7 @@ class FileScannerParametersTest {
         FileScannerParameters parameters = withDefaults();
         assertNotNull(parameters);
         assertTrue(parameters.getAlsoScanArchives().isEmpty());
-        assertEquals(DEFAULT_BUFFER_SIZE, parameters.getBufferSize());
+        assertEquals(32 * 1024, parameters.getBufferSize());
         assertEquals(0L, parameters.getMinRomSize());
         assertEquals(Long.MAX_VALUE, parameters.getMaxRomSize());
         assertEquals("0.00 B", parameters.getMinRomSizeStr());
@@ -55,12 +49,12 @@ class FileScannerParametersTest {
                                 .build()))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
-                AppConfig.builder().build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(datafile),
                 ImmutableList.of());
         assertNotNull(parameters);
         assertTrue(parameters.getAlsoScanArchives().isEmpty());
-        assertEquals(DEFAULT_BUFFER_SIZE, parameters.getBufferSize());
+        assertEquals(32 * 1024, parameters.getBufferSize());
         assertEquals(8 * 1024L, parameters.getMinRomSize());
         assertEquals(8 * 1024L, parameters.getMaxRomSize());
         assertEquals("8.00 KB", parameters.getMinRomSizeStr());
@@ -85,13 +79,13 @@ class FileScannerParametersTest {
                                         .build()))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
-                AppConfig.builder().build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(datafile),
                 ImmutableList.of());
         assertNotNull(parameters);
         assertEquals(1, parameters.getAlsoScanArchives().size());
         assertTrue(parameters.getAlsoScanArchives().contains(ZIP));
-        assertEquals(DEFAULT_BUFFER_SIZE, parameters.getBufferSize());
+        assertEquals(32 * 1024, parameters.getBufferSize());
         assertEquals(8 * 1024L, parameters.getMinRomSize());
         assertEquals(16 * 1024L, parameters.getMaxRomSize());
         assertEquals("8.00 KB", parameters.getMinRomSizeStr());
@@ -131,7 +125,7 @@ class FileScannerParametersTest {
                                 .build()))
                 .build();
         FileScannerParameters parameters = forDatWithDetector(
-                AppConfig.builder().build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(datafile),
                 ImmutableList.of());
         assertNotNull(parameters);
@@ -139,7 +133,7 @@ class FileScannerParametersTest {
         assertTrue(parameters.getAlsoScanArchives().contains(ZIP));
         assertTrue(parameters.getAlsoScanArchives().contains(SEVEN_ZIP));
         assertTrue(parameters.getAlsoScanArchives().contains(RAR));
-        assertEquals(DEFAULT_BUFFER_SIZE, parameters.getBufferSize());
+        assertEquals(32 * 1024, parameters.getBufferSize());
         assertEquals(4 * 1024L, parameters.getMinRomSize());
         assertEquals(27 * 1024L * 1024L, parameters.getMaxRomSize());
         assertEquals("4.00 KB", parameters.getMinRomSizeStr());
@@ -164,7 +158,7 @@ class FileScannerParametersTest {
                                 .build()))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
-                AppConfig.builder().build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(datafile),
                 ImmutableList.of(detector));
         assertNotNull(parameters);
@@ -195,7 +189,7 @@ class FileScannerParametersTest {
                                 .build()))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
-                AppConfig.builder().build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(datafile),
                 ImmutableList.of(detector));
         assertNotNull(parameters);
@@ -246,7 +240,7 @@ class FileScannerParametersTest {
                                 .build()))
                 .build();
         FileScannerParameters parameters = forDatWithDetector(
-                AppConfig.builder().build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(datafile),
                 ImmutableList.of(detector));
         assertNotNull(parameters);
@@ -254,7 +248,7 @@ class FileScannerParametersTest {
         assertTrue(parameters.getAlsoScanArchives().contains(ZIP));
         assertTrue(parameters.getAlsoScanArchives().contains(SEVEN_ZIP));
         assertTrue(parameters.getAlsoScanArchives().contains(RAR));
-        assertEquals(DEFAULT_BUFFER_SIZE, parameters.getBufferSize());
+        assertEquals(32 * 1024, parameters.getBufferSize());
         assertEquals(4 * 1024L, parameters.getMinRomSize());
         assertEquals(27 * 1024L * 1024L + 128, parameters.getMaxRomSize());
         assertEquals("4.00 KB", parameters.getMinRomSizeStr());
@@ -285,7 +279,7 @@ class FileScannerParametersTest {
                                 .build()))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
-                AppConfig.builder().build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(datafile),
                 ImmutableList.of(detector));
         assertNotNull(parameters);
@@ -305,7 +299,7 @@ class FileScannerParametersTest {
                 .rules(ImmutableList.of(Rule.builder()
                         .startOffset(128L)
                         .dataTests(ImmutableList.of(DataTest.builder()
-                                .offset(DEFAULT_BUFFER_SIZE - 4L)
+                                .offset(32 * 1024 - 4L)
                                 .value(new byte[]{0x01, 0x02, 0x03, 0x04})
                                 .build()))
                         .build()))
@@ -320,7 +314,7 @@ class FileScannerParametersTest {
                                 .build()))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
-                AppConfig.builder().build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(datafile),
                 ImmutableList.of(detector));
         assertNotNull(parameters);
@@ -340,7 +334,7 @@ class FileScannerParametersTest {
                 .rules(ImmutableList.of(Rule.builder()
                         .startOffset(128L)
                         .dataTests(ImmutableList.of(DataTest.builder()
-                                .offset((long) DEFAULT_BUFFER_SIZE)
+                                .offset((long) 32 * 1024)
                                 .value(new byte[]{0x01, 0x02, 0x03, 0x04})
                                 .build()))
                         .build()))
@@ -355,7 +349,7 @@ class FileScannerParametersTest {
                                 .build()))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
-                AppConfig.builder().build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(datafile),
                 ImmutableList.of(detector));
         assertNotNull(parameters);
@@ -388,7 +382,7 @@ class FileScannerParametersTest {
                                 .build()))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
-                AppConfig.builder().build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(datafile),
                 ImmutableList.of(detector));
         assertNotNull(parameters);
@@ -426,7 +420,7 @@ class FileScannerParametersTest {
                                 .build()))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
-                AppConfig.builder().build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(datafile),
                 ImmutableList.of(detector));
         assertNotNull(parameters);

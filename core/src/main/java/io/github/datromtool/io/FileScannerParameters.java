@@ -1,7 +1,7 @@
 package io.github.datromtool.io;
 
 import com.google.common.collect.ImmutableSet;
-import io.github.datromtool.ByteUnit;
+import io.github.datromtool.ByteSize;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.datafile.Game;
@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -29,7 +28,6 @@ import static java.util.Objects.requireNonNull;
 @AllArgsConstructor(access = AccessLevel.NONE)
 class FileScannerParameters {
 
-    public static final int DEFAULT_BUFFER_SIZE = 32 * 1024; // 32KB
     public static final int MAX_BUFFER_NO_WARNING = 64 * 1024 * 1024; // 64MB
 
     int bufferSize;
@@ -49,20 +47,15 @@ class FileScannerParameters {
         this.bufferSize = bufferSize;
         this.minRomSize = minRomSize;
         this.maxRomSize = maxRomSize;
-        this.minRomSizeStr = makeRomSizeStr(minRomSize);
-        this.maxRomSizeStr = makeRomSizeStr(maxRomSize);
+        this.minRomSizeStr = ByteSize.fromBytes(minRomSize).toFormattedString();
+        this.maxRomSizeStr = ByteSize.fromBytes(maxRomSize).toFormattedString();
         this.useLazyDetector = useLazyDetector;
         this.alsoScanArchives = requireNonNull(alsoScanArchives);
     }
 
-    private static String makeRomSizeStr(long size) {
-        ByteUnit minRomSizeUnit = ByteUnit.getUnit(size);
-        return String.format(Locale.US, "%.02f %s", minRomSizeUnit.convert(size), minRomSizeUnit.getSymbol());
-    }
-
     public static FileScannerParameters withDefaults() {
         return new FileScannerParameters(
-                DEFAULT_BUFFER_SIZE,
+                32 * 1024, // 32KB
                 0,
                 Long.MAX_VALUE,
                 false,
@@ -70,10 +63,9 @@ class FileScannerParameters {
     }
 
     public static FileScannerParameters forDatWithDetector(
-            @Nonnull AppConfig appConfig,
+            @Nonnull AppConfig.FileScannerConfig config,
             @Nonnull Collection<Datafile> datafiles,
             @Nonnull Collection<Detector> detectors) {
-        final int maxBuffer = appConfig.getScanner().getMaxBufferSize();
         final int bufferSize;
         final long maxRomSize;
         final boolean useLazyDetector;
@@ -87,7 +79,7 @@ class FileScannerParameters {
                 .min()
                 .orElse(0);
         if (detectors.isEmpty()) {
-            bufferSize = DEFAULT_BUFFER_SIZE;
+            bufferSize = config.getDefaultBufferSize();
             useLazyDetector = false;
             maxRomSize = toRomStream(datafiles)
                     .mapToLong(Rom::getSize)
@@ -133,7 +125,7 @@ class FileScannerParameters {
                             .mapToLong(t -> t.getOffset() + t.getValue().length)
                             .max()
                             .orElse(0);
-                    useLazyDetector = max(maxTestOffset, maxStartOffset) <= DEFAULT_BUFFER_SIZE;
+                    useLazyDetector = max(maxTestOffset, maxStartOffset) <= config.getDefaultBufferSize();
                 } else {
                     useLazyDetector = false;
                 }
@@ -141,26 +133,18 @@ class FileScannerParameters {
                 useLazyDetector = false;
             }
             if (useLazyDetector) {
-                bufferSize = DEFAULT_BUFFER_SIZE;
+                bufferSize = config.getDefaultBufferSize();
             } else {
-                bufferSize = toIntExact(max(min(maxRomSize, maxBuffer), DEFAULT_BUFFER_SIZE));
+                bufferSize = toIntExact(max(min(maxRomSize, config.getMaxBufferSize()), config.getDefaultBufferSize()));
             }
-            ByteUnit unit = ByteUnit.getUnit(bufferSize);
-            String bufferSizeStr = String.format(Locale.US, "%.02f", unit.convert(bufferSize));
+            String bufferSizeStr = ByteSize.fromBytes(bufferSize).toFormattedString();
             if (bufferSize > MAX_BUFFER_NO_WARNING) {
-                log.warn(
-                        "Using a bigger I/O buffer size of {} {} due to header detection",
-                        bufferSizeStr,
-                        unit.getSymbol());
-                if (bufferSize == maxBuffer) {
-                    log.warn(
-                            "Disabling header detection for ROMs larger than {} {}",
-                            bufferSizeStr,
-                            unit.getSymbol());
-                }
-            } else {
-                log.info("Using I/O buffer size of {} {}", bufferSizeStr, unit.getSymbol());
+                log.warn("Using a bigger I/O buffer size of {} due to header detection", bufferSizeStr);
             }
+            if (bufferSize == config.getMaxBufferSize()) {
+                log.warn("Disabling header detection for ROMs larger than {}", bufferSizeStr);
+            }
+            log.info("Using I/O buffer size of {}", bufferSizeStr);
         }
         return new FileScannerParameters(
                 bufferSize,

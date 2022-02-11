@@ -42,7 +42,6 @@ import static io.github.datromtool.util.ArchiveUtils.normalizePath;
 @Slf4j
 public final class FileCopier {
 
-    private static final int BUFFER_SIZE = 32 * 1024; // 32KB per thread
     private static final Path EMPTY_PATH = Paths.get("");
 
     public static abstract class Spec {
@@ -146,6 +145,8 @@ public final class FileCopier {
 
         void init(int numThreads);
 
+        void reportTotalItems(int totalItems);
+
         void reportStart(int thread, Path source, Path destination, long bytes);
 
         void reportBytesCopied(int thread, long bytes);
@@ -160,18 +161,17 @@ public final class FileCopier {
     private final int numThreads;
     private final boolean allowRawZipCopy;
     private final Listener listener;
+    private final ThreadLocal<byte[]> threadLocalBuffer;
 
     public FileCopier(
-            @Nonnull AppConfig appConfig,
+            @Nonnull AppConfig.FileCopierConfig config,
             boolean allowRawZipCopy,
             @Nullable Listener listener) {
         this.allowRawZipCopy = allowRawZipCopy;
-        this.numThreads = appConfig.getCopier().getThreads();
+        this.numThreads = config.getThreads();
         this.listener = listener;
+        this.threadLocalBuffer = ThreadLocal.withInitial(() -> new byte[config.getBufferSize()]);
     }
-
-    private final ThreadLocal<byte[]> threadLocalBuffer =
-            ThreadLocal.withInitial(() -> new byte[BUFFER_SIZE]);
 
     public void copy(Set<? extends Spec> definitions) {
         ExecutorService executorService = Executors.newFixedThreadPool(
@@ -185,6 +185,7 @@ public final class FileCopier {
         }
         if (listener != null) {
             listener.init(numThreads);
+            listener.reportTotalItems(definitions.size());
         }
         definitions.stream()
                 .map(d -> executorService.submit(() -> copy(d)))

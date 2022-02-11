@@ -3,11 +3,13 @@ package io.github.datromtool.cli.command;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
+import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.cli.GitVersionProvider;
 import io.github.datromtool.cli.argument.DatafileArgument;
 import io.github.datromtool.cli.option.*;
 import io.github.datromtool.cli.progressbar.CommandLineProgressBar;
 import io.github.datromtool.command.OneGameOneRom;
+import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.data.Filter;
 import io.github.datromtool.data.PostFilter;
 import io.github.datromtool.data.SortingPreference;
@@ -20,6 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.fusesource.jansi.Ansi;
 import picocli.CommandLine;
 
 import java.nio.file.Path;
@@ -27,6 +30,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
+import static java.lang.String.format;
 import static lombok.AccessLevel.NONE;
 
 @Slf4j
@@ -69,6 +73,9 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
     @CommandLine.ArgGroup(heading = "Sorting options\n", exclusive = false)
     private SortingOptions sortingOptions;
 
+    @CommandLine.ArgGroup(heading = "Performance options\n", exclusive = false)
+    private PerformanceOptions performanceOptions;
+
     @Override
     public Integer call() {
         if (outputOptions != null
@@ -77,7 +84,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                 && (inputOptions == null || inputOptions.getInputDirs().isEmpty())) {
             throw new CommandLine.ParameterException(
                     commandSpec.commandLine(),
-                    String.format(
+                    format(
                             "%s requires %s",
                             OutputOptions.FileOptions.OUT_DIR_OPTION,
                             InputOptions.IN_DIR_OPTION));
@@ -95,11 +102,17 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
         List<Datafile> realDataFiles = datafiles.stream()
                 .map(DatafileArgument::getDatafile)
                 .collect(ImmutableList.toImmutableList());
+        AppConfig appConfig = SerializationHelper.getInstance().loadAppConfig();
+        if (performanceOptions != null) {
+            appConfig = appConfig.withScanner(performanceOptions.merge(appConfig.getScanner()));
+            appConfig = appConfig.withCopier(performanceOptions.merge(appConfig.getCopier()));
+        }
         try {
             CommandLineProgressBar fileScannerListener = new CommandLineProgressBar("Scanning", "Scanning input directories...");
             if (outputOptions != null && outputOptions.getFileOptions() != null) {
                 CommandLineProgressBar fileCopierListener = new CommandLineProgressBar("Copying", "Copying selected files...");
                 oneGameOneRom.generate(
+                        appConfig,
                         realDataFiles,
                         inputOptions.getInputDirs(),
                         outputOptions.getFileOptions().toFileOutputOptions(),
@@ -114,6 +127,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                         ? inputOptions.getInputDirs()
                         : null;
                 oneGameOneRom.generate(
+                        appConfig,
                         realDataFiles,
                         inputDirs,
                         textOutputOptions,
@@ -124,12 +138,12 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             log.debug("Got invalid DAT exception", e);
             throw new CommandLine.ParameterException(
                     commandSpec.commandLine(),
-                    String.format("Invalid DAT file: %s", e.getMessage()));
+                    format("Invalid DAT file: %s", e.getMessage()));
         } catch (ExecutionException e) {
-            log.debug("Got execution exception", e);
-            throw new CommandLine.ParameterException(
-                    commandSpec.commandLine(),
-                    String.format("Execution error: %s: %s", e.getMessage(), e.getCause()));
+            log.error("Got execution exception", e);
+            System.err.print(Ansi.ansi().eraseScreen());
+            System.err.printf("Execution error caught. Check logs for details: %s%n", e.getCause());
+            return 1;
         }
         return 0;
     }

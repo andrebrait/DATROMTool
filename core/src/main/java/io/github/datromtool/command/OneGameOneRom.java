@@ -50,6 +50,7 @@ public final class OneGameOneRom {
     private final SortingPreference sortingPreference;
 
     public void generate(
+            @Nonnull AppConfig appConfig,
             @Nonnull Collection<Datafile> datafiles,
             @Nonnull Collection<Path> inputDirs,
             @Nonnull FileOutputOptions fileOutputOptions,
@@ -62,7 +63,6 @@ public final class OneGameOneRom {
             validate(parsedGames);
             ImmutableMap<String, ImmutableList<ParsedGame>> filteredAndGrouped =
                     filterAndGroup(parsedGames);
-            AppConfig appConfig = SerializationHelper.getInstance().loadAppConfig();
             ImmutableMap<String, ImmutableList<ScanResultMatcher.GameMatchList>> presentGames =
                     getPresentGames(
                             appConfig,
@@ -72,7 +72,7 @@ public final class OneGameOneRom {
                             fileScannerListener,
                             filteredAndGrouped);
             ImmutableSet<FileCopier.Spec> specs = createCopySpecs(fileOutputOptions, presentGames);
-            FileCopier fileCopier = new FileCopier(appConfig, false, fileCopierListener);
+            FileCopier fileCopier = new FileCopier(appConfig.getCopier(), false, fileCopierListener);
             fileCopier.copy(specs);
         } catch (InvalidDatafileException e) {
             throw e;
@@ -84,6 +84,7 @@ public final class OneGameOneRom {
     }
 
     public void generate(
+            @Nonnull AppConfig appConfig,
             @Nonnull Collection<Datafile> datafiles,
             @Nullable Collection<Path> inputDirs,
             @Nullable TextOutputOptions textOutputOptions,
@@ -104,7 +105,6 @@ public final class OneGameOneRom {
                         textOutputConsumer,
                         parsedGameStream(filteredAndGrouped));
             } else {
-                AppConfig appConfig = SerializationHelper.getInstance().loadAppConfig();
                 ImmutableMap<String, ImmutableList<ScanResultMatcher.GameMatchList>> presentGames =
                         getPresentGames(
                                 appConfig,
@@ -165,7 +165,7 @@ public final class OneGameOneRom {
             @Nonnull Map<String, ? extends Collection<ParsedGame>> filteredAndGrouped) {
         ImmutableList<Detector> detectors = loadDetectors(datafiles);
         FileScanner scanner = new FileScanner(
-                appConfig,
+                appConfig.getScanner(),
                 datafiles,
                 detectors,
                 fileScannerListener);
@@ -315,7 +315,7 @@ public final class OneGameOneRom {
                 case XML:
                     return helper.writeAsXml(newDat);
                 case JSON:
-                    return ImmutableList.of(helper.getJsonMapper().writeValueAsString(newDat));
+                    return helper.writeAsJson(newDat);
                 case YAML:
                     return helper.writeAsYaml(newDat);
                 default:

@@ -1,10 +1,9 @@
 package io.github.datromtool.cli.progressbar;
 
-import io.github.datromtool.ByteUnit;
+import io.github.datromtool.ByteSize;
 import io.github.datromtool.io.FileCopier;
 import io.github.datromtool.io.FileScanner;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fusesource.jansi.Ansi;
 import org.jline.terminal.Terminal;
@@ -14,8 +13,9 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.LongAdder;
+import java.util.concurrent.atomic.AtomicLongArray;
 
 import static io.github.datromtool.cli.util.TerminalUtils.*;
 import static java.lang.Math.toIntExact;
@@ -23,24 +23,37 @@ import static java.lang.String.format;
 import static org.fusesource.jansi.Ansi.ansi;
 
 @Slf4j
-@RequiredArgsConstructor
 public final class CommandLineProgressBar implements FileScanner.Listener, FileCopier.Listener {
 
-    private static final String THREAD_FORMAT = "Thread %3d |%3d%%|%6.2f %2s/s|: %s";
+    private static final String THREAD_FORMAT = "Thread %3d |%3d%%|%s/s|: %s";
     private static final long FRAME_TIME_MILLIS = Math.round(1_000L / 60.0d);
-    private static final String NEW_LINE = System.getProperty("line.separator");
+    private static final String NEW_LINE = "\n";
 
     private final String action;
     private final String title;
     private int numThreads;
     private int totalItems;
-    private LongAdder totalBytesRead;
     private Terminal terminal;
     private PrintWriter writer;
     private AtomicInteger current;
     private String mainBarPrint;
 
+    private AtomicLongArray totalBytesRead;
+    private AtomicLongArray startTimes;
     private LineData[] threadLineData;
+
+    public CommandLineProgressBar(String action, String title) {
+        this.action = action;
+        this.title = title;
+        try {
+            this.terminal = TerminalBuilder.terminal();
+            this.writer = terminal.writer();
+        } catch (IOException e) {
+            log.error("Error while creating terminal", e);
+            this.terminal = null;
+            this.writer = new PrintWriter(System.err);
+        }
+    }
 
     @Data
     private final static class LineData {
@@ -56,6 +69,14 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
         private volatile int lastUpdatedPercentage;
         private volatile int lastUpdatedColumns;
         private volatile long endInstant;
+        private volatile Status status = Status.STARTED;
+
+        private enum Status {
+            STARTED,
+            FINISHED,
+            FAILED,
+            SKIPPED
+        }
 
         public String getItemName() {
             String s = itemName;
@@ -73,8 +94,12 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
         }
     }
 
-    private static double getAverage(LineData lineData) {
+    private double getAverage(LineData lineData) {
         return lineData.getTotalBytesRead() / secondsBetween(lineData.getStartInstant(), lineData.getEndInstant());
+    }
+
+    private double getFinalAverage(int thread, LineData lineData) {
+        return totalBytesRead.get(thread - 1) / secondsBetween(startTimes.get(thread - 1), lineData.getEndInstant());
     }
 
     private synchronized void printMainBar(int curr) {
@@ -94,13 +119,12 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
     }
 
     private synchronized void printThread(int thread, String label, @Nullable String override, int percentage, double speed) {
-        ByteUnit unit = ByteUnit.getUnit(speed);
+        ByteSize speedByteSize = ByteSize.fromBytes(speed);
         String forPrint = format(
                 THREAD_FORMAT,
                 thread,
                 percentage,
-                unit.convert(speed),
-                unit.getSymbol(),
+                speedByteSize.toFixedSizeFormattedString(),
                 label);
         writer.print(ansi()
                 .reset()
@@ -136,14 +160,6 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
 
     @Override
     public synchronized void init(int numThreads) {
-        try {
-            this.terminal = TerminalBuilder.terminal();
-            this.writer = terminal.writer();
-        } catch (IOException e) {
-            log.error("Error while creating terminal", e);
-            this.terminal = null;
-            this.writer = new PrintWriter(System.err);
-        }
         writer.print(ansi()
                 .a(title)
                 .eraseLine()
@@ -151,13 +167,14 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
                 .eraseLine());
         this.numThreads = numThreads;
         this.threadLineData = new LineData[numThreads];
-        this.totalBytesRead = new LongAdder();
+        this.startTimes = new AtomicLongArray(numThreads);
+        this.totalBytesRead = new AtomicLongArray(numThreads);
         this.current = new AtomicInteger();
         Ansi ansi = ansi();
         ansi.reset();
         ansi.a(NEW_LINE);
         for (int i = 1; i <= numThreads; i++) {
-            ansi.a(format(THREAD_FORMAT, i, 0, 0.0d, ByteUnit.BYTE.getSymbol(), "INITIALIZED"));
+            ansi.a(format(Locale.US, THREAD_FORMAT, i, 0, ByteSize.fromBytes(0).toFixedSizeFormattedString(), "INITIALIZED"));
             ansi.eraseLine();
             ansi.a(NEW_LINE);
         }
@@ -166,16 +183,26 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
     }
 
     @Override
+    public void reportListing(Path path) {
+        writer.printf("Listing files under '%s'%n", path);
+    }
+
+    @Override
+    public void reportFinishedListing(int amount) {
+        writer.printf("Found %d files%n%n", amount);
+    }
+
+    @Override
     public synchronized void reportStart(int thread, Path source, @Nullable Path destination, long bytes) {
         LineData lineData = new LineData(source, destination, bytes);
         threadLineData[thread - 1] = lineData;
+        startTimes.updateAndGet(thread - 1, prev -> prev == 0 ? System.nanoTime() : prev);
         printThread(thread, "", lineData.getItemName(), 0, 0);
-        printMainBar(current.incrementAndGet());
     }
 
     @Override
     public void reportBytesCopied(int thread, long bytes) {
-        totalBytesRead.add(bytes);
+        totalBytesRead.accumulateAndGet(thread - 1, bytes, Long::sum);
         LineData lineData = threadLineData[thread - 1];
         long totalBytesRead = lineData.getTotalBytesRead() + bytes;
         lineData.setTotalBytesRead(totalBytesRead);
@@ -195,6 +222,7 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
     public void reportFailure(int thread, Path source, Path destination, String message, Throwable cause) {
         LineData lineData = threadLineData[thread - 1];
         lineData.setEndInstant(System.nanoTime());
+        lineData.setStatus(LineData.Status.FAILED);
         printThread(thread, "FAILED: ", lineData.getItemName(), 0, getAverage(lineData));
     }
 
@@ -202,7 +230,11 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
     public void reportFinish(int thread, Path source, Path destination) {
         LineData lineData = threadLineData[thread - 1];
         lineData.setEndInstant(System.nanoTime());
-        printThread(thread, "FINISHED: ", lineData.getItemName(), 100, getAverage(lineData));
+        if (lineData.getStatus() == LineData.Status.STARTED) {
+            lineData.setStatus(LineData.Status.FINISHED);
+        }
+        printThread(thread, format("%s: ", lineData.getStatus()), lineData.getItemName(), 100, getAverage(lineData));
+        printMainBar(current.incrementAndGet());
     }
 
     @Override
@@ -227,6 +259,7 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
     public void reportSkip(int thread, Path path, String message) {
         LineData lineData = threadLineData[thread - 1];
         lineData.setEndInstant(System.nanoTime());
+        lineData.setStatus(LineData.Status.SKIPPED);
         printThread(thread, "SKIPPED: ", path.toString(), 0, getAverage(lineData));
     }
 
@@ -243,7 +276,7 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
     @Override
     public synchronized void reportAllFinished() {
         for (int i = 1; i <= numThreads; i++) {
-            printThread(i, "FINISHED", "", 100, getAverage(threadLineData[i - 1]));
+            printThread(i, "FINISHED", "", 100, getFinalAverage(i, threadLineData[i - 1]));
         }
         printMainBar(totalItems);
         writer.print(ansi()

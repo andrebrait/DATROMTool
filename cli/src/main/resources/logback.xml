@@ -3,14 +3,15 @@
 
     <include resource="io/github/datromtool/logging/defaults.xml"/>
 
-    <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
-        <encoder>
-            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
-        </encoder>
-    </appender>
+    <!-- Uncomment these to make errors go to the standard error output -->
+<!--    <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">-->
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--            <level>ERROR</level>-->
+<!--        </filter>-->
+<!--        <encoder>-->
+<!--            <pattern>${CONSOLE_LOG_PATTERN}</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>datromtool.log</file>
@@ -21,7 +22,8 @@
     </appender>
 
     <root level="${log.level:-INFO}">
-        <appender-ref ref="STDERR"/>
+        <!-- Uncomment these to make errors go to the standard error output -->
+<!--        <appender-ref ref="STDERR"/>-->
         <appender-ref ref="FILE"/>
     </root>
 

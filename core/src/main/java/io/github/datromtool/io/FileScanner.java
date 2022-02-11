@@ -54,17 +54,17 @@ public final class FileScanner {
     private final ThreadLocal<ThreadLocalDataHolder> threadLocalData;
 
     public FileScanner(
-            @Nonnull AppConfig appConfig,
+            @Nonnull AppConfig.FileScannerConfig config,
             @Nonnull Collection<Datafile> datafiles,
             @Nonnull Collection<Detector> detectors,
             @Nullable Listener listener) {
-        this.numThreads = appConfig.getScanner().getThreads();
+        this.numThreads = config.getThreads();
         this.detectors = ImmutableList.copyOf(detectors);
         this.listener = listener;
         if (datafiles.isEmpty()) {
             this.fileScannerParameters = withDefaults();
         } else {
-            this.fileScannerParameters = forDatWithDetector(appConfig, datafiles, detectors);
+            this.fileScannerParameters = forDatWithDetector(config, datafiles, detectors);
         }
         this.threadLocalData =
                 ThreadLocal.withInitial(() -> new ThreadLocalDataHolder(fileScannerParameters));
@@ -129,6 +129,10 @@ public final class FileScanner {
 
     public interface Listener {
 
+        void reportListing(Path path);
+
+        void reportFinishedListing(int amount);
+
         void init(int numThreads);
 
         void reportTotalItems(int totalItems);
@@ -155,6 +159,7 @@ public final class FileScanner {
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
             if (attrs.isRegularFile()) {
+                log.info("Adding file to scan list: '{}'", file);
                 onVisited.accept(new FileMetadata(file, attrs.size()));
             }
             return FileVisitResult.CONTINUE;
@@ -178,11 +183,11 @@ public final class FileScanner {
             log.warn("XZ compression support is disabled");
         }
         try {
-            if (listener != null) {
-                listener.init(numThreads);
-            }
             ImmutableList.Builder<FileMetadata> pathsBuilder = ImmutableList.builder();
             for (Path directory : directories) {
+                if (listener != null) {
+                    listener.reportListing(directory);
+                }
                 try {
                     Files.walkFileTree(directory, new AppendingFileVisitor(pathsBuilder::add));
                 } catch (Exception e) {
@@ -191,6 +196,8 @@ public final class FileScanner {
             }
             ImmutableList<FileMetadata> paths = pathsBuilder.build();
             if (listener != null) {
+                listener.reportFinishedListing(paths.size());
+                listener.init(numThreads);
                 listener.reportTotalItems(paths.size());
             }
             ImmutableList<Result> results = paths.stream()
@@ -297,9 +304,6 @@ public final class FileScanner {
             }
             if (!scanned || fileScannerParameters.getAlsoScanArchives().contains(archiveType)) {
                 scanFile(fileMetadata, file, index, builder);
-            }
-            if (listener != null) {
-                listener.reportFinish(index, file);
             }
             return builder.build();
         } catch (Exception e) {
@@ -526,6 +530,9 @@ public final class FileScanner {
             MessageDigest md5,
             MessageDigest sha1,
             byte[] buffer) throws IOException {
+        if (listener != null) {
+            listener.reportStart(index, path, size);
+        }
         long totalRead = 0;
         int bytesRead;
         int bytesLeft;
@@ -582,6 +589,9 @@ public final class FileScanner {
             MessageDigest md5,
             MessageDigest sha1,
             byte[] buffer) throws IOException {
+        if (listener != null) {
+            listener.reportStart(index, path, size);
+        }
         long totalRead = 0;
         long endOffset = size;
         int bytesRead;
