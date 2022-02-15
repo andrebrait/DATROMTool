@@ -17,7 +17,6 @@ import org.apache.commons.compress.compressors.lzma.LZMAUtils;
 import org.apache.commons.compress.compressors.xz.XZUtils;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileVisitResult;
@@ -28,6 +27,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -49,7 +49,7 @@ public final class FileScanner {
 
     private final int numThreads;
     private final ImmutableList<Detector> detectors;
-    private final Listener listener;
+    private final List<Listener> listeners;
     private final FileScannerParameters fileScannerParameters;
     private final ThreadLocal<ThreadLocalDataHolder> threadLocalData;
 
@@ -57,10 +57,10 @@ public final class FileScanner {
             @Nonnull AppConfig.FileScannerConfig config,
             @Nonnull Collection<Datafile> datafiles,
             @Nonnull Collection<Detector> detectors,
-            @Nullable Listener listener) {
+            @Nonnull List<Listener> listeners) {
         this.numThreads = config.getThreads();
         this.detectors = ImmutableList.copyOf(detectors);
-        this.listener = listener;
+        this.listeners = listeners;
         if (datafiles.isEmpty()) {
             this.fileScannerParameters = withDefaults();
         } else {
@@ -182,7 +182,7 @@ public final class FileScanner {
         try {
             ImmutableList.Builder<FileMetadata> pathsBuilder = ImmutableList.builder();
             for (Path directory : directories) {
-                if (listener != null) {
+                for (Listener listener : listeners) {
                     listener.reportListing(directory);
                 }
                 try {
@@ -192,7 +192,7 @@ public final class FileScanner {
                 }
             }
             ImmutableList<FileMetadata> paths = pathsBuilder.build();
-            if (listener != null) {
+            for (Listener listener : listeners) {
                 listener.reportFinishedListing(paths.size());
                 listener.init(numThreads);
                 listener.reportTotalItems(paths.size());
@@ -204,7 +204,7 @@ public final class FileScanner {
                     .stream()
                     .flatMap(FileScanner::streamResults)
                     .collect(ImmutableList.toImmutableList());
-            if (listener != null) {
+            for (Listener listener : listeners) {
                 listener.reportAllFinished();
             }
             return results;
@@ -231,7 +231,7 @@ public final class FileScanner {
                     "File is smaller than minimum ROM size of {}. Skip calculation of hashes: '{}'",
                     fileScannerParameters.getMinRomSizeStr(),
                     path);
-            if (listener != null) {
+            for (Listener listener : listeners) {
                 listener.reportSkip(index, path, "File too small");
             }
             return true;
@@ -241,7 +241,7 @@ public final class FileScanner {
                     "File is larger than maximum ROM size of {}. Skip calculation of hashes: '{}'",
                     fileScannerParameters.getMaxRomSizeStr(),
                     path);
-            if (listener != null) {
+            for (Listener listener : listeners) {
                 listener.reportSkip(index, path, "File too big");
             }
             return true;
@@ -252,7 +252,7 @@ public final class FileScanner {
     private ImmutableList<Result> scanFile(FileMetadata fileMetadata) {
         Path file = fileMetadata.getPath();
         int index = ((IndexedThread) Thread.currentThread()).getIndex();
-        if (listener != null) {
+        for (Listener listener : listeners) {
             listener.reportStart(index, file, fileMetadata.getSize());
         }
         try {
@@ -305,12 +305,12 @@ public final class FileScanner {
             return builder.build();
         } catch (Exception e) {
             log.error("Could not read file '{}'", file, e);
-            if (listener != null) {
+            for (Listener listener : listeners) {
                 listener.reportFailure(index, file, "Could not read the file", e);
             }
             return ImmutableList.of();
         } finally {
-            if (listener != null) {
+            for (Listener listener : listeners) {
                 listener.reportFinish(index, file);
             }
         }
@@ -527,7 +527,7 @@ public final class FileScanner {
             MessageDigest md5,
             MessageDigest sha1,
             byte[] buffer) throws IOException {
-        if (listener != null) {
+        for (Listener listener : listeners) {
             listener.reportStart(index, path, size);
         }
         long totalRead = 0;
@@ -554,7 +554,7 @@ public final class FileScanner {
                     }
                 } catch (Exception e) {
                     log.error("Error while processing rule for '{}'", path, e);
-                    if (listener != null) {
+                    for (Listener listener : listeners) {
                         listener.reportFailure(index, path, "Error while processing rule", e);
                     }
                 }
@@ -571,7 +571,7 @@ public final class FileScanner {
         crc32.update(buffer, 0, endRead);
         md5.update(buffer, 0, endRead);
         sha1.update(buffer, 0, endRead);
-        if (listener != null) {
+        for (Listener listener : listeners) {
             listener.reportBytesRead(index, totalRead);
         }
         return totalRead;
@@ -586,7 +586,7 @@ public final class FileScanner {
             MessageDigest md5,
             MessageDigest sha1,
             byte[] buffer) throws IOException {
-        if (listener != null) {
+        for (Listener listener : listeners) {
             listener.reportStart(index, path, size);
         }
         long totalRead = 0;
@@ -621,7 +621,7 @@ public final class FileScanner {
                         }
                     } catch (Exception e) {
                         log.error("Error while processing rule for '{}'", path, e);
-                        if (listener != null) {
+                        for (Listener listener : listeners) {
                             listener.reportFailure(
                                     index,
                                     path,
@@ -644,7 +644,7 @@ public final class FileScanner {
             crc32.update(buffer, startOffsetInt, totalReadInt);
             md5.update(buffer, startOffsetInt, totalReadInt);
             sha1.update(buffer, startOffsetInt, totalReadInt);
-            if (listener != null) {
+            for (Listener listener : listeners) {
                 listener.reportBytesRead(index, totalRead);
             }
         }
@@ -655,7 +655,7 @@ public final class FileScanner {
             crc32.update(buffer, 0, bytesRead);
             md5.update(buffer, 0, bytesRead);
             sha1.update(buffer, 0, bytesRead);
-            if (listener != null) {
+            for (Listener listener : listeners) {
                 listener.reportBytesRead(index, bytesRead);
             }
         }

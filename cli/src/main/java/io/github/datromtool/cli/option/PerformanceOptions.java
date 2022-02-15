@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.datromtool.ByteSize;
 import io.github.datromtool.config.AppConfig;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import picocli.CommandLine;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
@@ -23,6 +20,7 @@ public class PerformanceOptions {
     private static final ByteSize MAX_BUFFER_SIZE = ByteSize.fromBytes(Integer.MAX_VALUE);
 
     @CommandLine.Spec
+    @ToString.Exclude
     @JsonIgnore
     @Getter(NONE)
     @Setter(NONE)

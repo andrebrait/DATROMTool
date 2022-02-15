@@ -8,6 +8,7 @@ import io.github.datromtool.SerializationHelper;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -20,6 +21,8 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 public final class PatternsFileArgument {
 
     private final Path path;
+
+    @ToString.Exclude
     @JsonIgnore
     private final StringFilterArgument stringFilter;
 

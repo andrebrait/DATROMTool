@@ -19,10 +19,11 @@ import io.github.datromtool.data.TextOutputOptions;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.exception.ExecutionException;
 import io.github.datromtool.exception.InvalidDatafileException;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import io.github.datromtool.io.FileCopier;
+import io.github.datromtool.io.FileScanner;
+import io.github.datromtool.io.logging.FileCopierLoggingListener;
+import io.github.datromtool.io.logging.FileScannerLoggingListener;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.fusesource.jansi.Ansi;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static java.lang.String.format;
@@ -51,6 +53,7 @@ import static lombok.AccessLevel.NONE;
 public final class OneGameOneRomCommand implements Callable<Integer> {
 
     @CommandLine.Spec
+    @ToString.Exclude
     @JsonIgnore
     @Getter(NONE)
     @Setter(NONE)
@@ -85,6 +88,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
+        log.info("Starting {}", this);
         if (diagnosticOptions != null && diagnosticOptions.isDebug()) {
             Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
             root.setLevel(Level.DEBUG);
@@ -118,17 +122,25 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             appConfig = appConfig.withScanner(performanceOptions.merge(appConfig.getScanner()));
             appConfig = appConfig.withCopier(performanceOptions.merge(appConfig.getCopier()));
         }
+        boolean hasErrors = false;
         try {
-            CommandLineProgressBar fileScannerListener = new CommandLineProgressBar("Scanning", "Scanning input directories...");
+            FileScannerLoggingListener scannerLoggingListener = new FileScannerLoggingListener();
+            Supplier<List<FileScanner.Listener>> scannerListenerSupplier = () -> ImmutableList.of(
+                    scannerLoggingListener,
+                    new CommandLineProgressBar("Scanning", "Scanning input directories..."));
             if (outputOptions != null && outputOptions.getFileOptions() != null) {
-                CommandLineProgressBar fileCopierListener = new CommandLineProgressBar("Copying", "Copying selected files...");
+                FileCopierLoggingListener copierLoggingListener = new FileCopierLoggingListener();
+                Supplier<List<FileCopier.Listener>> copierListenerSupplier = () -> ImmutableList.of(
+                        copierLoggingListener,
+                        new CommandLineProgressBar("Copying", "Copying selected files..."));
                 oneGameOneRom.generate(
                         appConfig,
                         realDataFiles,
                         inputOptions.getInputDirs(),
                         outputOptions.getFileOptions().toFileOutputOptions(),
-                        fileScannerListener,
-                        fileCopierListener);
+                        scannerListenerSupplier,
+                        copierListenerSupplier);
+                hasErrors = scannerLoggingListener.isErrors() || copierLoggingListener.isErrors();
             } else {
                 TextOutputOptions textOutputOptions =
                         outputOptions != null && outputOptions.getTextOptions() != null
@@ -142,8 +154,9 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                         realDataFiles,
                         inputDirs,
                         textOutputOptions,
-                        fileScannerListener,
+                        scannerListenerSupplier,
                         list -> list.forEach(System.out::println));
+                hasErrors = scannerLoggingListener.isErrors();
             }
         } catch (InvalidDatafileException e) {
             log.debug("Got invalid DAT exception", e);
@@ -156,10 +169,13 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             System.err.printf("Execution error caught. Check logs for details: %s%n", e.getCause());
             return 1;
         } finally {
-            Path currentDir = Paths.get("").toAbsolutePath().normalize().resolve("datromtool.log");
+            Path logFilePath = Paths.get("").toAbsolutePath().normalize().resolve("datromtool.log");
             System.err.println();
             System.err.println("Finished");
-            System.err.printf("Check the generated log file for details: %s%n", currentDir);
+            if (hasErrors) {
+                System.err.println("!!! Errors during execution detected !!!");
+            }
+            System.err.printf("Check the generated log file for details: '%s'%n", logFilePath);
         }
         return 0;
     }

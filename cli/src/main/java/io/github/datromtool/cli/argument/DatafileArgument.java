@@ -9,6 +9,7 @@ import io.github.datromtool.domain.datafile.Datafile;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -21,6 +22,8 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 public final class DatafileArgument {
 
     private final Path path;
+
+    @ToString.Exclude
     @JsonIgnore
     private final Datafile datafile;
 
