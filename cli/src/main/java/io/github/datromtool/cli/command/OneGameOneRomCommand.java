@@ -1,5 +1,7 @@
 package io.github.datromtool.cli.command;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
@@ -23,9 +25,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.fusesource.jansi.Ansi;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -76,8 +80,15 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
     @CommandLine.ArgGroup(heading = "Performance options\n", exclusive = false)
     private PerformanceOptions performanceOptions;
 
+    @CommandLine.ArgGroup(heading = "Diagnostic options\n", exclusive = false)
+    private DiagnosticOptions diagnosticOptions;
+
     @Override
     public Integer call() {
+        if (diagnosticOptions != null && diagnosticOptions.isDebug()) {
+            Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+            root.setLevel(Level.DEBUG);
+        }
         if (outputOptions != null
                 && outputOptions.getFileOptions() != null
                 && outputOptions.getFileOptions().getOutputDir() != null
@@ -140,10 +151,15 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                     commandSpec.commandLine(),
                     format("Invalid DAT file: %s", e.getMessage()));
         } catch (ExecutionException e) {
-            log.error("Got execution exception", e);
             System.err.print(Ansi.ansi().eraseScreen());
+            log.error("Got execution exception", e);
             System.err.printf("Execution error caught. Check logs for details: %s%n", e.getCause());
             return 1;
+        } finally {
+            Path currentDir = Paths.get("").toAbsolutePath().normalize().resolve("datromtool.log");
+            System.err.println();
+            System.err.println("Finished");
+            System.err.printf("Check the generated log file for details: %s%n", currentDir);
         }
         return 0;
     }

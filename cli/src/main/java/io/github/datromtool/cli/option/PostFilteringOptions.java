@@ -23,7 +23,13 @@ public final class PostFilteringOptions {
             names = "--post-exclude",
             description = "Exclude entries that match this expression",
             paramLabel = "EXPRESSION")
-    private List<Pattern> postExcludes = ImmutableList.of();
+    private List<String> postExcludes = ImmutableList.of();
+
+    @CommandLine.Option(
+            names = "--post-exclude-regex",
+            description = "Exclude entries that match this regular expression",
+            paramLabel = "EXPRESSION")
+    private List<Pattern> postExcludeRegexes = ImmutableList.of();
 
     @CommandLine.Option(
             names = "--post-excludes-file",
@@ -33,7 +39,7 @@ public final class PostFilteringOptions {
 
     public PostFilter toPostFilter() {
         return PostFilter.builder()
-                .excludes(merge(postExcludes, postExcludesFiles))
+                .excludes(merge(postExcludes, postExcludeRegexes, postExcludesFiles))
                 .build();
     }
 }

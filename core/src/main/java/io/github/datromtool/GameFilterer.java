@@ -150,6 +150,9 @@ public final class GameFilterer {
         boolean result = filter.getExcludes().stream()
                 .map(e -> e.matcher(p.getGame().getName()))
                 .noneMatch(Matcher::find);
+        result |= filter.getIncludes().stream()
+                .map(e -> e.matcher(p.getGame().getName()))
+                .anyMatch(Matcher::find);
         if (!result) {
             log.debug("Excludes filter removed '{}'", p.getGame().getName());
         }

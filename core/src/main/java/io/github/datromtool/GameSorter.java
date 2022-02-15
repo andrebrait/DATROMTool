@@ -28,12 +28,9 @@ public final class GameSorter {
                 .entrySet()
                 .stream()
                 .filter(e -> !e.getValue().isEmpty())
-                .peek(GameSorter::logBeforeSorting)
-                .peek(e -> e.getValue().sort(comparator))
-                .peek(GameSorter::logAfterSorting)
                 .collect(ImmutableMap.toImmutableMap(
                         Map.Entry::getKey,
-                        e -> ImmutableList.copyOf(e.getValue())));
+                        this::toSortedCandidatesList));
     }
 
     private static Map<String, List<ParsedGame>> groupByParent(Collection<ParsedGame> parsedGames) {
@@ -70,4 +67,10 @@ public final class GameSorter {
                 .collect(Collectors.toList());
     }
 
+    private ImmutableList<ParsedGame> toSortedCandidatesList(Map.Entry<String, List<ParsedGame>> e) {
+        logBeforeSorting(e);
+        e.getValue().sort(comparator);
+        logAfterSorting(e);
+        return ImmutableList.copyOf(e.getValue());
+    }
 }

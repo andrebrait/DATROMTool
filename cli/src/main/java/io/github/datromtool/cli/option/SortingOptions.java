@@ -44,7 +44,13 @@ public final class SortingOptions {
             names = "--prefer",
             description = "Prefer entries that match this expression",
             paramLabel = "EXPRESSION")
-    private List<Pattern> prefers = ImmutableList.of();
+    private List<String> prefers = ImmutableList.of();
+
+    @CommandLine.Option(
+            names = "--prefer-regex",
+            description = "Prefer entries that match this regular expression",
+            paramLabel = "EXPRESSION")
+    private List<Pattern> preferRegexes = ImmutableList.of();
 
     @CommandLine.Option(
             names = "--prefers-file",
@@ -56,7 +62,13 @@ public final class SortingOptions {
             names = "--avoid",
             description = "Avoid entries that match this expression",
             paramLabel = "EXPRESSION")
-    private List<Pattern> avoids = ImmutableList.of();
+    private List<String> avoids = ImmutableList.of();
+
+    @CommandLine.Option(
+            names = "--avoid-regex",
+            description = "Avoid entries that match this regular expression",
+            paramLabel = "EXPRESSION")
+    private List<Pattern> avoidRegexes = ImmutableList.of();
 
     @CommandLine.Option(
             names = "--avoids-file",
@@ -95,16 +107,11 @@ public final class SortingOptions {
     boolean preferParents = false;
 
     public SortingPreference toSortingPreference() {
-        ImmutableSet.Builder<Pattern> prefersBuilder = ImmutableSet.builder();
-        prefersBuilder.addAll(prefers);
-        prefersFiles.stream()
-                .map(PatternsFileArgument::getPatterns)
-                .forEach(prefersBuilder::addAll);
         return SortingPreference.builder()
                 .regions(ImmutableSet.copyOf(regions))
                 .languages(ImmutableSet.copyOf(languages))
-                .prefers(merge(prefers, prefersFiles))
-                .avoids(merge(avoids, avoidsFiles))
+                .prefers(merge(prefers, preferRegexes, prefersFiles))
+                .avoids(merge(avoids, preferRegexes, avoidsFiles))
                 .prioritizeLanguages(prioritizeLanguages)
                 .earlyVersions(earlyVersions)
                 .earlyRevisions(earlyRevisions)

@@ -1,12 +1,10 @@
 package io.github.datromtool.cli;
 
+import io.github.datromtool.ByteSize;
 import io.github.datromtool.cli.argument.DatafileArgument;
 import io.github.datromtool.cli.argument.PatternsFileArgument;
 import io.github.datromtool.cli.command.OneGameOneRomCommand;
-import io.github.datromtool.cli.converter.ArchiveTypeConverter;
-import io.github.datromtool.cli.converter.DatafileConverter;
-import io.github.datromtool.cli.converter.OutputModeConverter;
-import io.github.datromtool.cli.converter.PatternsFileConverter;
+import io.github.datromtool.cli.converter.*;
 import io.github.datromtool.data.OutputMode;
 import io.github.datromtool.io.ArchiveType;
 import picocli.CommandLine;
@@ -29,6 +27,7 @@ public final class DatRomCommand {
         cmd.registerConverter(OutputMode.class, new OutputModeConverter());
         cmd.registerConverter(PatternsFileArgument.class, new PatternsFileConverter());
         cmd.registerConverter(DatafileArgument.class, new DatafileConverter());
+        cmd.registerConverter(ByteSize.class, new ByteSizeConverter());
         int exitCode = cmd.execute(args);
         System.exit(exitCode);
     }

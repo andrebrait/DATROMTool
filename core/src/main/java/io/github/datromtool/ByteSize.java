@@ -1,15 +1,18 @@
 package io.github.datromtool;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Value;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 @Value
+@JsonInclude(NON_NULL)
 public class ByteSize implements Comparable<ByteSize> {
 
     private static final Pattern PARSE_PATTERN = Pattern.compile(

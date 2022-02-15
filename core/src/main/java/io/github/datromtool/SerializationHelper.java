@@ -1,6 +1,7 @@
 package io.github.datromtool;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -30,7 +31,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
@@ -40,6 +43,9 @@ public final class SerializationHelper {
 
     public static final String GIT_BUILD_VERSION = "git.build.version";
     public static final Path DEFAULT_BASE_PATH = Paths.get(System.getProperty("user.home")).resolve(".DATROMTool");
+
+    private static final Pattern YAML_PATTERN = Pattern.compile("^.+\\.(?:yaml|yml)$", CASE_INSENSITIVE);
+    private static final Pattern JSON_PATTERN = Pattern.compile("^.+\\.(?:json|js)$", CASE_INSENSITIVE);
 
     private final Path detectorsBasePath;
     private final Path appConfigPath;
@@ -128,6 +134,21 @@ public final class SerializationHelper {
 
     public <T> T loadXml(InputStream inputStream, Class<T> tClass) throws IOException {
         return xmlMapper.readValue(inputStream, tClass);
+    }
+
+    public <T> T loadJsonOrYaml(Path file, Class<T> tClass) throws IOException {
+        String fileName = file.getFileName().toString();
+        if (JSON_PATTERN.matcher(fileName).matches()) {
+            return loadJson(file, tClass);
+        } else if (YAML_PATTERN.matcher(fileName).matches()) {
+            return loadYaml(file, tClass);
+        }
+        // We have no idea what this file is, so let's try JSON first and then YAML if it fails
+        try {
+            return loadJson(file, tClass);
+        } catch (JacksonException ignore) {
+            return loadYaml(file, tClass);
+        }
     }
 
     public <T> T loadJson(Path json, Class<T> tClass) throws IOException {

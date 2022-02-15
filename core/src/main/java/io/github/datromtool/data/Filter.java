@@ -2,11 +2,7 @@ package io.github.datromtool.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableSet;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.regex.Pattern;
@@ -42,6 +38,10 @@ public class Filter {
     @Builder.Default
     ImmutableSet<Pattern> excludes = ImmutableSet.of();
 
+    @NonNull
+    @Builder.Default
+    ImmutableSet<Pattern> includes = ImmutableSet.of();
+
     /*
      * Adding the filters below here saves re-checking all names
      */
@@ -60,5 +60,4 @@ public class Filter {
 
     @Builder.Default
     boolean allowBios = true;
-
 }

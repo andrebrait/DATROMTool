@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.lang.String.format;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,7 +42,7 @@ public final class GameParser {
     private final RegionData regionData;
 
     @NonNull
-    private final GameParser.DivergenceDetection detection;
+    private final DivergenceDetection divergenceDetection;
 
     public ImmutableList<ParsedGame> parse(Datafile input) {
         return input.getGames().stream()
@@ -178,12 +179,19 @@ public final class GameParser {
                 .build();
     }
 
-    private boolean shouldLogDivergences(Set<?> detected, Set<?> provided) {
-        return detection != DivergenceDetection.IGNORE
-                && ((detection == DivergenceDetection.ALWAYS && !provided.equals(detected))
-                || (!detected.isEmpty() && !provided.isEmpty()
-                && ((detection == DivergenceDetection.ONE_WAY && !provided.containsAll(detected))
-                || (detection == DivergenceDetection.TWO_WAY && !provided.equals(detected)))));
+    private <T> boolean shouldLogDivergences(Set<T> detected, Set<T> provided) {
+        switch (divergenceDetection) {
+            case IGNORE:
+                return false;
+            case ALWAYS:
+                return !provided.equals(detected);
+            case ONE_WAY:
+                return !detected.isEmpty() && !provided.isEmpty() && !provided.containsAll(detected);
+            case TWO_WAY:
+                return !detected.isEmpty() && !provided.isEmpty() && !provided.equals(detected);
+            default:
+                throw new IllegalStateException(format("Unknown detection type: %s", divergenceDetection));
+        }
     }
 
     private static ImmutableList<Long> detectProto(Game game) {

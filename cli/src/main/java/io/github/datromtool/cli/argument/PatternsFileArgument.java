@@ -4,15 +4,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableList;
+import io.github.datromtool.SerializationHelper;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.regex.Pattern;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -23,14 +21,12 @@ public final class PatternsFileArgument {
 
     private final Path path;
     @JsonIgnore
-    private final ImmutableList<Pattern> patterns;
+    private final StringFilterArgument stringFilter;
 
     @JsonCreator
     public static PatternsFileArgument from(@JsonProperty("path") Path path) throws IOException {
-        ImmutableList<Pattern> patterns = Files.readAllLines(path).stream()
-                .map(Pattern::compile)
-                .collect(ImmutableList.toImmutableList());
-        return new PatternsFileArgument(path, patterns);
+        StringFilterArgument stringFilter = SerializationHelper.getInstance().loadJsonOrYaml(path, StringFilterArgument.class);
+        return new PatternsFileArgument(path, stringFilter);
     }
 
 }

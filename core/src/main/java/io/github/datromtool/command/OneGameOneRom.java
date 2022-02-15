@@ -23,6 +23,7 @@ import io.github.datromtool.io.FileCopier;
 import io.github.datromtool.io.FileScanner;
 import io.github.datromtool.io.ScanResultMatcher;
 import io.github.datromtool.sorting.GameComparator;
+import io.github.datromtool.sorting.GameNameComparator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -248,15 +249,11 @@ public final class OneGameOneRom {
             @Nullable TextOutputOptions textOutputOptions,
             @Nonnull Consumer<Collection<String>> textOutputConsumer) throws ExecutionException {
         if (textOutputOptions == null) {
-            textOutputConsumer.accept(
-                    getSortedGameNames(filteredAndGrouped));
+            textOutputConsumer.accept(getSortedGameNames(filteredAndGrouped));
         } else if (textOutputOptions.getOutputMode() == null) {
-            writeToOutput(
-                    textOutputOptions.getOutputFile(),
-                    getSortedGameNames(filteredAndGrouped));
+            writeToOutput(textOutputOptions.getOutputFile(), getSortedGameNames(filteredAndGrouped));
         } else if (textOutputOptions.getOutputFile() == null) {
-            textOutputConsumer.accept(
-                    getDatOutput(datafile, textOutputOptions.getOutputMode(), filteredAndGrouped));
+            textOutputConsumer.accept(getDatOutput(datafile, textOutputOptions.getOutputMode(), filteredAndGrouped));
         } else {
             writeToOutput(
                     textOutputOptions.getOutputFile(),
@@ -280,14 +277,19 @@ public final class OneGameOneRom {
     @Nonnull
     private static ImmutableList<String> getSortedGameNames(
             @Nonnull Stream<Stream<ParsedGame>> filteredAndGrouped) {
+        return getTopCandidates(filteredAndGrouped)
+                .map(ParsedGame::getGame)
+                .map(Game::getName)
+                .sorted(GameNameComparator.INSTANCE)
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    @NonNull
+    private static Stream<ParsedGame> getTopCandidates(@NonNull Stream<Stream<ParsedGame>> filteredAndGrouped) {
         return filteredAndGrouped
                 .map(Stream::findFirst)
                 .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(ParsedGame::getGame)
-                .map(Game::getName)
-                .sorted()
-                .collect(ImmutableList.toImmutableList());
+                .map(Optional::get);
     }
 
     @Nonnull
@@ -295,12 +297,9 @@ public final class OneGameOneRom {
             @Nonnull Datafile datafile,
             @Nonnull OutputMode outputMode,
             @Nonnull Stream<Stream<ParsedGame>> filteredAndGrouped) throws ExecutionException {
-        Stream<Game> gameStream = filteredAndGrouped
-                .map(Stream::findFirst)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+        Stream<Game> gameStream = getTopCandidates(filteredAndGrouped)
                 .map(ParsedGame::getGame)
-                .sorted(Comparator.comparing(Game::getName))
+                .sorted(Comparator.comparing(Game::getName, GameNameComparator.INSTANCE))
                 .map(g -> g.withCloneOf(null));
         Header header = datafile.getHeader();
         ImmutableList<Game> games = gameStream.collect(ImmutableList.toImmutableList());

@@ -66,13 +66,37 @@ public final class FilteringOptions {
             names = "--exclude",
             description = "Exclude entries that match this expression",
             paramLabel = "EXPRESSION")
-    private List<Pattern> excludes = ImmutableList.of();
+    private List<String> excludes = ImmutableList.of();
+
+    @CommandLine.Option(
+            names = "--exclude-regex",
+            description = "Exclude entries that match this regular expression",
+            paramLabel = "EXPRESSION")
+    private List<Pattern> excludeRegexes = ImmutableList.of();
 
     @CommandLine.Option(
             names = "--excludes-file",
             paramLabel = "PATH",
             description = "Read exclusion expressions from a file")
     private List<PatternsFileArgument> excludesFiles = ImmutableList.of();
+
+    @CommandLine.Option(
+            names = "--include",
+            description = "Include entries that match this expression",
+            paramLabel = "EXPRESSION")
+    private List<String> includes = ImmutableList.of();
+
+    @CommandLine.Option(
+            names = "--include-regex",
+            description = "Include entries that match this regular expression",
+            paramLabel = "EXPRESSION")
+    private List<Pattern> includeRegexes = ImmutableList.of();
+
+    @CommandLine.Option(
+            names = "--includes-file",
+            paramLabel = "PATH",
+            description = "Read inclusion expressions from a file")
+    private List<PatternsFileArgument> includesFiles = ImmutableList.of();
 
     @CommandLine.Option(
             names = "--bad",
@@ -266,7 +290,8 @@ public final class FilteringOptions {
         if (!isAllowUpdate()) {
             excludesBuilder.add(Patterns.UPDATE);
         }
-        builder.excludes(merge(excludes, excludesFiles));
+        builder.excludes(merge(excludes, excludeRegexes, excludesFiles));
+        builder.includes(merge(includes, includeRegexes, includesFiles));
         return builder.build();
     }
 }
