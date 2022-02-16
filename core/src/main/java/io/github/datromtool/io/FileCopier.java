@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.config.AppConfig;
+import io.github.datromtool.io.logging.FileCopierLoggingListener;
 import io.github.datromtool.util.ArchiveUtils;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -184,12 +185,20 @@ public final class FileCopier {
             @Nonnull List<Listener> listeners) {
         this.numThreads = config.getThreads();
         this.allowRawZipCopy = config.isAllowRawZipCopy();
-        this.listeners = ImmutableList.copyOf(requireNonNull(listeners));
+        this.listeners = processListenerList(requireNonNull(listeners));
         this.threadLocalBuffer = ThreadLocal.withInitial(() -> new byte[config.getBufferSize()]);
     }
 
+    @Nonnull
+    private static ImmutableList<Listener> processListenerList(@Nonnull List<Listener> listeners) {
+        if (listeners.stream().noneMatch(FileCopierLoggingListener.class::isInstance)) {
+            return ImmutableList.<Listener>builder().add(new FileCopierLoggingListener()).addAll(listeners).build();
+        }
+        return ImmutableList.copyOf(listeners);
+    }
+
     public void copy(Set<? extends Spec> definitions) {
-        log.info("Copying selected files: {}", definitions);
+        log.debug("Copying selected files: {}", definitions);
         ExecutorService executorService = Executors.newFixedThreadPool(
                 numThreads,
                 new IndexedThreadFactory(log, "COPIER"));

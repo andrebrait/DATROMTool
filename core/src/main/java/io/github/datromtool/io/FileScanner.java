@@ -8,6 +8,7 @@ import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.detector.Rule;
+import io.github.datromtool.io.logging.FileScannerLoggingListener;
 import io.github.datromtool.util.ArchiveUtils;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -61,13 +62,21 @@ public final class FileScanner {
             @Nonnull List<Listener> listeners) {
         this.numThreads = config.getThreads();
         this.detectors = ImmutableList.copyOf(requireNonNull(detectors));
-        this.listeners = ImmutableList.copyOf(requireNonNull(listeners));
+        this.listeners = processListenerList(requireNonNull(listeners));
         if (datafiles.isEmpty()) {
             this.fileScannerParameters = withDefaults();
         } else {
             this.fileScannerParameters = forDatWithDetector(config, datafiles, detectors);
         }
         this.threadLocalData = ThreadLocal.withInitial(() -> new ThreadLocalDataHolder(fileScannerParameters));
+    }
+
+    @Nonnull
+    private static ImmutableList<FileScanner.Listener> processListenerList(@Nonnull List<FileScanner.Listener> listeners) {
+        if (listeners.stream().noneMatch(FileScannerLoggingListener.class::isInstance)) {
+            return ImmutableList.<FileScanner.Listener>builder().add(new FileScannerLoggingListener()).addAll(listeners).build();
+        }
+        return ImmutableList.copyOf(listeners);
     }
 
     @Value

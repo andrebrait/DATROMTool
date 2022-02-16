@@ -5,8 +5,8 @@ import io.github.datromtool.cli.argument.PatternsFileArgument;
 import io.github.datromtool.cli.argument.StringFilterArgument;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -34,7 +34,7 @@ public final class ArgumentUtils {
                 .build();
     }
 
-    @NonNull
+    @Nonnull
     private static Stream<Pattern> toLiteralPatterns(Collection<String> strings) {
         return strings.stream()
                 .map(Pattern::quote)
