@@ -36,7 +36,6 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,8 +55,8 @@ public final class OneGameOneRom {
             @Nonnull Collection<Datafile> datafiles,
             @Nonnull Collection<Path> inputDirs,
             @Nonnull FileOutputOptions fileOutputOptions,
-            @Nonnull Supplier<List<FileScanner.Listener>> fileScannerListener,
-            @Nonnull Supplier<List<FileCopier.Listener>> fileCopierListener)
+            @Nonnull List<FileScanner.Listener> fileScannerListeners,
+            @Nonnull List<FileCopier.Listener> fileCopierListeners)
             throws InvalidDatafileException, ExecutionException {
         try {
             validate(inputDirs, fileOutputOptions);
@@ -71,10 +70,10 @@ public final class OneGameOneRom {
                             datafiles,
                             inputDirs,
                             fileOutputOptions.getArchiveType(),
-                            fileScannerListener.get(),
+                            fileScannerListeners,
                             filteredAndGrouped);
             ImmutableSet<FileCopier.Spec> specs = createCopySpecs(fileOutputOptions, presentGames);
-            FileCopier fileCopier = new FileCopier(appConfig.getCopier(), false, fileCopierListener.get());
+            FileCopier fileCopier = new FileCopier(appConfig.getCopier(), fileCopierListeners);
             fileCopier.copy(specs);
         } catch (InvalidDatafileException e) {
             throw e;
@@ -90,7 +89,7 @@ public final class OneGameOneRom {
             @Nonnull Collection<Datafile> datafiles,
             @Nullable Collection<Path> inputDirs,
             @Nullable TextOutputOptions textOutputOptions,
-            @Nonnull Supplier<List<FileScanner.Listener>> fileScannerListeners,
+            @Nonnull List<FileScanner.Listener> fileScannerListeners,
             @Nonnull Consumer<Collection<String>> textOutputConsumer)
             throws InvalidDatafileException, ExecutionException {
         try {
@@ -113,7 +112,7 @@ public final class OneGameOneRom {
                                 datafiles,
                                 inputDirs,
                                 null,
-                                fileScannerListeners.get(),
+                                fileScannerListeners,
                                 filteredAndGrouped);
                 sendToOutput(
                         datafiles,

@@ -7,10 +7,8 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.fusesource.jansi.Ansi;
 import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.Locale;
@@ -29,12 +27,13 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
     private static final long FRAME_TIME_MILLIS = Math.round(1_000L / 60.0d);
     private static final String NEW_LINE = "\n";
 
+    private final Terminal terminal;
+    private final PrintWriter writer;
     private final String action;
     private final String title;
+
     private int numThreads;
     private int totalItems;
-    private Terminal terminal;
-    private PrintWriter writer;
     private AtomicInteger current;
     private String mainBarPrint;
 
@@ -42,15 +41,13 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
     private AtomicLongArray startTimes;
     private LineData[] threadLineData;
 
-    public CommandLineProgressBar(String action, String title) {
+    public CommandLineProgressBar(@Nullable Terminal terminal, String action, String title) {
+        this.terminal = terminal;
         this.action = action;
         this.title = title;
-        try {
-            this.terminal = TerminalBuilder.terminal();
+        if (terminal != null) {
             this.writer = terminal.writer();
-        } catch (IOException e) {
-            log.error("Error while creating terminal", e);
-            this.terminal = null;
+        } else {
             this.writer = new PrintWriter(System.err);
         }
     }
@@ -284,13 +281,6 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
                 .cursorDownLine(numThreads + 1)
                 .a(NEW_LINE)
                 .a(NEW_LINE));
-        try {
-            if (terminal != null) {
-                terminal.close();
-            }
-        } catch (IOException e) {
-            log.error("Error while closing terminal", e);
-        }
     }
 
     private static double secondsBetween(long start, long finish) {

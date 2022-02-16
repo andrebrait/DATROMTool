@@ -54,6 +54,9 @@ public class AppConfig {
         @Builder.Default
         @NonNull
         Integer threads = Math.max(1, Runtime.getRuntime().availableProcessors() / 2);
+
+        @Builder.Default
+        boolean allowRawZipCopy = false;
     }
 
     @NonNull

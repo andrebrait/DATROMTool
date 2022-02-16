@@ -26,14 +26,17 @@ import io.github.datromtool.io.logging.FileScannerLoggingListener;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.fusesource.jansi.Ansi;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
+import javax.annotation.Nullable;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.function.Supplier;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static java.lang.String.format;
@@ -123,23 +126,23 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             appConfig = appConfig.withCopier(performanceOptions.merge(appConfig.getCopier()));
         }
         boolean hasErrors = false;
-        try {
+        try (Terminal terminal = createTerminal()) {
             FileScannerLoggingListener scannerLoggingListener = new FileScannerLoggingListener();
-            Supplier<List<FileScanner.Listener>> scannerListenerSupplier = () -> ImmutableList.of(
+            List<FileScanner.Listener> scannerListeners = ImmutableList.of(
                     scannerLoggingListener,
-                    new CommandLineProgressBar("Scanning", "Scanning input directories..."));
+                    new CommandLineProgressBar(terminal, "Scanning", "Scanning input directories..."));
             if (outputOptions != null && outputOptions.getFileOptions() != null) {
                 FileCopierLoggingListener copierLoggingListener = new FileCopierLoggingListener();
-                Supplier<List<FileCopier.Listener>> copierListenerSupplier = () -> ImmutableList.of(
+                List<FileCopier.Listener> copierListeners = ImmutableList.of(
                         copierLoggingListener,
-                        new CommandLineProgressBar("Copying", "Copying selected files..."));
+                        new CommandLineProgressBar(terminal, "Copying", "Copying selected files..."));
                 oneGameOneRom.generate(
                         appConfig,
                         realDataFiles,
                         inputOptions.getInputDirs(),
                         outputOptions.getFileOptions().toFileOutputOptions(),
-                        scannerListenerSupplier,
-                        copierListenerSupplier);
+                        scannerListeners,
+                        copierListeners);
                 hasErrors = scannerLoggingListener.isErrors() || copierLoggingListener.isErrors();
             } else {
                 TextOutputOptions textOutputOptions =
@@ -154,20 +157,24 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                         realDataFiles,
                         inputDirs,
                         textOutputOptions,
-                        scannerListenerSupplier,
+                        scannerListeners,
                         list -> list.forEach(System.out::println));
                 hasErrors = scannerLoggingListener.isErrors();
             }
         } catch (InvalidDatafileException e) {
-            log.debug("Got invalid DAT exception", e);
+            hasErrors = true;
+            log.error("Got invalid DAT exception", e);
             throw new CommandLine.ParameterException(
                     commandSpec.commandLine(),
                     format("Invalid DAT file: %s", e.getMessage()));
         } catch (ExecutionException e) {
+            hasErrors = true;
             System.err.print(Ansi.ansi().eraseScreen());
             log.error("Got execution exception", e);
-            System.err.printf("Execution error caught. Check logs for details: %s%n", e.getCause());
             return 1;
+        } catch (IOException e) {
+            hasErrors = true;
+            log.error("Error while closing the terminal", e);
         } finally {
             Path logFilePath = Paths.get("").toAbsolutePath().normalize().resolve("datromtool.log");
             System.err.println();
@@ -178,6 +185,18 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             System.err.printf("Check the generated log file for details: '%s'%n", logFilePath);
         }
         return 0;
+    }
+
+    @Nullable
+    private Terminal createTerminal() {
+        Terminal terminal;
+        try {
+            terminal = TerminalBuilder.terminal();
+        } catch (IOException e) {
+            log.error("Error while creating terminal", e);
+            terminal = null;
+        }
+        return terminal;
     }
 
 }

@@ -40,6 +40,7 @@ import static io.github.datromtool.io.FileScannerParameters.forDatWithDetector;
 import static io.github.datromtool.io.FileScannerParameters.withDefaults;
 import static io.github.datromtool.util.ArchiveUtils.normalizePath;
 import static java.lang.Math.toIntExact;
+import static java.util.Objects.requireNonNull;
 
 @Slf4j
 public final class FileScanner {
@@ -49,7 +50,7 @@ public final class FileScanner {
 
     private final int numThreads;
     private final ImmutableList<Detector> detectors;
-    private final List<Listener> listeners;
+    private final ImmutableList<Listener> listeners;
     private final FileScannerParameters fileScannerParameters;
     private final ThreadLocal<ThreadLocalDataHolder> threadLocalData;
 
@@ -59,15 +60,14 @@ public final class FileScanner {
             @Nonnull Collection<Detector> detectors,
             @Nonnull List<Listener> listeners) {
         this.numThreads = config.getThreads();
-        this.detectors = ImmutableList.copyOf(detectors);
-        this.listeners = listeners;
+        this.detectors = ImmutableList.copyOf(requireNonNull(detectors));
+        this.listeners = ImmutableList.copyOf(requireNonNull(listeners));
         if (datafiles.isEmpty()) {
             this.fileScannerParameters = withDefaults();
         } else {
             this.fileScannerParameters = forDatWithDetector(config, datafiles, detectors);
         }
-        this.threadLocalData =
-                ThreadLocal.withInitial(() -> new ThreadLocalDataHolder(fileScannerParameters));
+        this.threadLocalData = ThreadLocal.withInitial(() -> new ThreadLocalDataHolder(fileScannerParameters));
     }
 
     @Value

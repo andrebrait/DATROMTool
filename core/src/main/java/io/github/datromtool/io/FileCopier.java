@@ -4,6 +4,7 @@ import com.github.junrar.exception.RarException;
 import com.github.junrar.exception.UnsupportedRarV5Exception;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.util.ArchiveUtils;
 import lombok.*;
@@ -13,6 +14,8 @@ import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.X000A_NTFS;
+import org.apache.commons.compress.archivers.zip.X5455_ExtendedTimestamp;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.compressors.lzma.LZMAUtils;
@@ -27,6 +30,8 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributeView;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
@@ -39,10 +44,20 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static io.github.datromtool.util.ArchiveUtils.normalizePath;
+import static java.lang.String.format;
+import static java.util.Objects.requireNonNull;
 
 @Slf4j
 public final class FileCopier {
 
+    /**
+     * The upper bound of the 32-bit unix time, the "year 2038 problem".
+     */
+    private static final long UPPER_UNIXTIME_BOUND = 0x7fffffff;
+
+    /**
+     * An empty path. Should resolve to the current directory.
+     */
     private static final Path EMPTY_PATH = Paths.get("");
 
     public static abstract class Spec {
@@ -161,16 +176,15 @@ public final class FileCopier {
 
     private final int numThreads;
     private final boolean allowRawZipCopy;
-    private final List<Listener> listeners;
+    private final ImmutableList<Listener> listeners;
     private final ThreadLocal<byte[]> threadLocalBuffer;
 
     public FileCopier(
             @Nonnull AppConfig.FileCopierConfig config,
-            boolean allowRawZipCopy,
             @Nonnull List<Listener> listeners) {
-        this.allowRawZipCopy = allowRawZipCopy;
         this.numThreads = config.getThreads();
-        this.listeners = listeners;
+        this.allowRawZipCopy = config.isAllowRawZipCopy();
+        this.listeners = ImmutableList.copyOf(requireNonNull(listeners));
         this.threadLocalBuffer = ThreadLocal.withInitial(() -> new byte[config.getBufferSize()]);
     }
 
@@ -242,7 +256,9 @@ public final class FileCopier {
                             outputStream::write);
                 }
             }
-            Files.setLastModifiedTime(spec.getTo(), Files.getLastModifiedTime(spec.getFrom()));
+            BasicFileAttributes fromAttrib = Files.readAttributes(spec.getFrom(), BasicFileAttributes.class);
+            BasicFileAttributeView toAttrib = Files.getFileAttributeView(spec.getTo(), BasicFileAttributeView.class);
+            toAttrib.setTimes(fromAttrib.lastModifiedTime(), fromAttrib.lastAccessTime(), fromAttrib.creationTime());
         } catch (Exception e) {
             log.error("Could not copy '{}' to '{}'", spec.getFrom(), spec.getTo(), e);
             for (Listener listener : listeners) {
@@ -419,11 +435,8 @@ public final class FileCopier {
                     Files.delete(to);
                     throw e;
                 }
-                if (zipArchiveEntry.getLastModifiedDate() != null) {
-                    Files.setLastModifiedTime(to, zipArchiveEntry.getLastModifiedTime());
-                } else if (zipArchiveEntry.getCreationTime() != null) {
-                    Files.setLastModifiedTime(to, zipArchiveEntry.getCreationTime());
-                }
+                BasicFileAttributeView toAttrib = Files.getFileAttributeView(to, BasicFileAttributeView.class);
+                toAttrib.setTimes(zipArchiveEntry.getLastModifiedTime(), zipArchiveEntry.getLastAccessTime(), zipArchiveEntry.getCreationTime());
             }
         });
     }
@@ -454,11 +467,8 @@ public final class FileCopier {
                         Files.delete(to);
                         throw e;
                     }
-                    if (fileHeader.getMTime() != null) {
-                        Files.setLastModifiedTime(to, from(fileHeader.getMTime()));
-                    } else if (fileHeader.getCTime() != null) {
-                        Files.setLastModifiedTime(to, from(fileHeader.getCTime()));
-                    }
+                    BasicFileAttributeView toAttrib = Files.getFileAttributeView(to, BasicFileAttributeView.class);
+                    toAttrib.setTimes(from(fileHeader.getMTime()), from(fileHeader.getATime()), from(fileHeader.getCTime()));
                 }
             });
         } catch (UnsupportedRarV5Exception e) {
@@ -500,9 +510,8 @@ public final class FileCopier {
                         Files.delete(to);
                         throw e;
                     }
-                    if (entry.getModificationTime() != null) {
-                        Files.setLastModifiedTime(to, from(entry.getModificationTime()));
-                    }
+                    BasicFileAttributeView toAttrib = Files.getFileAttributeView(to, BasicFileAttributeView.class);
+                    toAttrib.setTimes(from(entry.getModificationTime()), null, null);
                 });
     }
 
@@ -524,13 +533,11 @@ public final class FileCopier {
                 Files.delete(to);
                 throw e;
             }
-            if (sevenZArchiveEntry.getHasLastModifiedDate()) {
-                FileTime fileTime = from(sevenZArchiveEntry.getLastModifiedDate());
-                Files.setLastModifiedTime(to, fileTime);
-            } else if (sevenZArchiveEntry.getHasCreationDate()) {
-                FileTime fileTime = from(sevenZArchiveEntry.getCreationDate());
-                Files.setLastModifiedTime(to, fileTime);
-            }
+            BasicFileAttributeView toAttrib = Files.getFileAttributeView(to, BasicFileAttributeView.class);
+            toAttrib.setTimes(
+                    sevenZArchiveEntry.getHasLastModifiedDate() ? from(sevenZArchiveEntry.getLastModifiedDate()) : null,
+                    sevenZArchiveEntry.getHasAccessDate() ? from(sevenZArchiveEntry.getAccessDate()) : null,
+                    sevenZArchiveEntry.getHasCreationDate() ? from(sevenZArchiveEntry.getCreationDate()) : null);
         });
     }
 
@@ -561,10 +568,8 @@ public final class FileCopier {
                         Files.delete(to);
                         throw e;
                     }
-                    if (tarArchiveEntry.getLastModifiedDate() != null) {
-                        FileTime fileTime = from(tarArchiveEntry.getLastModifiedDate());
-                        Files.setLastModifiedTime(to, fileTime);
-                    }
+                    BasicFileAttributeView toAttrib = Files.getFileAttributeView(to, BasicFileAttributeView.class);
+                    toAttrib.setTimes(from(tarArchiveEntry.getLastModifiedDate()), null, null);
                 });
     }
 
@@ -574,9 +579,11 @@ public final class FileCopier {
             for (CompressionSpec.InternalSpec internal : spec.getInternalSpecs()) {
                 Path source = internal.getFrom();
                 try (InputStream inputStream = Files.newInputStream(source)) {
-                    ArchiveEntry archiveEntry = zipArchiveOutputStream.createArchiveEntry(
+                    ZipArchiveEntry archiveEntry = (ZipArchiveEntry) zipArchiveOutputStream.createArchiveEntry(
                             source.toFile(),
                             internal.getTo());
+                    BasicFileAttributes fromAttrib = Files.readAttributes(source, BasicFileAttributes.class);
+                    setZipExtraProperties(fromAttrib.lastModifiedTime(), fromAttrib.lastAccessTime(), fromAttrib.creationTime(), archiveEntry);
                     Path destination = spec.getTo().resolve(internal.getTo());
                     zipArchiveOutputStream.putArchiveEntry(archiveEntry);
                     copyWithProgress(
@@ -604,6 +611,9 @@ public final class FileCopier {
                 try (InputStream inputStream = Files.newInputStream(source)) {
                     SevenZArchiveEntry archiveEntry =
                             sevenZOutputFile.createArchiveEntry(source.toFile(), internal.getTo());
+                    BasicFileAttributes fromAttrib = Files.readAttributes(source, BasicFileAttributes.class);
+                    archiveEntry.setAccessDate(toDate(fromAttrib.lastAccessTime()));
+                    archiveEntry.setCreationDate(toDate(fromAttrib.creationTime()));
                     Path destination = spec.getTo().resolve(internal.getFrom());
                     sevenZOutputFile.putArchiveEntry(archiveEntry);
                     copyWithProgress(
@@ -794,9 +804,9 @@ public final class FileCopier {
                                     spec,
                                     internal,
                                     name,
-                                    zipArchiveEntry.getCreationTime(),
                                     zipArchiveEntry.getLastModifiedTime(),
                                     zipArchiveEntry.getLastAccessTime(),
+                                    zipArchiveEntry.getCreationTime(),
                                     zipArchiveEntry.getSize());
                         }
                     });
@@ -826,9 +836,9 @@ public final class FileCopier {
                                     spec,
                                     internal,
                                     name,
-                                    toDate(zipArchiveEntry.getCreationTime()),
                                     toDate(zipArchiveEntry.getLastModifiedTime()),
                                     toDate(zipArchiveEntry.getLastAccessTime()),
+                                    toDate(zipArchiveEntry.getCreationTime()),
                                     zipArchiveEntry.getSize());
                         }
                     });
@@ -893,9 +903,9 @@ public final class FileCopier {
                                     spec,
                                     internal,
                                     name,
-                                    from(fileHeader.getCTime()),
                                     from(fileHeader.getMTime()),
                                     from(fileHeader.getATime()),
+                                    from(fileHeader.getCTime()),
                                     fileHeader.getFullUnpackSize());
                         }
                     });
@@ -927,7 +937,6 @@ public final class FileCopier {
                         if (internal == null) {
                             return;
                         }
-                        FileTime time = from(entry.getModificationTime());
                         toZip(
                                 index,
                                 processInputStream::read,
@@ -935,9 +944,9 @@ public final class FileCopier {
                                 spec,
                                 internal,
                                 name,
-                                time,
-                                time,
-                                time,
+                                from(entry.getModificationTime()),
+                                null,
+                                null,
                                 entry.getSize());
                     });
         } catch (FileAlreadyExistsException e) {
@@ -966,9 +975,9 @@ public final class FileCopier {
                                     spec,
                                     internal,
                                     name,
-                                    fileHeader.getCTime(),
                                     fileHeader.getMTime(),
                                     fileHeader.getATime(),
+                                    fileHeader.getCTime(),
                                     fileHeader.getFullUnpackSize());
                         }
                     });
@@ -999,7 +1008,6 @@ public final class FileCopier {
                         if (internal == null) {
                             return;
                         }
-                        Date time = toDate(entry.getModificationTime());
                         toSevenZip(
                                 index,
                                 processInputStream::read,
@@ -1007,9 +1015,9 @@ public final class FileCopier {
                                 spec,
                                 internal,
                                 name,
-                                time,
-                                time,
-                                time,
+                                toDate(entry.getModificationTime()),
+                                null,
+                                null,
                                 entry.getSize());
                     });
         } catch (FileAlreadyExistsException e) {
@@ -1108,14 +1116,14 @@ public final class FileCopier {
                             zipArchiveOutputStream,
                             spec,
                             sevenZArchiveEntry.getName(),
-                            sevenZArchiveEntry.getHasCreationDate()
-                                    ? from(sevenZArchiveEntry.getCreationDate())
-                                    : null,
                             sevenZArchiveEntry.getHasLastModifiedDate()
                                     ? from(sevenZArchiveEntry.getLastModifiedDate())
                                     : null,
                             sevenZArchiveEntry.getHasAccessDate()
                                     ? from(sevenZArchiveEntry.getAccessDate())
+                                    : null,
+                            sevenZArchiveEntry.getHasCreationDate()
+                                    ? from(sevenZArchiveEntry.getCreationDate())
                                     : null,
                             sevenZArchiveEntry.getSize()));
         } catch (FileAlreadyExistsException e) {
@@ -1137,14 +1145,14 @@ public final class FileCopier {
                             sevenZOutputFile,
                             spec,
                             sevenZArchiveEntry.getName(),
-                            sevenZArchiveEntry.getHasCreationDate()
-                                    ? sevenZArchiveEntry.getCreationDate()
-                                    : null,
                             sevenZArchiveEntry.getHasLastModifiedDate()
                                     ? sevenZArchiveEntry.getLastModifiedDate()
                                     : null,
                             sevenZArchiveEntry.getHasAccessDate()
                                     ? sevenZArchiveEntry.getAccessDate()
+                                    : null,
+                            sevenZArchiveEntry.getHasCreationDate()
+                                    ? sevenZArchiveEntry.getCreationDate()
                                     : null,
                             sevenZArchiveEntry.getSize()));
         } catch (FileAlreadyExistsException e) {
@@ -1194,8 +1202,8 @@ public final class FileCopier {
                             zipArchiveOutputStream,
                             spec,
                             tarArchiveEntry.getName(),
-                            null,
                             from(tarArchiveEntry.getLastModifiedDate()),
+                            null,
                             null,
                             tarArchiveEntry.getRealSize()));
         } catch (FileAlreadyExistsException e) {
@@ -1217,8 +1225,8 @@ public final class FileCopier {
                             sevenZOutputFile,
                             spec,
                             tarArchiveEntry.getName(),
-                            null,
                             tarArchiveEntry.getLastModifiedDate(),
+                            null,
                             null,
                             tarArchiveEntry.getRealSize()));
         } catch (FileAlreadyExistsException e) {
@@ -1266,9 +1274,9 @@ public final class FileCopier {
             ZipArchiveOutputStream zipArchiveOutputStream,
             ArchiveCopySpec spec,
             String name,
-            @Nullable FileTime creationTime,
             @Nullable FileTime lastModifiedTime,
             @Nullable FileTime lastAccessTime,
+            @Nullable FileTime creationTime,
             long size)
             throws IOException {
         toZip(
@@ -1278,9 +1286,9 @@ public final class FileCopier {
                 spec,
                 findInternalSpec(spec, name),
                 name,
-                creationTime,
                 lastModifiedTime,
                 lastAccessTime,
+                creationTime,
                 size);
     }
 
@@ -1291,9 +1299,9 @@ public final class FileCopier {
             ArchiveCopySpec spec,
             @Nullable ArchiveCopySpec.InternalSpec internal,
             String name,
-            @Nullable FileTime creationTime,
             @Nullable FileTime lastModifiedTime,
             @Nullable FileTime lastAccessTime,
+            @Nullable FileTime creationTime,
             long size)
             throws IOException {
         if (internal == null) {
@@ -1301,16 +1309,10 @@ public final class FileCopier {
         }
         Path to = spec.getTo().resolve(internal.getTo());
         ZipArchiveEntry zae = new ZipArchiveEntry(internal.getTo());
-        zae.setSize(size);
-        if (creationTime != null) {
-            zae.setCreationTime(creationTime);
-        }
         if (lastModifiedTime != null) {
-            zae.setLastModifiedTime(lastModifiedTime);
+            zae.setTime(lastModifiedTime.toMillis());
         }
-        if (lastAccessTime != null) {
-            zae.setLastAccessTime(lastAccessTime);
-        }
+        setZipExtraProperties(lastModifiedTime, lastAccessTime, creationTime, zae);
         Path source = spec.getFrom().resolve(name);
         zipArchiveOutputStream.putArchiveEntry(zae);
         copyWithProgress(
@@ -1323,15 +1325,81 @@ public final class FileCopier {
         zipArchiveOutputStream.closeArchiveEntry();
     }
 
+    private void setZipExtraProperties(
+            @Nullable FileTime lastModifiedTime,
+            @Nullable FileTime lastAccessTime,
+            @Nullable FileTime creationTime,
+            ZipArchiveEntry zae) {
+        boolean requireExtraTimestamp = exceedsUnixTime(lastModifiedTime) || lastAccessTime != null || creationTime != null;
+        if (requireExtraTimestamp) {
+            // This doesn't seem to have any effect on Apache's ZipArchiveEntry, but setting it just in case
+            if (lastModifiedTime != null) {
+                zae.setLastModifiedTime(lastModifiedTime);
+            }
+            if (lastAccessTime != null) {
+                zae.setLastAccessTime(lastAccessTime);
+            }
+            if (creationTime != null) {
+                zae.setCreationTime(creationTime);
+            }
+            addNTFSTimestamp(lastModifiedTime, lastAccessTime, creationTime, zae);
+            addExtendedTimestamp(lastModifiedTime, lastAccessTime, creationTime, zae);
+        }
+        zae.setComment(format("Compressed using DATROMTool v%s", SerializationHelper.getInstance().getVersionString()));
+    }
+
+    private void addExtendedTimestamp(
+            @Nullable FileTime lastModifiedTime,
+            @Nullable FileTime lastAccessTime,
+            @Nullable FileTime creationTime,
+            ZipArchiveEntry zae) {
+        boolean exceedsUnixTime = exceedsUnixTime(creationTime)
+                || exceedsUnixTime(lastModifiedTime)
+                || exceedsUnixTime(lastAccessTime);
+        if (!exceedsUnixTime) {
+            X5455_ExtendedTimestamp timestamp = new X5455_ExtendedTimestamp();
+            if (lastModifiedTime != null) {
+                timestamp.setModifyJavaTime(toDate(lastModifiedTime));
+            }
+            if (lastAccessTime != null) {
+                timestamp.setAccessJavaTime(toDate(lastAccessTime));
+            }
+            if (creationTime != null) {
+                timestamp.setCreateJavaTime(toDate(creationTime));
+            }
+            zae.addExtraField(timestamp);
+        }
+    }
+
+    private void addNTFSTimestamp(
+            @Nullable FileTime lastModifiedTime, @Nullable FileTime lastAccessTime, @Nullable FileTime creationTime,
+            ZipArchiveEntry zae) {
+        X000A_NTFS timestamp = new X000A_NTFS();
+        if (lastModifiedTime != null) {
+            timestamp.setModifyJavaTime(toDate(lastModifiedTime));
+        }
+        if (lastAccessTime != null) {
+            timestamp.setAccessJavaTime(toDate(lastAccessTime));
+        }
+        if (creationTime != null) {
+            timestamp.setCreateJavaTime(toDate(creationTime));
+        }
+        zae.addExtraField(timestamp);
+    }
+
+    private static boolean exceedsUnixTime(@Nullable FileTime fileTime) {
+        return fileTime != null && fileTime.toMillis() > UPPER_UNIXTIME_BOUND;
+    }
+
     private void toSevenZip(
             int index,
             TriFunction<byte[], Integer, Integer, Integer, IOException> readFunction,
             SevenZOutputFile sevenZOutputFile,
             ArchiveCopySpec spec,
             String name,
-            @Nullable Date creationDate,
             @Nullable Date lastModifiedDate,
             @Nullable Date lastAccessDate,
+            @Nullable Date creationDate,
             long size)
             throws IOException {
         toSevenZip(
@@ -1341,9 +1409,9 @@ public final class FileCopier {
                 spec,
                 findInternalSpec(spec, name),
                 name,
-                creationDate,
                 lastModifiedDate,
                 lastAccessDate,
+                creationDate,
                 size);
     }
 
@@ -1354,9 +1422,9 @@ public final class FileCopier {
             ArchiveCopySpec spec,
             @Nullable ArchiveCopySpec.InternalSpec internal,
             String name,
-            @Nullable Date creationDate,
             @Nullable Date lastModifiedDate,
             @Nullable Date lastAccessDate,
+            @Nullable Date creationDate,
             long size)
             throws IOException {
         if (internal == null) {
@@ -1366,14 +1434,14 @@ public final class FileCopier {
         SevenZArchiveEntry zae = new SevenZArchiveEntry();
         zae.setName(internal.getTo());
         zae.setSize(size);
-        if (creationDate != null) {
-            zae.setCreationDate(creationDate);
-        }
         if (lastModifiedDate != null) {
             zae.setLastModifiedDate(lastModifiedDate);
         }
         if (lastAccessDate != null) {
-            zae.setLastModifiedDate(lastAccessDate);
+            zae.setAccessDate(lastAccessDate);
+        }
+        if (creationDate != null) {
+            zae.setCreationDate(creationDate);
         }
         Path source = spec.getFrom().resolve(name);
         sevenZOutputFile.putArchiveEntry(zae);

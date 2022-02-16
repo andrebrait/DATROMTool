@@ -51,7 +51,7 @@ class FileScannerTestWithUnrar extends ConfigDependantTest {
                 AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(),
                 ImmutableList.of(),
-                null);
+                ImmutableList.of());
         ImmutableList<FileScanner.Result> results =
                 fileScanner.scan(ImmutableList.of(testDataSource));
         assertFalse(results.isEmpty());
@@ -74,7 +74,7 @@ class FileScannerTestWithUnrar extends ConfigDependantTest {
                 AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(buildDatafile(64 * 1024L, 64 * 1024L * 1024L)),
                 ImmutableList.of(),
-                null);
+                ImmutableList.of());
         ImmutableList<FileScanner.Result> results =
                 fileScanner.scan(ImmutableList.of(testDataSource));
         assertFalse(results.isEmpty());
@@ -97,7 +97,7 @@ class FileScannerTestWithUnrar extends ConfigDependantTest {
                 AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(buildDatafile(16 * 1024L, 768 * 1024L)),
                 ImmutableList.of(),
-                null);
+                ImmutableList.of());
         ImmutableList<FileScanner.Result> results =
                 fileScanner.scan(ImmutableList.of(testDataSource));
         assertFalse(results.isEmpty());
@@ -120,7 +120,7 @@ class FileScannerTestWithUnrar extends ConfigDependantTest {
                 AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(buildDatafile(64 * 1024L, 768 * 1024L)),
                 ImmutableList.of(),
-                null);
+                ImmutableList.of());
         ImmutableList<FileScanner.Result> results =
                 fileScanner.scan(ImmutableList.of(testDataSource));
         assertFalse(results.isEmpty());

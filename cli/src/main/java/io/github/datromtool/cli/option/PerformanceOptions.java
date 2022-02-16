@@ -32,6 +32,7 @@ public class PerformanceOptions {
 
     private Integer copyThreads;
     private ByteSize copyBufferSize;
+    private boolean allowRawZipCopy;
 
     @CommandLine.Option(
             names = "--scan-threads",
@@ -78,6 +79,13 @@ public class PerformanceOptions {
         this.copyBufferSize = copyBufferSize;
     }
 
+    @CommandLine.Option(
+            names = "--copy-raw-zip",
+            description = "Allow raw copies when copying from/to ZIP archives. Might improve performance.")
+    public void setAllowRawZipCopy(boolean allowRawZipCopy) {
+        this.allowRawZipCopy = allowRawZipCopy;
+    }
+
     private void validateThreads(Integer threads) {
         if (threads <= 0) {
             throw new CommandLine.ParameterException(spec.commandLine(), "Number of threads should be a positive number");
@@ -108,7 +116,7 @@ public class PerformanceOptions {
     }
 
     public AppConfig.FileCopierConfig merge(AppConfig.FileCopierConfig original) {
-        if (copyThreads != null || copyBufferSize != null) {
+        if (copyThreads != null || copyBufferSize != null || allowRawZipCopy) {
             AppConfig.FileCopierConfig.FileCopierConfigBuilder builder = original.toBuilder();
             if (copyThreads != null) {
                 builder.threads(scanThreads);
@@ -116,6 +124,7 @@ public class PerformanceOptions {
             if (copyBufferSize != null) {
                 builder.bufferSize(toIntExact(copyBufferSize.getSizeInBytes()));
             }
+            builder.allowRawZipCopy(allowRawZipCopy);
             return builder.build();
         }
         return original;

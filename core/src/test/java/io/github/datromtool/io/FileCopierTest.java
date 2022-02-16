@@ -51,7 +51,7 @@ class FileCopierTest extends ConfigDependantTest {
                 AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(),
                 ImmutableList.of(),
-                null);
+                ImmutableList.of());
         ImmutableList<FileScanner.Result> results = fs.scan(ImmutableList.of(testDataSource));
         Map<Path, List<FileScanner.Result>> resultsForArchive =
                 results.stream().collect(Collectors.groupingBy(FileScanner.Result::getPath));
@@ -102,7 +102,7 @@ class FileCopierTest extends ConfigDependantTest {
                                     .collect(ImmutableSet.toImmutableSet()))
                             .build();
                 }).collect(ImmutableSet.toImmutableSet());
-        FileCopier fc = new FileCopier(AppConfig.FileCopierConfig.builder().build(), false, null);
+        FileCopier fc = new FileCopier(AppConfig.FileCopierConfig.builder().build(), ImmutableList.of());
         fc.copy(specs);
         ImmutableList<FileScanner.Result> afterCopy = fs.scan(ImmutableList.of(tempDir));
         assertEquals(results.size(), afterCopy.size());
