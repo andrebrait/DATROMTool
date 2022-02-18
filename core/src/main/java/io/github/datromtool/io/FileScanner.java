@@ -49,7 +49,7 @@ public final class FileScanner {
     private static final Comparator<FileMetadata> FILE_SIZE_DESCENDING_COMPARATOR =
             Comparator.comparingLong(FileMetadata::getSize).reversed();
 
-    private final int numThreads;
+    private final AppConfig.FileScannerConfig config;
     private final ImmutableList<Detector> detectors;
     private final ImmutableList<Listener> listeners;
     private final FileScannerParameters fileScannerParameters;
@@ -60,7 +60,7 @@ public final class FileScanner {
             @Nonnull Collection<Datafile> datafiles,
             @Nonnull Collection<Detector> detectors,
             @Nonnull List<Listener> listeners) {
-        this.numThreads = config.getThreads();
+        this.config = config;
         this.detectors = ImmutableList.copyOf(requireNonNull(detectors));
         this.listeners = processListenerList(requireNonNull(listeners));
         if (datafiles.isEmpty()) {
@@ -180,7 +180,7 @@ public final class FileScanner {
 
     public ImmutableList<Result> scan(Collection<Path> directories) {
         ExecutorService executorService = Executors.newFixedThreadPool(
-                numThreads,
+                config.getThreads(),
                 new IndexedThreadFactory(log, "SCANNER"));
         if (!LZMAUtils.isLZMACompressionAvailable()) {
             log.warn("LZMA compression support is disabled");
@@ -203,7 +203,7 @@ public final class FileScanner {
             ImmutableList<FileMetadata> paths = pathsBuilder.build();
             for (Listener listener : listeners) {
                 listener.reportFinishedListing(paths.size());
-                listener.init(numThreads);
+                listener.init(config.getThreads());
                 listener.reportTotalItems(paths.size());
             }
             ImmutableList<Result> results = paths.stream()
@@ -405,9 +405,9 @@ public final class FileScanner {
                 }
             });
         } catch (UnsupportedRarV5Exception e) {
-            if (ArchiveUtils.isUnrarAvailable()) {
+            if (!config.isForceSevenZip() && ArchiveUtils.isUnrarAvailable(config.getCustomUnrarPath())) {
                 scanRarWithUnrar(file, index, builder);
-            } else if (ArchiveUtils.isSevenZipAvailable()) {
+            } else if (!config.isForceUnrar() && ArchiveUtils.isSevenZipAvailable(config.getCustomSevenZipPath())) {
                 scanRarWithSevenZip(file, index, builder);
             } else {
                 throw e;

@@ -175,16 +175,14 @@ public final class FileCopier {
         void reportAllFinished();
     }
 
-    private final int numThreads;
-    private final boolean allowRawZipCopy;
+    private final AppConfig.FileCopierConfig config;
     private final ImmutableList<Listener> listeners;
     private final ThreadLocal<byte[]> threadLocalBuffer;
 
     public FileCopier(
             @Nonnull AppConfig.FileCopierConfig config,
             @Nonnull List<Listener> listeners) {
-        this.numThreads = config.getThreads();
-        this.allowRawZipCopy = config.isAllowRawZipCopy();
+        this.config = config;
         this.listeners = processListenerList(requireNonNull(listeners));
         this.threadLocalBuffer = ThreadLocal.withInitial(() -> new byte[config.getBufferSize()]);
     }
@@ -200,7 +198,7 @@ public final class FileCopier {
     public void copy(Set<? extends Spec> definitions) {
         log.debug("Copying selected files: {}", definitions);
         ExecutorService executorService = Executors.newFixedThreadPool(
-                numThreads,
+                config.getThreads(),
                 new IndexedThreadFactory(log, "COPIER"));
         if (!LZMAUtils.isLZMACompressionAvailable()) {
             log.warn("LZMA compression support is disabled");
@@ -209,7 +207,7 @@ public final class FileCopier {
             log.warn("XZ compression support is disabled");
         }
         for (Listener listener : listeners) {
-            listener.init(numThreads);
+            listener.init(config.getThreads());
             listener.reportTotalItems(definitions.size());
         }
         definitions.stream()
@@ -481,9 +479,9 @@ public final class FileCopier {
                 }
             });
         } catch (UnsupportedRarV5Exception e) {
-            if (ArchiveUtils.isUnrarAvailable()) {
+            if (isUseUnrar()) {
                 extractRarEntriesWithUnrar(spec, index);
-            } else if (ArchiveUtils.isSevenZipAvailable()) {
+            } else if (isUseSevenZip()) {
                 extractRarEntriesWithSevenZip(spec, index);
             } else {
                 throw e;
@@ -695,7 +693,7 @@ public final class FileCopier {
     private void fromZipToArchive(ArchiveCopySpec spec, int index) throws IOException {
         switch (spec.getToType()) {
             case ZIP:
-                if (allowRawZipCopy) {
+                if (config.isAllowRawZipCopy()) {
                     fromZipToZipRaw(spec, index);
                 } else {
                     fromZipToZip(spec, index);
@@ -939,9 +937,9 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (UnsupportedRarV5Exception e) {
-            if (ArchiveUtils.isUnrarAvailable()) {
+            if (isUseUnrar()) {
                 fromRarWithUnrarToZip(spec, index);
-            } else if (ArchiveUtils.isSevenZipAvailable()) {
+            } else if (isUseSevenZip()) {
                 fromRarWithSevenZipToZip(spec, index);
             } else {
                 Files.delete(spec.getTo());
@@ -1036,9 +1034,9 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (UnsupportedRarV5Exception e) {
-            if (ArchiveUtils.isUnrarAvailable()) {
+            if (isUseUnrar()) {
                 fromRarWithUnrarToSevenZip(spec, index);
-            } else if (ArchiveUtils.isSevenZipAvailable()) {
+            } else if (isUseSevenZip()) {
                 fromRarWithSevenZipToSevenZip(spec, index);
             } else {
                 Files.delete(spec.getTo());
@@ -1133,9 +1131,9 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (UnsupportedRarV5Exception e) {
-            if (ArchiveUtils.isUnrarAvailable()) {
+            if (isUseUnrar()) {
                 fromRarWithUnrarToTar(spec, index);
-            } else if (ArchiveUtils.isSevenZipAvailable()) {
+            } else if (isUseSevenZip()) {
                 fromRarWithSevenZipToTar(spec, index);
             } else {
                 Files.delete(spec.getTo());
@@ -1145,6 +1143,14 @@ public final class FileCopier {
             Files.delete(spec.getTo());
             throw e;
         }
+    }
+
+    private boolean isUseSevenZip() {
+        return !config.isForceUnrar() && ArchiveUtils.isSevenZipAvailable(config.getCustomSevenZipPath());
+    }
+
+    private boolean isUseUnrar() {
+        return !config.isForceSevenZip() && ArchiveUtils.isUnrarAvailable(config.getCustomUnrarPath());
     }
 
     private void fromRarWithUnrarToTar(

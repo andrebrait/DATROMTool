@@ -3,11 +3,15 @@ package io.github.datromtool.cli.option;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.datromtool.ByteSize;
+import io.github.datromtool.cli.converter.ExecutableFileConverter;
 import io.github.datromtool.config.AppConfig;
 import lombok.*;
 import picocli.CommandLine;
 
+import java.nio.file.Path;
+
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static java.lang.Math.toIntExact;
 import static java.lang.String.format;
 import static lombok.AccessLevel.NONE;
@@ -33,6 +37,8 @@ public class PerformanceOptions {
     private Integer copyThreads;
     private ByteSize copyBufferSize;
     private boolean allowRawZipCopy;
+    private Path customUnrarPath;
+    private Path customSevenZipPath;
 
     @CommandLine.Option(
             names = "--scan-threads",
@@ -81,10 +87,49 @@ public class PerformanceOptions {
 
     @CommandLine.Option(
             names = "--copy-raw-zip",
-            description = "Allow raw copies when copying from/to ZIP archives. Might improve performance.")
+            description = "Allow raw copies when copying from/to ZIP file. \n" +
+                    "Improves performance, but it disables the renaming of files inside the generated ZIP files.")
     public void setAllowRawZipCopy(boolean allowRawZipCopy) {
         this.allowRawZipCopy = allowRawZipCopy;
     }
+
+
+    @CommandLine.Option(
+            names = "--unrar-exec",
+            paramLabel = "PATH",
+            description = "Custom path to the UnRAR executable for RAR5 extraction",
+            converter = ExecutableFileConverter.class)
+    public void setCustomUnrarPath(Path customUnrarPath) {
+        this.customUnrarPath = customUnrarPath;
+    }
+
+    @CommandLine.Option(
+            names = "--7z-exec",
+            paramLabel = "PATH",
+            description = "Custom path to the 7-Zip CLI executable for RAR5 extraction",
+            converter = ExecutableFileConverter.class)
+    public void setCustomSevenZipPath(Path customSevenZipPath) {
+        this.customSevenZipPath = customSevenZipPath;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @JsonInclude(NON_NULL)
+    public static final class ForceOptions {
+
+        @CommandLine.Option(
+                names = "--force-unrar",
+                description = "Force RAR5 extraction to use UnRAR")
+        private boolean forceUnrar;
+
+        @CommandLine.Option(
+                names = "--force-7z",
+                description = "Force RAR5 extraction to use 7-Zip")
+        private boolean forceSevenZip;
+    }
+
+    @CommandLine.ArgGroup
+    private ForceOptions forceOptions;
 
     private void validateThreads(Integer threads) {
         if (threads <= 0) {
@@ -99,7 +144,12 @@ public class PerformanceOptions {
     }
 
     public AppConfig.FileScannerConfig merge(AppConfig.FileScannerConfig original) {
-        if (scanThreads != null || scanBufferSize != null || scanBufferMaxSize != null) {
+        if (scanThreads != null
+                || scanBufferSize != null
+                || scanBufferMaxSize != null
+                || customUnrarPath != null
+                || customSevenZipPath != null
+                || forceOptions != null) {
             AppConfig.FileScannerConfig.FileScannerConfigBuilder builder = original.toBuilder();
             if (scanThreads != null) {
                 builder.threads(scanThreads);
@@ -110,13 +160,26 @@ public class PerformanceOptions {
             if (scanBufferMaxSize != null) {
                 builder.maxBufferSize(toIntExact(scanBufferMaxSize.getSizeInBytes()));
             }
+            if (customUnrarPath != null) {
+                builder.customUnrarPath(customUnrarPath);
+            }
+            if (customSevenZipPath != null) {
+                builder.customSevenZipPath(customSevenZipPath);
+            }
+            builder.forceUnrar(forceOptions.isForceUnrar());
+            builder.forceSevenZip(forceOptions.isForceSevenZip());
             return builder.build();
         }
         return original;
     }
 
     public AppConfig.FileCopierConfig merge(AppConfig.FileCopierConfig original) {
-        if (copyThreads != null || copyBufferSize != null || allowRawZipCopy) {
+        if (copyThreads != null
+                || copyBufferSize != null
+                || customUnrarPath != null
+                || customSevenZipPath != null
+                || allowRawZipCopy
+                || forceOptions != null) {
             AppConfig.FileCopierConfig.FileCopierConfigBuilder builder = original.toBuilder();
             if (copyThreads != null) {
                 builder.threads(scanThreads);
@@ -124,7 +187,15 @@ public class PerformanceOptions {
             if (copyBufferSize != null) {
                 builder.bufferSize(toIntExact(copyBufferSize.getSizeInBytes()));
             }
+            if (customUnrarPath != null) {
+                builder.customUnrarPath(customUnrarPath);
+            }
+            if (customSevenZipPath != null) {
+                builder.customSevenZipPath(customSevenZipPath);
+            }
             builder.allowRawZipCopy(allowRawZipCopy);
+            builder.forceUnrar(forceOptions.isForceUnrar());
+            builder.forceSevenZip(forceOptions.isForceSevenZip());
             return builder.build();
         }
         return original;

@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 
 import static java.lang.String.format;
 
-public final class ExistingFileConverter implements CommandLine.ITypeConverter<Path> {
+public class ExistingFileConverter implements CommandLine.ITypeConverter<Path> {
 
     @Override
     public Path convert(String s) {

@@ -174,15 +174,15 @@ public final class ArchiveUtils {
     private static final Pattern COMMAND_NOT_FOUND =
             Pattern.compile("error=2, (No such file or directory|The system cannot find the file specified)", CASE_INSENSITIVE);
 
-    public static boolean isExternalRarAvailable() {
-        return isUnrarAvailable() || isSevenZipAvailable();
-    }
-
     private static volatile String unrarPath = "unrar";
 
     private static volatile Boolean isUnrarAvailableCache;
 
-    public static boolean isUnrarAvailable() {
+    private static boolean isUnrarAvailable() {
+        return isUnrarAvailable(null);
+    }
+
+    public static boolean isUnrarAvailable(@Nullable Path customPath) {
         Boolean value = isUnrarAvailableCache;
         if (value != null) {
             return value;
@@ -192,83 +192,84 @@ public final class ArchiveUtils {
             if (value != null) {
                 return value;
             }
-            value = checkUnrarPath(unrarPath);
-            if (!value) {
-                copyUnrar();
+            if (customPath != null) {
+                String customPathStr = customPath.toAbsolutePath().normalize().toString();
+                value = checkUnrarPath(customPathStr);
+                if (value) {
+                    unrarPath = customPathStr;
+                }
             }
-            value = checkUnrarPath(unrarPath);
+            if (value == null || !value) {
+                value = checkUnrarPath(unrarPath);
+                if (!value) {
+                    unrarPath = getEmbeddedUnrarPath();
+                    value = checkUnrarPath(ArchiveUtils.unrarPath);
+                }
+            }
             isUnrarAvailableCache = value;
             return value;
         }
     }
 
-    private static void copyUnrar() {
+    private static String getEmbeddedUnrarPath() {
+        String embeddedUnrarPath = null;
         createTempBinDir();
         if (tempBinDir != null) {
             switch (SystemUtils.OPERATING_SYSTEM) {
                 case WINDOWS:
                     switch (SystemUtils.ARCHITECTURE) {
                         case X86_32:
-                            unrarPath = copyToTempBinDir("bin/unrar/windows/unrar-x86.exe", "unrar.exe");
+                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/windows/unrar-x86.exe", "unrar.exe");
                             break;
                         case X86_64:
-                            unrarPath = copyToTempBinDir("bin/unrar/windows/unrar-x64.exe", "unrar.exe");
+                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/windows/unrar-x64.exe", "unrar.exe");
                             break;
-                        default:
-                            unrarPath = null;
                     }
                     break;
                 case LINUX:
                     switch (SystemUtils.ARCHITECTURE) {
                         case X86_32:
-                            unrarPath = copyToTempBinDir("bin/unrar/linux/unrar-x32", "unrar");
+                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/linux/unrar-x32", "unrar");
                             break;
                         case X86_64:
-                            unrarPath = copyToTempBinDir("bin/unrar/linux/unrar-x64", "unrar");
+                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/linux/unrar-x64", "unrar");
                             break;
                         case ARM_32:
                         case ARM_64:
-                            unrarPath = copyToTempBinDir("bin/unrar/linux/unrar-arm", "unrar");
+                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/linux/unrar-arm", "unrar");
                             break;
                         case POWER_PC_32:
                         case POWER_PC_64:
-                            unrarPath = copyToTempBinDir("bin/unrar/linux/unrar-ppc", "unrar");
+                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/linux/unrar-ppc", "unrar");
                             break;
-                        default:
-                            unrarPath = null;
                     }
                     break;
                 case BSD:
                     switch (SystemUtils.ARCHITECTURE) {
                         case X86_32:
-                            unrarPath = copyToTempBinDir("bin/unrar/bsd/unrar-x32", "unrar");
+                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/bsd/unrar-x32", "unrar");
                             break;
                         case X86_64:
-                            unrarPath = copyToTempBinDir("bin/unrar/bsd/unrar-x64", "unrar");
+                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/bsd/unrar-x64", "unrar");
                             break;
-                        default:
-                            unrarPath = null;
                     }
                     break;
                 case OSX:
                     switch (SystemUtils.ARCHITECTURE) {
                         case X86_64:
-                            unrarPath = copyToTempBinDir("bin/unrar/macos/unrar-x64", "unrar");
+                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/macos/unrar-x64", "unrar");
                             break;
                         case ARM_64:
-                            unrarPath = copyToTempBinDir("bin/unrar/macos/unrar-arm64", "unrar");
+                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/macos/unrar-arm64", "unrar");
                             break;
-                        default:
-                            unrarPath = null;
                     }
                     break;
-                default:
-                    unrarPath = null;
             }
         }
-        if (unrarPath == null) {
+        if (embeddedUnrarPath == null) {
             log.warn("Could not find a suitable version of unrar for this combination of OS and architecture");
         }
+        return embeddedUnrarPath;
     }
 
     private static boolean checkUnrarPath(String unrarPath) {
@@ -276,13 +277,17 @@ public final class ArchiveUtils {
     }
 
     private static final Pattern SEVEN_ZIP_LIST =
-            Pattern.compile("^\\s*(\\S+)\\s+(\\S+)\\s+\\S+\\s+([0-9]+)\\s+[0-9]+\\s+(\\S+)\\s*$");
+            Pattern.compile("^\\s*(\\S+)\\s+(\\S+)\\s+\\S+\\s+([0-9]+)\\s+[0-9]+\\s+(\\S.+\\S)\\s*$");
 
     private static volatile String sevenZipPath;
 
     private static volatile Boolean isSevenZipAvailableCache;
 
-    public static boolean isSevenZipAvailable() {
+    private static boolean isSevenZipAvailable() {
+        return isSevenZipAvailable(null);
+    }
+
+    public static boolean isSevenZipAvailable(@Nullable Path customPath) {
         Boolean value = isSevenZipAvailableCache;
         if (value != null) {
             return value;
@@ -292,70 +297,73 @@ public final class ArchiveUtils {
             if (value != null) {
                 return value;
             }
-            copySevenZip();
-            value = checkSevenZipPath(sevenZipPath);
+            if (customPath != null) {
+                String customPathStr = customPath.toAbsolutePath().normalize().toString();
+                value = checkSevenZipPath(customPathStr);
+                if (value) {
+                    sevenZipPath = customPathStr;
+                }
+            }
+            if (value == null || !value) {
+                sevenZipPath = getEmbeddedSevenZipPath();
+                value = checkSevenZipPath(sevenZipPath);
+            }
             isSevenZipAvailableCache = value;
             return value;
         }
     }
 
-    private static void copySevenZip() {
+    private static String getEmbeddedSevenZipPath() {
+        String embeddedSevenZipPath = null;
         createTempBinDir();
         if (tempBinDir != null) {
             switch (SystemUtils.OPERATING_SYSTEM) {
                 case WINDOWS:
                     switch (SystemUtils.ARCHITECTURE) {
                         case X86_32:
-                            sevenZipPath = copyToTempBinDir("bin/7zip/windows/x32/7z.exe", "7z.exe");
+                            embeddedSevenZipPath = copyToTempBinDir("bin/7zip/windows/x32/7z.exe", "7z.exe");
                             copyToTempBinDir("bin/7zip/windows/x32/7z.dll", "7z.dll");
                             break;
                         case X86_64:
-                            sevenZipPath = copyToTempBinDir("bin/7zip/windows/x64/7z.exe", "7z.exe");
+                            embeddedSevenZipPath = copyToTempBinDir("bin/7zip/windows/x64/7z.exe", "7z.exe");
                             copyToTempBinDir("bin/7zip/windows/x64/7z.dll", "7z.dll");
                             break;
                         case ARM_64:
-                            sevenZipPath = copyToTempBinDir("bin/7zip/windows/arm64/7z.exe", "7z.exe");
+                            embeddedSevenZipPath = copyToTempBinDir("bin/7zip/windows/arm64/7z.exe", "7z.exe");
                             copyToTempBinDir("bin/7zip/windows/arm64/7z.dll", "7z.dll");
                             break;
-                        default:
-                            sevenZipPath = null;
                     }
                     break;
                 case LINUX:
                     switch (SystemUtils.ARCHITECTURE) {
                         case X86_32:
-                            sevenZipPath = copyToTempBinDir("bin/7zip/linux/x32/7zzs", "7zzs");
+                            embeddedSevenZipPath = copyToTempBinDir("bin/7zip/linux/x32/7zzs", "7zzs");
                             break;
                         case X86_64:
-                            sevenZipPath = copyToTempBinDir("bin/7zip/linux/x64/7zzs", "7zzs");
+                            embeddedSevenZipPath = copyToTempBinDir("bin/7zip/linux/x64/7zzs", "7zzs");
                             break;
                         case ARM_32:
-                            sevenZipPath = copyToTempBinDir("bin/7zip/linux/arm/7zzs", "7zzs");
+                            embeddedSevenZipPath = copyToTempBinDir("bin/7zip/linux/arm/7zzs", "7zzs");
                             break;
                         case ARM_64:
-                            sevenZipPath = copyToTempBinDir("bin/7zip/linux/arm64/7zzs", "7zzs");
+                            embeddedSevenZipPath = copyToTempBinDir("bin/7zip/linux/arm64/7zzs", "7zzs");
                             break;
-                        default:
-                            sevenZipPath = null;
                     }
                     break;
                 case OSX:
                     switch (SystemUtils.ARCHITECTURE) {
                         case X86_64:
                         case ARM_64:
-                            sevenZipPath = copyToTempBinDir("bin/7zip/macos/7zz", "7zz");
+                            embeddedSevenZipPath = copyToTempBinDir("bin/7zip/macos/7zz", "7zz");
                             break;
-                        default:
-                            sevenZipPath = null;
                     }
                     break;
-                default:
-                    sevenZipPath = null;
             }
         }
-        if (sevenZipPath == null) {
+        if (embeddedSevenZipPath == null) {
             log.warn("Could not find a suitable version of 7-Zip for this combination of OS and architecture");
         }
+        return embeddedSevenZipPath;
     }
 
     private static boolean checkSevenZipPath(String sevenZipPath) {
@@ -383,7 +391,8 @@ public final class ArchiveUtils {
         try (InputStream stream = ClassLoader.getSystemResource(path).openStream()) {
             Files.copy(stream, finalDestination, StandardCopyOption.REPLACE_EXISTING);
             log.info("Copied '{}' to '{}'", path, finalDestination);
-            if (!finalDestination.toFile().setExecutable(true)) {
+            File file = finalDestination.toFile();
+            if (!file.canExecute() && !file.setExecutable(true)) {
                 if (SystemUtils.OPERATING_SYSTEM != WINDOWS) {
                     log.warn("Failed to make '{}' executable", finalDestination);
                 }
