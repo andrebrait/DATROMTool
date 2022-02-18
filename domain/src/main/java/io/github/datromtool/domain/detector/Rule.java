@@ -16,11 +16,7 @@ import io.github.datromtool.domain.detector.exception.RuleException;
 import io.github.datromtool.domain.detector.util.NumberUtils;
 import io.github.datromtool.domain.serialization.HexDeserializer;
 import io.github.datromtool.domain.serialization.HexSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.Arrays;
@@ -31,6 +27,11 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static lombok.AccessLevel.PRIVATE;
 
 @JsonPropertyOrder({
+        // cosmetic for JSON/YAML, XML attributes
+        "startOffset",
+        "endOffset",
+        "operation",
+        // XML property order
         "dataTests",
         "orTests",
         "xorTests",

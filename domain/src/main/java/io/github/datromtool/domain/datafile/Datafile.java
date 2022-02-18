@@ -8,18 +8,18 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.domain.datafile.enumerations.YesNo;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
-import lombok.With;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static lombok.AccessLevel.PRIVATE;
 
-@JsonPropertyOrder({"header", "games"})
+@JsonPropertyOrder({
+        "header",
+        "build", // cosmetic for JSON/YAML, XML attribute
+        "debug", // cosmetic for JSON/YAML, XML attribute
+        "games"
+})
 @With
 @Value
 @Jacksonized
