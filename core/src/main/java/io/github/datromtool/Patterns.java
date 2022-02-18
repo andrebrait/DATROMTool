@@ -4,12 +4,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.regex.Pattern;
 
+import static java.util.regex.Pattern.*;
 import static lombok.AccessLevel.PRIVATE;
-
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
-import static java.util.regex.Pattern.compile;
-import static java.util.regex.Pattern.quote;
-
 
 @NoArgsConstructor(access = PRIVATE)
 public final class Patterns {

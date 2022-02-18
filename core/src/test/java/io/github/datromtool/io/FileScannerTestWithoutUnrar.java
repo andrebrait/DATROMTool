@@ -22,8 +22,8 @@ import static io.github.datromtool.util.TestUtils.isRar5;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisabledIf(
-        value = "io.github.datromtool.util.ArchiveUtils#isUnrarAvailable",
-        disabledReason = "'unrar' is available")
+        value = "io.github.datromtool.util.ArchiveUtils#isExternalRarAvailable",
+        disabledReason = "'unrar' or '7z' are available")
 class FileScannerTestWithoutUnrar extends ConfigDependantTest {
 
     private Map<String, CrcKey> crc32sums;

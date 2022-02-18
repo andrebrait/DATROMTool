@@ -36,8 +36,7 @@ public final class XMLValidator {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
         // load a WXS schema, represented by a Schema instance
-        try (BufferedReader xsdReader =
-                new BufferedReader(new InputStreamReader(url.openStream()))) {
+        try (BufferedReader xsdReader = new BufferedReader(new InputStreamReader(url.openStream()))) {
             Source schemaFile = new StreamSource(xsdReader);
             Schema schema = factory.newSchema(schemaFile);
 

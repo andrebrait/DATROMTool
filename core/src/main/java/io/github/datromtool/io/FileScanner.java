@@ -407,6 +407,8 @@ public final class FileScanner {
         } catch (UnsupportedRarV5Exception e) {
             if (ArchiveUtils.isUnrarAvailable()) {
                 scanRarWithUnrar(file, index, builder);
+            } else if (ArchiveUtils.isSevenZipAvailable()) {
+                scanRarWithSevenZip(file, index, builder);
             } else {
                 throw e;
             }
@@ -426,23 +428,52 @@ public final class FileScanner {
         if (desiredEntryNames.isEmpty()) {
             return;
         }
-        ArchiveUtils.readRarWithUnrar(file, desiredEntryNames, (entry, processInputStream) -> {
-            long size = entry.getSize();
-            String name = normalizePath(entry.getName());
-            Path entryPath = file.resolve(name);
-            ProcessingResult processingResult = process(
-                    entryPath,
-                    index,
-                    size,
-                    processInputStream::read);
-            builder.add(new Result(
-                    ArchiveType.RAR,
-                    file,
-                    size,
-                    processingResult.getUnheaderedSize(),
-                    processingResult.getDigest(),
-                    name));
-        });
+        ArchiveUtils.readRarWithUnrar(
+                file,
+                desiredEntryNames,
+                (entry, processInputStream) -> processRarEntry(file, index, builder, entry, processInputStream));
+    }
+
+    private void scanRarWithSevenZip(
+            Path file,
+            int index,
+            ImmutableList.Builder<Result> builder) throws Exception {
+        ImmutableSet<String> desiredEntryNames =
+                ArchiveUtils.listRarEntriesWithSevenZip(file)
+                        .stream()
+                        .filter(e -> !shouldSkip(file.resolve(e.getName()), index, e.getSize()))
+                        .map(UnrarArchiveEntry::getName)
+                        .collect(ImmutableSet.toImmutableSet());
+        if (desiredEntryNames.isEmpty()) {
+            return;
+        }
+        ArchiveUtils.readRarWithSevenZip(
+                file,
+                desiredEntryNames,
+                (entry, processInputStream) -> processRarEntry(file, index, builder, entry, processInputStream));
+    }
+
+    private void processRarEntry(
+            Path file,
+            int index,
+            ImmutableList.Builder<Result> builder,
+            UnrarArchiveEntry unrarArchiveEntry,
+            InputStream processInputStream) throws IOException {
+        long size = unrarArchiveEntry.getSize();
+        String name = unrarArchiveEntry.getName();
+        Path entryPath = file.resolve(name);
+        ProcessingResult processingResult = process(
+                entryPath,
+                index,
+                size,
+                processInputStream::read);
+        builder.add(new Result(
+                ArchiveType.RAR,
+                file,
+                size,
+                processingResult.getUnheaderedSize(),
+                processingResult.getDigest(),
+                name));
     }
 
     private void scanSevenZip(

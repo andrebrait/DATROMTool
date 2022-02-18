@@ -4,13 +4,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.ConfigDependantTest;
 import io.github.datromtool.config.AppConfig;
+import io.github.datromtool.util.ArchiveUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -30,19 +31,7 @@ class FileCopierTest extends ConfigDependantTest {
 
     @AfterEach
     void tearDown() throws Exception {
-        Files.walkFileTree(tempDir, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return super.visitFile(file, attrs);
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
-                return super.postVisitDirectory(dir, exc);
-            }
-        });
+        ArchiveUtils.deleteFolder(tempDir);
     }
 
     @Test

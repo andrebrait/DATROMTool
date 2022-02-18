@@ -22,6 +22,7 @@ import io.github.datromtool.domain.detector.Detector;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.SystemUtils;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -42,7 +43,7 @@ import static lombok.AccessLevel.PRIVATE;
 public final class SerializationHelper {
 
     public static final String GIT_BUILD_VERSION = "git.build.version";
-    public static final Path DEFAULT_BASE_PATH = Paths.get(System.getProperty("user.home")).resolve(".DATROMTool");
+    public static final Path DEFAULT_BASE_PATH = Paths.get(SystemUtils.USER_HOME).resolve(".DATROMTool");
 
     private static final Pattern YAML_PATTERN = Pattern.compile("^.+\\.(?:yaml|yml)$", CASE_INSENSITIVE);
     private static final Pattern JSON_PATTERN = Pattern.compile("^.+\\.(?:json|js)$", CASE_INSENSITIVE);

@@ -39,6 +39,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
+
 @Slf4j
 @RequiredArgsConstructor
 public final class OneGameOneRom {
@@ -144,6 +146,7 @@ public final class OneGameOneRom {
             @Nullable TextOutputOptions textOutputOptions,
             @Nonnull Consumer<Collection<String>> textOutputConsumer,
             Stream<Stream<ParsedGame>> streamStream) {
+        // Use only the header from the first DAT file
         datafiles.stream().findFirst().ifPresent(datafile -> {
             try {
                 outputTopItems(
@@ -250,14 +253,18 @@ public final class OneGameOneRom {
             @Nonnull Consumer<Collection<String>> textOutputConsumer) throws ExecutionException {
         if (textOutputOptions == null) {
             textOutputConsumer.accept(getSortedGameNames(filteredAndGrouped));
-        } else if (textOutputOptions.getOutputMode() == null) {
-            writeToOutput(textOutputOptions.getOutputFile(), getSortedGameNames(filteredAndGrouped));
-        } else if (textOutputOptions.getOutputFile() == null) {
-            textOutputConsumer.accept(getDatOutput(datafile, textOutputOptions.getOutputMode(), filteredAndGrouped));
         } else {
-            writeToOutput(
-                    textOutputOptions.getOutputFile(),
-                    getDatOutput(datafile, textOutputOptions.getOutputMode(), filteredAndGrouped));
+            Path outputFile = textOutputOptions.getOutputFile();
+            OutputMode outputMode = textOutputOptions.getOutputMode();
+            if (outputFile == null && outputMode == null) {
+                textOutputConsumer.accept(getSortedGameNames(filteredAndGrouped));
+            } else if (outputFile == null) {
+                textOutputConsumer.accept(getDatOutput(datafile, outputMode, filteredAndGrouped));
+            } else if (outputMode == null) {
+                writeToOutput(outputFile, getSortedGameNames(filteredAndGrouped));
+            } else {
+                writeToOutput(outputFile, getDatOutput(datafile, outputMode, filteredAndGrouped));
+            }
         }
     }
 
@@ -268,7 +275,7 @@ public final class OneGameOneRom {
         try {
             Files.write(outputFile, datOutput);
         } catch (IOException e) {
-            throw new ExecutionException(String.format(
+            throw new ExecutionException(format(
                     "Could not create output file: %s",
                     e.getMessage()), e);
         }
@@ -297,6 +304,12 @@ public final class OneGameOneRom {
             @Nonnull Datafile datafile,
             @Nonnull OutputMode outputMode,
             @Nonnull Stream<Stream<ParsedGame>> filteredAndGrouped) throws ExecutionException {
+        Datafile newDat = prepareDat(datafile, filteredAndGrouped);
+        return toOutputRepresentation(outputMode, newDat);
+    }
+
+    @Nonnull
+    private static Datafile prepareDat(@Nonnull Datafile datafile, Stream<Stream<ParsedGame>> filteredAndGrouped) {
         Stream<Game> gameStream = getTopCandidates(filteredAndGrouped)
                 .map(ParsedGame::getGame)
                 .sorted(Comparator.comparing(Game::getName, GameNameComparator.INSTANCE))
@@ -304,10 +317,16 @@ public final class OneGameOneRom {
         Header header = datafile.getHeader();
         ImmutableList<Game> games = gameStream.collect(ImmutableList.toImmutableList());
         if (header != null) {
-            header = header.withName(String.format("%s (1G1R)", header.getName()))
-                    .withDescription(String.format("%s (1G1R)", header.getDescription()));
+            header = header.withName(format("%s (1G1R)", header.getName()))
+                    .withDescription(format("%s (1G1R)", header.getDescription()));
         }
-        Datafile newDat = datafile.withHeader(header).withGames(games);
+        return datafile.withHeader(header).withGames(games);
+    }
+
+    @Nonnull
+    private static ImmutableList<String> toOutputRepresentation(
+            @Nonnull OutputMode outputMode,
+            @Nonnull Datafile newDat) throws ExecutionException {
         try {
             SerializationHelper helper = SerializationHelper.getInstance();
             switch (outputMode) {
@@ -318,13 +337,13 @@ public final class OneGameOneRom {
                 case YAML:
                     return helper.writeAsYaml(newDat);
                 default:
-                    throw new IllegalArgumentException(String.format(
+                    throw new IllegalArgumentException(format(
                             "Cannot handle mode %s",
                             outputMode));
             }
         } catch (JsonProcessingException e) {
             throw new ExecutionException(
-                    String.format("Could not write to output file: %s", e.getMessage()),
+                    format("Could not write to output file: %s", e.getMessage()),
                     e);
         }
     }
@@ -335,7 +354,7 @@ public final class OneGameOneRom {
                 Files.createDirectories(path);
             } catch (IOException e) {
                 throw new ExecutionException(
-                        String.format("Could not create output directory: %s", e.getMessage()),
+                        format("Could not create output directory: %s", e.getMessage()),
                         e);
             }
         }
@@ -434,7 +453,7 @@ public final class OneGameOneRom {
             Collection<ScanResultMatcher.RomMatch> matches,
             Map<Path, ? extends Collection<ScanResultMatcher.RomMatch>> matchesPerFile,
             ArchiveType toType) {
-        Path to = baseDir.resolve(String.format(
+        Path to = baseDir.resolve(format(
                 "%s.%s",
                 game.getName(),
                 toType.getAlias()));
@@ -555,13 +574,13 @@ public final class OneGameOneRom {
             return SerializationHelper.getInstance().loadDetector(name);
         } catch (NoSuchFileException e) {
             throw new ExecutionException(
-                    String.format(
+                    format(
                             "Could not load detector file: File not found: %s",
                             e.getMessage()),
                     e);
         } catch (Exception e) {
             throw new ExecutionException(
-                    String.format(
+                    format(
                             "Could not load detector file: %s: %s",
                             e.getClass().getSimpleName(),
                             e.getMessage()),

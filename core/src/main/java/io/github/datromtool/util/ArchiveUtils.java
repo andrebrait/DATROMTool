@@ -5,6 +5,7 @@ import com.github.junrar.exception.BadRarArchiveException;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.rarfile.FileHeader;
 import com.google.common.collect.ImmutableList;
+import io.github.datromtool.SystemUtils;
 import io.github.datromtool.io.ArchiveType;
 import io.github.datromtool.io.UnrarArchiveEntry;
 import lombok.AccessLevel;
@@ -29,21 +30,46 @@ import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
 
 import javax.annotation.Nullable;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static io.github.datromtool.SystemUtils.OperatingSystem.WINDOWS;
 import static java.nio.file.Files.newInputStream;
 import static java.nio.file.StandardOpenOption.CREATE;
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ArchiveUtils {
+
+    public static volatile Path tempBinDir;
+
+    public static void deleteFolder(@Nullable Path folder) throws IOException {
+        if (folder == null) {
+            return;
+        }
+        Files.walkFileTree(folder, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return super.visitFile(file, attrs);
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return super.postVisitDirectory(dir, exc);
+            }
+        });
+        Files.deleteIfExists(folder);
+    }
 
     public static String normalizePath(String path) {
         return path.indexOf('\\') > 0
@@ -145,6 +171,15 @@ public final class ArchiveUtils {
     private static final Pattern RAR_LIST =
             Pattern.compile("^\\s*\\S+\\s+([0-9]+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S.+\\S)\\s*$");
 
+    private static final Pattern COMMAND_NOT_FOUND =
+            Pattern.compile("error=2, (No such file or directory|The system cannot find the file specified)", CASE_INSENSITIVE);
+
+    public static boolean isExternalRarAvailable() {
+        return isUnrarAvailable() || isSevenZipAvailable();
+    }
+
+    private static volatile String unrarPath = "unrar";
+
     private static volatile Boolean isUnrarAvailableCache;
 
     public static boolean isUnrarAvailable() {
@@ -157,26 +192,259 @@ public final class ArchiveUtils {
             if (value != null) {
                 return value;
             }
-            ProcessBuilder pb = new ProcessBuilder("unrar", "-inul");
-            try {
-                Process process = pb.start();
-                value = process.waitFor() == 0;
-            } catch (IOException | InterruptedException e) {
-                log.error("Could not check if 'unrar' is available", e);
-                value = false;
+            value = checkUnrarPath(unrarPath);
+            if (!value) {
+                copyUnrar();
             }
+            value = checkUnrarPath(unrarPath);
             isUnrarAvailableCache = value;
             return value;
         }
     }
 
-    private static boolean isRarFileOk(Path path) {
-        ProcessBuilder pb = new ProcessBuilder("unrar", "t", path.toAbsolutePath().normalize().toString());
+    private static void copyUnrar() {
+        createTempBinDir();
+        if (tempBinDir != null) {
+            switch (SystemUtils.OPERATING_SYSTEM) {
+                case WINDOWS:
+                    switch (SystemUtils.ARCHITECTURE) {
+                        case X86_32:
+                            unrarPath = copyToTempBinDir("bin/unrar/windows/unrar-x86.exe", "unrar.exe");
+                            break;
+                        case X86_64:
+                            unrarPath = copyToTempBinDir("bin/unrar/windows/unrar-x64.exe", "unrar.exe");
+                            break;
+                        default:
+                            unrarPath = null;
+                    }
+                    break;
+                case LINUX:
+                    switch (SystemUtils.ARCHITECTURE) {
+                        case X86_32:
+                            unrarPath = copyToTempBinDir("bin/unrar/linux/unrar-x32", "unrar");
+                            break;
+                        case X86_64:
+                            unrarPath = copyToTempBinDir("bin/unrar/linux/unrar-x64", "unrar");
+                            break;
+                        case ARM_32:
+                        case ARM_64:
+                            unrarPath = copyToTempBinDir("bin/unrar/linux/unrar-arm", "unrar");
+                            break;
+                        case POWER_PC_32:
+                        case POWER_PC_64:
+                            unrarPath = copyToTempBinDir("bin/unrar/linux/unrar-ppc", "unrar");
+                            break;
+                        default:
+                            unrarPath = null;
+                    }
+                    break;
+                case BSD:
+                    switch (SystemUtils.ARCHITECTURE) {
+                        case X86_32:
+                            unrarPath = copyToTempBinDir("bin/unrar/bsd/unrar-x32", "unrar");
+                            break;
+                        case X86_64:
+                            unrarPath = copyToTempBinDir("bin/unrar/bsd/unrar-x64", "unrar");
+                            break;
+                        default:
+                            unrarPath = null;
+                    }
+                    break;
+                case OSX:
+                    switch (SystemUtils.ARCHITECTURE) {
+                        case X86_64:
+                            unrarPath = copyToTempBinDir("bin/unrar/macos/unrar-x64", "unrar");
+                            break;
+                        case ARM_64:
+                            unrarPath = copyToTempBinDir("bin/unrar/macos/unrar-arm64", "unrar");
+                            break;
+                        default:
+                            unrarPath = null;
+                    }
+                    break;
+                default:
+                    unrarPath = null;
+            }
+        }
+        if (unrarPath == null) {
+            log.warn("Could not find a suitable version of unrar for this combination of OS and architecture");
+        }
+    }
+
+    private static boolean checkUnrarPath(String unrarPath) {
+        return unrarPath != null && checkProcess(unrarPath, "-inul");
+    }
+
+    private static final Pattern SEVEN_ZIP_LIST =
+            Pattern.compile("^\\s*(\\S+)\\s+(\\S+)\\s+\\S+\\s+([0-9]+)\\s+[0-9]+\\s+(\\S+)\\s*$");
+
+    private static volatile String sevenZipPath;
+
+    private static volatile Boolean isSevenZipAvailableCache;
+
+    public static boolean isSevenZipAvailable() {
+        Boolean value = isSevenZipAvailableCache;
+        if (value != null) {
+            return value;
+        }
+        synchronized (ArchiveUtils.class) {
+            value = isSevenZipAvailableCache;
+            if (value != null) {
+                return value;
+            }
+            copySevenZip();
+            value = checkSevenZipPath(sevenZipPath);
+            isSevenZipAvailableCache = value;
+            return value;
+        }
+    }
+
+    private static void copySevenZip() {
+        createTempBinDir();
+        if (tempBinDir != null) {
+            switch (SystemUtils.OPERATING_SYSTEM) {
+                case WINDOWS:
+                    switch (SystemUtils.ARCHITECTURE) {
+                        case X86_32:
+                            sevenZipPath = copyToTempBinDir("bin/7zip/windows/x32/7z.exe", "7z.exe");
+                            copyToTempBinDir("bin/7zip/windows/x32/7z.dll", "7z.dll");
+                            break;
+                        case X86_64:
+                            sevenZipPath = copyToTempBinDir("bin/7zip/windows/x64/7z.exe", "7z.exe");
+                            copyToTempBinDir("bin/7zip/windows/x64/7z.dll", "7z.dll");
+                            break;
+                        case ARM_64:
+                            sevenZipPath = copyToTempBinDir("bin/7zip/windows/arm64/7z.exe", "7z.exe");
+                            copyToTempBinDir("bin/7zip/windows/arm64/7z.dll", "7z.dll");
+                            break;
+                        default:
+                            sevenZipPath = null;
+                    }
+                    break;
+                case LINUX:
+                    switch (SystemUtils.ARCHITECTURE) {
+                        case X86_32:
+                            sevenZipPath = copyToTempBinDir("bin/7zip/linux/x32/7zzs", "7zzs");
+                            break;
+                        case X86_64:
+                            sevenZipPath = copyToTempBinDir("bin/7zip/linux/x64/7zzs", "7zzs");
+                            break;
+                        case ARM_32:
+                            sevenZipPath = copyToTempBinDir("bin/7zip/linux/arm/7zzs", "7zzs");
+                            break;
+                        case ARM_64:
+                            sevenZipPath = copyToTempBinDir("bin/7zip/linux/arm64/7zzs", "7zzs");
+                            break;
+                        default:
+                            sevenZipPath = null;
+                    }
+                    break;
+                case OSX:
+                    switch (SystemUtils.ARCHITECTURE) {
+                        case X86_64:
+                        case ARM_64:
+                            sevenZipPath = copyToTempBinDir("bin/7zip/macos/7zz", "7zz");
+                            break;
+                        default:
+                            sevenZipPath = null;
+                    }
+                    break;
+                default:
+                    sevenZipPath = null;
+            }
+        }
+        if (sevenZipPath == null) {
+            log.warn("Could not find a suitable version of 7-Zip for this combination of OS and architecture");
+        }
+    }
+
+    private static boolean checkSevenZipPath(String sevenZipPath) {
+        return sevenZipPath != null && checkProcess(sevenZipPath);
+    }
+
+    private static boolean checkProcess(String... args) {
+        ProcessBuilder pb = new ProcessBuilder(args);
         try {
             Process process = pb.start();
             return process.waitFor() == 0;
-        } catch (IOException | InterruptedException e) {
-            log.error("'unrar' could not test file '{}'", path, e);
+        } catch (IOException e) {
+            if (!isFileNotFoundError(e)) {
+                log.error("Failed to run '{}'", String.join(" ", args), e);
+            }
+            return false;
+        } catch (InterruptedException e) {
+            log.error("Failed to run '{}'", String.join(" ", args), e);
+            return false;
+        }
+    }
+
+    private static String copyToTempBinDir(String path, String destination) {
+        Path finalDestination = tempBinDir.resolve(destination);
+        try (InputStream stream = ClassLoader.getSystemResource(path).openStream()) {
+            Files.copy(stream, finalDestination, StandardCopyOption.REPLACE_EXISTING);
+            log.info("Copied '{}' to '{}'", path, finalDestination);
+            if (!finalDestination.toFile().setExecutable(true)) {
+                if (SystemUtils.OPERATING_SYSTEM != WINDOWS) {
+                    log.warn("Failed to make '{}' executable", finalDestination);
+                }
+            }
+            return finalDestination.toString();
+        } catch (IOException e) {
+            log.error("Could not copy file '{}' to '{}'", path, finalDestination, e);
+            return null;
+        }
+    }
+
+    private static void createTempBinDir() {
+        if (tempBinDir != null) {
+            return;
+        }
+        synchronized (ArchiveUtils.class) {
+            if (tempBinDir != null) {
+                return;
+            }
+            try {
+                tempBinDir = Files.createTempDirectory("datromtool_bin_");
+                Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                    try {
+                        deleteFolder(tempBinDir);
+                    } catch (Exception e) {
+                        log.error("Could not delete temporary folder '{}'", tempBinDir, e);
+                    }
+                }));
+            } catch (IOException e) {
+                log.error("Could not create temporary directory", e);
+            }
+        }
+    }
+
+    private static boolean isFileNotFoundError(IOException e) {
+        while (e.getCause() instanceof IOException) {
+            e = (IOException) e.getCause();
+        }
+        return COMMAND_NOT_FOUND.matcher(e.getMessage()).find();
+    }
+
+    private static boolean isBadRarFile(Path path) {
+        if (isUnrarAvailable()) {
+            ProcessBuilder pb = new ProcessBuilder(unrarPath, "t", path.toAbsolutePath().normalize().toString());
+            try {
+                Process process = pb.start();
+                return process.waitFor() != 0;
+            } catch (IOException | InterruptedException e) {
+                log.error("'unrar' could not test file '{}'", path, e);
+                return false;
+            }
+        } else if (isSevenZipAvailable()) {
+            ProcessBuilder pb = new ProcessBuilder(sevenZipPath, "t", path.toAbsolutePath().normalize().toString());
+            try {
+                Process process = pb.start();
+                return process.waitFor() != 0;
+            } catch (IOException | InterruptedException e) {
+                log.error("'7z' could not test file '{}'", path, e);
+                return false;
+            }
+        } else {
             return false;
         }
     }
@@ -186,10 +454,10 @@ public final class ArchiveUtils {
         if (!isUnrarAvailable()) {
             throw new UnsupportedOperationException("'unrar' is not available");
         }
-        if (!isRarFileOk(path)) {
+        if (isBadRarFile(path)) {
             throw new BadRarArchiveException();
         }
-        String[] arguments = {"unrar", "l", path.toAbsolutePath().normalize().toString()};
+        String[] arguments = {unrarPath, "l", path.toAbsolutePath().normalize().toString()};
         ProcessBuilder pb = new ProcessBuilder(arguments);
         try {
             Process process = pb.start();
@@ -197,7 +465,7 @@ public final class ArchiveUtils {
                     .map(RAR_LIST::matcher)
                     .filter(Matcher::matches)
                     .map(m -> UnrarArchiveEntry.builder()
-                            .name(normalizePath(m.group(4)))
+                            .name(m.group(4))
                             .size(Long.parseLong(m.group(1)))
                             .modificationTime(LocalDateTime.parse(String.format(
                                     "%sT%s:00",
@@ -226,28 +494,16 @@ public final class ArchiveUtils {
         ImmutableList<UnrarArchiveEntry> desiredEntries = allEntries.stream()
                 .filter(e -> desiredEntryNames.contains(e.getName()))
                 .collect(ImmutableList.toImmutableList());
-        ImmutableList<String> exclusions = allEntries.stream()
-                .map(UnrarArchiveEntry::getName)
-                .filter(name -> !desiredEntryNames.contains(name))
-                .collect(ImmutableList.toImmutableList());
-        String[] arguments = {
-                "unrar",
-                "p",
-                "-inul",
-                "-x@",
-                path.toAbsolutePath().normalize().toString()
-        };
+        List<String> arguments = ImmutableList.<String>builder()
+                .add(unrarPath)
+                .add("p")
+                .add("-inul")
+                .add(path.toAbsolutePath().normalize().toString())
+                .addAll(desiredEntries.stream().map(UnrarArchiveEntry::getName).iterator())
+                .build();
         ProcessBuilder pb = new ProcessBuilder(arguments);
         try {
             Process process = pb.start();
-            BufferedWriter writer =
-                    new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-            for (String exclusion : exclusions) {
-                writer.write(exclusion);
-                writer.newLine();
-            }
-            writer.flush();
-            writer.close();
             InputStream processInputStream = process.getInputStream();
             for (UnrarArchiveEntry desiredFile : desiredEntries) {
                 consumer.accept(desiredFile, processInputStream);
@@ -258,6 +514,76 @@ public final class ArchiveUtils {
             }
         } catch (InterruptedException e) {
             log.error("'unrar' could not read contents of file '{}'", path, e);
+        }
+    }
+
+    public static ImmutableList<UnrarArchiveEntry> listRarEntriesWithSevenZip(Path path)
+            throws IOException, RarException {
+        if (!isSevenZipAvailable()) {
+            throw new UnsupportedOperationException("'7z' is not available");
+        }
+        if (isBadRarFile(path)) {
+            throw new BadRarArchiveException();
+        }
+        String[] arguments = {sevenZipPath, "l", "-ba", path.toAbsolutePath().normalize().toString()};
+        ProcessBuilder pb = new ProcessBuilder(arguments);
+        try {
+            Process process = pb.start();
+            ImmutableList<UnrarArchiveEntry> fileList = readStdout(process)
+                    .map(SEVEN_ZIP_LIST::matcher)
+                    .filter(Matcher::matches)
+                    .map(m -> UnrarArchiveEntry.builder()
+                            .name(m.group(4))
+                            .size(Long.parseLong(m.group(3)))
+                            .modificationTime(LocalDateTime.parse(String.format(
+                                    "%sT%s",
+                                    m.group(1),
+                                    m.group(2))))
+                            .build())
+                    .filter(e -> e.getSize() > 0)
+                    .collect(ImmutableList.toImmutableList());
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                log.error("Unexpected error while running '{}'. Exit code: {}", String.join(" ", arguments), exitCode);
+            }
+            return fileList;
+        } catch (InterruptedException e) {
+            log.error("'7z' could not list contents of file '{}'", path, e);
+            return ImmutableList.of();
+        }
+    }
+
+    public static <T extends Throwable> void readRarWithSevenZip(
+            Path path,
+            Set<String> desiredEntryNames,
+            ThrowingBiConsumer<UnrarArchiveEntry, InputStream, T> consumer)
+            throws IOException, RarException, T {
+        ImmutableList<UnrarArchiveEntry> allEntries = listRarEntriesWithSevenZip(path);
+        ImmutableList<UnrarArchiveEntry> desiredEntries = allEntries.stream()
+                .filter(e -> desiredEntryNames.contains(e.getName()))
+                .collect(ImmutableList.toImmutableList());
+        List<String> arguments = ImmutableList.<String>builder()
+                .add(sevenZipPath)
+                .add("e")
+                .add("-so")
+                .add("-bd")
+                .add("-ba")
+                .add(path.toAbsolutePath().normalize().toString())
+                .addAll(desiredEntries.stream().map(UnrarArchiveEntry::getName).iterator())
+                .build();
+        ProcessBuilder pb = new ProcessBuilder(arguments);
+        try {
+            Process process = pb.start();
+            InputStream processInputStream = process.getInputStream();
+            for (UnrarArchiveEntry desiredFile : desiredEntries) {
+                consumer.accept(desiredFile, processInputStream);
+            }
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                log.error("Unexpected error while running '{}'. Exit code: {}", String.join(" ", arguments), exitCode);
+            }
+        } catch (InterruptedException e) {
+            log.error("'7z' could not read contents of file '{}'", path, e);
         }
     }
 

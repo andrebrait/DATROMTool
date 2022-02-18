@@ -5,6 +5,7 @@ import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.data.RegionData;
 import io.github.datromtool.domain.datafile.Datafile;
 import io.github.datromtool.domain.detector.Detector;
+import io.github.datromtool.util.ArchiveUtils;
 import io.github.datromtool.util.XMLValidator;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.junit.jupiter.api.AfterEach;
@@ -15,11 +16,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
@@ -46,19 +47,7 @@ class SerializationHelperTest extends ConfigDependantTest {
 
     @AfterEach
     void tearDown() throws Exception {
-        Files.walkFileTree(tempDir, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return super.visitFile(file, attrs);
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
-                return super.postVisitDirectory(dir, exc);
-            }
-        });
+        ArchiveUtils.deleteFolder(tempDir);
     }
 
     @ParameterizedTest
@@ -70,192 +59,6 @@ class SerializationHelperTest extends ConfigDependantTest {
         }
         assertNotNull(datafile);
         assertFalse(datafile.getGames().isEmpty());
-//        ImmutableList<ParsedGame> parsedGameList = new GameParser(
-//                defaultHelper.loadRegionData(),
-//                GameParser.DivergenceDetection.ONE_WAY)
-//                .parse(datafile);
-//        GameSorter gameSorter = new GameSorter(
-//                SortingPreference.builder()
-//                        .regions(ImmutableSet.of("USA", "UK", "EUR"))
-//                        .languages(ImmutableSet.of("en", "es"))
-//                        .prioritizeLanguages(true)
-//                        .avoids(ImmutableSet.of(
-//                                Pattern.compile("Virtual Console", CASE_INSENSITIVE)))
-//                        .build());
-//        ImmutableMap<String, ImmutableList<ParsedGame>> gamesByParent = gameSorter
-//                .sortAndGroupByParent(parsedGameList);
-//        GameFilterer gameFilterer = new GameFilterer(
-//                Filter.builder()
-//                        .regions(ImmutableSet.of("USA", "UK", "EUR"))
-//                        .languages(ImmutableSet.of("en", "es"))
-//                        .noBeta(true)
-//                        .noDemo(true)
-//                        .noProto(true)
-//                        .noSample(true)
-//                        .noBios(true)
-//                        .excludes(ImmutableSet.of(
-//                                Pattern.compile("GameCube", CASE_INSENSITIVE)))
-//                        .build(),
-//                PostFilter.builder().build());
-//        ImmutableMap<String, ImmutableList<ParsedGame>> filteredGames = gamesByParent.entrySet()
-//                .stream()
-//                .map(e -> ImmutablePair.of(
-//                        e.getKey(),
-//                        gameFilterer.postFilter(gameFilterer.filter(e.getValue()))))
-//                .filter(p -> CollectionUtils.isNotEmpty(p.getRight()))
-//                .collect(ImmutableMap.toImmutableMap(Pair::getLeft, Pair::getRight));
-//        Detector detector = defaultHelper
-//                .loadDetector("No-Intro_NES.xml");
-//        ImmutableList<FileScanner.Result> results =
-//                new FileScanner(
-//                        Runtime.getRuntime().availableProcessors(),
-//                        datafile,
-//                        detector,
-//                        new FileScanner.Listener() {
-//
-//                            @Override
-//                            void reportTotalItems(int totalItems) {
-//                                logger.info("Reporting {} total items", totalItems);
-//                            }
-//
-//                            @Override
-//                            void reportStart(Path label, int thread) {
-//                                logger.info(
-//                                        "Reporting starting to read '{}'",
-//                                        label);
-//                            }
-//
-//                            @Override
-//                            void reportProgress(
-//                                    Path label,
-//                                    int thread,
-//                                    int percentage,
-//                                    long speed) {
-//                                ByteUnit unit = ByteUnit.getUnit(speed);
-//                                logger.info(
-//                                        "Reporting {}% for '{}' ({} {}/s)",
-//                                        percentage,
-//                                        label,
-//                                        String.format("%.02f", unit.convert(speed)),
-//                                        unit.getSymbol());
-//                            }
-//
-//                            @Override
-//                            void reportSkip(Path label, int thread, String message) {
-//                                // Do nothing
-//                            }
-//
-//                            @Override
-//                            void reportFailure(
-//                                    Path label,
-//                                    int thread,
-//                                    String message,
-//                                    Throwable cause) {
-//                                String causeMessage = cause.getMessage();
-//                                logger.error(
-//                                        "Reporting failure for '{}': {}. Cause: {}",
-//                                        label,
-//                                        message,
-//                                        StringUtils.isNotEmpty(causeMessage)
-//                                                ? causeMessage
-//                                                : cause.getClass().getSimpleName());
-//                            }
-//
-//                            @Override
-//                            void reportFinish(Path label, int thread) {
-//                                logger.info("Reporting finish for '{}'", label);
-//                            }
-//                        })
-//                        .scan(Paths.get("/home/andre/Downloads/test-1g1r"));
-//
-//        Path out = SystemUtils.getUserHome().toPath().resolve("Downloads").resolve("result-1g1r");
-//        Files.createDirectories(out);
-//        Map<Path, List<FileScanner.Result>> allWithSameOrigin = results.stream()
-//                .collect(Collectors.groupingBy(FileScanner.Result::getPath, Collectors.toList()));
-//        Set<FileCopier.CopyDefinition> copyDefinitions = allWithSameOrigin.entrySet().stream()
-//                .filter(e -> CollectionUtils.isNotEmpty(e.getValue()))
-//                .map(e -> {
-//                    ArchiveType type = e.getValue().get(0).getArchiveType();
-//                    Path from = e.getKey();
-//                    Path to = type == ArchiveType.RAR
-//                            ? out.resolve(from.getFileName() + ".zip")
-//                            : out.resolve(from.getFileName());
-//                    ImmutableSet<FileCopier.ArchiveCopyDefinition> archiveCopyDefinitions;
-//                    if (type == ArchiveType.NONE) {
-//                        archiveCopyDefinitions = ImmutableSet.of();
-//                    } else {
-//                        archiveCopyDefinitions = e.getValue()
-//                                .stream()
-//                                .map(FileScanner.Result::getArchivePath)
-//                                .filter(StringUtils::isNotBlank)
-//                                .map(s -> FileCopier.ArchiveCopyDefinition.builder()
-//                                        .source(s)
-//                                        .destination(s)
-//                                        .build())
-//                                .collect(ImmutableSet.toImmutableSet());
-//                    }
-//                    return FileCopier.CopyDefinition.builder()
-//                            .fromType(type)
-//                            .from(from)
-//                            .to(to)
-//                            .archiveCopyDefinitions(archiveCopyDefinitions)
-//                            .build();
-//                }).collect(ImmutableSet.toImmutableSet());
-//        new FileCopier(true, 1, new FileCopier.Listener() {
-//
-//            @Override
-//            void reportStart(Path from, Path to, int thread) {
-//                logger.info(
-//                        "Reporting starting to copy '{}' to '{}'",
-//                        from,
-//                        to);
-//            }
-//
-//            @Override
-//            void reportProgress(
-//                    Path from,
-//                    Path to,
-//                    int thread,
-//                    int percentage,
-//                    long speed) {
-//                ByteUnit unit = ByteUnit.getUnit(speed);
-//                logger.info(
-//                        "Reporting {}% for '{}' to '{}' ({} {}/s)",
-//                        percentage,
-//                        from,
-//                        to,
-//                        String.format("%.02f", unit.convert(speed)),
-//                        unit.getSymbol());
-//            }
-//
-//            @Override
-//            void reportSkip(Path from, Path to, int thread, String message) {
-//                // Do nothing
-//            }
-//
-//            @Override
-//            void reportFailure(
-//                    Path from,
-//                    Path to,
-//                    int thread,
-//                    String message,
-//                    Throwable cause) {
-//                String causeMessage = cause.getMessage();
-//                logger.error(
-//                        "Reporting failure for '{}' to '{}': {}. Cause: {}",
-//                        from,
-//                        to,
-//                        message,
-//                        StringUtils.isNotEmpty(causeMessage)
-//                                ? causeMessage
-//                                : cause.getClass().getSimpleName());
-//            }
-//
-//            @Override
-//            void reportFinish(Path from, Path to, int thread) {
-//                logger.info("Reporting finish for '{}' to '{}'", from, to);
-//            }
-//        }).copy(copyDefinitions);
         XMLValidator.validateDat(emptyHelper.getXmlMapper().writeValueAsBytes(datafile));
     }
 
