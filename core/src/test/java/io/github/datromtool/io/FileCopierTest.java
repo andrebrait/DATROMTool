@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static io.github.datromtool.util.ArchiveUtils.normalizePath;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FileCopierTest extends ConfigDependantTest {
@@ -111,12 +112,13 @@ class FileCopierTest extends ConfigDependantTest {
                     FileScanner.Result pathlessResult = r.withPath(Paths.get(""));
                     FileScanner.Result pathlessResult2 = r2.withPath(Paths.get(""));
                     if (r.getArchiveType() == ArchiveType.RAR) {
-                        assertEquals(
-                                pathlessResult.withArchiveType(ArchiveType.ZIP),
-                                pathlessResult2);
-                    } else {
-                        assertEquals(pathlessResult, pathlessResult2);
+                        pathlessResult = pathlessResult
+                                .withArchivePath(normalizePath(pathlessResult.getArchivePath()))
+                                .withArchiveType(ArchiveType.ZIP);
+                        pathlessResult2 = pathlessResult2
+                                .withArchivePath(normalizePath(pathlessResult2.getArchivePath()));
                     }
+                    assertEquals(pathlessResult, pathlessResult2);
                 }
             }
         }
