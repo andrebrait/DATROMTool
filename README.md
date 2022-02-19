@@ -24,10 +24,9 @@ They contain the files needed with correct names and checksums to allow you to r
 Basically, it boils down to:
 
 1. Functionality in other tools was either missing or not up to the task
-2. Despite the great effort the community puts into it, DAT files are not perfect.
-They might have issues such as:
-  1. Lack information, such as language
-  2. Mismatching region information
+2. Despite the great effort the community puts into it, DAT files are not perfect. They might have issues such as:
+    1. Lack information, such as language
+    2. Mismatching region information
 3. Existing tools are incapable of detecting and correcting these issues
 4. Current XML-based DAT formats make adding information cumbersome
 5. Most existing tools target only Windows running on x86 CPUs
@@ -60,16 +59,16 @@ Currently, DATROMTool supports:
 
 - Parsing DAT files in the Logiqx format
 - Parse additional information from names in the No-Intro naming convention, such as:
-  - Regions
-  - Languages
-  - Version/Revision
-  - Pre-release status
-  - Type of "game", such as BIOSes, Programs, among others
+    - Regions
+    - Languages
+    - Version/Revision
+    - Pre-release status
+    - Type of "game", such as BIOSes, Programs, among others
 - Point out divergences and possible issues in the DAT, such as:
-  - Diverging Region information between what's parsed and what's in the DAT
-  - Diverging Language information between what's parsed and what's in the DAT
+    - Diverging Region information between what's parsed and what's in the DAT
+    - Diverging Language information between what's parsed and what's in the DAT
 - Convert from and to:
-  - Logiqx XML DAT format
-  - DATROMTool XML DAT format
-  - JSON format
-  - YAML format
+    - Logiqx XML DAT format
+    - DATROMTool XML DAT format
+    - JSON format
+    - YAML format
