@@ -23,17 +23,16 @@ They contain the files needed with correct names and checksums to allow you to r
 
 Basically, it boils down to:
 
-1. Other tools didn't support what I wanted to do, or didn't do it very well
-2. Despite the great effort the community puts into it, DAT files are not perfect
-   1. Other tools weren't capable of identifying these issues
-   2. they lack 
-3. 
+1. Functionality in other tools was either missing or not up to the task
+2. Despite the great effort the community puts into it, DAT files are not perfect.
+They might have issues such as:
+  1. Lack information, such as language
+  2. Mismatching region information
+3. Existing tools are incapable of detecting and correcting these issues
+4. Current XML-based DAT formats make adding information cumbersome
+5. Most existing tools target only Windows running on x86 CPUs
 
-
-I wanted to do things other tools didn't support very well, or at all, and most of the ones that already existed targeted only Windows running on x86 CPUs. 
-On top of that, DAT files often contain conflicting data, making some operations on existing tools either painful to perform or impossible.
-
-Example taken from _No-Intro Nintendo - Game Boy Advance (Parent-Clone) (20220215-012049)_, which uses the [No-Intro Naming Convention](https://wiki.no-intro.org/index.php?title=Naming_Convention).:
+See an example of issues in a DAT file below, taken from _No-Intro Nintendo - Game Boy Advance (Parent-Clone) (20220215-012049)_, which uses the [No-Intro Naming Convention](https://wiki.no-intro.org/index.php?title=Naming_Convention).:
 
 ```xml
 <game name="2 Games in 1 - Finding Nemo + Finding Nemo - The Continuing Adventures (Europe) (Es,It+En,Es,It,Sv,Da)" cloneof="2 Games in 1 - Finding Nemo + Finding Nemo - The Continuing Adventures (Europe) (En+En,Es,It,Sv,Da)">
@@ -44,14 +43,33 @@ Example taken from _No-Intro Nintendo - Game Boy Advance (Parent-Clone) (2022021
 </game>
 ```
 
-The release entries suggest this game should be considered the regions of Italy and Spain, but the name suggests its region is Europe.
+We can see that:
 
-There is also no information on language other than the name.
+- The release entries suggest this game should be considered released in the regions of Italy and Spain, but the name suggests it was released in Europe as a whole
+- There is also no information on language other than in the name
 
-Other tools often make use of only one source of information. This means the ROM above would _not_ be selected in a query like "select all games with an European release". 
+Therefore, the following issues would arise from using this DAT in existing tools, which rely solely on the data in the DAT and don't parse anything from the game's name:
 
-The lack of language information also makes impossible to do something like "select all games with releases from the USA, Europe and Japan, but only if they're in English or German".
+- The game would _not_ be selected in a query like "select all games with an European release", even though its name suggests it's an European release
+- The game would _not_ be selected in a query like "select all games in Spanish", even though it clearly is in Spanish 
+- It would never come up in a query like "select all games with releases from the USA, Europe and Japan, but only if they're in English, Spanish or German".
 
-Currently, it supports:
+## Capabilities
 
-- Parsing DAT files
+Currently, DATROMTool supports:
+
+- Parsing DAT files in the Logiqx format
+- Parse additional information from names in the No-Intro naming convention, such as:
+  - Regions
+  - Languages
+  - Version/Revision
+  - Pre-release status
+  - Type of "game", such as BIOSes, Programs, among others
+- Point out divergences and possible issues in the DAT, such as:
+  - Diverging Region information between what's parsed and what's in the DAT
+  - Diverging Language information between what's parsed and what's in the DAT
+- Convert from and to:
+  - Logiqx XML DAT format
+  - DATROMTool XML DAT format
+  - JSON format
+  - YAML format
