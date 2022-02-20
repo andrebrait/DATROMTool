@@ -45,7 +45,7 @@ See an example of issues in a DAT file below, taken from _No-Intro Nintendo - Ga
 We can see that:
 
 - The release entries suggest this game should be considered released in the regions of Italy and Spain, but the name suggests it was released in Europe as a whole
-- There is also no information on language other than in the name
+- There is also no information on language other than in the name, *even though the specification supports it*
 
 Therefore, the following issues would arise from using this DAT in existing tools, which rely solely on the data in the DAT and don't parse anything from the game's name:
 
