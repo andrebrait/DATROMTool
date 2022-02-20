@@ -58,7 +58,7 @@ Therefore, the following issues would arise from using this DAT in existing tool
 Currently, DATROMTool supports:
 
 - Parsing DAT files in the Logiqx format
-- Parse additional information from names in the No-Intro naming convention, such as:
+- Parsing additional information from names in the No-Intro naming convention, such as:
     - Regions
     - Languages
     - Version/Revision
@@ -69,7 +69,35 @@ Currently, DATROMTool supports:
     - Diverging Language information between what's parsed and what's in the DAT
 - Convert from and to:
     - [Logiqx XML DAT format](https://github.com/SabreTools/SabreTools/wiki/DatFile-Formats#logiqx-xml-format)
-    - JSON format
-    - YAML format
+    - DATROMTool JSON format
+    - DATROMTool YAML format
+ - Matching ROMs based on file hashes, in the following order, as long as they're available in the DAT file:
+    - SHA-1
+    - MD5
+    - File size + CRC
 
+DATROMTool can work with the following archive formats:
 
+| Archive format | Read | Write |
+|----------------|------|-------|
+| Zip            | ✅    | ✅     |
+| RAR            | ✅*   | ❌     |
+| 7z             | ✅    | ✅     |
+| TAR            | ✅    | ✅     |
+
+- RAR up to version 4 is natively supported
+- RAR 5 is supported through external executables
+    - UnRAR, if present in your `PATH`
+    - 7-Zip
+    - DATROMTool includes executables for either UnRAR and 7-Zip for the following platforms and architectures, meaning you shouldn't have to install anything in order to use it:
+        - Windows (x86, x64 and ARM64)
+        - Linux (x86, x64, ARM and ARM64)
+        - macOS (x64 and ARM64)
+        - BSD (x86 and x64)
+
+The following compression algorithms are supoorted either plain or used in conjunction with TAR archives (both read and write):
+
+- GZip
+- BZip2
+- LZMA
+- XZ
