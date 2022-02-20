@@ -3,7 +3,7 @@
 
     <groupId>io.github.datromtool</groupId>
     <artifactId>datromtool</artifactId>
-    <version>1.0.0-RC2</version>
+    <version>1.0.0-RC2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>DATROMTool</name>
@@ -28,7 +28,7 @@
         <connection>scm:git:git@github.com:andrebrait/DATROMTool.git</connection>
         <developerConnection>scm:git:git@github.com:andrebrait/DATROMTool.git</developerConnection>
         <url>https://github.com/andrebrait/DATROMTool</url>
-        <tag>1.0.0-RC1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
