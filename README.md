@@ -31,7 +31,7 @@ Basically, it boils down to:
 4. Most widely-used XML-based DAT formats make adding information cumbersome
 5. Most existing tools target only Windows running on x86 CPUs
 
-See an example of issues in a DAT file below, taken from _No-Intro Nintendo - Game Boy Advance (Parent-Clone) (20220215-012049)_, which uses the [No-Intro Naming Convention](https://wiki.no-intro.org/index.php?title=Naming_Convention).:
+See an example of issues in a DAT file below, taken from _No-Intro Nintendo - Game Boy Advance (Parent-Clone) (20220215-012049)_, which uses the [No-Intro Naming Convention](https://wiki.no-intro.org/index.php?title=Naming_Convention):
 
 ```xml
 <game name="2 Games in 1 - Finding Nemo + Finding Nemo - The Continuing Adventures (Europe) (Es,It+En,Es,It,Sv,Da)" cloneof="2 Games in 1 - Finding Nemo + Finding Nemo - The Continuing Adventures (Europe) (En+En,Es,It,Sv,Da)">
