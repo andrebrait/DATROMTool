@@ -104,7 +104,7 @@ jobs:
           set -euo pipefail
           mkdir -p build
           for i in */target/*-jar-with-dependencies.jar; do
-            name="DATROMTool-$(basename $(echo "${i}" | sed -E 's/(?:DATROMTool-)?(.+)-jar-with-dependencies\.jar/\1/'))"
+            name="DATROMTool-$(basename "$(echo "${i}" | sed -E 's/(DATROMTool-)?(.+)-jar-with-dependencies\.jar/\2/')")"
             mv "${i}" "build/${name}.jar"
           done
           cd build
