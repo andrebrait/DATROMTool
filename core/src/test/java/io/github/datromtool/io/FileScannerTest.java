@@ -202,7 +202,7 @@ class FileScannerTest extends ConfigDependantTest {
         } else if (unrarAvailable || sevenZipAvailable) {
             return Stream.of(toggles[0], toggles[2]).map(Arguments::of);
         } else {
-            return Stream.of(toggles[2]).map(Arguments::of);
+            return Stream.of(new Boolean[][]{toggles[2]}).map(Arguments::of);
         }
     }
 
