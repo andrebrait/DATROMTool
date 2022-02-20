@@ -16,7 +16,6 @@ import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
@@ -31,10 +30,7 @@ import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
 
 import javax.annotation.Nullable;
 import java.io.*;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
@@ -44,6 +40,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static io.github.datromtool.SystemUtils.OperatingSystem.WINDOWS;
 import static java.nio.file.Files.newInputStream;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
@@ -58,7 +55,6 @@ public final class ArchiveUtils {
         if (folder == null) {
             return;
         }
-        log.info("Deleting folder '{}'", folder);
         Files.walkFileTree(folder, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
@@ -392,29 +388,20 @@ public final class ArchiveUtils {
 
     private static String copyToTempBinDir(String path, String destination) {
         Path finalDestination = tempBinDir.resolve(destination);
-        try (ZipArchiveInputStream zipFile = new ZipArchiveInputStream(ClassLoader.getSystemResource("bin.zip").openStream())) {
-            ZipArchiveEntry entry;
-            while ((entry = zipFile.getNextZipEntry()) != null) {
-                try (OutputStream outputStream = Files.newOutputStream(finalDestination)) {
-                    if (entry.getName().equals(path)) {
-                        byte[] buffer = new byte[32];
-                        long totalRead = 0;
-                        int bytesRead;
-                        int remainingBytes;
-                        while ((remainingBytes = (int) Math.min(entry.getSize() - totalRead, buffer.length)) > 0
-                                && (bytesRead = zipFile.read(buffer, 0, remainingBytes)) > -1) {
-                            totalRead += bytesRead;
-                            outputStream.write(buffer, 0, bytesRead);
-                        }
-                        log.info("Copied '{}' to '{}'", path, finalDestination);
-                        return finalDestination.toString();
-                    }
+        try (InputStream stream = ClassLoader.getSystemResource(path).openStream()) {
+            Files.copy(stream, finalDestination, StandardCopyOption.REPLACE_EXISTING);
+            log.info("Copied '{}' to '{}'", path, finalDestination);
+            File file = finalDestination.toFile();
+            if (!file.canExecute() && !file.setExecutable(true)) {
+                if (SystemUtils.OPERATING_SYSTEM != WINDOWS) {
+                    log.warn("Failed to make '{}' executable", finalDestination);
                 }
             }
+            return finalDestination.toString();
         } catch (IOException e) {
             log.error("Could not copy file '{}' to '{}'", path, finalDestination, e);
+            return null;
         }
-        return null;
     }
 
     private static void createTempBinDir() {
