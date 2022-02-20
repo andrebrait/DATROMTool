@@ -5,9 +5,21 @@ name: CI
 
 on:
   push:
+    paths-ignore:
+      - LICENSE
+      - README.md
+      - .gitignore
+      - .gitattributes
     branches:
       - master
+    tags:
+      - v*
   pull_request:
+    paths-ignore:
+      - LICENSE
+      - README.md
+      - .gitignore
+      - .gitattributes
     branches:
       - master
 
@@ -17,8 +29,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        java: [ 8, 17 ]
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+        java:
+          - 8
+          - 17
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -52,3 +69,51 @@ jobs:
           --file pom.xml
           verify
           -U
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 8
+          check-latest: true
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2-
+      - name: Build package
+        run: >
+          mvn
+          --show-version
+          --batch-mode
+          --file pom.xml
+          package
+          -DskipTests
+      - name: Generate compressed artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          for i in */target/*-jar-with-dependencies.jar; do
+            name="DATROMTool-$(basename $(echo "${i}" | sed -E 's/(?:DATROMTool-)?(.+)-jar-with-dependencies\.jar/\1/'))"
+            mv "${i}" "build/${name}.jar"
+          done
+          cd build
+          for i in *.jar; do
+            name="$(echo "${i}" | sed -E 's/\.jar//')"
+            zip -j "${name}.zip" "${name}.jar" "../LICENSE" "../README.md")
+      - name: Create an automatic release
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: contains(github.ref, '-rc')
+          files: build/*.zip

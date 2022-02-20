@@ -18,9 +18,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>
-                                io.github.datromtool.cli.DatRomCommand
-                            </mainClass>
+                            <mainClass>io.github.datromtool.cli.DatRomCommand</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
