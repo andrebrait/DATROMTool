@@ -110,7 +110,8 @@ jobs:
           cd build
           for i in *.jar; do
             name="$(echo "${i}" | sed -E 's/\.jar//')"
-            zip -j "${name}.zip" "${name}.jar" "../LICENSE" "../README.md")
+            zip -j "${name}.zip" "${name}.jar" "../LICENSE" "../README.md"
+          done
       - name: Create an automatic release
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
