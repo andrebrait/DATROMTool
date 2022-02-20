@@ -7,7 +7,7 @@
 DATROMTool, or "_That_ ROM tool", is a platform-independent tool for performing operations on DAT files, arcade sets and video game ROMs.
 It is the successor to [1g1r-romset-generator](https://github.com/andrebrait/1g1r-romset-generator).
 
-It is heavily inspired by [SabreTools](https://github.com/SabreTools/SabreTools).
+It is heavily inspired by [SabreTools](https://github.com/SabreTools/SabreTools), which you should definitely check out.
 
 ## What are DAT files?
 
@@ -27,8 +27,8 @@ Basically, it boils down to:
 2. Despite the great effort the community puts into it, DAT files are not perfect. They might have issues such as:
     1. Lack information, such as language
     2. Mismatching region information
-3. Existing tools are incapable of detecting and correcting these issues
-4. Current XML-based DAT formats make adding information cumbersome
+3. Existing tools are incapable of detecting, pointing out and correcting these issues
+4. Most widely-used XML-based DAT formats make adding information cumbersome
 5. Most existing tools target only Windows running on x86 CPUs
 
 See an example of issues in a DAT file below, taken from _No-Intro Nintendo - Game Boy Advance (Parent-Clone) (20220215-012049)_, which uses the [No-Intro Naming Convention](https://wiki.no-intro.org/index.php?title=Naming_Convention).:
@@ -68,7 +68,8 @@ Currently, DATROMTool supports:
     - Diverging Region information between what's parsed and what's in the DAT
     - Diverging Language information between what's parsed and what's in the DAT
 - Convert from and to:
-    - Logiqx XML DAT format
-    - DATROMTool XML DAT format
+    - [Logiqx XML DAT format](https://github.com/SabreTools/SabreTools/wiki/DatFile-Formats#logiqx-xml-format)
     - JSON format
     - YAML format
+
+
