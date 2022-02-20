@@ -9,6 +9,7 @@ import io.github.datromtool.domain.datafile.Game;
 import io.github.datromtool.domain.datafile.Rom;
 import io.github.datromtool.util.ArchiveUtils;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -48,10 +49,38 @@ class FileScannerTest extends ConfigDependantTest {
 
     @ParameterizedTest
     @MethodSource("rar5Toggles")
-    void testScan_defaultSettings(boolean rar5Available, boolean forceUnrar, boolean forceSevenZip) {
+    void testScan_rar5(boolean rar5Available, boolean forceUnrar, boolean forceSevenZip) {
         boolean rar5Enabled = rar5Available && !(forceUnrar && forceSevenZip);
         FileScanner fileScanner = new FileScanner(
                 AppConfig.FileScannerConfig.builder().forceUnrar(forceUnrar).forceSevenZip(forceSevenZip).build(),
+                ImmutableList.of(),
+                ImmutableList.of(),
+                ImmutableList.of());
+        ImmutableList<FileScanner.Result> results =
+                fileScanner.scan(ImmutableList.of(testDataSource.resolve("rar5")));
+        if (rar5Enabled) {
+            assertFalse(results.isEmpty());
+            assertEquals(crc32sums.size(), results.size());
+            for (FileScanner.Result i : results) {
+                assertEquals(i.getUnheaderedSize(), i.getSize());
+                String filename = getFilename(i);
+                CrcKey crc32 = crc32sums.get(filename);
+                assertNotNull(crc32);
+                assertEquals((long) crc32.getSize(), i.getSize());
+                assertEquals(crc32.getCrc(), i.getDigest().getCrc());
+                assertEquals(md5sums.get(filename), i.getDigest().getMd5());
+                assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
+            }
+        } else {
+            assertTrue(results.isEmpty());
+        }
+    }
+
+    @Test
+    void testScan_defaultSettings() {
+        boolean rar5Enabled = isRar5Available();
+        FileScanner fileScanner = new FileScanner(
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(),
                 ImmutableList.of(),
                 ImmutableList.of());
@@ -74,12 +103,11 @@ class FileScannerTest extends ConfigDependantTest {
         }
     }
 
-    @ParameterizedTest
-    @MethodSource("rar5Toggles")
-    void testScan_minSizeLimit(boolean rar5Available, boolean forceUnrar, boolean forceSevenZip) {
-        boolean rar5Enabled = rar5Available && !(forceUnrar && forceSevenZip);
+    @Test
+    void testScan_minSizeLimit() {
+        boolean rar5Enabled = isRar5Available();
         FileScanner fileScanner = new FileScanner(
-                AppConfig.FileScannerConfig.builder().forceUnrar(forceUnrar).forceSevenZip(forceSevenZip).build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(buildDatafile(64 * 1024L, 64 * 1024L * 1024L)),
                 ImmutableList.of(),
                 ImmutableList.of());
@@ -102,12 +130,11 @@ class FileScannerTest extends ConfigDependantTest {
         }
     }
 
-    @ParameterizedTest
-    @MethodSource("rar5Toggles")
-    void testScan_maxSizeLimit(boolean rar5Available, boolean forceUnrar, boolean forceSevenZip) {
-        boolean rar5Enabled = rar5Available && !(forceUnrar && forceSevenZip);
+    @Test
+    void testScan_maxSizeLimit() {
+        boolean rar5Enabled = isRar5Available();
         FileScanner fileScanner = new FileScanner(
-                AppConfig.FileScannerConfig.builder().forceUnrar(forceUnrar).forceSevenZip(forceSevenZip).build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(buildDatafile(16 * 1024L, 768 * 1024L)),
                 ImmutableList.of(),
                 ImmutableList.of());
@@ -130,12 +157,11 @@ class FileScannerTest extends ConfigDependantTest {
         }
     }
 
-    @ParameterizedTest
-    @MethodSource("rar5Toggles")
-    void testScan_minAndMaxSizeLimit(boolean rar5Available, boolean forceUnrar, boolean forceSevenZip) {
-        boolean rar5Enabled = rar5Available && !(forceUnrar && forceSevenZip);
+    @Test
+    void testScan_minAndMaxSizeLimit() {
+        boolean rar5Enabled = isRar5Available();
         FileScanner fileScanner = new FileScanner(
-                AppConfig.FileScannerConfig.builder().forceUnrar(forceUnrar).forceSevenZip(forceSevenZip).build(),
+                AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(buildDatafile(64 * 1024L, 768 * 1024L)),
                 ImmutableList.of(),
                 ImmutableList.of());
@@ -156,6 +182,10 @@ class FileScannerTest extends ConfigDependantTest {
             assertEquals(md5sums.get(filename), i.getDigest().getMd5());
             assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
         }
+    }
+
+    private boolean isRar5Available() {
+        return ArchiveUtils.isUnrarAvailable(null) || ArchiveUtils.isSevenZipAvailable(null);
     }
 
     static Stream<Arguments> rar5Toggles() {
