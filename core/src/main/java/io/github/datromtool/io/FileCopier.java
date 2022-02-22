@@ -252,18 +252,18 @@ public final class FileCopier {
             listener.reportStart(index, spec.getFrom(), spec.getTo(), 1);
         }
         try {
+            BasicFileAttributes fromAttrib = Files.readAttributes(spec.getFrom(), BasicFileAttributes.class);
             try (InputStream inputStream = Files.newInputStream(spec.getFrom())) {
                 try (OutputStream outputStream = Files.newOutputStream(spec.getTo())) {
                     copyWithProgress(
                             index,
-                            Files.size(spec.getFrom()),
+                            fromAttrib.size(),
                             spec.getFrom(),
                             spec.getTo(),
                             inputStream::read,
                             outputStream::write);
                 }
             }
-            BasicFileAttributes fromAttrib = Files.readAttributes(spec.getFrom(), BasicFileAttributes.class);
             BasicFileAttributeView toAttrib = Files.getFileAttributeView(spec.getTo(), BasicFileAttributeView.class);
             toAttrib.setTimes(fromAttrib.lastModifiedTime(), fromAttrib.lastAccessTime(), fromAttrib.creationTime());
         } catch (Exception e) {
@@ -390,7 +390,7 @@ public final class FileCopier {
             }
         } catch (UnsupportedRarV5Exception e) {
             log.error(
-                    "Could not copy contents of '{}' to '{}'. RAR5 is not supported yet",
+                    "Could not copy contents of '{}' to '{}'. RAR5 is not natively supported yet.",
                     spec.getFrom(),
                     spec.getTo());
             for (Listener listener : listeners) {
@@ -613,7 +613,7 @@ public final class FileCopier {
                     zipArchiveOutputStream.putArchiveEntry(archiveEntry);
                     copyWithProgress(
                             index,
-                            Files.size(source),
+                            fromAttrib.size(),
                             source,
                             destination,
                             inputStream::read,
@@ -643,7 +643,7 @@ public final class FileCopier {
                     sevenZOutputFile.putArchiveEntry(archiveEntry);
                     copyWithProgress(
                             index,
-                            Files.size(source),
+                            fromAttrib.size(),
                             source,
                             destination,
                             inputStream::read,
@@ -674,7 +674,7 @@ public final class FileCopier {
                     tarOutputStream.putArchiveEntry(archiveEntry);
                     copyWithProgress(
                             index,
-                            Files.size(source),
+                            archiveEntry.getSize(),
                             source,
                             destination,
                             inputStream::read,

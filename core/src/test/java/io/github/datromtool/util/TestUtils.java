@@ -30,10 +30,11 @@ public final class TestUtils {
 
     public static RegionData getRegionByCode(RegionData regionData, String code, String... codes) {
         List<String> codeList = Arrays.asList(codes);
-        return RegionData.builder().regions(regionData.getRegions()
-                .stream()
-                .filter(r -> code.equals(r.getCode()) || codeList.contains(r.getCode()))
-                .collect(ImmutableSet.toImmutableSet()))
+        return RegionData.builder()
+                .regions(regionData.getRegions()
+                        .stream()
+                        .filter(r -> code.equals(r.getCode()) || codeList.contains(r.getCode()))
+                        .collect(ImmutableSet.toImmutableSet()))
                 .build();
     }
 
@@ -46,10 +47,6 @@ public final class TestUtils {
         return i.getArchivePath() != null
                 ? Paths.get(i.getArchivePath()).getFileName().toString()
                 : i.getPath().getFileName().toString();
-    }
-
-    public static String getUnheaderedFilename(FileScanner.Result i) {
-        return getFilename(i).replace("headered-", "");
     }
 
 }

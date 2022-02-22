@@ -78,12 +78,12 @@ Currently, DATROMTool supports:
 
 DATROMTool can work with the following archive formats:
 
-| Archive format | Read | Write |
-|----------------|------|-------|
-| Zip            | ✅    | ✅     |
-| RAR            | ✅*   | ❌     |
-| 7z             | ✅    | ✅     |
-| TAR            | ✅    | ✅     |
+| Format | Read | Write |
+|--------|------|-------|
+| Zip    | ✅    | ✅     |
+| RAR    | ✅*   | ❌     |
+| 7z     | ✅    | ✅     |
+| TAR    | ✅    | ✅     |
 
 - RAR up to version 4 is natively supported
 - RAR 5 is supported through external executables
