@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Value
-@AllArgsConstructor(staticName = "from")
+@AllArgsConstructor(staticName = "of")
 @JsonInclude(NON_NULL)
 public class CrcKey {
 
@@ -23,11 +23,11 @@ public class CrcKey {
 
     @Nonnull
     public static CrcKey from(@Nonnull Rom rom) {
-        return from(rom.getSize(), rom.getCrc());
+        return of(rom.getSize(), rom.getCrc());
     }
 
     @Nonnull
     public static CrcKey from(@Nonnull FileScanner.Result result) {
-        return from(result.getUnheaderedSize(), result.getDigest().getCrc());
+        return of(result.getUnheaderedSize(), result.getDigest().getCrc());
     }
 }

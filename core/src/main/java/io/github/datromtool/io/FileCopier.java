@@ -599,8 +599,7 @@ public final class FileCopier {
     }
 
     private void compressZipEntries(CompressionSpec spec, int index) throws IOException {
-        try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(spec.getTo().toFile())) {
+        try (ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(spec.getTo())) {
             for (CompressionSpec.InternalSpec internal : spec.getInternalSpecs()) {
                 Path source = internal.getFrom();
                 try (InputStream inputStream = Files.newInputStream(source)) {
@@ -775,8 +774,7 @@ public final class FileCopier {
     }
 
     private void fromZipToZipRaw(ArchiveCopySpec spec, int index) throws IOException {
-        try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(spec.getTo().toFile())) {
+        try (ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(spec.getTo())) {
             ArchiveUtils.readZip(spec.getFrom(), (zipFile, zipArchiveEntry) -> {
                 String name = zipArchiveEntry.getName();
                 ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
@@ -811,8 +809,7 @@ public final class FileCopier {
     }
 
     private void fromZipToZip(ArchiveCopySpec spec, int index) throws IOException {
-        try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(spec.getTo().toFile())) {
+        try (ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(spec.getTo())) {
             ArchiveUtils.readZip(
                     spec.getFrom(),
                     (zipFile, zipArchiveEntry) -> {
@@ -910,8 +907,7 @@ public final class FileCopier {
     }
 
     private void fromRarToZip(ArchiveCopySpec spec, int index) throws Exception {
-        try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(spec.getTo().toFile())) {
+        try (ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(spec.getTo())) {
             ArchiveUtils.readRar(
                     spec.getFrom(),
                     (archive, fileHeader) -> {
@@ -952,8 +948,7 @@ public final class FileCopier {
     }
 
     private void fromRarWithUnrarToZip(ArchiveCopySpec spec, int index) throws Exception {
-        try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(spec.getTo().toFile())) {
+        try (ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(spec.getTo())) {
             ImmutableSet<String> desiredEntryNames = getInternalSources(spec);
             ArchiveUtils.readRarWithUnrar(
                     spec.getFrom(),
@@ -968,8 +963,7 @@ public final class FileCopier {
     }
 
     private void fromRarWithSevenZipToZip(ArchiveCopySpec spec, int index) throws Exception {
-        try (ZipArchiveOutputStream zipArchiveOutputStream =
-                     new ZipArchiveOutputStream(spec.getTo().toFile())) {
+        try (ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(spec.getTo())) {
             ImmutableSet<String> desiredEntryNames = getInternalSources(spec);
             ArchiveUtils.readRarWithSevenZip(
                     spec.getFrom(),
@@ -1218,8 +1212,7 @@ public final class FileCopier {
     }
 
     private void fromSevenZipToZip(ArchiveCopySpec spec, int index) throws IOException {
-        try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(spec.getTo().toFile())) {
+        try (ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(spec.getTo())) {
             ArchiveUtils.readSevenZip(
                     spec.getFrom(),
                     (sevenZFile, sevenZArchiveEntry) -> toZip(
@@ -1303,8 +1296,7 @@ public final class FileCopier {
 
     private void fromTarToZip(ArchiveCopySpec spec, int index)
             throws IOException {
-        try (ZipArchiveOutputStream zipArchiveOutputStream =
-                new ZipArchiveOutputStream(spec.getTo().toFile())) {
+        try (ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(spec.getTo())) {
             ArchiveUtils.readTar(
                     spec.getFromType(),
                     spec.getFrom(),

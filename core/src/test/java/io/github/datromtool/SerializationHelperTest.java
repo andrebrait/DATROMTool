@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 import static java.nio.file.Files.newInputStream;
 import static org.junit.jupiter.api.Assertions.*;
 
-class SerializationHelperTest extends ConfigDependantTest {
+class SerializationHelperTest extends TestDirDependantTest {
 
     static SerializationHelper testHelper;
 

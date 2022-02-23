@@ -8,11 +8,12 @@ import java.nio.file.Paths;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class ConfigDependantTest {
+public abstract class TestDirDependantTest {
 
-    static protected final String TEST_DATA_FOLDER = "../test-data";
-    static protected Path testDir;
-    static protected Path testDataSource;
+    protected static final String TEST_DATA_FOLDER = "../test-data";
+    protected static Path testDir;
+    protected static Path scanTestDataSource;
+    protected static Path archiveTestDataSource;
 
     @BeforeAll
     static void setupTestDataSource() {
@@ -21,6 +22,7 @@ public abstract class ConfigDependantTest {
             testDirStr = TEST_DATA_FOLDER;
         }
         testDir = Paths.get(requireNonNull(testDirStr));
-        testDataSource = testDir.resolve("data").resolve("files");
+        scanTestDataSource = testDir.resolve("data").resolve("scan-test-files");
+        archiveTestDataSource = testDir.resolve("data").resolve("archive-test-files");
     }
 }

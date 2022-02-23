@@ -2,7 +2,7 @@ package io.github.datromtool.io;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import io.github.datromtool.ConfigDependantTest;
+import io.github.datromtool.TestDirDependantTest;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.util.ArchiveUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import static io.github.datromtool.util.ArchiveUtils.normalizePath;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class FileCopierTest extends ConfigDependantTest {
+class FileCopierTest extends TestDirDependantTest {
 
     private Path tempDir;
 
@@ -42,7 +42,7 @@ class FileCopierTest extends ConfigDependantTest {
                 ImmutableList.of(),
                 ImmutableList.of(),
                 ImmutableList.of());
-        ImmutableList<FileScanner.Result> results = fs.scan(ImmutableList.of(testDataSource));
+        ImmutableList<FileScanner.Result> results = fs.scan(ImmutableList.of(scanTestDataSource));
         Map<Path, List<FileScanner.Result>> resultsForArchive =
                 results.stream().collect(Collectors.groupingBy(FileScanner.Result::getPath));
         ImmutableSet<FileCopier.Spec> specs = resultsForArchive.entrySet()
