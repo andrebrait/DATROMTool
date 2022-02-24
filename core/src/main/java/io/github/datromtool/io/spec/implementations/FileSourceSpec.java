@@ -5,6 +5,7 @@ import io.github.datromtool.io.spec.FileTimes;
 import io.github.datromtool.io.spec.SourceSpec;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nonnull;
@@ -17,10 +18,12 @@ import java.nio.file.attribute.BasicFileAttributes;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FileSourceSpec extends CachingDisplayableAddressable implements SourceSpec {
 
+    @NonNull
     @Getter
     private final Path path;
     @Getter
     private final long size;
+    @NonNull
     @Getter
     private final FileTimes fileTimes;
 

@@ -159,7 +159,9 @@ class FileScannerParameters {
                 .map(Datafile::getGames)
                 .flatMap(Collection::stream)
                 .map(Game::getRoms)
-                .flatMap(Collection::stream);
+                .flatMap(Collection::stream)
+                // filtering for ROMs which have a size, given it is optional as of DTD Revision 1.8_2022-02-24
+                .filter(r -> r.getSize() != null);
     }
 
     private static Stream<Rule> toRuleStream(@Nonnull Collection<Detector> detectors) {

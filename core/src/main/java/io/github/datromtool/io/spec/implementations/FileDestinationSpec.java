@@ -5,6 +5,7 @@ import io.github.datromtool.io.spec.DestinationSpec;
 import io.github.datromtool.io.spec.SourceSpec;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nonnull;
@@ -16,8 +17,10 @@ import java.nio.file.Path;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FileDestinationSpec extends CachingDisplayableAddressable implements DestinationSpec {
 
+    @NonNull
     @Getter
     private final Path path;
+    @NonNull
     private final SourceSpec sourceSpec;
 
     // Stateful part

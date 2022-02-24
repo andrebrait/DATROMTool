@@ -26,9 +26,11 @@ public class Rom {
     @JsonProperty(required = true)
     String name;
 
-    @NonNull
+    /**
+     * This is optional for parsing purposes only due to No-Intro using nodumps without settings a size
+     * This should never be empty for real ROMs or anything we will output
+     */
     @JacksonXmlProperty(isAttribute = true)
-    @JsonProperty(required = true)
     Long size;
 
     @JacksonXmlProperty(isAttribute = true)
@@ -48,4 +50,7 @@ public class Rom {
 
     @JacksonXmlProperty(isAttribute = true)
     String date;
+
+    @JacksonXmlProperty(isAttribute = true)
+    String serial;
 }

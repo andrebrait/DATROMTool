@@ -25,12 +25,14 @@ import static lombok.AccessLevel.PRIVATE;
         "board",
         "rebuildTo",
         // XML property order
+        "categories",
         "comments",
         "description",
         "year",
         "manufacturer",
         "releases",
         "biosSets",
+        "gameIds",
         "roms",
         "disks",
         "samples",
@@ -47,6 +49,12 @@ import static lombok.AccessLevel.PRIVATE;
 public class Game {
 
     @NonNull
+    @Builder.Default
+    @JacksonXmlProperty(localName = "category")
+    ImmutableList<String> categories = ImmutableList.of();
+
+    @NonNull
+    @Builder.Default
     @JacksonXmlProperty(localName = "comment")
     ImmutableList<String> comments = ImmutableList.of();
 
@@ -65,6 +73,11 @@ public class Game {
     @Builder.Default
     @JacksonXmlProperty(localName = "biosset")
     ImmutableList<BiosSet> biosSets = ImmutableList.of();
+
+    @NonNull
+    @Builder.Default
+    @JacksonXmlProperty(localName = "game_id")
+    ImmutableList<String> gameIds = ImmutableList.of();
 
     @NonNull
     @Builder.Default

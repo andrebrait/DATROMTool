@@ -1,5 +1,7 @@
 package io.github.datromtool.io.spec.implementations;
 
+import com.github.junrar.Archive;
+import com.github.junrar.rarfile.FileHeader;
 import io.github.datromtool.io.spec.AbstractArchiveSourceInternalSpec;
 import io.github.datromtool.io.spec.FileTimes;
 import io.github.datromtool.util.ArchiveUtils;
@@ -7,51 +9,43 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipFile;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-final class ZipArchiveSourceInternalSpec extends AbstractArchiveSourceInternalSpec {
+final class RarArchiveSourceInternalSpec extends AbstractArchiveSourceInternalSpec {
 
     @Getter
     @NonNull
-    private final ZipArchiveSourceSpec parent;
+    private final RarArchiveSourceSpec parent;
     @NonNull
-    private final ZipFile zipFile;
+    private final Archive archive;
     @NonNull
-    private final ZipArchiveEntry zipArchiveEntry;
+    private final FileHeader fileHeader;
 
     // Stateful part
     private transient InputStream inputStream;
 
     @Override
     public String getName() {
-        return ArchiveUtils.normalizePath(zipArchiveEntry.getName());
+        return ArchiveUtils.normalizePath(fileHeader.getFileName());
     }
 
     @Override
     public long getSize() {
-        return zipArchiveEntry.getSize();
+        return fileHeader.getFullUnpackSize();
     }
 
     @Override
     public FileTimes getFileTimes() {
-        // When reading an existing entry, ZipArchiveEntry can parse these times from Extra fields correctly
-        // (X000A_NTFS and X5455_ExtendedTimestamp)
-        // No need to parse them by hand
-        return FileTimes.from(
-                zipArchiveEntry.getLastModifiedTime(),
-                zipArchiveEntry.getLastAccessTime(),
-                zipArchiveEntry.getCreationTime());
+        return FileTimes.from(fileHeader.getMTime(), fileHeader.getATime(), fileHeader.getCTime());
     }
 
     @Override
     public InputStream getInputStream() throws IOException {
         if (inputStream == null) {
-            inputStream = zipFile.getInputStream(zipArchiveEntry);
+            inputStream = archive.getInputStream(fileHeader);
         }
         return inputStream;
     }

@@ -1,6 +1,5 @@
 package io.github.datromtool.io.spec.implementations;
 
-import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.io.ArchiveType;
 import io.github.datromtool.io.spec.ArchiveDestinationInternalSpec;
 import io.github.datromtool.io.spec.ArchiveDestinationSpec;
@@ -8,11 +7,9 @@ import io.github.datromtool.io.spec.FileTimes;
 import io.github.datromtool.io.spec.SourceSpec;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.compress.archivers.zip.X000A_NTFS;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.apache.commons.compress.archivers.zip.ZipEightByteInteger;
+import org.apache.commons.compress.archivers.zip.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,11 +18,10 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.concurrent.TimeUnit;
 
-import static java.lang.String.format;
-
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ZipArchiveDestinationSpec implements ArchiveDestinationSpec {
 
+    @NonNull
     @Getter
     private final Path path;
 
@@ -49,11 +45,8 @@ public final class ZipArchiveDestinationSpec implements ArchiveDestinationSpec {
         }
         ZipArchiveEntry zipArchiveEntry = new ZipArchiveEntry(name);
         FileTimes sourceFileTimes = sourceSpec.getFileTimes();
-        if (sourceFileTimes.getLastModifiedTime() != null) {
-            zipArchiveEntry.setTime(sourceFileTimes.getLastModifiedTime());
-        }
         zipArchiveEntry.setSize(sourceSpec.getSize());
-        setZipExtraProperties(sourceFileTimes, zipArchiveEntry);
+        setTimes(sourceFileTimes, zipArchiveEntry);
         zipArchiveOutputStream.putArchiveEntry(zipArchiveEntry);
         return new ZipArchiveDestinationInternalSpec(this, zipArchiveOutputStream, zipArchiveEntry);
     }
@@ -65,36 +58,61 @@ public final class ZipArchiveDestinationSpec implements ArchiveDestinationSpec {
         }
     }
 
-    private static void setZipExtraProperties(FileTimes fileTimes, ZipArchiveEntry entry) {
-        boolean requireExtraTimestamp = exceedsUnixTime(fileTimes.getLastModifiedTime()) || fileTimes.getLastAccessTime() != null || fileTimes.getCreationTime() != null;
-        if (requireExtraTimestamp) {
-            // This doesn't seem to have any effect on Apache's ZipArchiveEntry, but setting it just in case
-            if (fileTimes.getLastModifiedTime() != null) {
-                entry.setLastModifiedTime(fileTimes.getLastModifiedTime());
-            }
-            if (fileTimes.getLastAccessTime() != null) {
-                entry.setLastAccessTime(fileTimes.getLastAccessTime());
-            }
-            if (fileTimes.getCreationTime() != null) {
-                entry.setCreationTime(fileTimes.getCreationTime());
-            }
-            // The implementation does not seem to handle the X000A_NTFS extra fields
-            // We need to add them manually
-            addNTFSTimestamp(fileTimes, entry);
+    private static void setTimes(FileTimes fileTimes, ZipArchiveEntry entry) {
+        // These do not seem to have any effect on Apache ZipArchiveEntry, but setting it just in case
+        if (fileTimes.getLastModifiedTime() !=null) {
+            entry.setLastModifiedTime(fileTimes.getLastModifiedTime());
         }
-        entry.setComment(format("Compressed using DATROMTool v%s", SerializationHelper.getInstance().getVersionString()));
+        if (fileTimes.getLastAccessTime() != null) {
+            entry.setLastAccessTime(fileTimes.getLastAccessTime());
+        }
+        if (fileTimes.getCreationTime() != null) {
+            entry.setCreationTime(fileTimes.getCreationTime());
+        }
+        // The implementation does not seem to handle the extra fields correctly
+        // We need to fill and add them manually
+        // This is the same logic used by java.util.zip.ZipEntry
+        if (exceedsUnixTime(fileTimes)) {
+            addNTFSTimestamp(fileTimes, entry);
+        } else {
+            addExtendedTimestamp(fileTimes, entry);
+        }
     }
 
     private static void addNTFSTimestamp(FileTimes fileTimes, ZipArchiveEntry entry) {
         X000A_NTFS timestamp = new X000A_NTFS();
-        timestamp.setModifyTime(fileTimeToWinTime(fileTimes.getLastModifiedTime()));
-        timestamp.setAccessTime(fileTimeToWinTime(fileTimes.getLastAccessTime()));
-        timestamp.setCreateTime(fileTimeToWinTime(fileTimes.getCreationTime()));
+        timestamp.setModifyTime(toWindowsTime(fileTimes.getLastModifiedTime()));
+        timestamp.setAccessTime(toWindowsTime(fileTimes.getLastAccessTime()));
+        timestamp.setCreateTime(toWindowsTime(fileTimes.getCreationTime()));
         entry.addExtraField(timestamp);
     }
 
+    private static void addExtendedTimestamp(FileTimes fileTimes, ZipArchiveEntry entry) {
+        X5455_ExtendedTimestamp timestamp = new X5455_ExtendedTimestamp();
+        timestamp.setModifyTime(toUnixTime(fileTimes.getLastModifiedTime()));
+        timestamp.setAccessTime(toUnixTime(fileTimes.getLastAccessTime()));
+        timestamp.setCreateTime(toUnixTime(fileTimes.getCreationTime()));
+        entry.addExtraField(timestamp);
+    }
+
+    private static boolean exceedsUnixTime(FileTimes fileTimes) {
+        return exceedsUnixTime(fileTimes.getLastModifiedTime())
+                || exceedsUnixTime(fileTimes.getLastAccessTime())
+                || exceedsUnixTime(fileTimes.getCreationTime());
+    }
+
     private static boolean exceedsUnixTime(@Nullable FileTime fileTime) {
-        return fileTime != null && fileTime.toMillis() > UPPER_UNIXTIME_BOUND;
+        return fileTime != null && fileTimeToUnixTime(fileTime) > UPPER_UNIXTIME_BOUND;
+    }
+
+    @Nullable
+    private static ZipEightByteInteger toWindowsTime(@Nullable FileTime fileTime) {
+        return fileTime != null ? new ZipEightByteInteger(fileTimeToWinTime(fileTime)) : null;
+    }
+
+    @Nullable
+    private static ZipLong toUnixTime(@Nullable FileTime fileTime) {
+        return fileTime != null ? new ZipLong(fileTimeToUnixTime(fileTime)) : null;
     }
 
     /*
@@ -112,11 +130,15 @@ public final class ZipArchiveDestinationSpec implements ArchiveDestinationSpec {
     /**
      * Converts FileTime to Windows time.
      */
-    @Nullable
-    private static ZipEightByteInteger fileTimeToWinTime(@Nullable FileTime fileTime) {
-        if (fileTime == null) {
-            return null;
-        }
-        return new ZipEightByteInteger((fileTime.to(TimeUnit.MICROSECONDS) - WINDOWS_EPOCH_IN_MICROSECONDS) * 10);
+    private static long fileTimeToWinTime(FileTime fileTime) {
+        return (fileTime.to(TimeUnit.MICROSECONDS) - WINDOWS_EPOCH_IN_MICROSECONDS) * 10;
     }
+
+    /**
+     * Converts FileTime to "standard Unix time".
+     */
+    private static long fileTimeToUnixTime(FileTime fileTime) {
+        return fileTime.to(TimeUnit.SECONDS);
+    }
+
 }

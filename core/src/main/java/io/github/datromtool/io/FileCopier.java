@@ -4,7 +4,6 @@ import com.github.junrar.exception.RarException;
 import com.github.junrar.exception.UnsupportedRarV5Exception;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.io.logging.FileCopierLoggingListener;
 import io.github.datromtool.util.ArchiveUtils;
@@ -15,10 +14,7 @@ import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.compress.archivers.zip.X000A_NTFS;
-import org.apache.commons.compress.archivers.zip.X5455_ExtendedTimestamp;
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.*;
 import org.apache.commons.compress.compressors.lzma.LZMAUtils;
 import org.apache.commons.compress.compressors.xz.XZUtils;
 
@@ -43,9 +39,9 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static io.github.datromtool.util.ArchiveUtils.normalizePath;
-import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 
 @Slf4j
@@ -607,7 +603,7 @@ public final class FileCopier {
                             source.toFile(),
                             internal.getTo());
                     BasicFileAttributes fromAttrib = Files.readAttributes(source, BasicFileAttributes.class);
-                    setZipExtraProperties(fromAttrib.lastModifiedTime(), fromAttrib.lastAccessTime(), fromAttrib.creationTime(), archiveEntry);
+                    setTimes(fromAttrib.lastModifiedTime(), fromAttrib.lastAccessTime(), fromAttrib.creationTime(), archiveEntry);
                     Path destination = spec.getTo().resolve(internal.getTo());
                     zipArchiveOutputStream.putArchiveEntry(archiveEntry);
                     copyWithProgress(
@@ -1413,10 +1409,7 @@ public final class FileCopier {
         }
         Path to = spec.getTo().resolve(internal.getTo());
         ZipArchiveEntry zae = new ZipArchiveEntry(internal.getTo());
-        if (lastModifiedTime != null) {
-            zae.setTime(lastModifiedTime.toMillis());
-        }
-        setZipExtraProperties(lastModifiedTime, lastAccessTime, creationTime, zae);
+        setTimes(lastModifiedTime, lastAccessTime, creationTime, zae);
         Path source = spec.getFrom().resolve(name);
         zipArchiveOutputStream.putArchiveEntry(zae);
         copyWithProgress(
@@ -1429,27 +1422,29 @@ public final class FileCopier {
         zipArchiveOutputStream.closeArchiveEntry();
     }
 
-    private void setZipExtraProperties(
+    private void setTimes(
             @Nullable FileTime lastModifiedTime,
             @Nullable FileTime lastAccessTime,
             @Nullable FileTime creationTime,
             ZipArchiveEntry zae) {
-        boolean requireExtraTimestamp = exceedsUnixTime(lastModifiedTime) || lastAccessTime != null || creationTime != null;
-        if (requireExtraTimestamp) {
-            // This doesn't seem to have any effect on Apache's ZipArchiveEntry, but setting it just in case
-            if (lastModifiedTime != null) {
-                zae.setLastModifiedTime(lastModifiedTime);
-            }
-            if (lastAccessTime != null) {
-                zae.setLastAccessTime(lastAccessTime);
-            }
-            if (creationTime != null) {
-                zae.setCreationTime(creationTime);
-            }
+        // This doesn't seem to have any effect on Apache's ZipArchiveEntry, but setting it just in case
+        if (lastModifiedTime != null) {
+            zae.setLastModifiedTime(lastModifiedTime);
+        }
+        if (lastAccessTime != null) {
+            zae.setLastAccessTime(lastAccessTime);
+        }
+        if (creationTime != null) {
+            zae.setCreationTime(creationTime);
+        }
+        boolean exceedsUnixTime = exceedsUnixTime(lastModifiedTime)
+                || exceedsUnixTime(lastAccessTime)
+                || exceedsUnixTime(creationTime);
+        if (exceedsUnixTime) {
             addNTFSTimestamp(lastModifiedTime, lastAccessTime, creationTime, zae);
+        } else {
             addExtendedTimestamp(lastModifiedTime, lastAccessTime, creationTime, zae);
         }
-        zae.setComment(format("Compressed using DATROMTool v%s", SerializationHelper.getInstance().getVersionString()));
     }
 
     private void addExtendedTimestamp(
@@ -1457,42 +1452,31 @@ public final class FileCopier {
             @Nullable FileTime lastAccessTime,
             @Nullable FileTime creationTime,
             ZipArchiveEntry zae) {
-        boolean exceedsUnixTime = exceedsUnixTime(creationTime)
-                || exceedsUnixTime(lastModifiedTime)
-                || exceedsUnixTime(lastAccessTime);
-        if (!exceedsUnixTime) {
-            X5455_ExtendedTimestamp timestamp = new X5455_ExtendedTimestamp();
-            if (lastModifiedTime != null) {
-                timestamp.setModifyJavaTime(toDate(lastModifiedTime));
-            }
-            if (lastAccessTime != null) {
-                timestamp.setAccessJavaTime(toDate(lastAccessTime));
-            }
-            if (creationTime != null) {
-                timestamp.setCreateJavaTime(toDate(creationTime));
-            }
-            zae.addExtraField(timestamp);
-        }
+        X5455_ExtendedTimestamp timestamp = new X5455_ExtendedTimestamp();
+        timestamp.setModifyTime(toUnixTime(lastModifiedTime));
+        timestamp.setAccessTime(toUnixTime(lastAccessTime));
+        timestamp.setCreateTime(toUnixTime(creationTime));
+        zae.addExtraField(timestamp);
     }
 
     private void addNTFSTimestamp(
-            @Nullable FileTime lastModifiedTime, @Nullable FileTime lastAccessTime, @Nullable FileTime creationTime,
+            @Nullable FileTime lastModifiedTime,
+            @Nullable FileTime lastAccessTime,
+            @Nullable FileTime creationTime,
             ZipArchiveEntry zae) {
         X000A_NTFS timestamp = new X000A_NTFS();
-        if (lastModifiedTime != null) {
-            timestamp.setModifyJavaTime(toDate(lastModifiedTime));
-        }
-        if (lastAccessTime != null) {
-            timestamp.setAccessJavaTime(toDate(lastAccessTime));
-        }
-        if (creationTime != null) {
-            timestamp.setCreateJavaTime(toDate(creationTime));
-        }
+        timestamp.setModifyTime(toWindowsTime(lastModifiedTime));
+        timestamp.setAccessTime(toWindowsTime(lastAccessTime));
+        timestamp.setCreateTime(toWindowsTime(creationTime));
         zae.addExtraField(timestamp);
     }
 
     private static boolean exceedsUnixTime(@Nullable FileTime fileTime) {
-        return fileTime != null && fileTime.toMillis() > UPPER_UNIXTIME_BOUND;
+        return fileTime != null && fileTimeToUnixTime(fileTime) > UPPER_UNIXTIME_BOUND;
+    }
+
+    private static long fileTimeToUnixTime(@Nonnull FileTime fileTime) {
+        return fileTime.to(TimeUnit.SECONDS);
     }
 
     private void toSevenZip(
@@ -1613,6 +1597,16 @@ public final class FileCopier {
     @Nullable
     private Date toDate(@Nullable FileTime fileTime) {
         return fileTime != null ? new Date(fileTime.toMillis()) : null;
+    }
+
+    @Nullable
+    private ZipLong toUnixTime(@Nullable FileTime fileTime) {
+        return fileTime != null ? new ZipLong(fileTimeToUnixTime(fileTime)) : null;
+    }
+
+    @Nullable
+    private ZipEightByteInteger toWindowsTime(@Nullable FileTime fileTime) {
+        return fileTime != null ? new ZipEightByteInteger(fileTime.to(TimeUnit.MICROSECONDS) * 10) : null;
     }
 
     @Nullable

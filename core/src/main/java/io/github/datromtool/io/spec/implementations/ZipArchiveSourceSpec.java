@@ -8,6 +8,7 @@ import io.github.datromtool.io.spec.exceptions.ArchiveEntryNotFoundException;
 import io.github.datromtool.io.spec.exceptions.InvalidArchiveEntryException;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipFile;
@@ -23,8 +24,10 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ZipArchiveSourceSpec implements ArchiveSourceSpec {
 
+    @NonNull
     @Getter
     private final Path path;
+    @NonNull
     private final ImmutableList<String> names;
 
     // Stateful part

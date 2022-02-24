@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- This XSD was generated from the DTD found in "http://www.logiqx.com/Dats/datafile.dtd" -->
+<!-- Revision 1.1 (24-02-2022): Updated against DTD revision 1.8 -->
+<!-- Revision 1.2 (24-02-2022): Updated against DTD revision 1.8_2022-02-24 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="datafile">
         <xs:complexType>
@@ -135,12 +137,14 @@
     <xs:element name="game">
         <xs:complexType>
             <xs:sequence>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="category"/>
                 <xs:element maxOccurs="unbounded" minOccurs="0" ref="comment"/>
                 <xs:element ref="description"/>
                 <xs:element minOccurs="0" ref="year"/>
                 <xs:element minOccurs="0" ref="manufacturer"/>
                 <xs:element maxOccurs="unbounded" minOccurs="0" ref="release"/>
                 <xs:element maxOccurs="unbounded" minOccurs="0" ref="biosset"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="game_id"/>
                 <xs:element maxOccurs="unbounded" minOccurs="0" ref="rom"/>
                 <xs:element maxOccurs="unbounded" minOccurs="0" ref="disk"/>
                 <xs:element maxOccurs="unbounded" minOccurs="0" ref="sample"/>
@@ -195,10 +199,11 @@
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+    <xs:element name="game_id" type="xs:string"/>
     <xs:element name="rom">
         <xs:complexType>
             <xs:attribute name="name" type="xs:string" use="required"/>
-            <xs:attribute name="size" type="xs:string" use="required"/>
+            <xs:attribute name="size" type="xs:string"/> <!-- Not required anymore because No-Intro has been uploading nodumps without size, but we will ignore them -->
             <xs:attribute name="crc" type="xs:string"/>
             <xs:attribute name="sha1" type="xs:string"/>
             <xs:attribute name="md5" type="xs:string"/>
@@ -214,6 +219,7 @@
                 </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="date" type="xs:string"/>
+            <xs:attribute name="serial" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="disk">
