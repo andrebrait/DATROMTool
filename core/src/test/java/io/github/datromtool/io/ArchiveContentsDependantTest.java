@@ -14,6 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +32,16 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
             FileTime.from(Instant.parse("2022-02-23T09:25:55.206205Z")),
             FileTime.from(Instant.parse("2022-02-23T09:28:27.781976Z")),
             FileTime.from(Instant.parse("2022-02-23T09:19:22.854708Z")));
+    protected static final FileTimes SHORT_TEXT_TIMES_DATES = FileTimes.from(
+            Date.from(Instant.parse("2022-02-23T09:24:19.191543Z")),
+            Date.from(Instant.parse("2022-02-23T09:28:27.781976Z")),
+            Date.from(Instant.parse("2022-02-23T09:17:37.409043Z")),
+            TimeZone.getTimeZone("Europe/Amsterdam"));
+    protected static final FileTimes LOREM_IPSUM_TIMES_DATES = FileTimes.from(
+            Date.from(Instant.parse("2022-02-23T09:25:55.206205Z")),
+            Date.from(Instant.parse("2022-02-23T09:28:27.781976Z")),
+            Date.from(Instant.parse("2022-02-23T09:19:22.854708Z")),
+            TimeZone.getTimeZone("Europe/Amsterdam"));
 
     protected static byte[] shortTextContents;
     protected static byte[] loremIpsumContents;
@@ -72,26 +84,34 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
     }
 
     protected static void assertIsLoremIpsum(ArchiveSourceInternalSpec internalSpec) throws IOException {
-        assertIsLoremIpsum(internalSpec, false, false);
+        assertIsLoremIpsum(internalSpec, false, false, false);
     }
 
-    protected static void assertIsLoremIpsum(ArchiveSourceInternalSpec internalSpec, boolean onlyModificationTime, boolean ignoreDifferencesSmallerThanOneUnit) throws IOException {
+    protected static void assertIsLoremIpsum(ArchiveSourceInternalSpec internalSpec, boolean onlyModificationTime, boolean ignoreDifferencesSmallerThanOneUnit, boolean convertTimeZone) throws IOException {
         assertNotNull(internalSpec);
         assertEquals(LOREM_IPSUM_FILE, internalSpec.getName());
         assertEquals(loremIpsumContents.length, internalSpec.getSize());
-        lenientAssertEquals(LOREM_IPSUM_TIMES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+        if (convertTimeZone) {
+            lenientAssertEquals(LOREM_IPSUM_TIMES_DATES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+        } else {
+            lenientAssertEquals(LOREM_IPSUM_TIMES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+        }
         assertIsLoremIpsumContents(internalSpec);
     }
 
     protected static void assertIsShortText(ArchiveSourceInternalSpec internalSpec) throws IOException {
-        assertIsShortText(internalSpec, false, false);
+        assertIsShortText(internalSpec, false, false, false);
     }
 
-    protected static void assertIsShortText(ArchiveSourceInternalSpec internalSpec, boolean onlyModificationTime, boolean ignoreDifferencesSmallerThanOneUnit) throws IOException {
+    protected static void assertIsShortText(ArchiveSourceInternalSpec internalSpec, boolean onlyModificationTime, boolean ignoreDifferencesSmallerThanOneUnit, boolean convertTimeZone) throws IOException {
         assertNotNull(internalSpec);
         assertEquals(SHORT_TEXT_FILE, internalSpec.getName());
         assertEquals(shortTextContents.length, internalSpec.getSize());
-        lenientAssertEquals(SHORT_TEXT_TIMES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+        if (convertTimeZone) {
+            lenientAssertEquals(SHORT_TEXT_TIMES_DATES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+        } else {
+            lenientAssertEquals(SHORT_TEXT_TIMES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+        }
         assertIsShortTextContents(internalSpec);
     }
 

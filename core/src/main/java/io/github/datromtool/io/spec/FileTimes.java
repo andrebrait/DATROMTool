@@ -2,6 +2,7 @@ package io.github.datromtool.io.spec;
 
 import lombok.Value;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,6 +11,7 @@ import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 @Value
@@ -32,6 +34,10 @@ public class FileTimes {
 
     public static FileTimes from(@Nullable Date lastModifiedTime, @Nullable Date lastAccessTime, @Nullable Date creationTime) {
         return new FileTimes(fromDate(lastModifiedTime), fromDate(lastAccessTime), fromDate(creationTime));
+    }
+
+    public static FileTimes from(@Nullable Date lastModifiedTime, @Nullable Date lastAccessTime, @Nullable Date creationTime, @Nonnull TimeZone targetTimeZone) {
+        return new FileTimes(fromDate(lastModifiedTime, targetTimeZone), fromDate(lastAccessTime, targetTimeZone), fromDate(creationTime, targetTimeZone));
     }
 
     /**
@@ -106,12 +112,24 @@ public class FileTimes {
         return asDate(creationTime);
     }
 
+    @Nullable
     private static Date asDate(@Nullable FileTime fileTime) {
         return fileTime != null ? new Date(fileTime.toMillis()) : null;
     }
 
+    @Nullable
     private static FileTime fromDate(@Nullable Date date) {
         return date != null ? FileTime.fromMillis(date.getTime()) : null;
+    }
+
+    @Nullable
+    private static FileTime fromDate(@Nullable Date date, @Nonnull TimeZone timeZone) {
+        if (date != null) {
+            long time = date.getTime();
+            return FileTime.fromMillis(time - TimeZone.getDefault().getOffset(time) + timeZone.getOffset(time));
+        } else {
+            return null;
+        }
     }
 
     public void applyTo(Path file) throws IOException {
