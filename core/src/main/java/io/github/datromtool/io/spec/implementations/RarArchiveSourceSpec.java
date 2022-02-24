@@ -71,11 +71,11 @@ public final class RarArchiveSourceSpec implements ArchiveSourceSpec {
                 }
             }
         } else {
-            if (namesIterator == null) {
-                namesIterator = names.iterator();
-            }
             if (fileHeaders == null) {
                 fileHeaders = archive.getFileHeaders();
+            }
+            if (namesIterator == null) {
+                namesIterator = names.iterator();
             }
             if (namesIterator.hasNext()) {
                 String name = namesIterator.next();
@@ -111,6 +111,7 @@ public final class RarArchiveSourceSpec implements ArchiveSourceSpec {
 
     @Override
     public void close() throws IOException {
+        fileHeaders = null;
         namesIterator = null;
         if (archive != null) {
             archive.close();
