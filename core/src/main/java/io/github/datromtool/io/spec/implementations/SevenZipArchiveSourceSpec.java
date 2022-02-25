@@ -26,6 +26,10 @@ public final class SevenZipArchiveSourceSpec implements ArchiveSourceSpec {
     @NonNull
     private final ImmutableSet<String> names;
 
+    // Stateful part
+    private transient SevenZFile sevenZFile;
+    private transient Set<String> mutableNames;
+
     @Nonnull
     public static SevenZipArchiveSourceSpec from(@Nonnull Path path) {
         return from(path, ImmutableList.of());
@@ -35,10 +39,6 @@ public final class SevenZipArchiveSourceSpec implements ArchiveSourceSpec {
     public static SevenZipArchiveSourceSpec from(@Nonnull Path path, @Nonnull Iterable<String> names) {
         return new SevenZipArchiveSourceSpec(path.toAbsolutePath().normalize(), ImmutableSet.copyOf(names));
     }
-
-    // Stateful part
-    private transient SevenZFile sevenZFile;
-    private transient Set<String> mutableNames;
 
     @Override
     public ArchiveType getType() {
