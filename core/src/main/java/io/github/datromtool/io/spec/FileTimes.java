@@ -36,7 +36,13 @@ public class FileTimes {
         return new FileTimes(fromDate(lastModifiedTime), fromDate(lastAccessTime), fromDate(creationTime));
     }
 
-    public static FileTimes from(@Nullable Date lastModifiedTime, @Nullable Date lastAccessTime, @Nullable Date creationTime, @Nonnull TimeZone targetTimeZone) {
+    /**
+     * Constructs a new FileTimes from a set of DOS dates. DOS dates are parsed using the system's local time zone and
+     * thus can differ depending on the machine they are parsed on. If the time zone in which the dates were created
+     * is known, we can correct this by applying the target time zone to the dates and correct the different parsing
+     * results.
+     */
+    public static FileTimes fromDosDates(@Nullable Date lastModifiedTime, @Nullable Date lastAccessTime, @Nullable Date creationTime, @Nonnull TimeZone targetTimeZone) {
         return new FileTimes(fromDate(lastModifiedTime, targetTimeZone), fromDate(lastAccessTime, targetTimeZone), fromDate(creationTime, targetTimeZone));
     }
 

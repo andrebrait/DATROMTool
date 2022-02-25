@@ -1,11 +1,10 @@
 package io.github.datromtool.io.spec.implementations;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.io.ArchiveType;
 import io.github.datromtool.io.spec.ArchiveSourceInternalSpec;
 import io.github.datromtool.io.spec.ArchiveSourceSpec;
 import io.github.datromtool.io.spec.exceptions.ArchiveEntryNotFoundException;
-import io.github.datromtool.io.spec.exceptions.InvalidArchiveEntryException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -18,8 +17,8 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ZipArchiveSourceSpec implements ArchiveSourceSpec {
@@ -28,21 +27,29 @@ public final class ZipArchiveSourceSpec implements ArchiveSourceSpec {
     @Getter
     private final Path path;
     @NonNull
-    private final ImmutableList<String> names;
+    private final ImmutableSet<String> names;
 
     // Stateful part
     private transient ZipFile zipFile;
     private transient Enumeration<ZipArchiveEntry> entries;
-    private transient Iterator<String> namesIterator;
+    private transient Set<String> mutableNames;
 
+    /**
+     * Creates a ZipArchiveSourceSpec which will iterate over all valid entries in the archive in physical order.
+     */
     @Nonnull
     public static ZipArchiveSourceSpec from(@Nonnull Path path) {
-        return from(path, ImmutableList.of());
+        return from(path, ImmutableSet.of());
     }
 
+    /**
+     * Creates a ZipArchiveSourceSpec which will iterate over the selected entries (by name) in the archive.
+     *  The order of iteration will be the physical order in which they appear in the archive, regardless of
+     *  the order in the provided collection of names.
+     */
     @Nonnull
-    public static ZipArchiveSourceSpec from(@Nonnull Path path, @Nonnull List<String> names) {
-        return new ZipArchiveSourceSpec(path.toAbsolutePath().normalize(), ImmutableList.copyOf(names));
+    public static ZipArchiveSourceSpec from(@Nonnull Path path, @Nonnull Iterable<String> names) {
+        return new ZipArchiveSourceSpec(path.toAbsolutePath().normalize(), ImmutableSet.copyOf(names));
     }
 
     @Override
@@ -56,10 +63,10 @@ public final class ZipArchiveSourceSpec implements ArchiveSourceSpec {
         if (zipFile == null) {
             zipFile = new ZipFile(path.toFile());
         }
+        if (entries == null) {
+            entries = zipFile.getEntriesInPhysicalOrder();
+        }
         if (names.isEmpty()) {
-            if (entries == null) {
-                entries = zipFile.getEntriesInPhysicalOrder();
-            }
             while (entries.hasMoreElements()) {
                 ZipArchiveEntry zipArchiveEntry = entries.nextElement();
                 if (isFile(zipArchiveEntry)) {
@@ -67,37 +74,30 @@ public final class ZipArchiveSourceSpec implements ArchiveSourceSpec {
                 }
             }
         } else {
-            if (namesIterator == null) {
-                namesIterator = names.iterator();
+            if (mutableNames == null) {
+                mutableNames = new HashSet<>(names);
             }
-            if (namesIterator.hasNext()) {
-                String name = namesIterator.next();
-                ZipArchiveEntry zipArchiveEntry = zipFile.getEntry(name);
-                return getValidZipArchiveEntry(name, zipArchiveEntry);
+            while (entries.hasMoreElements()) {
+                ZipArchiveEntry zipArchiveEntry = entries.nextElement();
+                if (isFile(zipArchiveEntry) && mutableNames.remove(zipArchiveEntry.getName())) {
+                    return new ZipArchiveSourceInternalSpec(this, zipFile, zipArchiveEntry);
+                }
+            }
+            if (!mutableNames.isEmpty()) {
+                throw new ArchiveEntryNotFoundException(path, mutableNames);
             }
         }
         return null;
     }
 
-    @Nonnull
-    private ZipArchiveSourceInternalSpec getValidZipArchiveEntry(String name, ZipArchiveEntry zipArchiveEntry) throws IOException {
-        if (isFile(zipArchiveEntry)) {
-            return new ZipArchiveSourceInternalSpec(this, zipFile, zipArchiveEntry);
-        } else if (zipArchiveEntry == null) {
-            throw new ArchiveEntryNotFoundException(path, name);
-        } else {
-            throw new InvalidArchiveEntryException(path, name);
-        }
-    }
-
-    private boolean isFile(@Nullable ZipArchiveEntry zipArchiveEntry) {
+    private static boolean isFile(@Nullable ZipArchiveEntry zipArchiveEntry) {
         return zipArchiveEntry != null && !zipArchiveEntry.isDirectory() && !zipArchiveEntry.isUnixSymlink();
     }
 
     @Override
     public void close() throws IOException {
+        mutableNames = null;
         entries = null;
-        namesIterator = null;
         if (zipFile != null) {
             zipFile.close();
         }

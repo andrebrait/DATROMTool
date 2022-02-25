@@ -32,12 +32,18 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
             FileTime.from(Instant.parse("2022-02-23T09:25:55.206205Z")),
             FileTime.from(Instant.parse("2022-02-23T09:28:27.781976Z")),
             FileTime.from(Instant.parse("2022-02-23T09:19:22.854708Z")));
-    protected static final FileTimes SHORT_TEXT_TIMES_DATES = FileTimes.from(
+    /**
+     * Corrected for the file's original time zone
+     */
+    protected static final FileTimes SHORT_TEXT_TIMES_DOS_DATES = FileTimes.fromDosDates(
             Date.from(Instant.parse("2022-02-23T09:24:19.191543Z")),
             Date.from(Instant.parse("2022-02-23T09:28:27.781976Z")),
             Date.from(Instant.parse("2022-02-23T09:17:37.409043Z")),
             TimeZone.getTimeZone("Europe/Amsterdam"));
-    protected static final FileTimes LOREM_IPSUM_TIMES_DATES = FileTimes.from(
+    /**
+     * Corrected for the file's original time zone
+     */
+    protected static final FileTimes LOREM_IPSUM_TIMES_DOS_DATES = FileTimes.fromDosDates(
             Date.from(Instant.parse("2022-02-23T09:25:55.206205Z")),
             Date.from(Instant.parse("2022-02-23T09:28:27.781976Z")),
             Date.from(Instant.parse("2022-02-23T09:19:22.854708Z")),
@@ -92,7 +98,7 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
         assertEquals(LOREM_IPSUM_FILE, internalSpec.getName());
         assertEquals(loremIpsumContents.length, internalSpec.getSize());
         if (convertTimeZone) {
-            lenientAssertEquals(LOREM_IPSUM_TIMES_DATES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+            lenientAssertEquals(LOREM_IPSUM_TIMES_DOS_DATES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
         } else {
             lenientAssertEquals(LOREM_IPSUM_TIMES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
         }
@@ -108,7 +114,7 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
         assertEquals(SHORT_TEXT_FILE, internalSpec.getName());
         assertEquals(shortTextContents.length, internalSpec.getSize());
         if (convertTimeZone) {
-            lenientAssertEquals(SHORT_TEXT_TIMES_DATES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+            lenientAssertEquals(SHORT_TEXT_TIMES_DOS_DATES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
         } else {
             lenientAssertEquals(SHORT_TEXT_TIMES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
         }

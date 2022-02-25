@@ -19,6 +19,10 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
         rarFile = archiveTestDataSource.resolve("files.rar4.rar");
     }
 
+    /*
+    Current implementation of JUnrar doesn not support creation and last access times, so we are not testing against those
+     */
+
     @Test
     void testReadContents() throws IOException {
         try (RarArchiveSourceSpec spec = RarArchiveSourceSpec.from(rarFile)) {
@@ -38,10 +42,10 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     }
 
     @Test
-    void testAllContentsInReverse() throws IOException {
+    void testAllContentsInReverse_shouldStillBePhysicalOrder() throws IOException {
         try (RarArchiveSourceSpec spec = RarArchiveSourceSpec.from(rarFile, ImmutableList.of(SHORT_TEXT_FILE, LOREM_IPSUM_FILE))) {
-            assertIsShortText(spec.getNextInternalSpec(), true, true, true);
             assertIsLoremIpsum(spec.getNextInternalSpec(), true, true, true);
+            assertIsShortText(spec.getNextInternalSpec(), true, true, true);
             assertNull(spec.getNextInternalSpec());
         }
     }

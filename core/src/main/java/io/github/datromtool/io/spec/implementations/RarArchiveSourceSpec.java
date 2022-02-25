@@ -3,12 +3,11 @@ package io.github.datromtool.io.spec.implementations;
 import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.rarfile.FileHeader;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.io.ArchiveType;
 import io.github.datromtool.io.spec.ArchiveSourceInternalSpec;
 import io.github.datromtool.io.spec.ArchiveSourceSpec;
 import io.github.datromtool.io.spec.exceptions.ArchiveEntryNotFoundException;
-import io.github.datromtool.io.spec.exceptions.InvalidArchiveEntryException;
 import io.github.datromtool.util.ArchiveUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,8 +18,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.lang.String.format;
 
@@ -31,22 +31,29 @@ public final class RarArchiveSourceSpec implements ArchiveSourceSpec {
     @Getter
     private final Path path;
     @NonNull
-    private final ImmutableList<String> names;
-
-    @Nonnull
-    public static RarArchiveSourceSpec from(@Nonnull Path path) {
-        return from(path, ImmutableList.of());
-    }
-
-    @Nonnull
-    public static RarArchiveSourceSpec from(@Nonnull Path path, @Nonnull List<String> names) {
-        return new RarArchiveSourceSpec(path.toAbsolutePath().normalize(), ImmutableList.copyOf(names));
-    }
+    private final ImmutableSet<String> names;
 
     // Stateful part
     private transient Archive archive;
-    private transient List<FileHeader> fileHeaders;
-    private transient Iterator<String> namesIterator;
+    private transient Set<String> mutableNames;
+
+    /**
+     * Creates a RarArchiveSourceSpec which will iterate over all valid entries in the order they appear in the archive.
+     */
+    @Nonnull
+    public static RarArchiveSourceSpec from(@Nonnull Path path) {
+        return from(path, Collections.emptySet());
+    }
+
+    /**
+     * Creates a RarArchiveSourceSpec which will iterate over the selected entries (by name) in the archive.
+     * The order of iteration will be the same in which they appear in the archive, regardless of the order in
+     * the provided collection of names.
+     */
+    @Nonnull
+    public static RarArchiveSourceSpec from(@Nonnull Path path, @Nonnull Iterable<String> names) {
+        return new RarArchiveSourceSpec(path.toAbsolutePath().normalize(), ImmutableSet.copyOf(names));
+    }
 
     @Override
     public ArchiveType getType() {
@@ -71,48 +78,29 @@ public final class RarArchiveSourceSpec implements ArchiveSourceSpec {
                 }
             }
         } else {
-            if (fileHeaders == null) {
-                fileHeaders = archive.getFileHeaders();
+            if (mutableNames == null) {
+                mutableNames = new HashSet<>(names);
             }
-            if (namesIterator == null) {
-                namesIterator = names.iterator();
+            FileHeader fileHeader;
+            while ((fileHeader = archive.nextFileHeader()) != null) {
+                if (isFile(fileHeader) && mutableNames.remove(ArchiveUtils.normalizePath(fileHeader.getFileName()))) {
+                    return new RarArchiveSourceInternalSpec(this, archive, fileHeader);
+                }
             }
-            if (namesIterator.hasNext()) {
-                String name = namesIterator.next();
-                return getValidFileHeader(name);
+            if (!mutableNames.isEmpty()) {
+                throw new ArchiveEntryNotFoundException(path, mutableNames);
             }
         }
         return null;
     }
 
-    @Nonnull
-    private RarArchiveSourceInternalSpec getValidFileHeader(String name) throws IOException {
-        FileHeader fileHeader = null;
-        for (FileHeader fh : fileHeaders) {
-            if (name.equals(ArchiveUtils.normalizePath(fh.getFileName()))) {
-                fileHeader = fh;
-                break;
-            }
-        }
-        if (fileHeader != null) {
-            if (isFile(fileHeader)) {
-                return new RarArchiveSourceInternalSpec(this, archive, fileHeader);
-            } else {
-                throw new InvalidArchiveEntryException(path, name);
-            }
-        } else {
-            throw new ArchiveEntryNotFoundException(path, name);
-        }
-    }
-
-    private boolean isFile(FileHeader fileHeader) {
+    private static boolean isFile(FileHeader fileHeader) {
         return fileHeader.isFileHeader() && !fileHeader.isDirectory();
     }
 
     @Override
     public void close() throws IOException {
-        fileHeaders = null;
-        namesIterator = null;
+        mutableNames = null;
         if (archive != null) {
             archive.close();
         }
