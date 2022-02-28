@@ -32,7 +32,7 @@ class SevenZipArchiveDestinationSpecTest extends ArchiveContentsDependantTest {
 
     @Test
     void testWriteFileToSevenZip() throws IOException {
-        Path file = tempDir.resolve("testWriteFileToZip.7z");
+        Path file = tempDir.resolve("testWriteFileToSevenZip.7z");
         try (ArchiveDestinationSpec destinationSpec = new SevenZipArchiveDestinationSpec(file)) {
             writeFile(SHORT_TEXT_FILE, destinationSpec);
             writeFile(LOREM_IPSUM_FILE, destinationSpec);
