@@ -12,7 +12,7 @@ public abstract class AbstractArchiveDestinationSpec implements ArchiveDestinati
     @Getter
     private final Path path;
 
-    protected AbstractArchiveDestinationSpec(@Nonnull Path path) {
+    public AbstractArchiveDestinationSpec(@Nonnull Path path) {
         this.path = requireNonNull(path, "'path' must not be null").toAbsolutePath().normalize();
     }
 }

@@ -1,14 +1,9 @@
 package io.github.datromtool.io.spec.implementations;
 
-import io.github.datromtool.io.ArchiveType;
+import io.github.datromtool.io.spec.AbstractArchiveDestinationSpec;
 import io.github.datromtool.io.spec.ArchiveDestinationInternalSpec;
-import io.github.datromtool.io.spec.ArchiveDestinationSpec;
 import io.github.datromtool.io.spec.FileTimes;
 import io.github.datromtool.io.spec.SourceSpec;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.compress.archivers.zip.*;
 
 import javax.annotation.Nonnull;
@@ -18,30 +13,19 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.concurrent.TimeUnit;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class ZipArchiveDestinationSpec implements ArchiveDestinationSpec {
-
-    @NonNull
-    @Getter
-    private final Path path;
-
-    @Nonnull
-    public static ZipArchiveDestinationSpec of(@Nonnull Path path) {
-        return new ZipArchiveDestinationSpec(path.toAbsolutePath().normalize());
-    }
+public final class ZipArchiveDestinationSpec extends AbstractArchiveDestinationSpec {
 
     // Stateful part
     private transient ZipArchiveOutputStream zipArchiveOutputStream;
 
-    @Override
-    public ArchiveType getType() {
-        return ArchiveType.ZIP;
+    public ZipArchiveDestinationSpec(@Nonnull Path path) {
+        super(path);
     }
 
     @Override
     public ArchiveDestinationInternalSpec createInternalDestinationSpecFor(String name, SourceSpec sourceSpec) throws IOException {
         if (zipArchiveOutputStream == null) {
-            zipArchiveOutputStream = new ZipArchiveOutputStream(path);
+            zipArchiveOutputStream = new ZipArchiveOutputStream(getPath());
         }
         ZipArchiveEntry zipArchiveEntry = new ZipArchiveEntry(name);
         FileTimes sourceFileTimes = sourceSpec.getFileTimes();

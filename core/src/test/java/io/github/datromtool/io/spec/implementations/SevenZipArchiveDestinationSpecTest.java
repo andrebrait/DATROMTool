@@ -16,7 +16,7 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class ZipArchiveDestinationSpecTest extends ArchiveContentsDependantTest {
+class SevenZipArchiveDestinationSpecTest extends ArchiveContentsDependantTest {
 
     private Path tempDir;
 
@@ -31,13 +31,13 @@ class ZipArchiveDestinationSpecTest extends ArchiveContentsDependantTest {
     }
 
     @Test
-    void testWriteFileToZip() throws IOException {
-        Path file = tempDir.resolve("testWriteFileToZip.zip");
-        try (ArchiveDestinationSpec destinationSpec = new ZipArchiveDestinationSpec(file)) {
+    void testWriteFileToSevenZip() throws IOException {
+        Path file = tempDir.resolve("testWriteFileToZip.7z");
+        try (ArchiveDestinationSpec destinationSpec = new SevenZipArchiveDestinationSpec(file)) {
             writeFile(SHORT_TEXT_FILE, destinationSpec);
             writeFile(LOREM_IPSUM_FILE, destinationSpec);
         }
-        try (ZipArchiveSourceSpec spec = new ZipArchiveSourceSpec(file)) {
+        try (SevenZipArchiveSourceSpec spec = new SevenZipArchiveSourceSpec(file)) {
             assertIsLocalShortText(spec.getNextInternalSpec());
             assertIsLocalLoremIpsum(spec.getNextInternalSpec());
             assertNull(spec.getNextInternalSpec());

@@ -71,7 +71,7 @@ final class RarArchiveSourceInternalSpec extends AbstractArchiveSourceInternalSp
     }
 
     /**
-     * This allows us to
+     * This allows us to initialize this executor lazily, since this class is only loaded upon the first usage
      */
     @Slf4j
     private final static class RarArchiveExtractorService {
