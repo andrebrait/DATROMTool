@@ -37,7 +37,7 @@ class ZipArchiveDestinationSpecTest extends ArchiveContentsDependantTest {
             writeFile(SHORT_TEXT_FILE, destinationSpec);
             writeFile(LOREM_IPSUM_FILE, destinationSpec);
         }
-        try (ZipArchiveSourceSpec spec = ZipArchiveSourceSpec.from(file)) {
+        try (ZipArchiveSourceSpec spec = new ZipArchiveSourceSpec(file)) {
             assertIsLocalShortText(spec.getNextInternalSpec());
             assertIsLocalLoremIpsum(spec.getNextInternalSpec());
             assertNull(spec.getNextInternalSpec());

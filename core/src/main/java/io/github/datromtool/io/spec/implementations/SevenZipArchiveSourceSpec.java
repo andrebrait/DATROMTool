@@ -1,58 +1,55 @@
 package io.github.datromtool.io.spec.implementations;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import io.github.datromtool.io.ArchiveType;
+import io.github.datromtool.io.spec.AbstractArchiveSourceSpec;
 import io.github.datromtool.io.spec.ArchiveSourceInternalSpec;
-import io.github.datromtool.io.spec.ArchiveSourceSpec;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Set;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public final class SevenZipArchiveSourceSpec implements ArchiveSourceSpec {
-
-    @NonNull
-    @Getter
-    private final Path path;
-    @NonNull
-    private final ImmutableSet<String> names;
+public final class SevenZipArchiveSourceSpec extends AbstractArchiveSourceSpec {
 
     // Stateful part
     private transient SevenZFile sevenZFile;
-    private transient Set<String> mutableNames;
 
-    @Nonnull
-    public static SevenZipArchiveSourceSpec from(@Nonnull Path path) {
-        return from(path, ImmutableList.of());
+    public SevenZipArchiveSourceSpec(@Nonnull Path path) {
+        super(path);
     }
 
-    @Nonnull
-    public static SevenZipArchiveSourceSpec from(@Nonnull Path path, @Nonnull Iterable<String> names) {
-        return new SevenZipArchiveSourceSpec(path.toAbsolutePath().normalize(), ImmutableSet.copyOf(names));
+    public SevenZipArchiveSourceSpec(@Nonnull Path path, @Nonnull Iterable<String> names) {
+        super(path, names);
     }
 
     @Override
-    public ArchiveType getType() {
-        return ArchiveType.SEVEN_ZIP;
+    protected void initArchive() throws IOException {
+        if (sevenZFile == null) {
+            sevenZFile = new SevenZFile(getPath().toFile());
+        }
     }
 
     @Nullable
     @Override
-    public ArchiveSourceInternalSpec getNextInternalSpec() throws IOException {
+    protected ArchiveSourceInternalSpec getNextEntry() throws IOException {
+        SevenZArchiveEntry sevenZArchiveEntry;
+        while ((sevenZArchiveEntry = sevenZFile.getNextEntry()) != null) {
+            if (isFile(sevenZArchiveEntry)) {
+                return new SevenZipArchiveSourceInternalSpec(this, sevenZFile, sevenZArchiveEntry);
+            }
+        }
         return null;
     }
 
-    @Override
-    public void close() throws IOException {
+    private boolean isFile(SevenZArchiveEntry sevenZArchiveEntry) {
+        return !sevenZArchiveEntry.isDirectory() && !sevenZArchiveEntry.isAntiItem();
+    }
 
+    @Override
+    protected void closeArchive() throws IOException {
+        if (sevenZFile != null) {
+            sevenZFile.close();
+        }
     }
 }

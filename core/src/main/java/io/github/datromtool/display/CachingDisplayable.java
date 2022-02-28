@@ -6,12 +6,10 @@ public abstract class CachingDisplayable implements Displayable {
 
     @Override
     public final String getDisplayName() {
-        if ($displayNameCache != null) {
-            return $displayNameCache;
+        if ($displayNameCache == null) {
+            $displayNameCache = getDisplayNameForCache();
         }
-        String displayName = getDisplayNameForCache();
-        $displayNameCache = displayName;
-        return displayName;
+        return $displayNameCache;
     }
 
     protected abstract String getDisplayNameForCache();

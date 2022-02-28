@@ -2,6 +2,7 @@ package io.github.datromtool.io.spec.implementations;
 
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.io.ArchiveContentsDependantTest;
+import io.github.datromtool.io.spec.exceptions.ArchiveEntryNotFoundException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
 
@@ -20,12 +22,12 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     }
 
     /*
-    Current implementation of JUnrar doesn not support creation and last access times, so we are not testing against those
+    Current implementation of JUnrar does not support creation and last access times, so we are not testing against those
      */
 
     @Test
     void testReadContents() throws IOException {
-        try (RarArchiveSourceSpec spec = RarArchiveSourceSpec.from(rarFile)) {
+        try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rarFile)) {
             assertIsLoremIpsum(spec.getNextInternalSpec(), true, true, true);
             assertIsShortText(spec.getNextInternalSpec(), true, true, true);
             assertNull(spec.getNextInternalSpec());
@@ -34,7 +36,7 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
 
     @Test
     void testAllContentsInOrder() throws IOException {
-        try (RarArchiveSourceSpec spec = RarArchiveSourceSpec.from(rarFile, ImmutableList.of(LOREM_IPSUM_FILE, SHORT_TEXT_FILE))) {
+        try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rarFile, ImmutableList.of(LOREM_IPSUM_FILE, SHORT_TEXT_FILE))) {
             assertIsLoremIpsum(spec.getNextInternalSpec(), true, true, true);
             assertIsShortText(spec.getNextInternalSpec(), true, true, true);
             assertNull(spec.getNextInternalSpec());
@@ -43,7 +45,7 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
 
     @Test
     void testAllContentsInReverse_shouldStillBePhysicalOrder() throws IOException {
-        try (RarArchiveSourceSpec spec = RarArchiveSourceSpec.from(rarFile, ImmutableList.of(SHORT_TEXT_FILE, LOREM_IPSUM_FILE))) {
+        try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rarFile, ImmutableList.of(SHORT_TEXT_FILE, LOREM_IPSUM_FILE))) {
             assertIsLoremIpsum(spec.getNextInternalSpec(), true, true, true);
             assertIsShortText(spec.getNextInternalSpec(), true, true, true);
             assertNull(spec.getNextInternalSpec());
@@ -52,7 +54,7 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
 
     @Test
     void testReadOnlyLoremIpsum() throws IOException {
-        try (RarArchiveSourceSpec spec = RarArchiveSourceSpec.from(rarFile, ImmutableList.of(LOREM_IPSUM_FILE))) {
+        try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rarFile, ImmutableList.of(LOREM_IPSUM_FILE))) {
             assertIsLoremIpsum(spec.getNextInternalSpec(), true, true, true);
             assertNull(spec.getNextInternalSpec());
         }
@@ -60,9 +62,17 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
 
     @Test
     void testReadOnlyShortText() throws IOException {
-        try (RarArchiveSourceSpec spec = RarArchiveSourceSpec.from(rarFile, ImmutableList.of(SHORT_TEXT_FILE))) {
+        try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rarFile, ImmutableList.of(SHORT_TEXT_FILE))) {
             assertIsShortText(spec.getNextInternalSpec(), true, true, true);
             assertNull(spec.getNextInternalSpec());
+        }
+    }
+
+    @Test
+    void testReadShortTextAndThenUnknown() throws IOException {
+        try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rarFile, ImmutableList.of(SHORT_TEXT_FILE, "unknownFile"))) {
+            assertIsShortText(spec.getNextInternalSpec(), true, true, true);
+            assertThrows(ArchiveEntryNotFoundException.class, spec::getNextInternalSpec);
         }
     }
 
