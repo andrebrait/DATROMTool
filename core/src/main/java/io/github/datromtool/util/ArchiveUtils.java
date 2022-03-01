@@ -183,7 +183,11 @@ public final class ArchiveUtils {
         for (String dirname : System.getenv("PATH").split(File.pathSeparator)) {
             File file = new File(dirname, name);
             if (file.isFile() && file.canExecute()) {
-                return file.getAbsolutePath();
+                String absolutePath = file.getAbsolutePath();
+                log.info("Found '{}' in '{}'", name, absolutePath);
+                return absolutePath;
+            } else {
+                log.debug("Could not find '{}' in '{}'", name, dirname);
             }
         }
         log.warn("Could not find '{}' in the PATH", name);
