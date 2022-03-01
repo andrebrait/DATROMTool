@@ -29,7 +29,7 @@ class TarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     }
 
     /*
-    Test files for 7z only contain modification dates, so we are testing only against those
+    TAR only contain modification dates, so we are testing only against those
      */
 
     @ParameterizedTest
