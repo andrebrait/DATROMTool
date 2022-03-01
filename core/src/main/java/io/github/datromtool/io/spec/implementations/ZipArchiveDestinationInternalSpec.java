@@ -22,9 +22,6 @@ final class ZipArchiveDestinationInternalSpec extends AbstractArchiveDestination
     @NonNull
     private final ZipArchiveEntry entry;
 
-    // Stateful part
-    private transient OutputStream outputStream;
-
     @Override
     public String getName() {
         return entry.getName();
@@ -32,16 +29,11 @@ final class ZipArchiveDestinationInternalSpec extends AbstractArchiveDestination
 
     @Override
     public OutputStream getOutputStream() {
-        if (outputStream == null) {
-            outputStream = zipArchiveOutputStream;
-        }
-        return outputStream;
+        return zipArchiveOutputStream;
     }
 
     @Override
     public void close() throws IOException {
-        if (outputStream != null) {
-            zipArchiveOutputStream.closeArchiveEntry();
-        }
+        zipArchiveOutputStream.closeArchiveEntry();
     }
 }

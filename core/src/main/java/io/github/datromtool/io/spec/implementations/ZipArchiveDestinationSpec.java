@@ -39,6 +39,7 @@ public final class ZipArchiveDestinationSpec extends AbstractArchiveDestinationS
     public void close() throws IOException {
         if (zipArchiveOutputStream != null) {
             zipArchiveOutputStream.close();
+            zipArchiveOutputStream = null;
         }
     }
 

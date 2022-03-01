@@ -38,6 +38,7 @@ public final class SevenZipArchiveDestinationSpec extends AbstractArchiveDestina
     public void close() throws IOException {
         if (sevenZOutputFile != null) {
             sevenZOutputFile.close();
+            sevenZOutputFile = null;
         }
     }
 }

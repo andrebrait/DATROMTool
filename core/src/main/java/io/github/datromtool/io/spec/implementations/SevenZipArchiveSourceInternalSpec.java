@@ -63,8 +63,7 @@ final class SevenZipArchiveSourceInternalSpec extends AbstractArchiveSourceInter
 
     /**
      * An InputStream which reads bytes directly from a SevenZFile.
-     * Although SevenZFile has {@link SevenZFile#getInputStream(SevenZArchiveEntry)}, it's supposedly slower
-     * due to
+     * Although SevenZFile has {@link SevenZFile#getInputStream(SevenZArchiveEntry)}, it's slower for some archive formats.
      */
     @RequiredArgsConstructor
     private static final class SevenZFileInputStream extends InputStream {

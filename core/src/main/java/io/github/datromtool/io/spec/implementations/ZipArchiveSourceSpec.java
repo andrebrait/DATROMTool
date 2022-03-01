@@ -56,6 +56,7 @@ public final class ZipArchiveSourceSpec extends AbstractArchiveSourceSpec {
         entries = null;
         if (zipFile != null) {
             zipFile.close();
+            zipFile = null;
         }
     }
 }

@@ -57,6 +57,7 @@ public final class RarArchiveSourceSpec extends AbstractArchiveSourceSpec {
     protected void closeArchive() throws IOException {
         if (archive != null) {
             archive.close();
+            archive = null;
         }
     }
 }

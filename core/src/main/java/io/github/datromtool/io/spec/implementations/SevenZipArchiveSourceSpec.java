@@ -50,6 +50,7 @@ public final class SevenZipArchiveSourceSpec extends AbstractArchiveSourceSpec {
     protected void closeArchive() throws IOException {
         if (sevenZFile != null) {
             sevenZFile.close();
+            sevenZFile = null;
         }
     }
 }

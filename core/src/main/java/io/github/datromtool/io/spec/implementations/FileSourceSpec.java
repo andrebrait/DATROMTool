@@ -18,6 +18,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FileSourceSpec extends CachingDisplayableAddressable implements SourceSpec {
 
+    private transient String $nameCache;
+
     @NonNull
     @Getter
     private final Path path;
@@ -41,7 +43,10 @@ public final class FileSourceSpec extends CachingDisplayableAddressable implemen
 
     @Override
     public String getName() {
-        return path.toString();
+        if ($nameCache == null) {
+            $nameCache = path.toString();
+        }
+        return $nameCache;
     }
 
     @Override
@@ -56,6 +61,7 @@ public final class FileSourceSpec extends CachingDisplayableAddressable implemen
     public void close() throws IOException {
         if (inputStream != null) {
             inputStream.close();
+            inputStream = null;
         }
     }
 }

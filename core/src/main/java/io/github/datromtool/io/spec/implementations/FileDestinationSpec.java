@@ -17,6 +17,8 @@ import java.nio.file.Path;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class FileDestinationSpec extends CachingDisplayableAddressable implements DestinationSpec {
 
+    private transient String $nameCache;
+
     @NonNull
     @Getter
     private final Path path;
@@ -33,7 +35,10 @@ public final class FileDestinationSpec extends CachingDisplayableAddressable imp
 
     @Override
     public String getName() {
-        return path.toString();
+        if ($nameCache == null) {
+            $nameCache = path.toString();
+        }
+        return $nameCache;
     }
 
     @Override
@@ -48,6 +53,7 @@ public final class FileDestinationSpec extends CachingDisplayableAddressable imp
     public void close() throws IOException {
         if (outputStream != null) {
             outputStream.close();
+            outputStream = null;
         }
         sourceSpec.getFileTimes().applyTo(path);
     }
