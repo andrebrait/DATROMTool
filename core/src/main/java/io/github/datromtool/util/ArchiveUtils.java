@@ -174,11 +174,33 @@ public final class ArchiveUtils {
     private static final Pattern COMMAND_NOT_FOUND =
             Pattern.compile("error=2, (No such file or directory|The system cannot find the file specified)", CASE_INSENSITIVE);
 
-    private static volatile String unrarPath = "unrar";
+    private static volatile String unrarPath;
+
+    public static String findExecutableOnPath(String name) {
+        if (SystemUtils.OPERATING_SYSTEM == WINDOWS) {
+            name = name + ".exe";
+        }
+        for (String dirname : System.getenv("PATH").split(File.pathSeparator)) {
+            File file = new File(dirname, name);
+            if (file.isFile() && file.canExecute()) {
+                return file.getAbsolutePath();
+            }
+        }
+        log.warn("Could not find '{}' in the PATH", name);
+        return null;
+    }
+
+    @Nullable
+    public static Path getUnrarPath() {
+        if (isUnrarAvailable()) {
+            return Paths.get(unrarPath);
+        }
+        return null;
+    }
 
     private static volatile Boolean isUnrarAvailableCache;
 
-    private static boolean isUnrarAvailable() {
+    public static boolean isUnrarAvailable() {
         return isUnrarAvailable(null);
     }
 
@@ -198,6 +220,8 @@ public final class ArchiveUtils {
                 if (value) {
                     unrarPath = customPathStr;
                 }
+            } else {
+                unrarPath = findExecutableOnPath("unrar");
             }
             if (value == null || !value) {
                 value = checkUnrarPath(unrarPath);
@@ -281,9 +305,17 @@ public final class ArchiveUtils {
 
     private static volatile String sevenZipPath;
 
+    @Nullable
+    public static Path getSevenZipPath() {
+        if (isSevenZipAvailable()) {
+            return Paths.get(sevenZipPath);
+        }
+        return null;
+    }
+
     private static volatile Boolean isSevenZipAvailableCache;
 
-    private static boolean isSevenZipAvailable() {
+    public static boolean isSevenZipAvailable() {
         return isSevenZipAvailable(null);
     }
 
@@ -303,6 +335,8 @@ public final class ArchiveUtils {
                 if (value) {
                     sevenZipPath = customPathStr;
                 }
+            } else {
+                sevenZipPath = findExecutableOnPath("7z");
             }
             if (value == null || !value) {
                 sevenZipPath = getEmbeddedSevenZipPath();

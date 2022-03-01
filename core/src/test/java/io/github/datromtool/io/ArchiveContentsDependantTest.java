@@ -1,9 +1,9 @@
 package io.github.datromtool.io;
 
 import io.github.datromtool.TestDirDependantTest;
-import io.github.datromtool.io.spec.ArchiveSourceInternalSpec;
-import io.github.datromtool.io.spec.FileTimes;
-import io.github.datromtool.io.spec.SourceSpec;
+import io.github.datromtool.io.copy.FileTimes;
+import io.github.datromtool.io.copy.SourceSpec;
+import io.github.datromtool.io.copy.archive.ArchiveSourceInternalSpec;
 import org.apache.commons.compress.utils.IOUtils;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -147,7 +147,11 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
 
     private static void lenientAssertEquals(FileTimes expected, FileTimes actual, boolean onlyModificationTime, boolean ignoreDifferencesSmallerThanOneUnit) {
         TimeUnit unit = TimeUnit.MICROSECONDS;
-        if (isSecondsPrecision(actual)) {
+        if (isMinutesPrecision(actual)) {
+            unit = TimeUnit.MINUTES;
+            expected = expected.truncate(TimeUnit.MINUTES);
+            actual = actual.truncate(TimeUnit.MINUTES);
+        } else if (isSecondsPrecision(actual)) {
             unit = TimeUnit.SECONDS;
             expected = expected.toUnixTimes();
             actual = actual.toUnixTimes();
@@ -179,6 +183,10 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
 
     private static boolean isSecondsPrecision(FileTimes actual) {
         return actual.equals(actual.toUnixTimes());
+    }
+
+    private static boolean isMinutesPrecision(FileTimes actual) {
+        return actual.equals(actual.truncate(TimeUnit.MINUTES));
     }
 
     private static boolean isMillisPrecision(FileTimes actual) {

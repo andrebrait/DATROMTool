@@ -1,5 +1,7 @@
 package io.github.datromtool.display;
 
+import javax.annotation.Nonnull;
+
 public abstract class CachingDisplayable implements Displayable {
 
     private transient String $displayNameCache;
@@ -12,5 +14,6 @@ public abstract class CachingDisplayable implements Displayable {
         return $displayNameCache;
     }
 
+    @Nonnull
     protected abstract String getDisplayNameForCache();
 }
