@@ -28,8 +28,8 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadContents() throws IOException {
         try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rarFile)) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, true, true);
-            assertIsShortText(spec.getNextInternalSpec(), true, true, true);
+            assertIsLoremIpsum(spec.getNextInternalSpec(),true, true, DateField.MTIME);
+            assertIsShortText(spec.getNextInternalSpec(), true, true, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -37,8 +37,8 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testAllContentsInOrder() throws IOException {
         try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rarFile, ImmutableList.of(LOREM_IPSUM_FILE, SHORT_TEXT_FILE))) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, true, true);
-            assertIsShortText(spec.getNextInternalSpec(), true, true, true);
+            assertIsLoremIpsum(spec.getNextInternalSpec(),true, true, DateField.MTIME);
+            assertIsShortText(spec.getNextInternalSpec(),true, true, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -46,8 +46,8 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testAllContentsInReverse_shouldStillBePhysicalOrder() throws IOException {
         try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rarFile, ImmutableList.of(SHORT_TEXT_FILE, LOREM_IPSUM_FILE))) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, true, true);
-            assertIsShortText(spec.getNextInternalSpec(), true, true, true);
+            assertIsLoremIpsum(spec.getNextInternalSpec(),true, true, DateField.MTIME);
+            assertIsShortText(spec.getNextInternalSpec(),true, true, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -55,7 +55,7 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadOnlyLoremIpsum() throws IOException {
         try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rarFile, ImmutableList.of(LOREM_IPSUM_FILE))) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, true, true);
+            assertIsLoremIpsum(spec.getNextInternalSpec(),true, true, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -63,7 +63,7 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadOnlyShortText() throws IOException {
         try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rarFile, ImmutableList.of(SHORT_TEXT_FILE))) {
-            assertIsShortText(spec.getNextInternalSpec(), true, true, true);
+            assertIsShortText(spec.getNextInternalSpec(),true, true, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -71,7 +71,7 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadShortTextAndThenUnknown() throws IOException {
         try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rarFile, ImmutableList.of(SHORT_TEXT_FILE, "unknownFile"))) {
-            assertIsShortText(spec.getNextInternalSpec(), true, true, true);
+            assertIsShortText(spec.getNextInternalSpec(),true, true, DateField.MTIME);
             assertThrows(ArchiveEntryNotFoundException.class, spec::getNextInternalSpec);
         }
     }

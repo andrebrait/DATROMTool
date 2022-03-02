@@ -55,9 +55,9 @@ public abstract class ProcessArchiveSourceSpec implements ArchiveSourceSpec {
     /**
      * Converts the output of the command into instances of {@link ProcessArchiveFile}.
      */
-    protected abstract List<ProcessArchiveFile> convertToContents(List<String> lines);
+    protected abstract List<ProcessArchiveFile> convertToContents(ImmutableList<ImmutableList<String>> lines);
 
-    protected abstract List<String> getReadContentsArgs(List<ProcessArchiveFile> contents);
+    protected abstract List<String> getReadContentsArgs(ImmutableList<ProcessArchiveFile> contents);
 
     @Nullable
     @Override
@@ -129,14 +129,32 @@ public abstract class ProcessArchiveSourceSpec implements ArchiveSourceSpec {
         }
     }
 
-    private static ImmutableList<String> readStdout(Process process) throws IOException {
+    private static ImmutableList<ImmutableList<String>> readStdout(Process process) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        ImmutableList.Builder<String> builder = ImmutableList.builder();
+        ImmutableList.Builder<ImmutableList<String>> builder = ImmutableList.builder();
+        ImmutableList.Builder<String> sectionBuilder = ImmutableList.builder();
         String currLine;
         while ((currLine = reader.readLine()) != null) {
-            builder.add(currLine);
+            currLine = currLine.trim();
+            if (currLine.isEmpty()) {
+                if (addIfNotEmpty(builder, sectionBuilder)) {
+                    sectionBuilder = ImmutableList.builder();
+                }
+            } else {
+                sectionBuilder.add(currLine);
+            }
         }
+        addIfNotEmpty(builder, sectionBuilder);
         return builder.build();
+    }
+
+    private static boolean addIfNotEmpty(ImmutableList.Builder<ImmutableList<String>> builder, ImmutableList.Builder<String> sectionBuilder) {
+        ImmutableList<String> section = sectionBuilder.build();
+        if (!section.isEmpty()) {
+            builder.add(section);
+            return true;
+        }
+        return false;
     }
 
 }

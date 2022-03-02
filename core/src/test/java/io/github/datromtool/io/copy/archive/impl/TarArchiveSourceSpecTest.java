@@ -42,8 +42,8 @@ class TarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @MethodSource("tarArchives")
     void testReadContents(Path file, CompressionAlgorithm algorithm) throws IOException {
         try (TarArchiveSourceSpec spec = new TarArchiveSourceSpec(algorithm, file)) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, false, false);
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
+            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -52,8 +52,8 @@ class TarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @MethodSource("tarArchives")
     void testAllContentsInOrder(Path file, CompressionAlgorithm algorithm) throws IOException {
         try (TarArchiveSourceSpec spec = new TarArchiveSourceSpec(algorithm, file, ImmutableList.of(LOREM_IPSUM_FILE, SHORT_TEXT_FILE))) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, false, false);
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
+            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -62,8 +62,8 @@ class TarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @MethodSource("tarArchives")
     void testAllContentsInReverse_shouldStillBePhysicalOrder(Path file, CompressionAlgorithm algorithm) throws IOException {
         try (TarArchiveSourceSpec spec = new TarArchiveSourceSpec(algorithm, file, ImmutableList.of(SHORT_TEXT_FILE, LOREM_IPSUM_FILE))) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, false, false);
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
+            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -72,7 +72,7 @@ class TarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @MethodSource("tarArchives")
     void testReadOnlyLoremIpsum(Path file, CompressionAlgorithm algorithm) throws IOException {
         try (TarArchiveSourceSpec spec = new TarArchiveSourceSpec(algorithm, file, ImmutableList.of(LOREM_IPSUM_FILE))) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, false, false);
+            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -81,7 +81,7 @@ class TarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @MethodSource("tarArchives")
     void testReadOnlyShortText(Path file, CompressionAlgorithm algorithm) throws IOException {
         try (TarArchiveSourceSpec spec = new TarArchiveSourceSpec(algorithm, file, ImmutableList.of(SHORT_TEXT_FILE))) {
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -90,7 +90,7 @@ class TarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @MethodSource("tarArchives")
     void testReadShortTextAndThenUnknown(Path file, CompressionAlgorithm algorithm) throws IOException {
         try (TarArchiveSourceSpec spec = new TarArchiveSourceSpec(algorithm, file, ImmutableList.of(SHORT_TEXT_FILE, "unknownFile"))) {
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertThrows(ArchiveEntryNotFoundException.class, spec::getNextInternalSpec);
         }
     }

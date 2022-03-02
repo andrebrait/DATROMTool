@@ -32,8 +32,8 @@ class UnrarRarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadContents() throws IOException {
         try (UnrarRarArchiveSourceSpec spec = new UnrarRarArchiveSourceSpec(unrarPath, rarFile)) {
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, false, false);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -41,8 +41,8 @@ class UnrarRarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testAllContentsInOrder() throws IOException {
         try (UnrarRarArchiveSourceSpec spec = new UnrarRarArchiveSourceSpec(unrarPath, rarFile, ImmutableList.of(SHORT_TEXT_FILE, LOREM_IPSUM_FILE))) {
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, false, false);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -50,8 +50,8 @@ class UnrarRarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testAllContentsInReverse_shouldStillBePhysicalOrder() throws IOException {
         try (UnrarRarArchiveSourceSpec spec = new UnrarRarArchiveSourceSpec(unrarPath, rarFile, ImmutableList.of(LOREM_IPSUM_FILE, SHORT_TEXT_FILE))) {
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, false, false);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -59,7 +59,7 @@ class UnrarRarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadOnlyLoremIpsum() throws IOException {
         try (UnrarRarArchiveSourceSpec spec = new UnrarRarArchiveSourceSpec(unrarPath, rarFile, ImmutableList.of(LOREM_IPSUM_FILE))) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, false, false);
+            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -67,7 +67,7 @@ class UnrarRarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadOnlyShortText() throws IOException {
         try (UnrarRarArchiveSourceSpec spec = new UnrarRarArchiveSourceSpec(unrarPath, rarFile, ImmutableList.of(SHORT_TEXT_FILE))) {
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }

@@ -405,14 +405,22 @@ public final class FileScanner {
                 }
             });
         } catch (UnsupportedRarV5Exception e) {
-            if (!config.isForceSevenZip() && ArchiveUtils.isUnrarAvailable(config.getCustomUnrarPath())) {
+            if (isUseUnrar()) {
                 scanRarWithUnrar(file, index, builder);
-            } else if (!config.isForceUnrar() && ArchiveUtils.isSevenZipAvailable(config.getCustomSevenZipPath())) {
+            } else if (isUseSevenZip()) {
                 scanRarWithSevenZip(file, index, builder);
             } else {
                 throw e;
             }
         }
+    }
+
+    private boolean isUseSevenZip() {
+        return !config.isForceUnrar() && ArchiveUtils.isSevenZipAvailable(config.getCustomSevenZipPath());
+    }
+
+    private boolean isUseUnrar() {
+        return !config.isForceSevenZip() && ArchiveUtils.isUnrarAvailable(config.getCustomUnrarPath());
     }
 
     private void scanRarWithUnrar(

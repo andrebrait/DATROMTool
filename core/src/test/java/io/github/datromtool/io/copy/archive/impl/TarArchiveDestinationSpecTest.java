@@ -59,8 +59,8 @@ class TarArchiveDestinationSpecTest extends ArchiveContentsDependantTest {
             writeFile(LOREM_IPSUM_FILE, destinationSpec);
         }
         try (TarArchiveSourceSpec spec = new TarArchiveSourceSpec(algorithm, file)) {
-            assertIsLocalShortText(spec.getNextInternalSpec(), true, false);
-            assertIsLocalLoremIpsum(spec.getNextInternalSpec(), true, false);
+            assertIsLocalShortText(spec.getNextInternalSpec(), false, DateField.MTIME);
+            assertIsLocalLoremIpsum(spec.getNextInternalSpec(), false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }

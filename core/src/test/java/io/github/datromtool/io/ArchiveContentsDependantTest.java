@@ -22,6 +22,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class ArchiveContentsDependantTest extends TestDirDependantTest {
 
+    public enum DateField {
+        MTIME, CTIME, ATIME
+    }
+
     protected static final String LOREM_IPSUM_FILE = "files/test/lorem-ipsum.txt";
     protected static final String SHORT_TEXT_FILE = "files/test/short-text.txt";
     protected static final FileTimes SHORT_TEXT_TIMES = FileTimes.from(
@@ -90,62 +94,62 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
     }
 
     protected static void assertIsLoremIpsum(ArchiveSourceInternalSpec internalSpec) throws IOException {
-        assertIsLoremIpsum(internalSpec, false, false, false);
+        assertIsLoremIpsum(internalSpec, false, false);
     }
 
-    protected static void assertIsLoremIpsum(ArchiveSourceInternalSpec internalSpec, boolean onlyModificationTime, boolean ignoreDifferencesSmallerThanOneUnit, boolean convertTimeZone) throws IOException {
+    protected static void assertIsLoremIpsum(ArchiveSourceInternalSpec internalSpec, boolean ignoreDifferencesSmallerThanOneUnit, boolean convertTimeZone, DateField... dateFields) throws IOException {
         assertNotNull(internalSpec);
         assertEquals(LOREM_IPSUM_FILE, internalSpec.getName());
         assertEquals(loremIpsumContents.length, internalSpec.getSize());
         if (convertTimeZone) {
-            lenientAssertEquals(LOREM_IPSUM_TIMES_DOS_DATES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+            lenientAssertEquals(LOREM_IPSUM_TIMES_DOS_DATES, internalSpec.getFileTimes(), ignoreDifferencesSmallerThanOneUnit, dateFields);
         } else {
-            lenientAssertEquals(LOREM_IPSUM_TIMES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+            lenientAssertEquals(LOREM_IPSUM_TIMES, internalSpec.getFileTimes(), ignoreDifferencesSmallerThanOneUnit, dateFields);
         }
         assertIsLoremIpsumContents(internalSpec);
     }
 
     protected static void assertIsShortText(ArchiveSourceInternalSpec internalSpec) throws IOException {
-        assertIsShortText(internalSpec, false, false, false);
+        assertIsShortText(internalSpec, false, false);
     }
 
-    protected static void assertIsShortText(ArchiveSourceInternalSpec internalSpec, boolean onlyModificationTime, boolean ignoreDifferencesSmallerThanOneUnit, boolean convertTimeZone) throws IOException {
+    protected static void assertIsShortText(ArchiveSourceInternalSpec internalSpec, boolean ignoreDifferencesSmallerThanOneUnit, boolean convertTimeZone, DateField... dateFields) throws IOException {
         assertNotNull(internalSpec);
         assertEquals(SHORT_TEXT_FILE, internalSpec.getName());
         assertEquals(shortTextContents.length, internalSpec.getSize());
         if (convertTimeZone) {
-            lenientAssertEquals(SHORT_TEXT_TIMES_DOS_DATES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+            lenientAssertEquals(SHORT_TEXT_TIMES_DOS_DATES, internalSpec.getFileTimes(), ignoreDifferencesSmallerThanOneUnit, dateFields);
         } else {
-            lenientAssertEquals(SHORT_TEXT_TIMES, internalSpec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+            lenientAssertEquals(SHORT_TEXT_TIMES, internalSpec.getFileTimes(), ignoreDifferencesSmallerThanOneUnit, dateFields);
         }
         assertIsShortTextContents(internalSpec);
     }
 
     protected static void assertIsLocalShortText(ArchiveSourceInternalSpec internalSpec) throws IOException {
-        assertIsLocalShortText(internalSpec, false, false);
+        assertIsLocalShortText(internalSpec, false);
     }
 
-    protected static void assertIsLocalShortText(ArchiveSourceInternalSpec spec, boolean onlyModificationTime, boolean ignoreDifferencesSmallerThanOneUnit) throws IOException {
+    protected static void assertIsLocalShortText(ArchiveSourceInternalSpec spec, boolean ignoreDifferencesSmallerThanOneUnit, DateField... dateFields) throws IOException {
         assertNotNull(spec);
         assertEquals(SHORT_TEXT_FILE, spec.getName());
         assertEquals(shortTextContents.length, spec.getSize());
-        lenientAssertEquals(shortTextLocalTimes, spec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+        lenientAssertEquals(shortTextLocalTimes, spec.getFileTimes(), ignoreDifferencesSmallerThanOneUnit, dateFields);
         assertIsShortTextContents(spec);
     }
 
     protected static void assertIsLocalLoremIpsum(ArchiveSourceInternalSpec internalSpec) throws IOException {
-        assertIsLocalLoremIpsum(internalSpec, false, false);
+        assertIsLocalLoremIpsum(internalSpec, false);
     }
 
-    protected static void assertIsLocalLoremIpsum(ArchiveSourceInternalSpec spec, boolean onlyModificationTime, boolean ignoreDifferencesSmallerThanOneUnit) throws IOException {
+    protected static void assertIsLocalLoremIpsum(ArchiveSourceInternalSpec spec, boolean ignoreDifferencesSmallerThanOneUnit, DateField... dateFields) throws IOException {
         assertNotNull(spec);
         assertEquals(LOREM_IPSUM_FILE, spec.getName());
         assertEquals(loremIpsumContents.length, spec.getSize());
-        lenientAssertEquals(loremIpsumLocalTimes, spec.getFileTimes(), onlyModificationTime, ignoreDifferencesSmallerThanOneUnit);
+        lenientAssertEquals(loremIpsumLocalTimes, spec.getFileTimes(), ignoreDifferencesSmallerThanOneUnit, dateFields);
         assertIsLoremIpsumContents(spec);
     }
 
-    private static void lenientAssertEquals(FileTimes expected, FileTimes actual, boolean onlyModificationTime, boolean ignoreDifferencesSmallerThanOneUnit) {
+    private static void lenientAssertEquals(FileTimes expected, FileTimes actual, boolean ignoreDifferencesSmallerThanOneUnit, DateField... dateFields) {
         TimeUnit unit = TimeUnit.MICROSECONDS;
         if (isMinutesPrecision(actual)) {
             unit = TimeUnit.MINUTES;
@@ -160,14 +164,27 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
             expected = expected.toJavaTime();
             actual = actual.toJavaTime();
         }
-        if (onlyModificationTime && ignoreDifferencesSmallerThanOneUnit) {
-            assertDifferenceSmallerThanOneUnit(unit, expected.getLastModifiedTime(), actual.getLastModifiedTime());
-        } else if (onlyModificationTime) {
-            assertEquals(expected.getLastModifiedTime(), actual.getLastModifiedTime());
-        } else if (ignoreDifferencesSmallerThanOneUnit) {
-            assertDifferenceSmallerThanOneUnit(unit, expected.getLastModifiedTime(), actual.getLastModifiedTime());
-            assertDifferenceSmallerThanOneUnit(unit, expected.getLastAccessTime(), actual.getLastAccessTime());
-            assertDifferenceSmallerThanOneUnit(unit, expected.getCreationTime(), actual.getCreationTime());
+        if (dateFields.length == 0) {
+            dateFields = DateField.values();
+        }
+        for (DateField field : dateFields) {
+            switch (field) {
+                case MTIME:
+                    assertEqualTimes(expected.getLastModifiedTime(), actual.getLastModifiedTime(), ignoreDifferencesSmallerThanOneUnit, unit);
+                    break;
+                case ATIME:
+                    assertEqualTimes(expected.getLastAccessTime(), actual.getLastAccessTime(), ignoreDifferencesSmallerThanOneUnit, unit);
+                    break;
+                case CTIME:
+                    assertEqualTimes(expected.getCreationTime(), actual.getCreationTime(), ignoreDifferencesSmallerThanOneUnit, unit);
+                    break;
+            }
+        }
+    }
+
+    private static void assertEqualTimes(FileTime expected, FileTime actual, boolean ignoreDifferencesSmallerThanOneUnit, TimeUnit unit) {
+        if (ignoreDifferencesSmallerThanOneUnit) {
+            assertDifferenceSmallerThanOneUnit(unit, expected, actual);
         } else {
             assertEquals(expected, actual);
         }
@@ -177,6 +194,7 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
         if (expectedMod != null && actualMod != null) {
             assertTrue(Math.abs(expectedMod.to(unit) - actualMod.to(unit)) <= 1);
         } else {
+            // This will always fail unless they're both null
             assertEquals(expectedMod, actualMod);
         }
     }

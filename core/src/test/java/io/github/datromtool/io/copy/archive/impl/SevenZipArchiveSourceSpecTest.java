@@ -28,8 +28,8 @@ class SevenZipArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadContents() throws IOException {
         try (SevenZipArchiveSourceSpec spec = new SevenZipArchiveSourceSpec(sevenZipFile)) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, false, false);
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
+            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -37,8 +37,8 @@ class SevenZipArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testAllContentsInOrder() throws IOException {
         try (SevenZipArchiveSourceSpec spec = new SevenZipArchiveSourceSpec(sevenZipFile, ImmutableList.of(LOREM_IPSUM_FILE, SHORT_TEXT_FILE))) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, false, false);
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
+            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -46,8 +46,8 @@ class SevenZipArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testAllContentsInReverse_shouldStillBePhysicalOrder() throws IOException {
         try (SevenZipArchiveSourceSpec spec = new SevenZipArchiveSourceSpec(sevenZipFile, ImmutableList.of(SHORT_TEXT_FILE, LOREM_IPSUM_FILE))) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, false, false);
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
+            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -55,7 +55,7 @@ class SevenZipArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadOnlyLoremIpsum() throws IOException {
         try (SevenZipArchiveSourceSpec spec = new SevenZipArchiveSourceSpec(sevenZipFile, ImmutableList.of(LOREM_IPSUM_FILE))) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true, false, false);
+            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -63,7 +63,7 @@ class SevenZipArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadOnlyShortText() throws IOException {
         try (SevenZipArchiveSourceSpec spec = new SevenZipArchiveSourceSpec(sevenZipFile, ImmutableList.of(SHORT_TEXT_FILE))) {
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -71,7 +71,7 @@ class SevenZipArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadShortTextAndThenUnknown() throws IOException {
         try (SevenZipArchiveSourceSpec spec = new SevenZipArchiveSourceSpec(sevenZipFile, ImmutableList.of(SHORT_TEXT_FILE, "unknownFile"))) {
-            assertIsShortText(spec.getNextInternalSpec(), true, false, false);
+            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
             assertThrows(ArchiveEntryNotFoundException.class, spec::getNextInternalSpec);
         }
     }
