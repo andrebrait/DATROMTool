@@ -265,32 +265,33 @@ public final class FilteringOptions {
         builder.allowDemo(isAllowDemo());
         builder.allowSample(isAllowSample());
         builder.allowBios(isAllowBios());
-        ImmutableSet.Builder<Pattern> excludesBuilder = ImmutableSet.builder();
+        ImmutableSet.Builder<Pattern> excludeRegexesBuilder = ImmutableSet.builder();
         if (!isAllowBad()) {
-            excludesBuilder.add(Patterns.BAD);
+            excludeRegexesBuilder.add(Patterns.BAD);
         }
         if (!isAllowProgram()) {
-            excludesBuilder.add(Patterns.PROGRAM);
+            excludeRegexesBuilder.add(Patterns.PROGRAM);
         }
         if (!isAllowChip()) {
-            excludesBuilder.add(Patterns.ENHANCEMENT_CHIP);
+            excludeRegexesBuilder.add(Patterns.ENHANCEMENT_CHIP);
         }
         if (!isAllowPirate()) {
-            excludesBuilder.add(Patterns.PIRATE);
+            excludeRegexesBuilder.add(Patterns.PIRATE);
         }
         if (!isAllowPromo()) {
-            excludesBuilder.add(Patterns.PROMO);
+            excludeRegexesBuilder.add(Patterns.PROMO);
         }
         if (!isAllowUnlicensed()) {
-            excludesBuilder.add(Patterns.UNLICENSED);
+            excludeRegexesBuilder.add(Patterns.UNLICENSED);
         }
         if (!isAllowDlc()) {
-            excludesBuilder.add(Patterns.DLC);
+            excludeRegexesBuilder.add(Patterns.DLC);
         }
         if (!isAllowUpdate()) {
-            excludesBuilder.add(Patterns.UPDATE);
+            excludeRegexesBuilder.add(Patterns.UPDATE);
         }
-        builder.excludes(merge(excludes, excludeRegexes, excludesFiles));
+        excludeRegexesBuilder.addAll(excludeRegexes);
+        builder.excludes(merge(excludes, excludeRegexesBuilder.build(), excludesFiles));
         builder.includes(merge(includes, includeRegexes, includesFiles));
         return builder.build();
     }
