@@ -25,15 +25,15 @@ class SevenZipRarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
 
     @BeforeAll
     static void resolveFile() {
-        rarFile = archiveTestDataSource.resolve("files.rar");
+        rarFile = archiveTestDataSource.resolve("archives").resolve("files.rar");
         sevenZipPath = requireNonNull(ArchiveUtils.getSevenZipPath());
     }
 
     @Test
     void testReadContents() throws IOException {
         try (SevenZipRarArchiveSourceSpec spec = new SevenZipRarArchiveSourceSpec(sevenZipPath, rarFile)) {
-            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
-            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsLoremIpsum(spec.getNextInternalSpec());
+            assertIsShortText(spec.getNextInternalSpec());
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -41,8 +41,8 @@ class SevenZipRarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testAllContentsInOrder() throws IOException {
         try (SevenZipRarArchiveSourceSpec spec = new SevenZipRarArchiveSourceSpec(sevenZipPath, rarFile, ImmutableList.of(SHORT_TEXT_FILE, LOREM_IPSUM_FILE))) {
-            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
-            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsLoremIpsum(spec.getNextInternalSpec());
+            assertIsShortText(spec.getNextInternalSpec());
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -50,8 +50,8 @@ class SevenZipRarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testAllContentsInReverse_shouldStillBePhysicalOrder() throws IOException {
         try (SevenZipRarArchiveSourceSpec spec = new SevenZipRarArchiveSourceSpec(sevenZipPath, rarFile, ImmutableList.of(LOREM_IPSUM_FILE, SHORT_TEXT_FILE))) {
-            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
-            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsLoremIpsum(spec.getNextInternalSpec());
+            assertIsShortText(spec.getNextInternalSpec());
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -59,7 +59,7 @@ class SevenZipRarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadOnlyLoremIpsum() throws IOException {
         try (SevenZipRarArchiveSourceSpec spec = new SevenZipRarArchiveSourceSpec(sevenZipPath, rarFile, ImmutableList.of(LOREM_IPSUM_FILE))) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsLoremIpsum(spec.getNextInternalSpec());
             assertNull(spec.getNextInternalSpec());
         }
     }
@@ -67,7 +67,7 @@ class SevenZipRarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadOnlyShortText() throws IOException {
         try (SevenZipRarArchiveSourceSpec spec = new SevenZipRarArchiveSourceSpec(sevenZipPath, rarFile, ImmutableList.of(SHORT_TEXT_FILE))) {
-            assertIsShortText(spec.getNextInternalSpec(), false, false, DateField.MTIME);
+            assertIsShortText(spec.getNextInternalSpec());
             assertNull(spec.getNextInternalSpec());
         }
     }

@@ -18,7 +18,7 @@ class ZipArchiveSourceSpecTest extends ArchiveContentsDependantTest {
 
     @BeforeAll
     static void resolveFile() {
-        zipFile = archiveTestDataSource.resolve("files.zip");
+        zipFile = archiveTestDataSource.resolve("archives").resolve("files.zip");
     }
 
     @Test

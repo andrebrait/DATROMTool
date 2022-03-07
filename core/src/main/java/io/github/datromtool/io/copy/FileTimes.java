@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -125,11 +126,25 @@ public class FileTimes {
     @Nullable
     private static FileTime fromDate(@Nullable Date date, @Nonnull TimeZone timeZone) {
         if (date != null) {
-            long time = date.getTime();
-            return FileTime.fromMillis(time - TimeZone.getDefault().getOffset(time) + timeZone.getOffset(time));
+            // Local date
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            Calendar targetCalendar = Calendar.getInstance(timeZone);
+            copy(Calendar.YEAR, calendar, targetCalendar);
+            copy(Calendar.MONTH, calendar, targetCalendar);
+            copy(Calendar.DAY_OF_MONTH, calendar, targetCalendar);
+            copy(Calendar.HOUR_OF_DAY, calendar, targetCalendar);
+            copy(Calendar.MINUTE, calendar, targetCalendar);
+            copy(Calendar.SECOND, calendar, targetCalendar);
+            copy(Calendar.MILLISECOND, calendar, targetCalendar);
+            return FileTime.fromMillis(targetCalendar.getTimeInMillis());
         } else {
             return null;
         }
+    }
+
+    private static void copy(int field, Calendar calendar, Calendar targetCalendar) {
+        targetCalendar.set(field, calendar.get(field));
     }
 
     public void applyTo(Path file) throws IOException {

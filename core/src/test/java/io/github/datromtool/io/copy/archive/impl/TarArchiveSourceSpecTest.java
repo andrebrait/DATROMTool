@@ -22,7 +22,7 @@ class TarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
 
     static Stream<Arguments> tarArchives() {
         return Stream.concat(
-                Stream.of(Arguments.of(archiveTestDataSource.resolve("files.tar"), null)),
+                Stream.of(Arguments.of(archiveTestDataSource.resolve("archives").resolve("files.tar"), null)),
                 Arrays.stream(CompressionAlgorithm.values())
                         .filter(a -> {
                             if (a.isEnabled()) {
@@ -31,11 +31,11 @@ class TarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
                                 log.warn("{} is disabled. Will not run tests for {}-compressed TAR archives.", a, a);
                                 return false;
                             }
-                        }).map(a -> Arguments.of(archiveTestDataSource.resolve("files.tar." + a.getExtension()), a)));
+                        }).map(a -> Arguments.of(archiveTestDataSource.resolve("archives").resolve("files.tar." + a.getExtension()), a)));
     }
 
     /*
-    TAR only contain modification dates, so we are testing only against those
+    Only testing mtime and ctime because BSD tar cannot preserve atime and GNU tar cannot preserve ctime
      */
 
     @ParameterizedTest

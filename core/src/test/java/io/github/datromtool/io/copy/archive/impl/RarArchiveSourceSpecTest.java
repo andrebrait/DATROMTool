@@ -18,7 +18,7 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
 
     @BeforeAll
     static void resolveFile() {
-        rarFile = archiveTestDataSource.resolve("files.rar4.rar");
+        rarFile = archiveTestDataSource.resolve("archives").resolve("files.rar4.rar");
     }
 
     /*
@@ -28,7 +28,7 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     @Test
     void testReadContents() throws IOException {
         try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rarFile)) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(),true, true, DateField.MTIME);
+            assertIsLoremIpsum(spec.getNextInternalSpec(), true, true, DateField.MTIME);
             assertIsShortText(spec.getNextInternalSpec(), true, true, DateField.MTIME);
             assertNull(spec.getNextInternalSpec());
         }

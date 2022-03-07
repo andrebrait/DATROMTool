@@ -31,8 +31,8 @@ class CompressionAlgorithmTest extends ArchiveContentsDependantTest {
     @ParameterizedTest
     @MethodSource("compressionAlgorithmProvider")
     void testDecompressFromDisk(CompressionAlgorithm algorithm) throws IOException {
-        byte[] decompressedShortText = getDecompressedByteArray(algorithm, "files/test/short-text.txt");
-        byte[] decompressedLoremIpsum = getDecompressedByteArray(algorithm, "files/test/lorem-ipsum.txt");
+        byte[] decompressedShortText = getDecompressedByteArray(algorithm, "compressed/short-text.txt");
+        byte[] decompressedLoremIpsum = getDecompressedByteArray(algorithm, "compressed/lorem-ipsum.txt");
         assertArrayEquals(shortTextContents, decompressedShortText);
         assertArrayEquals(loremIpsumContents, decompressedLoremIpsum);
     }

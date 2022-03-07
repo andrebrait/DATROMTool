@@ -39,8 +39,30 @@ final class TarArchiveSourceInternalSpec extends AbstractArchiveSourceInternalSp
 
     @Override
     public FileTimes getFileTimes() {
+        // TODO handle ctime and atime
+//        Map<String, String> extraHeaders = tarArchiveEntry.getExtraPaxHeaders();
+//        if (extraHeaders != null && !extraHeaders.isEmpty()) {
+//            String mtime = extraHeaders.get("mtime");
+//            String atime = extraHeaders.get("atime");
+//            String ctime = extraHeaders.get("ctime");
+//            if (mtime != null || atime != null || ctime != null) {
+//                return FileTimes.from(
+//                        fromEpochSeconds(mtime, tarArchiveEntry.getLastModifiedDate()),
+//                        fromEpochSeconds(atime, null),
+//                        fromEpochSeconds(ctime, null));
+//            }
+//        }
         return FileTimes.from(tarArchiveEntry.getLastModifiedDate(), null, null);
     }
+
+//    @Nullable
+//    private static FileTime fromEpochSeconds(@Nullable String seconds, @Nullable Date defaultDate) {
+//        if (seconds == null || seconds.isEmpty()) {
+//            return defaultDate != null ? FileTime.fromMillis(defaultDate.getTime()) : null;
+//        }
+//        BigDecimal epochSeconds = new BigDecimal(seconds);
+//        return FileTime.from(Instant.ofEpochSecond(epochSeconds.longValue(), epochSeconds.remainder(BigDecimal.ONE).movePointRight(9).longValue()));
+//    }
 
     @Override
     public InputStream getInputStream() throws IOException {
