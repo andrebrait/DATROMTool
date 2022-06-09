@@ -13,6 +13,7 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
@@ -43,12 +44,22 @@ public final class UnrarRarArchiveSourceSpec extends ZonedTimeProcessArchiveSour
                 .map(map -> new ProcessArchiveFile(
                         map.get("Name"),
                         Long.parseLong(requireNonNull(map.get("Size"))),
+                        // Unix builds of unrar may output these fields as mtime, atime and ctime
                         FileTimes.from(
-                                parseFileTime(map.get("Modified")),
-                                parseFileTime(map.get("Accessed")),
-                                parseFileTime(map.get("Created")))))
+                                parseFileTime(getFirstNonNullKey(map, "Modified", "mtime")),
+                                parseFileTime(getFirstNonNullKey(map, "Accessed", "atime")),
+                                parseFileTime(getFirstNonNullKey(map, "Created", "ctime")))))
                 .filter(f -> f.getSize() > 0)
                 .collect(ImmutableList.toImmutableList());
+    }
+
+    @Nullable
+    private String getFirstNonNullKey(Map<String, String> map, String key1, String key2) {
+        String val = map.get(key1);
+        if (val != null) {
+            return val;
+        }
+        return map.get(key2);
     }
 
     @Nonnull
