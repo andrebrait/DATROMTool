@@ -7,6 +7,7 @@ import io.github.datromtool.io.copy.archive.ArchiveSourceInternalSpec;
 import org.apache.commons.compress.utils.IOUtils;
 import org.junit.jupiter.api.BeforeAll;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,9 +15,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
-import java.util.TimeZone;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.Calendar.FEBRUARY;
+import static java.util.Calendar.MARCH;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class ArchiveContentsDependantTest extends TestDirDependantTest {
@@ -39,20 +43,24 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
     /**
      * Corrected for the file's original time zone
      */
-    protected static final FileTimes SHORT_TEXT_TIMES_DOS_TIMES = FileTimes.fromDosDates(
-            SHORT_TEXT_TIMES.getLastModifiedTime(),
-            SHORT_TEXT_TIMES.getLastAccessTime(),
-            SHORT_TEXT_TIMES.getCreationTime(),
-            TimeZone.getTimeZone("Europe/Amsterdam"));
+    @Nonnull
+    private static FileTimes getShortTextDosTimes() {
+        return FileTimes.from(
+                toFileTime(2022, FEBRUARY, 23, 10, 24, 19, 191, 543300),
+                toFileTime(2022, MARCH, 2, 18, 45, 18, 694, 91100),
+                toFileTime(2022, FEBRUARY, 23, 10, 34, 59, 759, 754700));
+    }
 
     /**
      * Corrected for the file's original time zone
      */
-    protected static final FileTimes LOREM_IPSUM_TIMES_DOS_TIMES = FileTimes.fromDosDates(
-            LOREM_IPSUM_TIMES.getLastModifiedTime(),
-            LOREM_IPSUM_TIMES.getLastAccessTime(),
-            LOREM_IPSUM_TIMES.getCreationTime(),
-            TimeZone.getTimeZone("Europe/Amsterdam"));
+    @Nonnull
+    private static FileTimes getLoremIpsumDosTimes() {
+        return FileTimes.from(
+                toFileTime(2022, FEBRUARY, 23, 10, 25, 55, 206, 205200),
+                toFileTime(2022, MARCH, 2, 18, 45, 18, 695, 90800),
+                toFileTime(2022, FEBRUARY, 23, 10, 19, 22, 854, 708200));
+    }
 
     protected static byte[] shortTextContents;
     protected static byte[] loremIpsumContents;
@@ -71,7 +79,7 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
         shortTextLocalTimes = FileTimes.from(shortTextPath);
         loremIpsumLocalTimes = FileTimes.from(loremIpsumPath);
     }
-    
+
     protected static void assertIsLoremIpsumContents(@Nullable SourceSpec sourceSpec) throws IOException {
         assertNotNull(sourceSpec);
         try (InputStream is = sourceSpec.getInputStream()) {
@@ -103,7 +111,7 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
         assertEquals(LOREM_IPSUM_FILE, internalSpec.getName());
         assertEquals(loremIpsumContents.length, internalSpec.getSize());
         if (convertTimeZone) {
-            lenientAssertEquals(LOREM_IPSUM_TIMES_DOS_TIMES, internalSpec.getFileTimes(), dateFields);
+            lenientAssertEquals(getLoremIpsumDosTimes(), internalSpec.getFileTimes(), dateFields);
         } else {
             lenientAssertEquals(LOREM_IPSUM_TIMES, internalSpec.getFileTimes(), dateFields);
         }
@@ -114,12 +122,19 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
         assertIsShortText(internalSpec, false);
     }
 
+    private static FileTime toFileTime(int year, int month, int day, int hour, int minute, int second, int millis, int nanos) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day, hour, minute, second);
+        calendar.set(Calendar.MILLISECOND, millis);
+        return  FileTime.from(Instant.ofEpochMilli(calendar.getTimeInMillis()).plus(nanos, ChronoUnit.NANOS));
+    }
+
     protected static void assertIsShortText(ArchiveSourceInternalSpec internalSpec, boolean convertTimeZone, DateField... dateFields) throws IOException {
         assertNotNull(internalSpec);
         assertEquals(SHORT_TEXT_FILE, internalSpec.getName());
         assertEquals(shortTextContents.length, internalSpec.getSize());
         if (convertTimeZone) {
-            lenientAssertEquals(SHORT_TEXT_TIMES_DOS_TIMES, internalSpec.getFileTimes(), dateFields);
+            lenientAssertEquals(getShortTextDosTimes(), internalSpec.getFileTimes(), dateFields);
         } else {
             lenientAssertEquals(SHORT_TEXT_TIMES, internalSpec.getFileTimes(), dateFields);
         }

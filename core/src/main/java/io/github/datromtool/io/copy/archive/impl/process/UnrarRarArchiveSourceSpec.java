@@ -9,18 +9,14 @@ import javax.annotation.Nullable;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
 
-public final class UnrarRarArchiveSourceSpec extends ProcessArchiveSourceSpec {
-
-    private static final Pattern SPACE_REGEX = Pattern.compile("\\s+");
+public final class UnrarRarArchiveSourceSpec extends ZonedTimeProcessArchiveSourceSpec {
 
     public UnrarRarArchiveSourceSpec(@Nonnull Path executablePath, @Nonnull Path path) {
         super(executablePath, path);
@@ -77,8 +73,7 @@ public final class UnrarRarArchiveSourceSpec extends ProcessArchiveSourceSpec {
         if (s == null || s.isEmpty()) {
             return null;
         }
-        String formattedDate = SPACE_REGEX.matcher(s).replaceFirst("T").replace(',', '.');
-        return LocalDateTime.parse(formattedDate).atZone(ZoneId.systemDefault());
+        return LocalDateTime.parse(formatDateString(s)).atZone(SYSTEM_ZONE_ID);
     }
 
     @Override

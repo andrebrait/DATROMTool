@@ -11,17 +11,13 @@ import java.nio.file.attribute.FileTime;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
 
-public final class SevenZipRarArchiveSourceSpec extends ProcessArchiveSourceSpec {
-
-    private static final Pattern SPACE_REGEX = Pattern.compile("\\s+");
+public final class SevenZipRarArchiveSourceSpec extends ZonedTimeProcessArchiveSourceSpec {
 
     public SevenZipRarArchiveSourceSpec(@Nonnull Path executablePath, @Nonnull Path path) {
         super(executablePath, path);
@@ -77,12 +73,11 @@ public final class SevenZipRarArchiveSourceSpec extends ProcessArchiveSourceSpec
         if (s == null || s.isEmpty()) {
             return null;
         }
-        String formattedDate = SPACE_REGEX.matcher(s).replaceFirst("T").replace(',', '.');
-        // return LocalDateTime.parse(formattedDate).atZone(ZoneId.systemDefault());
+        // return LocalDateTime.parse(formatDateString(s)).atZone(ZoneId.systemDefault());
 
         // Workaround for the fact 7z for some reason thinks it should apply the current offset to a date, not the
         // offset of when the date is supposed to be, when launched from Java.
-        return LocalDateTime.parse(formattedDate).atOffset(ZoneId.systemDefault().getRules().getOffset(Instant.now()));
+        return LocalDateTime.parse(formatDateString(s)).atOffset(SYSTEM_ZONE_ID.getRules().getOffset(Instant.now()));
     }
 
     @Override

@@ -36,6 +36,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <junit.jupiter.version>5.8.2</junit.jupiter.version>
+        <junit.jupiter.pioneer.version>1.7.0</junit.jupiter.pioneer.version>
         <lombok.version>1.18.24</lombok.version>
         <commons-compress.version>1.21</commons-compress.version>
         <picocli.version>4.6.3</picocli.version>
@@ -132,6 +133,11 @@
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter</artifactId>
                 <version>${junit.jupiter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit-pioneer</groupId>
+                <artifactId>junit-pioneer</artifactId>
+                <version>${junit.jupiter.pioneer.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>

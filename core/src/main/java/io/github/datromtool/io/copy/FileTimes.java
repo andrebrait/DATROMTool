@@ -2,7 +2,6 @@ package io.github.datromtool.io.copy;
 
 import lombok.Value;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,10 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
-import java.time.Instant;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 @Value
@@ -38,26 +34,6 @@ public class FileTimes {
 
     public static FileTimes from(@Nullable Date lastModifiedTime, @Nullable Date lastAccessTime, @Nullable Date creationTime) {
         return new FileTimes(fromDate(lastModifiedTime), fromDate(lastAccessTime), fromDate(creationTime));
-    }
-
-    /**
-     * Constructs a new FileTimes from a set of DOS dates. DOS dates are parsed using the system's local time zone and
-     * thus can differ depending on the machine they are parsed on. If the time zone in which the dates were created
-     * is known, we can correct this by applying the target time zone to the dates and correct the different parsing
-     * results.
-     */
-    public static FileTimes fromDosDates(@Nullable Date lastModifiedTime, @Nullable Date lastAccessTime, @Nullable Date creationTime, @Nonnull TimeZone targetTimeZone) {
-        return new FileTimes(fromDate(lastModifiedTime, targetTimeZone), fromDate(lastAccessTime), fromDate(creationTime));
-    }
-
-    /**
-     * Constructs a new FileTimes from a set of DOS dates. DOS dates are parsed using the system's local time zone and
-     * thus can differ depending on the machine they are parsed on. If the time zone in which the dates were created
-     * is known, we can correct this by applying the target time zone to the dates and correct the different parsing
-     * results.
-     */
-    public static FileTimes fromDosDates(@Nullable FileTime lastModifiedTime, @Nullable FileTime lastAccessTime, @Nullable FileTime creationTime, @Nonnull TimeZone targetTimeZone) {
-        return new FileTimes(fromFileTime(lastModifiedTime, targetTimeZone), fromFileTime(lastAccessTime, targetTimeZone), fromFileTime(creationTime, targetTimeZone));
     }
 
     /**
@@ -134,51 +110,6 @@ public class FileTimes {
     @Nullable
     private static FileTime fromDate(@Nullable Date date) {
         return date != null ? FileTime.fromMillis(date.getTime()) : null;
-    }
-
-    @Nullable
-    private static FileTime fromDate(@Nullable Date date, @Nonnull TimeZone timeZone) {
-        if (date != null) {
-            // Local date
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            Calendar targetCalendar = Calendar.getInstance(timeZone);
-            copy(Calendar.YEAR, calendar, targetCalendar);
-            copy(Calendar.MONTH, calendar, targetCalendar);
-            copy(Calendar.DAY_OF_MONTH, calendar, targetCalendar);
-            copy(Calendar.HOUR_OF_DAY, calendar, targetCalendar);
-            copy(Calendar.MINUTE, calendar, targetCalendar);
-            copy(Calendar.SECOND, calendar, targetCalendar);
-            copy(Calendar.MILLISECOND, calendar, targetCalendar);
-            return FileTime.fromMillis(targetCalendar.getTimeInMillis());
-        } else {
-            return null;
-        }
-    }
-
-    @Nullable
-    private static FileTime fromFileTime(@Nullable FileTime date, @Nonnull TimeZone timeZone) {
-        if (date != null) {
-            // Local date
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(date.toMillis());
-            Calendar targetCalendar = Calendar.getInstance(timeZone);
-            copy(Calendar.YEAR, calendar, targetCalendar);
-            copy(Calendar.MONTH, calendar, targetCalendar);
-            copy(Calendar.DAY_OF_MONTH, calendar, targetCalendar);
-            copy(Calendar.HOUR_OF_DAY, calendar, targetCalendar);
-            copy(Calendar.MINUTE, calendar, targetCalendar);
-            copy(Calendar.SECOND, calendar, targetCalendar);
-            copy(Calendar.MILLISECOND, calendar, targetCalendar);
-            Instant instant = Instant.ofEpochMilli(targetCalendar.getTimeInMillis());
-            return FileTime.from(instant.plusNanos(date.toInstant().getNano() % ONE_MILLISECOND_IN_NANOS));
-        } else {
-            return null;
-        }
-    }
-
-    private static void copy(int field, Calendar calendar, Calendar targetCalendar) {
-        targetCalendar.set(field, calendar.get(field));
     }
 
     public void applyTo(Path file) throws IOException {
