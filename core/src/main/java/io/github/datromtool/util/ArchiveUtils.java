@@ -72,9 +72,7 @@ public final class ArchiveUtils {
     }
 
     public static String normalizePath(String path) {
-        return path.indexOf('\\') > 0
-                ? path.replace('\\', '/')
-                : path;
+        return path.replace('\\', '/');
     }
 
     @Nullable

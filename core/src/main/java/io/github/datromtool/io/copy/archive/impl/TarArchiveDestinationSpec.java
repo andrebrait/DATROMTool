@@ -13,8 +13,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.time.Instant;
 
 public final class TarArchiveDestinationSpec extends AbstractArchiveDestinationSpec {
 
@@ -41,6 +45,7 @@ public final class TarArchiveDestinationSpec extends AbstractArchiveDestinationS
             } else {
                 tarArchiveOutputStream = new TarArchiveOutputStream(rawOutputStream);
             }
+            tarArchiveOutputStream.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
         }
         TarArchiveEntry tarArchiveEntry = new TarArchiveEntry(name);
         tarArchiveEntry.setSize(sourceSpec.getSize());
@@ -48,8 +53,43 @@ public final class TarArchiveDestinationSpec extends AbstractArchiveDestinationS
         if (fileTimes.getLastModifiedTime() != null) {
             tarArchiveEntry.setModTime(fileTimes.getLastModifiedTime());
         }
+        // Workaround for this not being handled in Apache Commons Compress
+        addPaxHeader(tarArchiveEntry, "mtime", fileTimes.getLastModifiedTime());
+        addPaxHeader(tarArchiveEntry, "ctime", fileTimes.getCreationTime());
+        addPaxHeader(tarArchiveEntry, "atime", fileTimes.getLastAccessTime());
         tarArchiveOutputStream.putArchiveEntry(tarArchiveEntry);
         return new TarArchiveDestinationInternalSpec(this, tarArchiveOutputStream, tarArchiveEntry);
+    }
+
+    private void addPaxHeader(TarArchiveEntry entry, String header, FileTime value) {
+        if (value != null) {
+            Instant instant = value.toInstant();
+            if (header.equals("mtime") && instant.getNano() == 0) {
+                // Let Apache Commons Compress handle it
+                return;
+            }
+            addFileTimePaxHeader(entry, header, value);
+        }
+    }
+
+    private void addFileTimePaxHeader(TarArchiveEntry entry, String header, FileTime value) {
+        if (value != null) {
+            Instant instant = value.toInstant();
+            long seconds = instant.getEpochSecond();
+            int nanos = instant.getNano();
+            if (nanos == 0) {
+                entry.addPaxHeader(header, String.valueOf(seconds));
+            } else {
+                addInstantPaxHeader(entry, header, seconds, nanos);
+            }
+        }
+    }
+
+    private void addInstantPaxHeader(TarArchiveEntry entry, String header, long seconds, int nanos) {
+        BigDecimal bdSeconds = BigDecimal.valueOf(seconds);
+        BigDecimal bdNanos = BigDecimal.valueOf(nanos).movePointLeft(9).setScale(7, RoundingMode.DOWN);
+        BigDecimal timestamp = bdSeconds.add(bdNanos);
+        entry.addPaxHeader(header, timestamp.toPlainString());
     }
 
     @Override

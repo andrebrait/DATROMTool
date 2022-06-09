@@ -10,8 +10,14 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.utils.BoundedInputStream;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.nio.file.attribute.FileTime;
+import java.time.Instant;
+import java.util.Date;
+import java.util.Map;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 final class TarArchiveSourceInternalSpec extends AbstractArchiveSourceInternalSpec {
@@ -39,30 +45,34 @@ final class TarArchiveSourceInternalSpec extends AbstractArchiveSourceInternalSp
 
     @Override
     public FileTimes getFileTimes() {
-        // TODO handle ctime and atime
-//        Map<String, String> extraHeaders = tarArchiveEntry.getExtraPaxHeaders();
-//        if (extraHeaders != null && !extraHeaders.isEmpty()) {
-//            String mtime = extraHeaders.get("mtime");
-//            String atime = extraHeaders.get("atime");
-//            String ctime = extraHeaders.get("ctime");
-//            if (mtime != null || atime != null || ctime != null) {
-//                return FileTimes.from(
-//                        fromEpochSeconds(mtime, tarArchiveEntry.getLastModifiedDate()),
-//                        fromEpochSeconds(atime, null),
-//                        fromEpochSeconds(ctime, null));
-//            }
-//        }
+        Map<String, String> extraHeaders = tarArchiveEntry.getExtraPaxHeaders();
+        if (extraHeaders != null && !extraHeaders.isEmpty()) {
+            String mtime = extraHeaders.get("mtime");
+            String atime = extraHeaders.get("atime");
+            String ctime = extraHeaders.get("ctime");
+            if (mtime != null || atime != null || ctime != null) {
+                return FileTimes.from(
+                        fromEpochSeconds(mtime, tarArchiveEntry.getLastModifiedDate()),
+                        fromEpochSeconds(atime),
+                        fromEpochSeconds(ctime));
+            }
+        }
         return FileTimes.from(tarArchiveEntry.getLastModifiedDate(), null, null);
     }
 
-//    @Nullable
-//    private static FileTime fromEpochSeconds(@Nullable String seconds, @Nullable Date defaultDate) {
-//        if (seconds == null || seconds.isEmpty()) {
-//            return defaultDate != null ? FileTime.fromMillis(defaultDate.getTime()) : null;
-//        }
-//        BigDecimal epochSeconds = new BigDecimal(seconds);
-//        return FileTime.from(Instant.ofEpochSecond(epochSeconds.longValue(), epochSeconds.remainder(BigDecimal.ONE).movePointRight(9).longValue()));
-//    }
+    @Nullable
+    private static FileTime fromEpochSeconds(@Nullable String seconds) {
+        return fromEpochSeconds(seconds, null);
+    }
+
+    @Nullable
+    private static FileTime fromEpochSeconds(@Nullable String seconds, @Nullable Date defaultDate) {
+        if (seconds == null || seconds.isEmpty()) {
+            return defaultDate != null ? FileTime.fromMillis(defaultDate.getTime()) : null;
+        }
+        BigDecimal epochSeconds = new BigDecimal(seconds);
+        return FileTime.from(Instant.ofEpochSecond(epochSeconds.longValue(), epochSeconds.remainder(BigDecimal.ONE).movePointRight(9).longValue()));
+    }
 
     @Override
     public InputStream getInputStream() throws IOException {

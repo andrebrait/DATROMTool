@@ -35,21 +35,23 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
             FileTime.from(Instant.parse("2022-02-23T09:25:55.206205200Z")),
             FileTime.from(Instant.parse("2022-03-02T17:45:18.695090800Z")),
             FileTime.from(Instant.parse("2022-02-23T09:19:22.854708200Z")));
+
     /**
      * Corrected for the file's original time zone
      */
-    protected static final FileTimes SHORT_TEXT_TIMES_DOS_DATES = FileTimes.fromDosDates(
-            SHORT_TEXT_TIMES.getLastModifiedTimeAsDate(),
-            SHORT_TEXT_TIMES.getLastAccessTimeAsDate(),
-            SHORT_TEXT_TIMES.getCreationTimeAsDate(),
+    protected static final FileTimes SHORT_TEXT_TIMES_DOS_TIMES = FileTimes.fromDosDates(
+            SHORT_TEXT_TIMES.getLastModifiedTime(),
+            SHORT_TEXT_TIMES.getLastAccessTime(),
+            SHORT_TEXT_TIMES.getCreationTime(),
             TimeZone.getTimeZone("Europe/Amsterdam"));
+
     /**
      * Corrected for the file's original time zone
      */
-    protected static final FileTimes LOREM_IPSUM_TIMES_DOS_DATES = FileTimes.fromDosDates(
-            LOREM_IPSUM_TIMES.getLastModifiedTimeAsDate(),
-            LOREM_IPSUM_TIMES.getLastAccessTimeAsDate(),
-            LOREM_IPSUM_TIMES.getCreationTimeAsDate(),
+    protected static final FileTimes LOREM_IPSUM_TIMES_DOS_TIMES = FileTimes.fromDosDates(
+            LOREM_IPSUM_TIMES.getLastModifiedTime(),
+            LOREM_IPSUM_TIMES.getLastAccessTime(),
+            LOREM_IPSUM_TIMES.getCreationTime(),
             TimeZone.getTimeZone("Europe/Amsterdam"));
 
     protected static byte[] shortTextContents;
@@ -93,73 +95,61 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
     }
 
     protected static void assertIsLoremIpsum(ArchiveSourceInternalSpec internalSpec) throws IOException {
-        assertIsLoremIpsum(internalSpec, false, false);
+        assertIsLoremIpsum(internalSpec, false);
     }
 
-    protected static void assertIsLoremIpsum(ArchiveSourceInternalSpec internalSpec, boolean ignoreDifferencesSmallerThanOneUnit, boolean convertTimeZone, DateField... dateFields) throws IOException {
+    protected static void assertIsLoremIpsum(ArchiveSourceInternalSpec internalSpec, boolean convertTimeZone, DateField... dateFields) throws IOException {
         assertNotNull(internalSpec);
         assertEquals(LOREM_IPSUM_FILE, internalSpec.getName());
         assertEquals(loremIpsumContents.length, internalSpec.getSize());
         if (convertTimeZone) {
-            lenientAssertEquals(LOREM_IPSUM_TIMES_DOS_DATES, internalSpec.getFileTimes(), ignoreDifferencesSmallerThanOneUnit, dateFields);
+            lenientAssertEquals(LOREM_IPSUM_TIMES_DOS_TIMES, internalSpec.getFileTimes(), dateFields);
         } else {
-            lenientAssertEquals(LOREM_IPSUM_TIMES, internalSpec.getFileTimes(), ignoreDifferencesSmallerThanOneUnit, dateFields);
+            lenientAssertEquals(LOREM_IPSUM_TIMES, internalSpec.getFileTimes(), dateFields);
         }
         assertIsLoremIpsumContents(internalSpec);
     }
 
     protected static void assertIsShortText(ArchiveSourceInternalSpec internalSpec) throws IOException {
-        assertIsShortText(internalSpec, false, false);
+        assertIsShortText(internalSpec, false);
     }
 
-    protected static void assertIsShortText(ArchiveSourceInternalSpec internalSpec, boolean ignoreDifferencesSmallerThanOneUnit, boolean convertTimeZone, DateField... dateFields) throws IOException {
+    protected static void assertIsShortText(ArchiveSourceInternalSpec internalSpec, boolean convertTimeZone, DateField... dateFields) throws IOException {
         assertNotNull(internalSpec);
         assertEquals(SHORT_TEXT_FILE, internalSpec.getName());
         assertEquals(shortTextContents.length, internalSpec.getSize());
         if (convertTimeZone) {
-            lenientAssertEquals(SHORT_TEXT_TIMES_DOS_DATES, internalSpec.getFileTimes(), ignoreDifferencesSmallerThanOneUnit, dateFields);
+            lenientAssertEquals(SHORT_TEXT_TIMES_DOS_TIMES, internalSpec.getFileTimes(), dateFields);
         } else {
-            lenientAssertEquals(SHORT_TEXT_TIMES, internalSpec.getFileTimes(), ignoreDifferencesSmallerThanOneUnit, dateFields);
+            lenientAssertEquals(SHORT_TEXT_TIMES, internalSpec.getFileTimes(), dateFields);
         }
         assertIsShortTextContents(internalSpec);
     }
 
-    protected static void assertIsLocalShortText(ArchiveSourceInternalSpec internalSpec) throws IOException {
-        assertIsLocalShortText(internalSpec, false);
-    }
-
-    protected static void assertIsLocalShortText(ArchiveSourceInternalSpec spec, boolean ignoreDifferencesSmallerThanOneUnit, DateField... dateFields) throws IOException {
+    protected static void assertIsLocalShortText(ArchiveSourceInternalSpec spec, DateField... dateFields) throws IOException {
         assertNotNull(spec);
         assertEquals(SHORT_TEXT_FILE, spec.getName());
         assertEquals(shortTextContents.length, spec.getSize());
-        lenientAssertEquals(shortTextLocalTimes, spec.getFileTimes(), ignoreDifferencesSmallerThanOneUnit, dateFields);
+        lenientAssertEquals(shortTextLocalTimes, spec.getFileTimes(), dateFields);
         assertIsShortTextContents(spec);
     }
 
-    protected static void assertIsLocalLoremIpsum(ArchiveSourceInternalSpec internalSpec) throws IOException {
-        assertIsLocalLoremIpsum(internalSpec, false);
-    }
-
-    protected static void assertIsLocalLoremIpsum(ArchiveSourceInternalSpec spec, boolean ignoreDifferencesSmallerThanOneUnit, DateField... dateFields) throws IOException {
+    protected static void assertIsLocalLoremIpsum(ArchiveSourceInternalSpec spec, DateField... dateFields) throws IOException {
         assertNotNull(spec);
         assertEquals(LOREM_IPSUM_FILE, spec.getName());
         assertEquals(loremIpsumContents.length, spec.getSize());
-        lenientAssertEquals(loremIpsumLocalTimes, spec.getFileTimes(), ignoreDifferencesSmallerThanOneUnit, dateFields);
+        lenientAssertEquals(loremIpsumLocalTimes, spec.getFileTimes(), dateFields);
         assertIsLoremIpsumContents(spec);
     }
 
-    private static void lenientAssertEquals(FileTimes expected, FileTimes actual, boolean ignoreDifferencesSmallerThanOneUnit, DateField... dateFields) {
-        TimeUnit unit = TimeUnit.MICROSECONDS;
+    private static void lenientAssertEquals(FileTimes expected, FileTimes actual, DateField... dateFields) {
         if (isMinutesPrecision(actual)) {
-            unit = TimeUnit.MINUTES;
             expected = expected.truncate(TimeUnit.MINUTES);
             actual = actual.truncate(TimeUnit.MINUTES);
         } else if (isSecondsPrecision(actual)) {
-            unit = TimeUnit.SECONDS;
             expected = expected.toUnixTimes();
             actual = actual.toUnixTimes();
         } else if (isMillisPrecision(actual)) {
-            unit = TimeUnit.MILLISECONDS;
             expected = expected.toJavaTime();
             actual = actual.toJavaTime();
         }
@@ -169,33 +159,27 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
         for (DateField field : dateFields) {
             switch (field) {
                 case MTIME:
-                    assertEqualTimes(expected.getLastModifiedTime(), actual.getLastModifiedTime(), ignoreDifferencesSmallerThanOneUnit, unit);
+                    // workaround for missing mtime PAX header in Tar
+                    FileTime truncated = truncate(actual.getLastModifiedTime(), TimeUnit.SECONDS);
+                    if (truncated != null && truncated.equals(actual.getLastModifiedTime())) {
+                        assertEquals(truncate(expected.getLastModifiedTime(), TimeUnit.SECONDS), truncated);
+                    } else {
+                        assertEquals(expected.getLastModifiedTime(), actual.getLastModifiedTime());
+                    }
                     break;
                 case ATIME:
-                    assertEqualTimes(expected.getLastAccessTime(), actual.getLastAccessTime(), ignoreDifferencesSmallerThanOneUnit, unit);
+                    assertEquals(expected.getLastAccessTime(), actual.getLastAccessTime());
                     break;
                 case CTIME:
-                    assertEqualTimes(expected.getCreationTime(), actual.getCreationTime(), ignoreDifferencesSmallerThanOneUnit, unit);
+                    assertEquals(expected.getCreationTime(), actual.getCreationTime());
                     break;
             }
         }
     }
 
-    private static void assertEqualTimes(FileTime expected, FileTime actual, boolean ignoreDifferencesSmallerThanOneUnit, TimeUnit unit) {
-        if (ignoreDifferencesSmallerThanOneUnit) {
-            assertDifferenceSmallerThanOneUnit(unit, expected, actual);
-        } else {
-            assertEquals(expected, actual);
-        }
-    }
-
-    private static void assertDifferenceSmallerThanOneUnit(TimeUnit unit, FileTime expectedMod, FileTime actualMod) {
-        if (expectedMod != null && actualMod != null) {
-            assertTrue(Math.abs(expectedMod.to(unit) - actualMod.to(unit)) <= 1);
-        } else {
-            // This will always fail unless they're both null
-            assertEquals(expectedMod, actualMod);
-        }
+    @Nullable
+    private static FileTime truncate(@Nullable FileTime fileTime, TimeUnit timeUnit) {
+        return fileTime != null ? FileTime.from(fileTime.to(timeUnit), timeUnit) : null;
     }
 
     private static boolean isSecondsPrecision(FileTimes actual) {

@@ -57,7 +57,7 @@ public final class ZipArchiveDestinationSpec extends AbstractArchiveDestinationS
         // The implementation does not seem to handle the extra fields correctly
         // We need to fill and add them manually
         // This is the same logic used by java.util.zip.ZipEntry
-        if (exceedsUnixTime(fileTimes)) {
+        if (requiresNTFSExtraField(fileTimes)) {
             addNTFSTimestamp(fileTimes, entry);
         } else {
             addExtendedTimestamp(fileTimes, entry);
@@ -80,14 +80,18 @@ public final class ZipArchiveDestinationSpec extends AbstractArchiveDestinationS
         entry.addExtraField(timestamp);
     }
 
-    private static boolean exceedsUnixTime(FileTimes fileTimes) {
-        return exceedsUnixTime(fileTimes.getLastModifiedTime())
-                || exceedsUnixTime(fileTimes.getLastAccessTime())
-                || exceedsUnixTime(fileTimes.getCreationTime());
+    private static boolean requiresNTFSExtraField(FileTimes fileTimes) {
+        return requiresNTFSExtraField(fileTimes.getLastModifiedTime())
+                || requiresNTFSExtraField(fileTimes.getLastAccessTime())
+                || requiresNTFSExtraField(fileTimes.getCreationTime());
     }
 
-    private static boolean exceedsUnixTime(@Nullable FileTime fileTime) {
-        return fileTime != null && fileTimeToUnixTime(fileTime) > UPPER_UNIXTIME_BOUND;
+    private static boolean requiresNTFSExtraField(@Nullable FileTime fileTime) {
+        return fileTime != null && (fileTimeToUnixTime(fileTime) > UPPER_UNIXTIME_BOUND || isHighPrecision(fileTime));
+    }
+
+    private static boolean isHighPrecision(@Nonnull FileTime fileTime) {
+        return fileTime.toInstant().getNano() % FileTimes.ONE_MILLISECOND_IN_NANOS != 0;
     }
 
     @Nullable

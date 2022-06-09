@@ -1,16 +1,26 @@
 package io.github.datromtool.io.copy.archive.impl.process;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import io.github.datromtool.io.copy.FileTimes;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static java.util.Objects.requireNonNull;
 
 public final class UnrarRarArchiveSourceSpec extends ProcessArchiveSourceSpec {
+
+    private static final Pattern SPACE_REGEX = Pattern.compile("\\s+");
 
     public UnrarRarArchiveSourceSpec(@Nonnull Path executablePath, @Nonnull Path path) {
         super(executablePath, path);
@@ -27,24 +37,48 @@ public final class UnrarRarArchiveSourceSpec extends ProcessArchiveSourceSpec {
 
     @Override
     protected List<ProcessArchiveFile> convertToContents(ImmutableList<ImmutableList<String>> lines) {
-//        return lines.stream()
-//                .map(RAR_LIST::matcher)
-//                .filter(Matcher::matches)
-//                .map(m -> new ProcessArchiveFile(
-//                        m.group(4),
-//                        Long.parseLong(m.group(1)),
-//                        FileTimes.from(
-//                                FileTime.from(parseForDefaultTimeZone(m).toInstant()),
-//                                null,
-//                                null)))
-//                .filter(f -> f.getSize() > 0)
-//                .collect(ImmutableList.toImmutableList());
-        return null;
+        return lines.stream()
+                .map(Collection::stream)
+                .map(stream -> stream.map(UnrarRarArchiveSourceSpec::splitKeyValues)
+                        .filter(a -> a.length == 2)
+                        .collect(ImmutableMap.toImmutableMap(a -> a[0], a -> a[1])))
+                .filter(map -> "File".equals(map.get("Type")))
+                .filter(map -> map.containsKey("Size"))
+                .map(map -> new ProcessArchiveFile(
+                        map.get("Name"),
+                        Long.parseLong(requireNonNull(map.get("Size"))),
+                        FileTimes.from(
+                                parseFileTime(map.get("Modified")),
+                                parseFileTime(map.get("Accessed")),
+                                parseFileTime(map.get("Created")))))
+                .filter(f -> f.getSize() > 0)
+                .collect(ImmutableList.toImmutableList());
     }
 
     @Nonnull
-    private ZonedDateTime parseForDefaultTimeZone(Matcher m) {
-        return LocalDateTime.parse(String.format("%sT%s:00", m.group(2), m.group(3))).atZone(ZoneId.systemDefault());
+    private static String[] splitKeyValues(String s) {
+        return Arrays.stream(s.split(":", 2))
+                .map(String::trim)
+                .filter(str -> !str.isEmpty())
+                .toArray(String[]::new);
+    }
+
+    @Nullable
+    private FileTime parseFileTime(String s) {
+        ZonedDateTime zonedDateTime = parseZonedDateTimeForDefaultTimeZone(s);
+        if (zonedDateTime != null) {
+            return FileTime.from(zonedDateTime.toInstant());
+        }
+        return null;
+    }
+
+    @Nullable
+    private ZonedDateTime parseZonedDateTimeForDefaultTimeZone(String s) {
+        if (s == null || s.isEmpty()) {
+            return null;
+        }
+        String formattedDate = SPACE_REGEX.matcher(s).replaceFirst("T").replace(',', '.');
+        return LocalDateTime.parse(formattedDate).atZone(ZoneId.systemDefault());
     }
 
     @Override
