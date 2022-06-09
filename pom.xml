@@ -3,7 +3,7 @@
 
     <groupId>io.github.datromtool</groupId>
     <artifactId>datromtool</artifactId>
-    <version>1.0.0-RC2</version>
+    <version>1.0.0-RC3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>DATROMTool</name>
