@@ -387,6 +387,8 @@ public final class OneGameOneRom {
             @Nonnull ScanResultMatcher.GameMatchList gameMatchList) {
         try {
             Game game = gameMatchList.getParsedGame().getGame();
+            // TODO: implement category-based subfolders (region, type, name, etc.)
+            // TODO: what if it belongs to multiple regions? What about World?
             Path baseDir = createBaseDirectory(game, fileOutputOptions);
             ImmutableList<ScanResultMatcher.RomMatch> matches =
                     gameMatchList.getRomMatches();
