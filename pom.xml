@@ -34,18 +34,18 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
-        <junit.jupiter.version>5.9.0</junit.jupiter.version>
-        <junit.jupiter.pioneer.version>1.7.1</junit.jupiter.pioneer.version>
-        <lombok.version>1.18.24</lombok.version>
-        <commons-compress.version>1.21</commons-compress.version>
-        <picocli.version>4.6.3</picocli.version>
-        <slf4j-api.version>2.0.1</slf4j-api.version>
-        <logback.version>1.4.1</logback.version>
+        <junit.jupiter.version>5.9.2</junit.jupiter.version>
+        <junit.jupiter.pioneer.version>2.0.0</junit.jupiter.pioneer.version>
+        <lombok.version>1.18.26</lombok.version>
+        <commons-compress.version>1.22</commons-compress.version>
+        <picocli.version>4.7.1</picocli.version>
+        <slf4j-api.version>2.0.6</slf4j-api.version>
+        <logback.version>1.4.5</logback.version>
         <guava.version>31.1-jre</guava.version>
-        <jackson.version>2.13.4</jackson.version>
+        <jackson.version>2.14.2</jackson.version>
         <xz.version>1.9</xz.version>
         <commons-codec.version>1.15</commons-codec.version>
-        <junrar.version>7.5.3</junrar.version>
+        <junrar.version>7.5.4</junrar.version>
         <git-commit-id-maven-plugin.version>5.0.0</git-commit-id-maven-plugin.version>
         <mockito-core.version>4.8.0</mockito-core.version>
         <jline.version>3.21.0</jline.version>
@@ -173,19 +173,19 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.2.2</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0-M6</version>
+                    <version>3.0.0-M7</version>
                 </plugin>
             </plugins>
         </pluginManagement>
