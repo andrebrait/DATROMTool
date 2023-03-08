@@ -10,8 +10,7 @@ import java.io.IOException;
 public final class HexArraySerializer extends JsonSerializer<byte[]> {
 
     @Override
-    public void serialize(
-            byte[] value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(byte[] value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         if (value == null) {
             gen.writeNull();
         } else {

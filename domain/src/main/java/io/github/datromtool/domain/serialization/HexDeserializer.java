@@ -11,8 +11,7 @@ import java.io.IOException;
 public final class HexDeserializer extends JsonDeserializer<Long> {
 
     @Override
-    public Long deserialize(
-            JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Long deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         try {
             String val = p.getValueAsString();
             if (Rule.END_OF_FILE.equals(val)) {

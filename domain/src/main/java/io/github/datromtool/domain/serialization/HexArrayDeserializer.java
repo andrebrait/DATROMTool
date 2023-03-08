@@ -12,8 +12,7 @@ import java.io.IOException;
 public final class HexArrayDeserializer extends JsonDeserializer<byte[]> {
 
     @Override
-    public byte[] deserialize(
-            JsonParser p, DeserializationContext ctxt) throws IOException {
+    public byte[] deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         try {
             String valueAsString = p.getValueAsString();
             if (valueAsString != null) {

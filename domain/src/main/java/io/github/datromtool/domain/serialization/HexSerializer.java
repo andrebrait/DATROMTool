@@ -9,8 +9,7 @@ import java.io.IOException;
 public final class HexSerializer extends JsonSerializer<Long> {
 
     @Override
-    public void serialize(
-            Long value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(Long value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         if (value == null) {
             gen.writeNull();
         } else {

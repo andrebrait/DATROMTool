@@ -50,6 +50,7 @@
         <mockito-core.version>4.8.0</mockito-core.version>
         <jline.version>3.21.0</jline.version>
         <jansi.version>2.4.0</jansi.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
     </properties>
 
     <modules>
@@ -122,6 +123,11 @@
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.junrar</groupId>
