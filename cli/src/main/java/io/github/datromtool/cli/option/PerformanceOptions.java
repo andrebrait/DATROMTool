@@ -166,8 +166,10 @@ public class PerformanceOptions {
             if (customSevenZipPath != null) {
                 builder.customSevenZipPath(customSevenZipPath);
             }
-            builder.forceUnrar(forceOptions.isForceUnrar());
-            builder.forceSevenZip(forceOptions.isForceSevenZip());
+            if (forceOptions != null) {
+                builder.forceUnrar(forceOptions.isForceUnrar());
+                builder.forceSevenZip(forceOptions.isForceSevenZip());
+            }
             return builder.build();
         }
         return original;
