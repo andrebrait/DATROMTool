@@ -85,6 +85,7 @@ public final class FileScanner {
         CRC32 crc32 = new CRC32();
         MessageDigest md5 = DigestUtils.getMd5Digest();
         MessageDigest sha1 = DigestUtils.getSha1Digest();
+        MessageDigest sha256 = DigestUtils.getSha256Digest();
 
         private ThreadLocalDataHolder(FileScannerParameters fileScannerParameters) {
             this.buffer = new byte[fileScannerParameters.getBufferSize()];
@@ -105,6 +106,8 @@ public final class FileScanner {
             String md5;
             @NonNull
             String sha1;
+            @NonNull
+            String sha256;
         }
 
         ArchiveType archiveType;
@@ -548,21 +551,23 @@ public final class FileScanner {
         Checksum crc32 = threadLocalDataHolder.getCrc32();
         MessageDigest md5 = threadLocalDataHolder.getMd5();
         MessageDigest sha1 = threadLocalDataHolder.getSha1();
+        MessageDigest sha256 = threadLocalDataHolder.getSha256();
         byte[] buffer = threadLocalDataHolder.getBuffer();
         crc32.reset();
         md5.reset();
         sha1.reset();
         long totalRead;
         if (size <= buffer.length && detectors != null) {
-            totalRead = readAllAtOnce(path, index, size, function, crc32, md5, sha1, buffer);
+            totalRead = readAllAtOnce(path, index, size, function, crc32, md5, sha1, sha256, buffer);
         } else {
-            totalRead = readInSteps(path, index, size, function, crc32, md5, sha1, buffer);
+            totalRead = readInSteps(path, index, size, function, crc32, md5, sha1, sha256, buffer);
         }
         return new ProcessingResult(
                 new Result.Digest(
                         Strings.padStart(Long.toHexString(crc32.getValue()), 8, '0'),
                         Hex.encodeHexString(md5.digest()),
-                        Hex.encodeHexString(sha1.digest())),
+                        Hex.encodeHexString(sha1.digest()),
+                        Hex.encodeHexString(sha256.digest())),
                 totalRead);
     }
 
@@ -574,7 +579,7 @@ public final class FileScanner {
             Checksum crc32,
             MessageDigest md5,
             MessageDigest sha1,
-            byte[] buffer) throws IOException {
+            MessageDigest sha256, byte[] buffer) throws IOException {
         for (Listener listener : listeners) {
             listener.reportStart(index, path, size);
         }
@@ -633,6 +638,7 @@ public final class FileScanner {
             Checksum crc32,
             MessageDigest md5,
             MessageDigest sha1,
+            MessageDigest sha256,
             byte[] buffer) throws IOException {
         for (Listener listener : listeners) {
             listener.reportStart(index, path, size);
@@ -692,6 +698,7 @@ public final class FileScanner {
             crc32.update(buffer, startOffsetInt, totalReadInt);
             md5.update(buffer, startOffsetInt, totalReadInt);
             sha1.update(buffer, startOffsetInt, totalReadInt);
+            sha256.update(buffer, startOffsetInt, totalReadInt);
             for (Listener listener : listeners) {
                 listener.reportBytesRead(index, totalRead);
             }
@@ -703,6 +710,7 @@ public final class FileScanner {
             crc32.update(buffer, 0, bytesRead);
             md5.update(buffer, 0, bytesRead);
             sha1.update(buffer, 0, bytesRead);
+            sha256.update(buffer, 0, bytesRead);
             for (Listener listener : listeners) {
                 listener.reportBytesRead(index, bytesRead);
             }

@@ -1,18 +1,16 @@
 <!--
    ROM Management Datafile - DTD
 
-   For further information, see: http://www.logiqx.com/
+   This file has been modified from the original DTD. For further information,
+   see: http://www.logiqx.com/
 
    This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
    PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN"
-   SYSTEM "http://www.logiqx.com/Dats/datafile.dtd"
+   SYSTEM "https://raw.githubusercontent.com/unexpectedpanda/retool/main/datafile.dtd"
 
-   $Revision: 1.8 $
-   $Date: 2020/07/26 13:57:12 $
-
-   Independent revisions:
-   # 1.8_2022-02-24: ROM sizes are now optional
+   $Revision: 2.1 $
+   $Date: 2022/05/20 08:39:00 $
 
 -->
 
@@ -68,8 +66,11 @@
 		<!ELEMENT rom EMPTY>
 			<!ATTLIST rom name CDATA #REQUIRED>
 			<!ATTLIST rom size CDATA #IMPLIED>
+			<!ATTLIST rom header CDATA #IMPLIED>
+			<!ATTLIST rom mia CDATA #IMPLIED>
 			<!ATTLIST rom crc CDATA #IMPLIED>
 			<!ATTLIST rom sha1 CDATA #IMPLIED>
+			<!ATTLIST rom sha256 CDATA #IMPLIED>
 			<!ATTLIST rom md5 CDATA #IMPLIED>
 			<!ATTLIST rom merge CDATA #IMPLIED>
 			<!ATTLIST rom status (baddump|nodump|good|verified) "good">
@@ -78,6 +79,7 @@
 		<!ELEMENT disk EMPTY>
 			<!ATTLIST disk name CDATA #REQUIRED>
 			<!ATTLIST disk sha1 CDATA #IMPLIED>
+			<!ATTLIST disk sha256 CDATA #IMPLIED>
 			<!ATTLIST disk md5 CDATA #IMPLIED>
 			<!ATTLIST disk merge CDATA #IMPLIED>
 			<!ATTLIST disk status (baddump|nodump|good|verified) "good">

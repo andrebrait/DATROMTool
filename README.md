@@ -4,10 +4,13 @@
 
 ## What is it?
 
-DATROMTool, or "_That_ ROM tool", is a platform-independent tool for performing operations on DAT files, arcade sets and video game ROMs.
+DATROMTool, or "_That_ ROM tool", is a platform-independent tool for ROM management and manipulation of DAT files.
 It is the successor to [1g1r-romset-generator](https://github.com/andrebrait/1g1r-romset-generator).
 
-It is heavily inspired by [SabreTools](https://github.com/SabreTools/SabreTools), which you should definitely check out.
+It is heavily inspired by [SabreTools](https://github.com/SabreTools/SabreTools) and [Retool](https://github.com/unexpectedpanda/retool).
+
+DATROMTool supports the usage of external metadata sources, such as [Retool metadata](https://github.com/unexpectedpanda/retool-clonelists-metadata), 
+as well as purely using the input from DAT files.
 
 ## What are DAT files?
 
@@ -72,6 +75,7 @@ Currently, DATROMTool supports:
     - DATROMTool JSON format
     - DATROMTool YAML format
  - Matching ROMs based on file hashes, in the following order, as long as they're available in the DAT file:
+    - SHA-256
     - SHA-1
     - MD5
     - File size + CRC

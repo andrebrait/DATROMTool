@@ -64,10 +64,15 @@ public final class SerializationHelper {
 
     private static Properties loadProperties() {
         Properties gitProps = new Properties();
-        try (InputStream stream = ClassLoader.getSystemResource("git.properties").openStream()) {
-            gitProps.load(stream);
-        } catch (IOException e) {
-            log.error("Could not load version information", e);
+        URL gitPropertiesResource = ClassLoader.getSystemResource("git.properties");
+        if (gitPropertiesResource != null) {
+            try (InputStream stream = gitPropertiesResource.openStream()) {
+                gitProps.load(stream);
+            } catch (IOException e) {
+                log.error("Could not load version information", e);
+            }
+        } else {
+            log.error("Could not find 'git.properties'");
         }
         return gitProps;
     }

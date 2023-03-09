@@ -1,18 +1,30 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- This XSD was generated from the DTD found in "http://www.logiqx.com/Dats/datafile.dtd" -->
-<!-- Revision 1.1 (24-02-2022): Updated against DTD revision 1.8 -->
-<!-- Revision 1.2 (24-02-2022): Updated against DTD revision 1.8_2022-02-24 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    ROM Management Datafile - DTD
+    
+    This file has been modified from the original DTD. For further information,
+    see: http://www.logiqx.com/
+    
+    This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+    
+    PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN"
+    SYSTEM "https://raw.githubusercontent.com/unexpectedpanda/retool/main/datafile.dtd"
+    
+    $Revision: 2.1 $
+    $Date: 2022/05/20 08:39:00 $
+    
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
     <xs:element name="datafile">
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" ref="header"/>
                 <xs:element maxOccurs="unbounded" ref="game"/>
             </xs:sequence>
-            <xs:attribute name="build" type="xs:string"/>
-            <xs:attribute default="no" name="debug">
+            <xs:attribute name="build"/>
+            <xs:attribute name="debug" default="no">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="yes"/>
                         <xs:enumeration value="no"/>
                     </xs:restriction>
@@ -50,28 +62,28 @@
     <xs:element name="comment" type="xs:string"/>
     <xs:element name="clrmamepro">
         <xs:complexType>
-            <xs:attribute name="header" type="xs:string"/>
-            <xs:attribute default="split" name="forcemerging">
+            <xs:attribute name="header"/>
+            <xs:attribute name="forcemerging" default="split">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="none"/>
                         <xs:enumeration value="split"/>
                         <xs:enumeration value="full"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute default="obsolete" name="forcenodump">
+            <xs:attribute name="forcenodump" default="obsolete">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="obsolete"/>
                         <xs:enumeration value="required"/>
                         <xs:enumeration value="ignore"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute default="zip" name="forcepacking">
+            <xs:attribute name="forcepacking" default="zip">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="zip"/>
                         <xs:enumeration value="unzip"/>
                     </xs:restriction>
@@ -81,52 +93,52 @@
     </xs:element>
     <xs:element name="romcenter">
         <xs:complexType>
-            <xs:attribute name="plugin" type="xs:string"/>
-            <xs:attribute default="split" name="rommode">
+            <xs:attribute name="plugin"/>
+            <xs:attribute name="rommode" default="split">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="merged"/>
                         <xs:enumeration value="split"/>
                         <xs:enumeration value="unmerged"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute default="split" name="biosmode">
+            <xs:attribute name="biosmode" default="split">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="merged"/>
                         <xs:enumeration value="split"/>
                         <xs:enumeration value="unmerged"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute default="merged" name="samplemode">
+            <xs:attribute name="samplemode" default="merged">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="merged"/>
                         <xs:enumeration value="unmerged"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute default="no" name="lockrommode">
+            <xs:attribute name="lockrommode" default="no">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="yes"/>
                         <xs:enumeration value="no"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute default="no" name="lockbiosmode">
+            <xs:attribute name="lockbiosmode" default="no">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="yes"/>
                         <xs:enumeration value="no"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute default="no" name="locksamplemode">
+            <xs:attribute name="locksamplemode" default="no">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="yes"/>
                         <xs:enumeration value="no"/>
                     </xs:restriction>
@@ -137,47 +149,47 @@
     <xs:element name="game">
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" minOccurs="0" ref="category"/>
-                <xs:element maxOccurs="unbounded" minOccurs="0" ref="comment"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="category"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="comment"/>
                 <xs:element ref="description"/>
                 <xs:element minOccurs="0" ref="year"/>
                 <xs:element minOccurs="0" ref="manufacturer"/>
-                <xs:element maxOccurs="unbounded" minOccurs="0" ref="release"/>
-                <xs:element maxOccurs="unbounded" minOccurs="0" ref="biosset"/>
-                <xs:element maxOccurs="unbounded" minOccurs="0" ref="game_id"/>
-                <xs:element maxOccurs="unbounded" minOccurs="0" ref="rom"/>
-                <xs:element maxOccurs="unbounded" minOccurs="0" ref="disk"/>
-                <xs:element maxOccurs="unbounded" minOccurs="0" ref="sample"/>
-                <xs:element maxOccurs="unbounded" minOccurs="0" ref="archive"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="release"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="biosset"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="game_id"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="rom"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="disk"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="sample"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="archive"/>
             </xs:sequence>
-            <xs:attribute name="name" type="xs:string" use="required"/>
-            <xs:attribute name="sourcefile" type="xs:string"/>
-            <xs:attribute default="no" name="isbios">
+            <xs:attribute name="name" use="required"/>
+            <xs:attribute name="sourcefile"/>
+            <xs:attribute name="isbios" default="no">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="yes"/>
                         <xs:enumeration value="no"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="cloneof" type="xs:string"/>
-            <xs:attribute name="romof" type="xs:string"/>
-            <xs:attribute name="sampleof" type="xs:string"/>
-            <xs:attribute name="board" type="xs:string"/>
-            <xs:attribute name="rebuildto" type="xs:string"/>
+            <xs:attribute name="cloneof"/>
+            <xs:attribute name="romof"/>
+            <xs:attribute name="sampleof"/>
+            <xs:attribute name="board"/>
+            <xs:attribute name="rebuildto"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="year" type="xs:string"/>
     <xs:element name="manufacturer" type="xs:string"/>
     <xs:element name="release">
         <xs:complexType>
-            <xs:attribute name="name" type="xs:string" use="required"/>
-            <xs:attribute name="region" type="xs:string" use="required"/>
-            <xs:attribute name="language" type="xs:string"/>
-            <xs:attribute name="date" type="xs:string"/>
-            <xs:attribute default="no" name="default">
+            <xs:attribute name="name" use="required"/>
+            <xs:attribute name="region" use="required"/>
+            <xs:attribute name="language"/>
+            <xs:attribute name="date"/>
+            <xs:attribute name="default" default="no">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="yes"/>
                         <xs:enumeration value="no"/>
                     </xs:restriction>
@@ -187,11 +199,11 @@
     </xs:element>
     <xs:element name="biosset">
         <xs:complexType>
-            <xs:attribute name="name" type="xs:string" use="required"/>
-            <xs:attribute name="description" type="xs:string" use="required"/>
-            <xs:attribute default="no" name="default">
+            <xs:attribute name="name" use="required"/>
+            <xs:attribute name="description" use="required"/>
+            <xs:attribute name="default" default="no">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="yes"/>
                         <xs:enumeration value="no"/>
                     </xs:restriction>
@@ -202,15 +214,18 @@
     <xs:element name="game_id" type="xs:string"/>
     <xs:element name="rom">
         <xs:complexType>
-            <xs:attribute name="name" type="xs:string" use="required"/>
-            <xs:attribute name="size" type="xs:string"/> <!-- Not required anymore because No-Intro has been uploading nodumps without size, but we will ignore them -->
-            <xs:attribute name="crc" type="xs:string"/>
-            <xs:attribute name="sha1" type="xs:string"/>
-            <xs:attribute name="md5" type="xs:string"/>
-            <xs:attribute name="merge" type="xs:string"/>
-            <xs:attribute default="good" name="status">
+            <xs:attribute name="name" use="required"/>
+            <xs:attribute name="size"/>
+            <xs:attribute name="header"/>
+            <xs:attribute name="mia"/>
+            <xs:attribute name="crc"/>
+            <xs:attribute name="sha1"/>
+            <xs:attribute name="sha256"/>
+            <xs:attribute name="md5"/>
+            <xs:attribute name="merge"/>
+            <xs:attribute name="status" default="good">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="baddump"/>
                         <xs:enumeration value="nodump"/>
                         <xs:enumeration value="good"/>
@@ -218,19 +233,20 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="date" type="xs:string"/>
-            <xs:attribute name="serial" type="xs:string"/>
+            <xs:attribute name="date"/>
+            <xs:attribute name="serial"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="disk">
         <xs:complexType>
-            <xs:attribute name="name" type="xs:string" use="required"/>
-            <xs:attribute name="sha1" type="xs:string"/>
-            <xs:attribute name="md5" type="xs:string"/>
-            <xs:attribute name="merge" type="xs:string"/>
-            <xs:attribute default="good" name="status">
+            <xs:attribute name="name" use="required"/>
+            <xs:attribute name="sha1"/>
+            <xs:attribute name="sha256"/>
+            <xs:attribute name="md5"/>
+            <xs:attribute name="merge"/>
+            <xs:attribute name="status" default="good">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string">
+                    <xs:restriction base="xs:token">
                         <xs:enumeration value="baddump"/>
                         <xs:enumeration value="nodump"/>
                         <xs:enumeration value="good"/>
@@ -242,13 +258,12 @@
     </xs:element>
     <xs:element name="sample">
         <xs:complexType>
-            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="name" use="required"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="archive">
         <xs:complexType>
-            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="name" use="required"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>
-
