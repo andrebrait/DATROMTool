@@ -3,7 +3,7 @@ package io.github.datromtool;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.github.datromtool.data.ParsedGame;
-import io.github.datromtool.domain.datafile.Game;
+import io.github.datromtool.domain.datafile.logiqx.Game;
 import io.github.datromtool.sorting.GameComparator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

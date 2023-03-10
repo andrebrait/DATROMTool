@@ -4,9 +4,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.RegionData;
-import io.github.datromtool.domain.datafile.*;
-import io.github.datromtool.domain.datafile.enumerations.Status;
-import io.github.datromtool.domain.datafile.enumerations.YesNo;
+import io.github.datromtool.domain.datafile.logiqx.Datafile;
+import io.github.datromtool.domain.datafile.logiqx.Disk;
+import io.github.datromtool.domain.datafile.logiqx.Game;
+import io.github.datromtool.domain.datafile.logiqx.Release;
+import io.github.datromtool.domain.datafile.logiqx.Rom;
+import io.github.datromtool.domain.datafile.logiqx.enumerations.Status;
+import io.github.datromtool.domain.datafile.logiqx.enumerations.YesNo;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +25,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static java.lang.String.format;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -180,18 +183,12 @@ public final class GameParser {
     }
 
     private <T> boolean shouldLogDivergences(Set<T> detected, Set<T> provided) {
-        switch (divergenceDetection) {
-            case IGNORE:
-                return false;
-            case ALWAYS:
-                return !provided.equals(detected);
-            case ONE_WAY:
-                return !detected.isEmpty() && !provided.isEmpty() && !provided.containsAll(detected);
-            case TWO_WAY:
-                return !detected.isEmpty() && !provided.isEmpty() && !provided.equals(detected);
-            default:
-                throw new IllegalStateException(format("Unknown detection type: %s", divergenceDetection));
-        }
+        return switch (divergenceDetection) {
+            case IGNORE -> false;
+            case ALWAYS -> !provided.equals(detected);
+            case ONE_WAY -> !detected.isEmpty() && !provided.isEmpty() && !provided.containsAll(detected);
+            case TWO_WAY -> !detected.isEmpty() && !provided.isEmpty() && !provided.equals(detected);
+        };
     }
 
     private static ImmutableList<Long> detectProto(Game game) {

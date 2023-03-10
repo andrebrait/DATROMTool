@@ -5,8 +5,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.data.RegionData.RegionDataEntry;
-import io.github.datromtool.domain.datafile.Game;
-import lombok.*;
+import io.github.datromtool.domain.datafile.logiqx.Game;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.Collection;

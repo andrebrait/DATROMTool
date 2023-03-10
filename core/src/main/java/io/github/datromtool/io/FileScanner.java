@@ -5,12 +5,16 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.config.AppConfig;
-import io.github.datromtool.domain.datafile.Datafile;
+import io.github.datromtool.domain.datafile.logiqx.Datafile;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.detector.Rule;
 import io.github.datromtool.io.logging.FileScannerLoggingListener;
 import io.github.datromtool.util.ArchiveUtils;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.Value;
+import lombok.With;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -274,27 +278,22 @@ public final class FileScanner {
             if (archiveType != null) {
                 try {
                     switch (archiveType) {
-                        case ZIP:
+                        case ZIP -> {
                             scanZip(file, index, builder);
                             scanned = true;
-                            break;
-                        case RAR:
+                        }
+                        case RAR -> {
                             scanRar(file, index, builder);
                             scanned = true;
-                            break;
-                        case SEVEN_ZIP:
+                        }
+                        case SEVEN_ZIP -> {
                             scanSevenZip(file, index, builder);
                             scanned = true;
-                            break;
-                        case TAR:
-                        case TAR_BZ2:
-                        case TAR_GZ:
-                        case TAR_LZ4:
-                        case TAR_LZMA:
-                        case TAR_XZ:
+                        }
+                        case TAR, TAR_BZ2, TAR_GZ, TAR_LZ4, TAR_LZMA, TAR_XZ -> {
                             scanTar(archiveType, file, index, builder);
                             scanned = true;
-                            break;
+                        }
                     }
                 } catch (UnsupportedRarV5Exception e) {
                     log.error(

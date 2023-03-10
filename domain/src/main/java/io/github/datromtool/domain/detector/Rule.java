@@ -16,7 +16,11 @@ import io.github.datromtool.domain.detector.exception.RuleException;
 import io.github.datromtool.domain.detector.util.NumberUtils;
 import io.github.datromtool.domain.serialization.HexDeserializer;
 import io.github.datromtool.domain.serialization.HexSerializer;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.Arrays;
@@ -131,30 +135,30 @@ public class Rule {
                     || operation != BinaryOperation.NONE)) {
                 byte[] out = Arrays.copyOfRange(bytes, startOffset, endOffset);
                 switch (operation) {
-                    case BIT_SWAP:
+                    case BIT_SWAP -> {
                         for (int i = 0; i < out.length; i++) {
                             out[i] = (byte) (Integer.reverse(out[i] << 24) & 0xFF);
                         }
-                        break;
-                    case BYTE_SWAP:
+                    }
+                    case BYTE_SWAP -> {
                         if (out.length % 2 != 0) {
                             throw new RuleException(this, "Array size is not a multiple of 2");
                         }
                         swap(out, 2);
-                        break;
-                    case WORD_SWAP:
+                    }
+                    case WORD_SWAP -> {
                         if (out.length % 4 != 0) {
                             throw new RuleException(this, "Array size is not a multiple of 4");
                         }
                         swap(out, 4);
-                        break;
-                    case WORD_BYTE_SWAP:
+                    }
+                    case WORD_BYTE_SWAP -> {
                         if (out.length % 4 != 0) {
                             throw new RuleException(this, "Array size is not a multiple of 4");
                         }
                         swap(out, 4);
                         swap(out, 2);
-                        break;
+                    }
                 }
                 return out;
             }

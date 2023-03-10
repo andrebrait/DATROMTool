@@ -3,7 +3,7 @@ package io.github.datromtool.util;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.data.RegionData;
-import io.github.datromtool.domain.datafile.Game;
+import io.github.datromtool.domain.datafile.logiqx.Game;
 import io.github.datromtool.io.FileScanner;
 import lombok.NoArgsConstructor;
 

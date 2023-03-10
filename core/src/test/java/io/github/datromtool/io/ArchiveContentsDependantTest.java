@@ -21,7 +21,9 @@ import java.util.concurrent.TimeUnit;
 
 import static java.util.Calendar.FEBRUARY;
 import static java.util.Calendar.MARCH;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public abstract class ArchiveContentsDependantTest extends TestDirDependantTest {
 
@@ -173,7 +175,7 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
         }
         for (DateField field : dateFields) {
             switch (field) {
-                case MTIME:
+                case MTIME -> {
                     // workaround for missing mtime PAX header in Tar
                     FileTime truncated = truncate(actual.getLastModifiedTime(), TimeUnit.SECONDS);
                     if (truncated != null && truncated.equals(actual.getLastModifiedTime())) {
@@ -181,13 +183,9 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
                     } else {
                         assertEquals(expected.getLastModifiedTime(), actual.getLastModifiedTime());
                     }
-                    break;
-                case ATIME:
-                    assertEquals(expected.getLastAccessTime(), actual.getLastAccessTime());
-                    break;
-                case CTIME:
-                    assertEquals(expected.getCreationTime(), actual.getCreationTime());
-                    break;
+                }
+                case ATIME -> assertEquals(expected.getLastAccessTime(), actual.getLastAccessTime());
+                case CTIME -> assertEquals(expected.getCreationTime(), actual.getCreationTime());
             }
         }
     }

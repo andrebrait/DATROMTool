@@ -7,14 +7,24 @@ import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.io.logging.FileCopierLoggingListener;
 import io.github.datromtool.util.ArchiveUtils;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.compress.archivers.zip.*;
+import org.apache.commons.compress.archivers.zip.X000A_NTFS;
+import org.apache.commons.compress.archivers.zip.X5455_ExtendedTimestamp;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipEightByteInteger;
+import org.apache.commons.compress.archivers.zip.ZipLong;
 import org.apache.commons.compress.compressors.lzma.LZMAUtils;
 import org.apache.commons.compress.compressors.xz.XZUtils;
 
@@ -281,22 +291,10 @@ public final class FileCopier {
         }
         try {
             switch (spec.getFromType()) {
-                case ZIP:
-                    extractZipEntries(spec, index);
-                    return;
-                case RAR:
-                    extractRarEntries(spec, index);
-                    return;
-                case SEVEN_ZIP:
-                    extractSevenZipEntries(spec, index);
-                    return;
-                case TAR:
-                case TAR_BZ2:
-                case TAR_GZ:
-                case TAR_LZ4:
-                case TAR_LZMA:
-                case TAR_XZ:
-                    extractTarEntries(spec, index);
+                case ZIP -> extractZipEntries(spec, index);
+                case RAR -> extractRarEntries(spec, index);
+                case SEVEN_ZIP -> extractSevenZipEntries(spec, index);
+                case TAR, TAR_BZ2, TAR_GZ, TAR_LZ4, TAR_LZMA, TAR_XZ -> extractTarEntries(spec, index);
             }
         } catch (UnsupportedRarV5Exception e) {
             log.error("Could not extract '{}'. RAR5 is not supported yet", spec.getFrom());
@@ -332,21 +330,10 @@ public final class FileCopier {
         }
         try {
             switch (spec.getToType()) {
-                case ZIP:
-                    compressZipEntries(spec, index);
-                    return;
-                case RAR:
-                    throw new UnsupportedOperationException("RAR compression is not supported");
-                case SEVEN_ZIP:
-                    compressSevenZipEntries(spec, index);
-                    return;
-                case TAR:
-                case TAR_BZ2:
-                case TAR_GZ:
-                case TAR_LZ4:
-                case TAR_LZMA:
-                case TAR_XZ:
-                    compressTarEntries(spec, index);
+                case ZIP -> compressZipEntries(spec, index);
+                case RAR -> throw new UnsupportedOperationException("RAR compression is not supported");
+                case SEVEN_ZIP -> compressSevenZipEntries(spec, index);
+                case TAR, TAR_BZ2, TAR_GZ, TAR_LZ4, TAR_LZMA, TAR_XZ -> compressTarEntries(spec, index);
             }
         } catch (Exception e) {
             log.error("Could not compress files to '{}'", spec.getTo(), e);
@@ -367,22 +354,10 @@ public final class FileCopier {
         }
         try {
             switch (spec.getFromType()) {
-                case ZIP:
-                    fromZipToArchive(spec, index);
-                    return;
-                case RAR:
-                    fromRarToArchive(spec, index);
-                    return;
-                case SEVEN_ZIP:
-                    fromSevenZipToArchive(spec, index);
-                    return;
-                case TAR:
-                case TAR_BZ2:
-                case TAR_GZ:
-                case TAR_LZ4:
-                case TAR_LZMA:
-                case TAR_XZ:
-                    fromTarToArchive(spec, index);
+                case ZIP -> fromZipToArchive(spec, index);
+                case RAR -> fromRarToArchive(spec, index);
+                case SEVEN_ZIP -> fromSevenZipToArchive(spec, index);
+                case TAR, TAR_BZ2, TAR_GZ, TAR_LZ4, TAR_LZMA, TAR_XZ -> fromTarToArchive(spec, index);
             }
         } catch (UnsupportedRarV5Exception e) {
             log.error(
@@ -687,85 +662,43 @@ public final class FileCopier {
 
     private void fromZipToArchive(ArchiveCopySpec spec, int index) throws IOException {
         switch (spec.getToType()) {
-            case ZIP:
+            case ZIP -> {
                 if (config.isAllowRawZipCopy()) {
                     fromZipToZipRaw(spec, index);
                 } else {
                     fromZipToZip(spec, index);
                 }
-                return;
-            case RAR:
-                throw new UnsupportedOperationException("RAR compression is not supported");
-            case SEVEN_ZIP:
-                fromZipToSevenZip(spec, index);
-                return;
-            case TAR:
-            case TAR_BZ2:
-            case TAR_GZ:
-            case TAR_LZ4:
-            case TAR_LZMA:
-            case TAR_XZ:
-                fromZipToTar(spec, index);
+            }
+            case RAR -> throw new UnsupportedOperationException("RAR compression is not supported");
+            case SEVEN_ZIP -> fromZipToSevenZip(spec, index);
+            case TAR, TAR_BZ2, TAR_GZ, TAR_LZ4, TAR_LZMA, TAR_XZ -> fromZipToTar(spec, index);
         }
     }
 
     private void fromRarToArchive(ArchiveCopySpec spec, int index) throws Exception {
         switch (spec.getToType()) {
-            case ZIP:
-                fromRarToZip(spec, index);
-                return;
-            case RAR:
-                throw new UnsupportedOperationException("RAR compression is not supported");
-            case SEVEN_ZIP:
-                fromRarToSevenZip(spec, index);
-                return;
-            case TAR:
-            case TAR_BZ2:
-            case TAR_GZ:
-            case TAR_LZ4:
-            case TAR_LZMA:
-            case TAR_XZ:
-                fromRarToTar(spec, index);
+            case ZIP -> fromRarToZip(spec, index);
+            case RAR -> throw new UnsupportedOperationException("RAR compression is not supported");
+            case SEVEN_ZIP -> fromRarToSevenZip(spec, index);
+            case TAR, TAR_BZ2, TAR_GZ, TAR_LZ4, TAR_LZMA, TAR_XZ -> fromRarToTar(spec, index);
         }
     }
 
     private void fromSevenZipToArchive(ArchiveCopySpec spec, int index) throws IOException {
         switch (spec.getToType()) {
-            case ZIP:
-                fromSevenZipToZip(spec, index);
-                return;
-            case RAR:
-                throw new UnsupportedOperationException("RAR compression is not supported");
-            case SEVEN_ZIP:
-                fromSevenZipToSevenZip(spec, index);
-                return;
-            case TAR:
-            case TAR_BZ2:
-            case TAR_GZ:
-            case TAR_LZ4:
-            case TAR_LZMA:
-            case TAR_XZ:
-                fromSevenZipToTar(spec, index);
+            case ZIP -> fromSevenZipToZip(spec, index);
+            case RAR -> throw new UnsupportedOperationException("RAR compression is not supported");
+            case SEVEN_ZIP -> fromSevenZipToSevenZip(spec, index);
+            case TAR, TAR_BZ2, TAR_GZ, TAR_LZ4, TAR_LZMA, TAR_XZ -> fromSevenZipToTar(spec, index);
         }
     }
 
     private void fromTarToArchive(ArchiveCopySpec spec, int index) throws IOException {
         switch (spec.getToType()) {
-            case ZIP:
-                fromTarToZip(spec, index);
-                return;
-            case RAR:
-                throw new UnsupportedOperationException("RAR compression is not supported");
-            case SEVEN_ZIP:
-                fromTarToSevenZip(spec, index);
-                return;
-            case TAR:
-            case TAR_BZ2:
-            case TAR_GZ:
-            case TAR_LZ4:
-            case TAR_LZMA:
-            case TAR_XZ:
-                fromTarToTar(spec, index);
+            case ZIP -> fromTarToZip(spec, index);
+            case RAR -> throw new UnsupportedOperationException("RAR compression is not supported");
+            case SEVEN_ZIP -> fromTarToSevenZip(spec, index);
+            case TAR, TAR_BZ2, TAR_GZ, TAR_LZ4, TAR_LZMA, TAR_XZ -> fromTarToTar(spec, index);
         }
     }
 

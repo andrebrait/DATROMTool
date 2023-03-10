@@ -3,7 +3,7 @@ package io.github.datromtool;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.data.RegionData;
-import io.github.datromtool.domain.datafile.Datafile;
+import io.github.datromtool.domain.datafile.logiqx.Datafile;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.util.ArchiveUtils;
 import io.github.datromtool.util.XMLValidator;
@@ -27,7 +27,10 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 class SerializationHelperTest extends TestDirDependantTest {
@@ -54,7 +57,7 @@ class SerializationHelperTest extends TestDirDependantTest {
     }
 
     @ParameterizedTest
-    @MethodSource("validNoIntroDats")
+    @MethodSource("validLogiqxNoIntroDats")
     void testReadDats(Path validFile) throws Exception {
         try (ZipInputStream zis = new ZipInputStream(Files.newInputStream(validFile))) {
             ZipEntry zi;
@@ -175,8 +178,8 @@ class SerializationHelperTest extends TestDirDependantTest {
         assertFalse(regionData.getRegions().isEmpty());
     }
 
-    static Stream<Arguments> validNoIntroDats() throws Exception {
-        URL folderUrl = ClassLoader.getSystemResource("valid-dats/no-intro");
+    static Stream<Arguments> validLogiqxNoIntroDats() throws Exception {
+        URL folderUrl = ClassLoader.getSystemResource("valid-dats/no-intro/logiqx");
         return Files.list(Paths.get(folderUrl.toURI())).map(Arguments::of);
     }
 

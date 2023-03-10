@@ -29,8 +29,18 @@ import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
 
 import javax.annotation.Nullable;
-import java.io.*;
-import java.nio.file.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
@@ -78,22 +88,15 @@ public final class ArchiveUtils {
     @Nullable
     public static InputStream inputStreamForTar(ArchiveType archiveType, Path file)
             throws IOException {
-        switch (archiveType) {
-            case TAR:
-                return newInputStream(file);
-            case TAR_BZ2:
-                return newBz2InputStream(file);
-            case TAR_GZ:
-                return newGzipInputStream(file);
-            case TAR_LZ4:
-                return newLz4InputStream(file);
-            case TAR_LZMA:
-                return newLzmaInputStream(file);
-            case TAR_XZ:
-                return newXzInputStream(file);
-            default:
-                return null;
-        }
+        return switch (archiveType) {
+            case TAR -> newInputStream(file);
+            case TAR_BZ2 -> newBz2InputStream(file);
+            case TAR_GZ -> newGzipInputStream(file);
+            case TAR_LZ4 -> newLz4InputStream(file);
+            case TAR_LZMA -> newLzmaInputStream(file);
+            case TAR_XZ -> newXzInputStream(file);
+            default -> null;
+        };
     }
 
     public static BZip2CompressorInputStream newBz2InputStream(Path file) throws IOException {
@@ -119,22 +122,15 @@ public final class ArchiveUtils {
     @Nullable
     public static OutputStream outputStreamForTar(ArchiveType archiveType, Path file)
             throws IOException {
-        switch (archiveType) {
-            case TAR:
-                return Files.newOutputStream(file, CREATE);
-            case TAR_BZ2:
-                return new BZip2CompressorOutputStream(Files.newOutputStream(file, CREATE));
-            case TAR_GZ:
-                return new GzipCompressorOutputStream(Files.newOutputStream(file, CREATE));
-            case TAR_LZ4:
-                return new FramedLZ4CompressorOutputStream(Files.newOutputStream(file, CREATE));
-            case TAR_LZMA:
-                return new LZMACompressorOutputStream(Files.newOutputStream(file, CREATE));
-            case TAR_XZ:
-                return new XZCompressorOutputStream(Files.newOutputStream(file, CREATE));
-            default:
-                return null;
-        }
+        return switch (archiveType) {
+            case TAR -> Files.newOutputStream(file, CREATE);
+            case TAR_BZ2 -> new BZip2CompressorOutputStream(Files.newOutputStream(file, CREATE));
+            case TAR_GZ -> new GzipCompressorOutputStream(Files.newOutputStream(file, CREATE));
+            case TAR_LZ4 -> new FramedLZ4CompressorOutputStream(Files.newOutputStream(file, CREATE));
+            case TAR_LZMA -> new LZMACompressorOutputStream(Files.newOutputStream(file, CREATE));
+            case TAR_XZ -> new XZCompressorOutputStream(Files.newOutputStream(file, CREATE));
+            default -> null;
+        };
     }
 
     public static <T extends Throwable> void readZip(
@@ -242,54 +238,33 @@ public final class ArchiveUtils {
         createTempBinDir();
         if (tempBinDir != null) {
             switch (SystemUtils.OPERATING_SYSTEM) {
-                case WINDOWS:
+                case WINDOWS -> {
                     switch (SystemUtils.ARCHITECTURE) {
-                        case X86_32:
-                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/windows/unrar-x86.exe", "unrar.exe");
-                            break;
-                        case X86_64:
-                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/windows/unrar-x64.exe", "unrar.exe");
-                            break;
+                        case X86_32 -> embeddedUnrarPath = copyToTempBinDir(
+                                "bin/unrar/windows/unrar-x86.exe",
+                                "unrar.exe");
+                        case X86_64 -> embeddedUnrarPath = copyToTempBinDir(
+                                "bin/unrar/windows/unrar-x64.exe",
+                                "unrar.exe");
                     }
-                    break;
-                case LINUX:
-                    switch (SystemUtils.ARCHITECTURE) {
-                        case X86_32:
-                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/linux/unrar-x32", "unrar");
-                            break;
-                        case X86_64:
-                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/linux/unrar-x64", "unrar");
-                            break;
-                        case ARM_32:
-                        case ARM_64:
-                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/linux/unrar-arm", "unrar");
-                            break;
-                        case POWER_PC_32:
-                        case POWER_PC_64:
-                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/linux/unrar-ppc", "unrar");
-                            break;
-                    }
-                    break;
-                case BSD:
-                    switch (SystemUtils.ARCHITECTURE) {
-                        case X86_32:
-                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/bsd/unrar-x32", "unrar");
-                            break;
-                        case X86_64:
-                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/bsd/unrar-x64", "unrar");
-                            break;
-                    }
-                    break;
-                case OSX:
-                    switch (SystemUtils.ARCHITECTURE) {
-                        case X86_64:
-                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/macos/unrar-x64", "unrar");
-                            break;
-                        case ARM_64:
-                            embeddedUnrarPath = copyToTempBinDir("bin/unrar/macos/unrar-arm64", "unrar");
-                            break;
-                    }
-                    break;
+                }
+                case LINUX -> embeddedUnrarPath = switch (SystemUtils.ARCHITECTURE) {
+                    case X86_32 -> copyToTempBinDir("bin/unrar/linux/unrar-x32", "unrar");
+                    case X86_64 -> copyToTempBinDir("bin/unrar/linux/unrar-x64", "unrar");
+                    case ARM_32, ARM_64 -> copyToTempBinDir("bin/unrar/linux/unrar-arm", "unrar");
+                    case POWER_PC_32, POWER_PC_64 -> copyToTempBinDir("bin/unrar/linux/unrar-ppc", "unrar");
+                    default -> null;
+                };
+                case BSD -> embeddedUnrarPath = switch (SystemUtils.ARCHITECTURE) {
+                    case X86_32 -> copyToTempBinDir("bin/unrar/bsd/unrar-x32", "unrar");
+                    case X86_64 -> copyToTempBinDir("bin/unrar/bsd/unrar-x64", "unrar");
+                    default -> null;
+                };
+                case OSX -> embeddedUnrarPath = switch (SystemUtils.ARCHITECTURE) {
+                    case X86_64 -> copyToTempBinDir("bin/unrar/macos/unrar-x64", "unrar");
+                    case ARM_64 -> copyToTempBinDir("bin/unrar/macos/unrar-arm64", "unrar");
+                    default -> null;
+                };
             }
         }
         if (embeddedUnrarPath == null) {
@@ -354,46 +329,33 @@ public final class ArchiveUtils {
         createTempBinDir();
         if (tempBinDir != null) {
             switch (SystemUtils.OPERATING_SYSTEM) {
-                case WINDOWS:
+                case WINDOWS -> {
                     switch (SystemUtils.ARCHITECTURE) {
-                        case X86_32:
+                        case X86_32 -> {
                             embeddedSevenZipPath = copyToTempBinDir("bin/7zip/windows/x32/7z.exe", "7z.exe");
                             copyToTempBinDir("bin/7zip/windows/x32/7z.dll", "7z.dll");
-                            break;
-                        case X86_64:
+                        }
+                        case X86_64 -> {
                             embeddedSevenZipPath = copyToTempBinDir("bin/7zip/windows/x64/7z.exe", "7z.exe");
                             copyToTempBinDir("bin/7zip/windows/x64/7z.dll", "7z.dll");
-                            break;
-                        case ARM_64:
+                        }
+                        case ARM_64 -> {
                             embeddedSevenZipPath = copyToTempBinDir("bin/7zip/windows/arm64/7z.exe", "7z.exe");
                             copyToTempBinDir("bin/7zip/windows/arm64/7z.dll", "7z.dll");
-                            break;
+                        }
                     }
-                    break;
-                case LINUX:
-                    switch (SystemUtils.ARCHITECTURE) {
-                        case X86_32:
-                            embeddedSevenZipPath = copyToTempBinDir("bin/7zip/linux/x32/7zzs", "7zzs");
-                            break;
-                        case X86_64:
-                            embeddedSevenZipPath = copyToTempBinDir("bin/7zip/linux/x64/7zzs", "7zzs");
-                            break;
-                        case ARM_32:
-                            embeddedSevenZipPath = copyToTempBinDir("bin/7zip/linux/arm/7zzs", "7zzs");
-                            break;
-                        case ARM_64:
-                            embeddedSevenZipPath = copyToTempBinDir("bin/7zip/linux/arm64/7zzs", "7zzs");
-                            break;
-                    }
-                    break;
-                case OSX:
-                    switch (SystemUtils.ARCHITECTURE) {
-                        case X86_64:
-                        case ARM_64:
-                            embeddedSevenZipPath = copyToTempBinDir("bin/7zip/macos/7zz", "7zz");
-                            break;
-                    }
-                    break;
+                }
+                case LINUX -> embeddedSevenZipPath = switch (SystemUtils.ARCHITECTURE) {
+                    case X86_32 -> copyToTempBinDir("bin/7zip/linux/x32/7zzs", "7zzs");
+                    case X86_64 -> copyToTempBinDir("bin/7zip/linux/x64/7zzs", "7zzs");
+                    case ARM_32 -> copyToTempBinDir("bin/7zip/linux/arm/7zzs", "7zzs");
+                    case ARM_64 -> copyToTempBinDir("bin/7zip/linux/arm64/7zzs", "7zzs");
+                    default -> null;
+                };
+                case OSX -> embeddedSevenZipPath = switch (SystemUtils.ARCHITECTURE) {
+                    case X86_64, ARM_64 -> copyToTempBinDir("bin/7zip/macos/7zz", "7zz");
+                    default -> null;
+                };
             }
         }
         if (embeddedSevenZipPath == null) {

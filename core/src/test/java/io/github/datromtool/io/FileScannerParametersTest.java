@@ -2,9 +2,9 @@ package io.github.datromtool.io;
 
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.config.AppConfig;
-import io.github.datromtool.domain.datafile.Datafile;
-import io.github.datromtool.domain.datafile.Game;
-import io.github.datromtool.domain.datafile.Rom;
+import io.github.datromtool.domain.datafile.logiqx.Datafile;
+import io.github.datromtool.domain.datafile.logiqx.Game;
+import io.github.datromtool.domain.datafile.logiqx.Rom;
 import io.github.datromtool.domain.detector.DataTest;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.detector.Rule;
@@ -17,10 +17,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import static io.github.datromtool.io.ArchiveType.*;
+import static io.github.datromtool.io.ArchiveType.RAR;
+import static io.github.datromtool.io.ArchiveType.SEVEN_ZIP;
+import static io.github.datromtool.io.ArchiveType.ZIP;
 import static io.github.datromtool.io.FileScannerParameters.forDatWithDetector;
 import static io.github.datromtool.io.FileScannerParameters.withDefaults;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FileScannerParametersTest {
 

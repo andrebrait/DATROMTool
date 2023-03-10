@@ -1,7 +1,7 @@
 package io.github.datromtool.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.github.datromtool.domain.datafile.Rom;
+import io.github.datromtool.domain.datafile.logiqx.Rom;
 import io.github.datromtool.io.FileScanner;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;

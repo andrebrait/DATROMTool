@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.github.datromtool.SerializationHelper;
-import io.github.datromtool.domain.datafile.Datafile;
+import io.github.datromtool.domain.datafile.logiqx.Datafile;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

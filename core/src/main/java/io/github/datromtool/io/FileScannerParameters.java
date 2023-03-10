@@ -3,9 +3,9 @@ package io.github.datromtool.io;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.ByteSize;
 import io.github.datromtool.config.AppConfig;
-import io.github.datromtool.domain.datafile.Datafile;
-import io.github.datromtool.domain.datafile.Game;
-import io.github.datromtool.domain.datafile.Rom;
+import io.github.datromtool.domain.datafile.logiqx.Datafile;
+import io.github.datromtool.domain.datafile.logiqx.Game;
+import io.github.datromtool.domain.datafile.logiqx.Rom;
 import io.github.datromtool.domain.detector.BinaryTest;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.detector.Rule;
@@ -20,7 +20,9 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static java.lang.Math.*;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.lang.Math.toIntExact;
 import static java.util.Objects.requireNonNull;
 
 @Slf4j

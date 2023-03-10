@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import io.github.datromtool.TestDirDependantTest;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.data.CrcKey;
-import io.github.datromtool.domain.datafile.Datafile;
-import io.github.datromtool.domain.datafile.Game;
-import io.github.datromtool.domain.datafile.Rom;
+import io.github.datromtool.domain.datafile.logiqx.Datafile;
+import io.github.datromtool.domain.datafile.logiqx.Game;
+import io.github.datromtool.domain.datafile.logiqx.Rom;
 import io.github.datromtool.util.ArchiveUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,10 @@ import java.util.stream.Stream;
 
 import static io.github.datromtool.util.TestUtils.getFilename;
 import static io.github.datromtool.util.TestUtils.isRar5;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FileScannerTest extends TestDirDependantTest {
 

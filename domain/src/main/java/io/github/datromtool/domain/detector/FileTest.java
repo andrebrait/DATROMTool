@@ -7,7 +7,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import io.github.datromtool.domain.detector.enumerations.ComparisonOperator;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Value;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
@@ -48,15 +53,10 @@ public class FileTest extends Test {
             double log = Math.log(fileSize) / Math.log(2);
             return Math.abs(Math.round(log) - log) < 1e-11;
         }
-        switch (operator) {
-            case LESS:
-                return (fileSize < getSizeAsLong()) == getResult();
-            case GREATER:
-                return (fileSize > getSizeAsLong()) == getResult();
-            case EQUAL:
-                return (fileSize == getSizeAsLong()) == getResult();
-            default:
-                return false;
-        }
+        return switch (operator) {
+            case LESS -> (fileSize < getSizeAsLong()) == getResult();
+            case GREATER -> (fileSize > getSizeAsLong()) == getResult();
+            case EQUAL -> (fileSize == getSizeAsLong()) == getResult();
+        };
     }
 }

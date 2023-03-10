@@ -1,7 +1,7 @@
 XML driven header support
 =========================
 
->This is a markdown version of [the original document](https://mamedev.emulab.it/clrmamepro/docs/xmlheaders.txt).
+>This is a Markdown version of [the original document](https://mamedev.emulab.it/clrmamepro/docs/xmlheaders.txt).
 
 So...what's the main problem with headers anyway? They have an impact on the
 file's hash values, like crc32, sha1 or md5. A used datfile usually lists only

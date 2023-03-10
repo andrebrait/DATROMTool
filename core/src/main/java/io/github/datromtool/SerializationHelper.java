@@ -13,11 +13,10 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.data.RegionData;
-import io.github.datromtool.domain.datafile.Datafile;
+import io.github.datromtool.domain.datafile.logiqx.Datafile;
 import io.github.datromtool.domain.detector.Detector;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -93,14 +92,12 @@ public final class SerializationHelper {
     private static XmlMapper createXmlMapper() {
         return XmlMapper.builder()
                 .defaultUseWrapper(false)
-                .addModule(new JaxbAnnotationModule())
                 .addModule(new JavaTimeModule())
                 .addModule(new Jdk8Module())
                 .addModule(new GuavaModule())
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
                 .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
-                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .build();
     }

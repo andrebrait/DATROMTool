@@ -20,7 +20,7 @@ import static lombok.AccessLevel.PRIVATE;
 public final class XMLValidator {
 
     public static void validateDat(byte[] xml) throws Exception {
-        validateDat(xml, "xsd/datafile/datafile.xsd");
+        validateDat(xml, "xsd/datafile/logiqx/datafile.xsd");
     }
 
     public static void validateDetector(byte[] xml) throws Exception {

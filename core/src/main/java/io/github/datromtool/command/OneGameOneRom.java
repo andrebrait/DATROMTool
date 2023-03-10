@@ -9,11 +9,17 @@ import io.github.datromtool.GameParser;
 import io.github.datromtool.GameSorter;
 import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.config.AppConfig;
-import io.github.datromtool.data.*;
-import io.github.datromtool.domain.datafile.Clrmamepro;
-import io.github.datromtool.domain.datafile.Datafile;
-import io.github.datromtool.domain.datafile.Game;
-import io.github.datromtool.domain.datafile.Header;
+import io.github.datromtool.data.FileOutputOptions;
+import io.github.datromtool.data.Filter;
+import io.github.datromtool.data.OutputMode;
+import io.github.datromtool.data.ParsedGame;
+import io.github.datromtool.data.PostFilter;
+import io.github.datromtool.data.SortingPreference;
+import io.github.datromtool.data.TextOutputOptions;
+import io.github.datromtool.domain.datafile.logiqx.Clrmamepro;
+import io.github.datromtool.domain.datafile.logiqx.Datafile;
+import io.github.datromtool.domain.datafile.logiqx.Game;
+import io.github.datromtool.domain.datafile.logiqx.Header;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.exception.ExecutionException;
 import io.github.datromtool.exception.InvalidDatafileException;
@@ -34,7 +40,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -329,18 +340,11 @@ public final class OneGameOneRom {
             @Nonnull Datafile newDat) throws ExecutionException {
         try {
             SerializationHelper helper = SerializationHelper.getInstance();
-            switch (outputMode) {
-                case XML:
-                    return helper.writeAsXml(newDat);
-                case JSON:
-                    return helper.writeAsJson(newDat);
-                case YAML:
-                    return helper.writeAsYaml(newDat);
-                default:
-                    throw new IllegalArgumentException(format(
-                            "Cannot handle mode %s",
-                            outputMode));
-            }
+            return switch (outputMode) {
+                case XML -> helper.writeAsXml(newDat);
+                case JSON -> helper.writeAsJson(newDat);
+                case YAML -> helper.writeAsYaml(newDat);
+            };
         } catch (JsonProcessingException e) {
             throw new ExecutionException(
                     format("Could not write to output file: %s", e.getMessage()),

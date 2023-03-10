@@ -6,7 +6,7 @@ import io.github.datromtool.data.Filter;
 import io.github.datromtool.data.Pair;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.PostFilter;
-import io.github.datromtool.domain.datafile.Game;
+import io.github.datromtool.domain.datafile.logiqx.Game;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
