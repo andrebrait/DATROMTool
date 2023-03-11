@@ -6,11 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import io.github.datromtool.domain.datafile.logiqx.enumerations.Status;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
+import io.github.datromtool.domain.datafile.logiqx.enumerations.YesNo;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
@@ -38,6 +35,15 @@ public class Rom {
     Long size;
 
     @JacksonXmlProperty(isAttribute = true)
+    String header;
+
+    @NonNull
+    @Builder.Default
+    @JacksonXmlProperty(isAttribute = true)
+    @JsonProperty(defaultValue = "no")
+    YesNo mia = YesNo.NO;
+
+    @JacksonXmlProperty(isAttribute = true)
     String crc;
 
     @JacksonXmlProperty(isAttribute = true)
@@ -45,6 +51,9 @@ public class Rom {
 
     @JacksonXmlProperty(isAttribute = true)
     String sha1;
+
+    @JacksonXmlProperty(isAttribute = true)
+    String sha256;
 
     @JacksonXmlProperty(isAttribute = true)
     String merge;

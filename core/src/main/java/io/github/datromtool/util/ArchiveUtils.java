@@ -29,18 +29,8 @@ import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
 
 import javax.annotation.Nullable;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardCopyOption;
+import java.io.*;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
@@ -65,19 +55,7 @@ public final class ArchiveUtils {
         if (folder == null) {
             return;
         }
-        Files.walkFileTree(folder, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return super.visitFile(file, attrs);
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
-                return super.postVisitDirectory(dir, exc);
-            }
-        });
+        Files.walkFileTree(folder, DeleterFileVisitor.getInstance());
         Files.deleteIfExists(folder);
     }
 
@@ -626,8 +604,7 @@ public final class ArchiveUtils {
             throws IOException, T {
         InputStream inputStream = inputStreamForTar(archiveType, file);
         if (inputStream != null) {
-            try (TarArchiveInputStream tarArchiveInputStream =
-                    new TarArchiveInputStream(inputStream)) {
+            try (TarArchiveInputStream tarArchiveInputStream = new TarArchiveInputStream(inputStream)) {
                 TarArchiveEntry tarArchiveEntry;
                 while ((tarArchiveEntry = tarArchiveInputStream.getNextTarEntry()) != null) {
                     if (!tarArchiveEntry.isFile()
@@ -648,4 +625,25 @@ public final class ArchiveUtils {
         void accept(T t, D d) throws E;
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    private static final class DeleterFileVisitor extends SimpleFileVisitor<Path> {
+
+        private static final DeleterFileVisitor INSTANCE = new DeleterFileVisitor();
+
+        public static DeleterFileVisitor getInstance() {
+            return INSTANCE;
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            Files.deleteIfExists(file);
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+            Files.deleteIfExists(dir);
+            return FileVisitResult.CONTINUE;
+        }
+    }
 }

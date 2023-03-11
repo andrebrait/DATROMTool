@@ -8,10 +8,7 @@ import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.util.ArchiveUtils;
 import io.github.datromtool.util.XMLValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -27,10 +24,7 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 class SerializationHelperTest extends TestDirDependantTest {
@@ -57,8 +51,8 @@ class SerializationHelperTest extends TestDirDependantTest {
     }
 
     @ParameterizedTest
-    @MethodSource("validLogiqxNoIntroDats")
-    void testReadDats(Path validFile) throws Exception {
+    @MethodSource("validLogiqxDats")
+    void testReadLogiqxDats(Path validFile) throws Exception {
         try (ZipInputStream zis = new ZipInputStream(Files.newInputStream(validFile))) {
             ZipEntry zi;
             while ((zi = zis.getNextEntry()) != null) {
@@ -71,11 +65,30 @@ class SerializationHelperTest extends TestDirDependantTest {
                 log.info("Reading '{}'", validFile.resolve(zi.getName()));
                 Datafile datafile = emptyHelper.loadXml(toNonCloseable(zis), Datafile.class);
                 assertNotNull(datafile);
-                if (datafile.getGames().isEmpty()) {
-                    log.warn("Empty 'games' entry found in '{}'", validFile.resolve(zi.getName()));
-                } else {
-                    XMLValidator.validateDat(emptyHelper.getXmlMapper().writeValueAsBytes(datafile));
+                XMLValidator.validateLogiqxDat(emptyHelper.getXmlMapper().writeValueAsBytes(datafile));
+            }
+        }
+    }
+
+    // TODO: reenable later
+    @Disabled
+    @ParameterizedTest
+    @MethodSource("validNoIntroDats")
+    void testReadNoIntroDats(Path validFile) throws Exception {
+        try (ZipInputStream zis = new ZipInputStream(Files.newInputStream(validFile))) {
+            ZipEntry zi;
+            while ((zi = zis.getNextEntry()) != null) {
+                if (zi.isDirectory()) {
+                    continue;
                 }
+                if (!zi.getName().matches("(?i)^.+.dat$")) {
+                    continue;
+                }
+                log.info("Reading '{}'", validFile.resolve(zi.getName()));
+                // TODO: replace with Nointro Datafile
+                Datafile datafile = emptyHelper.loadXml(toNonCloseable(zis), Datafile.class);
+                assertNotNull(datafile);
+                XMLValidator.validateNoIntroDat(emptyHelper.getXmlMapper().writeValueAsBytes(datafile));
             }
         }
     }
@@ -178,8 +191,13 @@ class SerializationHelperTest extends TestDirDependantTest {
         assertFalse(regionData.getRegions().isEmpty());
     }
 
-    static Stream<Arguments> validLogiqxNoIntroDats() throws Exception {
-        URL folderUrl = ClassLoader.getSystemResource("valid-dats/no-intro/logiqx");
+    static Stream<Arguments> validLogiqxDats() throws Exception {
+        URL folderUrl = ClassLoader.getSystemResource("valid-dats/logiqx");
+        return Files.list(Paths.get(folderUrl.toURI())).map(Arguments::of);
+    }
+
+    static Stream<Arguments> validNoIntroDats() throws Exception {
+        URL folderUrl = ClassLoader.getSystemResource("valid-dats/nointro");
         return Files.list(Paths.get(folderUrl.toURI())).map(Arguments::of);
     }
 

@@ -10,8 +10,8 @@
     PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN"
     SYSTEM "https://raw.githubusercontent.com/unexpectedpanda/retool/main/datafile.dtd"
     
-    $Revision: 2.1 $
-    $Date: 2022/05/20 08:39:00 $
+    $Revision: 2.2 $
+    $Date: 2023/03/11 03:56:00 $
     
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
@@ -217,7 +217,14 @@
             <xs:attribute name="name" use="required"/>
             <xs:attribute name="size"/>
             <xs:attribute name="header"/>
-            <xs:attribute name="mia"/>
+            <xs:attribute name="mia" default="no">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="yes"/>
+                        <xs:enumeration value="no"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
             <xs:attribute name="crc"/>
             <xs:attribute name="sha1"/>
             <xs:attribute name="sha256"/>

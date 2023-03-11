@@ -19,9 +19,14 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public final class XMLValidator {
 
-    public static void validateDat(byte[] xml) throws Exception {
+    public static void validateLogiqxDat(byte[] xml) throws Exception {
         validateDat(xml, "xsd/datafile/logiqx/datafile.xsd");
     }
+
+    public static void validateNoIntroDat(byte[] xml) throws Exception {
+        validateDat(xml, "xsd/datafile/nointro/schema_nointro_datfile_v2.xsd");
+    }
+
 
     public static void validateDetector(byte[] xml) throws Exception {
         validateDat(xml, "xsd/detector/detector.xsd");
