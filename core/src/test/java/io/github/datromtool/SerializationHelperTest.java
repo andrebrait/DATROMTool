@@ -65,6 +65,15 @@ class SerializationHelperTest extends TestDirDependantTest {
                 log.info("Reading '{}'", validFile.resolve(zi.getName()));
                 Datafile datafile = emptyHelper.loadXml(toNonCloseable(zis), Datafile.class);
                 assertNotNull(datafile);
+                // Blacklist of known bad DATs
+                if (validFile.getFileName().toString().equals("No-Intro Love Pack (PC XML) (2023-03-08).zip")
+                        && (datafile.getHeader().getName().startsWith("Non-Game - Miscellaneous - Instructional (Audio CD)")
+                        || datafile.getHeader().getName().startsWith("Non-Redump - Microsoft - Xbox Series X")
+                        || datafile.getHeader().getName().startsWith("Non-Redump - Super Audio CD")
+                        || datafile.getHeader().getName().startsWith("VTech - Mobigo"))) {
+                    assertTrue(datafile.getGames().isEmpty());
+                    continue;
+                }
                 XMLValidator.validateLogiqxDat(emptyHelper.getXmlMapper().writeValueAsBytes(datafile));
             }
         }

@@ -13,9 +13,23 @@
               <xs:element name="author" type="xs:string" />
               <xs:element name="homepage" type="xs:string" />
               <xs:element name="url" type="xs:string" />
-              <xs:element name="clrmamepro">
+              <xs:element name="clrmamepro" >
                 <xs:complexType>
-                  <xs:attribute name="forcenodump" type="xs:string" use="optional" />
+                  <xs:attribute name="forcenodump" default="obsolete" use="optional">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:token">
+                        <xs:enumeration value="obsolete"/>
+                        <xs:enumeration value="required"/>
+                        <xs:enumeration value="ignore"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="header" type="xs:string" use="optional" />
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="romcenter" minOccurs="0" >
+                <xs:complexType>
+                  <xs:attribute name="plugin" type="xs:string" use="optional" />
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
@@ -35,6 +49,7 @@
                   <xs:attribute name="sha256" type="xs:string" use="optional" />
                   <xs:attribute name="status" type="xs:string" use="optional" />
                   <xs:attribute name="serial" type="xs:string" use="optional" />
+                  <xs:attribute name="header" type="xs:string" use="optional" />
                 </xs:complexType>
               </xs:element>
             </xs:sequence>
