@@ -24,7 +24,7 @@ public final class XMLValidator {
     }
 
     public static void validateNoIntroDat(byte[] xml) throws Exception {
-        validateDat(xml, "xsd/datafile/nointro/schema_nointro_datfile_v2.xsd");
+        validateDat(xml, "xsd/datafile/nointro/schema_nointro_datfile_v3.xsd");
     }
 
 

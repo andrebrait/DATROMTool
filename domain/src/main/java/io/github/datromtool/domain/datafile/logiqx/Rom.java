@@ -3,10 +3,14 @@ package io.github.datromtool.domain.datafile.logiqx;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import io.github.datromtool.domain.datafile.logiqx.enumerations.Status;
 import io.github.datromtool.domain.datafile.logiqx.enumerations.YesNo;
+import io.github.datromtool.domain.serialization.SpacedHexArrayDeserializer;
+import io.github.datromtool.domain.serialization.SpacedHexArraySerializer;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
@@ -35,7 +39,9 @@ public class Rom {
     Long size;
 
     @JacksonXmlProperty(isAttribute = true)
-    String header;
+    @JsonSerialize(using = SpacedHexArraySerializer.class)
+    @JsonDeserialize(using = SpacedHexArrayDeserializer.class)
+    byte[] header;
 
     @NonNull
     @Builder.Default
