@@ -79,8 +79,8 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
                 <executions>
                     <execution>
                         <phase>validate</phase>
@@ -101,14 +101,6 @@
                         <includeOnlyProperty>git.dirty</includeOnlyProperty>
                     </includeOnlyProperties>
                     <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>9</source>
-                    <target>9</target>
                 </configuration>
             </plugin>
         </plugins>

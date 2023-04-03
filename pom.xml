@@ -36,19 +36,19 @@
         <junit.jupiter.version>5.9.2</junit.jupiter.version>
         <junit.jupiter.pioneer.version>2.0.0</junit.jupiter.pioneer.version>
         <lombok.version>1.18.26</lombok.version>
-        <commons-compress.version>1.22</commons-compress.version>
+        <commons-compress.version>1.23.0</commons-compress.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-codec.version>1.15</commons-codec.version>
         <picocli.version>4.7.1</picocli.version>
-        <slf4j-api.version>2.0.6</slf4j-api.version>
-        <logback.version>1.4.5</logback.version>
+        <slf4j-api.version>2.0.7</slf4j-api.version>
+        <logback.version>1.4.6</logback.version>
         <guava.version>31.1-jre</guava.version>
         <jackson.version>2.14.2</jackson.version>
         <xz.version>1.9</xz.version>
         <junrar.version>7.5.4</junrar.version>
         <git-commit-id-maven-plugin.version>5.0.0</git-commit-id-maven-plugin.version>
-        <mockito-core.version>4.8.0</mockito-core.version>
-        <jline.version>3.21.0</jline.version>
+        <mockito-core.version>5.2.0</mockito-core.version>
+        <jline.version>3.23.0</jline.version>
         <jansi.version>2.4.0</jansi.version>
     </properties>
 
@@ -160,16 +160,16 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M7</version>
+                    <version>3.0.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.4.2</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.12.0</version>
+                    <version>2.15.0</version>
                 </plugin>
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
@@ -182,15 +182,15 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.1.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.1.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0-M7</version>
+                    <version>3.0.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
