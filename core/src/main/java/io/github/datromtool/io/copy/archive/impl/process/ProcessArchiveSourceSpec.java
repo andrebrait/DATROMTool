@@ -55,9 +55,9 @@ public abstract class ProcessArchiveSourceSpec implements ArchiveSourceSpec {
     /**
      * Converts the output of the command into instances of {@link ProcessArchiveFile}.
      */
-    protected abstract List<ProcessArchiveFile> convertToContents(ImmutableList<ImmutableList<String>> lines);
+    abstract List<ProcessArchiveFile> convertToContents(ImmutableList<ImmutableList<String>> lines);
 
-    protected abstract List<String> getReadContentsArgs(ImmutableList<ProcessArchiveFile> contents);
+    abstract List<String> getReadContentsArgs(ImmutableList<ProcessArchiveFile> contents);
 
     @Nullable
     @Override

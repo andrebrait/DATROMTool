@@ -33,7 +33,7 @@ public final class SevenZipRarArchiveSourceSpec extends ZonedTimeProcessArchiveS
     }
 
     @Override
-    protected List<ProcessArchiveFile> convertToContents(ImmutableList<ImmutableList<String>> lines) {
+    List<ProcessArchiveFile> convertToContents(ImmutableList<ImmutableList<String>> lines) {
         return lines.stream()
                 .map(Collection::stream)
                 .map(stream -> stream.map(SevenZipRarArchiveSourceSpec::splitKeyValues)
@@ -81,7 +81,7 @@ public final class SevenZipRarArchiveSourceSpec extends ZonedTimeProcessArchiveS
     }
 
     @Override
-    protected List<String> getReadContentsArgs(ImmutableList<ProcessArchiveFile> contents) {
+    List<String> getReadContentsArgs(ImmutableList<ProcessArchiveFile> contents) {
         return ImmutableList.<String>builder()
                 .add(getExecutablePath().toString())
                 .add("e")

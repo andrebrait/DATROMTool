@@ -33,7 +33,7 @@ public final class UnrarRarArchiveSourceSpec extends ZonedTimeProcessArchiveSour
     }
 
     @Override
-    protected List<ProcessArchiveFile> convertToContents(ImmutableList<ImmutableList<String>> lines) {
+    List<ProcessArchiveFile> convertToContents(ImmutableList<ImmutableList<String>> lines) {
         return lines.stream()
                 .map(Collection::stream)
                 .map(stream -> stream.map(UnrarRarArchiveSourceSpec::splitKeyValues)
@@ -88,7 +88,7 @@ public final class UnrarRarArchiveSourceSpec extends ZonedTimeProcessArchiveSour
     }
 
     @Override
-    protected List<String> getReadContentsArgs(ImmutableList<ProcessArchiveFile> contents) {
+    List<String> getReadContentsArgs(ImmutableList<ProcessArchiveFile> contents) {
         return ImmutableList.<String>builder()
                 .add(getExecutablePath().toString())
                 .add("p")
