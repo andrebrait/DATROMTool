@@ -76,7 +76,9 @@ final class TarArchiveSourceInternalSpec extends AbstractArchiveSourceInternalSp
     @Override
     public InputStream getInputStream() {
         if (inputStream == null) {
-            inputStream = new BoundedInputStream(tarArchiveInputStream, tarArchiveEntry.getRealSize());
+            BoundedInputStream boundedInputStream = new BoundedInputStream(tarArchiveInputStream, tarArchiveEntry.getRealSize());
+            boundedInputStream.setPropagateClose(false);
+            inputStream = boundedInputStream;
         }
         return inputStream;
     }

@@ -49,7 +49,9 @@ final class SevenZipArchiveSourceInternalSpec extends AbstractArchiveSourceInter
     @Override
     public InputStream getInputStream() {
         if (inputStream == null) {
-            inputStream = new BoundedInputStream(new SevenZFileInputStream(sevenZFile), sevenZArchiveEntry.getSize());
+            BoundedInputStream boundedInputStream = new BoundedInputStream(new SevenZFileInputStream(sevenZFile), sevenZArchiveEntry.getSize());
+            boundedInputStream.setPropagateClose(false);
+            inputStream = boundedInputStream;
         }
         return inputStream;
     }

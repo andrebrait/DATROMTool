@@ -46,7 +46,9 @@ final class ProcessArchiveSourceInternalSpec extends CachingAbstractArchiveSourc
     @Override
     public InputStream getInputStream() {
         if (inputStream == null) {
-            inputStream = new BoundedInputStream(processInputStream, file.getSize());
+            BoundedInputStream boundedInputStream = new BoundedInputStream(processInputStream, file.getSize());
+            boundedInputStream.setPropagateClose(false);
+            inputStream = boundedInputStream;
         }
         return inputStream;
     }
