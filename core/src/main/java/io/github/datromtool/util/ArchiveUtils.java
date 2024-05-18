@@ -29,8 +29,18 @@ import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.commons.compress.compressors.xz.XZCompressorOutputStream;
 
 import javax.annotation.Nullable;
-import java.io.*;
-import java.nio.file.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
@@ -114,7 +124,7 @@ public final class ArchiveUtils {
     public static <T extends Throwable> void readZip(
             Path file,
             ThrowingBiConsumer<ZipFile, ZipArchiveEntry, T> consumer) throws IOException, T {
-        try (ZipFile zipFile = new ZipFile(file.toFile())) {
+        try (ZipFile zipFile = ZipFile.builder().setPath(file).get()) {
             Enumeration<ZipArchiveEntry> entries = zipFile.getEntriesInPhysicalOrder();
             while (entries.hasMoreElements()) {
                 ZipArchiveEntry zipArchiveEntry = entries.nextElement();
@@ -586,7 +596,7 @@ public final class ArchiveUtils {
             Path file,
             ThrowingBiConsumer<SevenZFile, SevenZArchiveEntry, T> consumer)
             throws IOException, T {
-        try (SevenZFile sevenZFile = new SevenZFile(file.toFile())) {
+        try (SevenZFile sevenZFile = SevenZFile.builder().setPath(file).get()) {
             SevenZArchiveEntry sevenZArchiveEntry;
             while ((sevenZArchiveEntry = sevenZFile.getNextEntry()) != null) {
                 if (sevenZArchiveEntry.isDirectory() || sevenZArchiveEntry.isAntiItem()) {
@@ -606,7 +616,7 @@ public final class ArchiveUtils {
         if (inputStream != null) {
             try (TarArchiveInputStream tarArchiveInputStream = new TarArchiveInputStream(inputStream)) {
                 TarArchiveEntry tarArchiveEntry;
-                while ((tarArchiveEntry = tarArchiveInputStream.getNextTarEntry()) != null) {
+                while ((tarArchiveEntry = tarArchiveInputStream.getNextEntry()) != null) {
                     if (!tarArchiveEntry.isFile()
                             || !tarArchiveInputStream.canReadEntryData(tarArchiveEntry)) {
                         continue;

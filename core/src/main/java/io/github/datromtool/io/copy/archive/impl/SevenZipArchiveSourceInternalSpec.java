@@ -8,7 +8,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZFile;
-import org.apache.commons.compress.utils.BoundedInputStream;
+import org.apache.commons.io.input.BoundedInputStream;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -47,7 +47,7 @@ final class SevenZipArchiveSourceInternalSpec extends AbstractArchiveSourceInter
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() {
         if (inputStream == null) {
             inputStream = new BoundedInputStream(new SevenZFileInputStream(sevenZFile), sevenZArchiveEntry.getSize());
         }
@@ -55,7 +55,7 @@ final class SevenZipArchiveSourceInternalSpec extends AbstractArchiveSourceInter
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         // No need to close this InputStream
         inputStream = null;
     }

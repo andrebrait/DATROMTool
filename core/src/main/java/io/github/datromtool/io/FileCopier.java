@@ -3,6 +3,7 @@ package io.github.datromtool.io;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.exception.UnsupportedRarV5Exception;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.io.logging.FileCopierLoggingListener;
@@ -14,7 +15,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry;
 import org.apache.commons.compress.archivers.sevenz.SevenZOutputFile;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -107,7 +107,7 @@ public final class FileCopier {
         @NonNull
         Path from;
         @NonNull
-        ImmutableSet<InternalSpec> internalSpecs;
+        ImmutableMap<String, InternalSpec> internalSpecs;
     }
 
     @Builder
@@ -161,7 +161,7 @@ public final class FileCopier {
         @NonNull
         Path to;
         @NonNull
-        ImmutableSet<InternalSpec> internalSpecs;
+        ImmutableMap<String, InternalSpec> internalSpecs;
     }
 
     public interface Listener {
@@ -410,7 +410,7 @@ public final class FileCopier {
                 } catch (FileAlreadyExistsException e) {
                     throw e;
                 } catch (IOException e) {
-                    Files.delete(to);
+                    Files.deleteIfExists(to);
                     throw e;
                 }
                 BasicFileAttributeView toAttrib = Files.getFileAttributeView(to, BasicFileAttributeView.class);
@@ -442,7 +442,7 @@ public final class FileCopier {
                     } catch (FileAlreadyExistsException e) {
                         throw e;
                     } catch (IOException e) {
-                        Files.delete(to);
+                        Files.deleteIfExists(to);
                         throw e;
                     }
                     BasicFileAttributeView toAttrib = Files.getFileAttributeView(to, BasicFileAttributeView.class);
@@ -461,9 +461,7 @@ public final class FileCopier {
     }
 
     private void extractRarEntriesWithUnrar(ExtractionSpec spec, int index) throws Exception {
-        ImmutableSet<String> desiredEntryNames = spec.getInternalSpecs().stream()
-                .map(ExtractionSpec.InternalSpec::getFrom)
-                .collect(ImmutableSet.toImmutableSet());
+        ImmutableSet<String> desiredEntryNames = spec.getInternalSpecs().keySet();
         ArchiveUtils.readRarWithUnrar(
                 spec.getFrom(),
                 desiredEntryNames,
@@ -471,9 +469,7 @@ public final class FileCopier {
     }
 
     private void extractRarEntriesWithSevenZip(ExtractionSpec spec, int index) throws Exception {
-        ImmutableSet<String> desiredEntryNames = spec.getInternalSpecs().stream()
-                .map(ExtractionSpec.InternalSpec::getFrom)
-                .collect(ImmutableSet.toImmutableSet());
+        ImmutableSet<String> desiredEntryNames = spec.getInternalSpecs().keySet();
         ArchiveUtils.readRarWithSevenZip(
                 spec.getFrom(),
                 desiredEntryNames,
@@ -504,7 +500,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(to);
+            Files.deleteIfExists(to);
             throw e;
         }
         BasicFileAttributeView toAttrib = Files.getFileAttributeView(to, BasicFileAttributeView.class);
@@ -526,7 +522,7 @@ public final class FileCopier {
             } catch (FileAlreadyExistsException e) {
                 throw e;
             } catch (IOException e) {
-                Files.delete(to);
+                Files.deleteIfExists(to);
                 throw e;
             }
             BasicFileAttributeView toAttrib = Files.getFileAttributeView(to, BasicFileAttributeView.class);
@@ -561,7 +557,7 @@ public final class FileCopier {
                     } catch (FileAlreadyExistsException e) {
                         throw e;
                     } catch (IOException e) {
-                        Files.delete(to);
+                        Files.deleteIfExists(to);
                         throw e;
                     }
                     BasicFileAttributeView toAttrib = Files.getFileAttributeView(to, BasicFileAttributeView.class);
@@ -574,7 +570,7 @@ public final class FileCopier {
             for (CompressionSpec.InternalSpec internal : spec.getInternalSpecs()) {
                 Path source = internal.getFrom();
                 try (InputStream inputStream = Files.newInputStream(source)) {
-                    ZipArchiveEntry archiveEntry = (ZipArchiveEntry) zipArchiveOutputStream.createArchiveEntry(
+                    ZipArchiveEntry archiveEntry = zipArchiveOutputStream.createArchiveEntry(
                             source.toFile(),
                             internal.getTo());
                     BasicFileAttributes fromAttrib = Files.readAttributes(source, BasicFileAttributes.class);
@@ -594,7 +590,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -624,7 +620,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -638,7 +634,7 @@ public final class FileCopier {
             for (CompressionSpec.InternalSpec internal : spec.getInternalSpecs()) {
                 Path source = internal.getFrom();
                 try (InputStream inputStream = Files.newInputStream(source)) {
-                    ArchiveEntry archiveEntry =
+                    TarArchiveEntry archiveEntry =
                             tarOutputStream.createArchiveEntry(source.toFile(), internal.getTo());
                     Path destination = spec.getTo().resolve(internal.getTo());
                     tarOutputStream.putArchiveEntry(archiveEntry);
@@ -655,7 +651,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -732,7 +728,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -764,7 +760,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -796,7 +792,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -830,7 +826,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -867,11 +863,11 @@ public final class FileCopier {
             } else if (isUseSevenZip()) {
                 fromRarWithSevenZipToZip(spec, index);
             } else {
-                Files.delete(spec.getTo());
+                Files.deleteIfExists(spec.getTo());
                 throw e;
             }
         } catch (IOException | RarException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -886,7 +882,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException | RarException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -901,7 +897,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException | RarException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -962,11 +958,11 @@ public final class FileCopier {
             } else if (isUseSevenZip()) {
                 fromRarWithSevenZipToSevenZip(spec, index);
             } else {
-                Files.delete(spec.getTo());
+                Files.deleteIfExists(spec.getTo());
                 throw e;
             }
         } catch (IOException | RarException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -981,7 +977,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException | RarException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -996,7 +992,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException | RarException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -1059,11 +1055,11 @@ public final class FileCopier {
             } else if (isUseSevenZip()) {
                 fromRarWithSevenZipToTar(spec, index);
             } else {
-                Files.delete(spec.getTo());
+                Files.deleteIfExists(spec.getTo());
                 throw e;
             }
         } catch (IOException | RarException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -1092,7 +1088,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException | RarException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -1113,7 +1109,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException | RarException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -1163,14 +1159,14 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
 
     private void fromSevenZipToSevenZip(ArchiveCopySpec spec, int index) throws IOException {
         try (SevenZOutputFile sevenZOutputFile =
-                new SevenZOutputFile(spec.getTo().toFile())) {
+                     new SevenZOutputFile(spec.getTo().toFile())) {
             ArchiveUtils.readSevenZip(
                     spec.getFrom(),
                     (sevenZFile, sevenZArchiveEntry) -> toSevenZip(
@@ -1192,7 +1188,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -1218,7 +1214,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -1242,7 +1238,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -1265,7 +1261,7 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
@@ -1290,15 +1286,13 @@ public final class FileCopier {
         } catch (FileAlreadyExistsException e) {
             throw e;
         } catch (IOException e) {
-            Files.delete(spec.getTo());
+            Files.deleteIfExists(spec.getTo());
             throw e;
         }
     }
 
     private static ImmutableSet<String> getInternalSources(ArchiveCopySpec spec) {
-        return spec.getInternalSpecs().stream()
-                .map(ArchiveCopySpec.InternalSpec::getFrom)
-                .collect(ImmutableSet.toImmutableSet());
+        return spec.getInternalSpecs().keySet();
     }
 
     private void toZip(
@@ -1561,18 +1555,12 @@ public final class FileCopier {
 
     @Nullable
     private ExtractionSpec.InternalSpec findInternalSpec(ExtractionSpec spec, String name) {
-        return spec.getInternalSpecs().stream()
-                .filter(ad -> ad.getFrom().equals(name))
-                .findFirst()
-                .orElse(null);
+        return spec.getInternalSpecs().get(name);
     }
 
     @Nullable
     private ArchiveCopySpec.InternalSpec findInternalSpec(ArchiveCopySpec spec, String name) {
-        return spec.getInternalSpecs().stream()
-                .filter(ad -> ad.getFrom().equals(name))
-                .findFirst()
-                .orElse(null);
+        return spec.getInternalSpecs().get(name);
     }
 
     private void copyWithProgress(

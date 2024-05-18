@@ -8,10 +8,9 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.utils.BoundedInputStream;
+import org.apache.commons.io.input.BoundedInputStream;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.file.attribute.FileTime;
@@ -75,7 +74,7 @@ final class TarArchiveSourceInternalSpec extends AbstractArchiveSourceInternalSp
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() {
         if (inputStream == null) {
             inputStream = new BoundedInputStream(tarArchiveInputStream, tarArchiveEntry.getRealSize());
         }
@@ -83,7 +82,7 @@ final class TarArchiveSourceInternalSpec extends AbstractArchiveSourceInternalSp
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         // No need to close this InputStream
         inputStream = null;
     }

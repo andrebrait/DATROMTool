@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -447,7 +448,7 @@ public final class OneGameOneRom {
                                                 .from(m.getResult().getArchivePath())
                                                 .to(baseDir.resolve(m.getRom().getName()))
                                                 .build())
-                                        .collect(ImmutableSet.toImmutableSet()))
+                                        .collect(ImmutableMap.toImmutableMap(FileCopier.ExtractionSpec.InternalSpec::getFrom, Function.identity(), (a, b) -> a)))
                                 .build());
                     }
                 });
@@ -489,7 +490,7 @@ public final class OneGameOneRom {
         List<ScanResultMatcher.RomMatch> forCompression = matches
                 .stream()
                 .filter(m -> m.getResult().getArchiveType() == null)
-                .collect(Collectors.toList());
+                .toList();
         Stream<FileCopier.CompressionSpec> compressions;
         if (forCompression.isEmpty()) {
             compressions = Stream.empty();
@@ -537,7 +538,7 @@ public final class OneGameOneRom {
                                 .from(m.getResult().getArchivePath())
                                 .to(m.getRom().getName())
                                 .build())
-                        .collect(ImmutableSet.toImmutableSet()))
+                        .collect(ImmutableMap.toImmutableMap(FileCopier.ArchiveCopySpec.InternalSpec::getFrom, Function.identity(), (a, b) -> a)))
                 .build();
     }
 

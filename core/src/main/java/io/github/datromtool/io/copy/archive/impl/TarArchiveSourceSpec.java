@@ -55,7 +55,7 @@ public final class TarArchiveSourceSpec extends AbstractArchiveSourceSpec {
     @Override
     protected ArchiveSourceInternalSpec getNextEntry() throws IOException {
         TarArchiveEntry tarArchiveEntry;
-        while ((tarArchiveEntry = tarArchiveInputStream.getNextTarEntry()) != null) {
+        while ((tarArchiveEntry = tarArchiveInputStream.getNextEntry()) != null) {
             if (tarArchiveEntry.isFile() && tarArchiveInputStream.canReadEntryData(tarArchiveEntry)) {
                 return new TarArchiveSourceInternalSpec(this, tarArchiveInputStream, tarArchiveEntry);
             }

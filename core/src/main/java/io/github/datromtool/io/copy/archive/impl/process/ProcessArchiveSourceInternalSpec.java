@@ -7,7 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.compress.utils.BoundedInputStream;
+import org.apache.commons.io.input.BoundedInputStream;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -44,7 +44,7 @@ final class ProcessArchiveSourceInternalSpec extends CachingAbstractArchiveSourc
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() {
         if (inputStream == null) {
             inputStream = new BoundedInputStream(processInputStream, file.getSize());
         }

@@ -33,23 +33,34 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
-        <junit.jupiter.version>5.9.2</junit.jupiter.version>
-        <junit.jupiter.pioneer.version>2.0.0</junit.jupiter.pioneer.version>
-        <lombok.version>1.18.26</lombok.version>
-        <commons-compress.version>1.23.0</commons-compress.version>
-        <commons-lang3.version>3.12.0</commons-lang3.version>
-        <commons-codec.version>1.15</commons-codec.version>
-        <picocli.version>4.7.1</picocli.version>
-        <slf4j-api.version>2.0.7</slf4j-api.version>
-        <logback.version>1.4.6</logback.version>
-        <guava.version>31.1-jre</guava.version>
-        <jackson.version>2.14.2</jackson.version>
+        <junit.jupiter.version>5.10.2</junit.jupiter.version>
+        <junit.jupiter.pioneer.version>2.2.0</junit.jupiter.pioneer.version>
+        <lombok.version>1.18.32</lombok.version>
+        <commons-compress.version>1.26.1</commons-compress.version>
+        <commons-lang3.version>3.14.0</commons-lang3.version>
+        <commons-codec.version>1.17.0</commons-codec.version>
+        <picocli.version>4.7.6</picocli.version>
+        <slf4j-api.version>2.0.13</slf4j-api.version>
+        <logback.version>1.5.6</logback.version>
+        <guava.version>33.2.0-jre</guava.version>
+        <jackson.version>2.17.1</jackson.version>
         <xz.version>1.9</xz.version>
-        <junrar.version>7.5.4</junrar.version>
-        <git-commit-id-maven-plugin.version>5.0.0</git-commit-id-maven-plugin.version>
-        <mockito-core.version>5.2.0</mockito-core.version>
-        <jline.version>3.23.0</jline.version>
-        <jansi.version>2.4.0</jansi.version>
+        <junrar.version>7.5.5</junrar.version>
+        <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
+        <mockito-core.version>5.12.0</mockito-core.version>
+        <jline.version>3.26.1</jline.version>
+        <jansi.version>2.4.1</jansi.version>
+        <versions-maven-plugin.version>2.16.2</versions-maven-plugin.version>
+        <maven-scm-provider-gitexe.version>2.1.0</maven-scm-provider-gitexe.version>
+        <maven-scm-api.version>2.1.0</maven-scm-api.version>
+        <!-- Maven plugins -->
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+        <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version>
+        <maven-jar-plugin.version>3.4.1</maven-jar-plugin.version>
+        <maven-install-plugin.version>3.1.2</maven-install-plugin.version>
+        <maven-deploy-plugin.version>3.1.2</maven-deploy-plugin.version>
+        <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
     </properties>
 
     <modules>
@@ -156,41 +167,41 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.10.1</version>
+                    <version>${maven-compiler-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>${maven-surefire-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>${maven-assembly-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven-install-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven-release-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.15.0</version>
+                    <version>${versions-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
                     <version>${git-commit-id-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.3.0</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>3.1.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.1.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -233,12 +244,12 @@
                     <dependency>
                         <groupId>org.apache.maven.scm</groupId>
                         <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>2.0.0-M1</version>
+                        <version>${maven-scm-provider-gitexe.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>org.apache.maven.scm</groupId>
                         <artifactId>maven-scm-api</artifactId>
-                        <version>2.0.0-M1</version>
+                        <version>${maven-scm-api.version}</version>
                     </dependency>
                 </dependencies>
                 <configuration>

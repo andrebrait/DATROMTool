@@ -26,7 +26,7 @@ public final class SevenZipArchiveSourceSpec extends AbstractArchiveSourceSpec {
     @Override
     protected void initArchive() throws IOException {
         if (sevenZFile == null) {
-            sevenZFile = new SevenZFile(getPath().toFile());
+            sevenZFile = SevenZFile.builder().setPath(getPath()).get();
         }
     }
 

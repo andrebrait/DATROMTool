@@ -17,7 +17,9 @@ import java.nio.file.Path;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import static java.util.regex.Pattern.*;
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.compile;
+import static java.util.regex.Pattern.quote;
 
 @AllArgsConstructor
 public enum ArchiveType {
@@ -50,13 +52,13 @@ public enum ArchiveType {
     }
 
     private static boolean isBzip2(String s) {
-        return BZip2Utils.isCompressedFilename(s)
-                && Constants.TAR_PATTERN.matcher(BZip2Utils.getUncompressedFilename(s)).find();
+        return BZip2Utils.isCompressedFileName(s)
+                && Constants.TAR_PATTERN.matcher(BZip2Utils.getUncompressedFileName(s)).find();
     }
 
     private static boolean isGzip(String s) {
-        return GzipUtils.isCompressedFilename(s)
-                && Constants.TAR_PATTERN.matcher(GzipUtils.getUncompressedFilename(s)).find();
+        return GzipUtils.isCompressedFileName(s)
+                && Constants.TAR_PATTERN.matcher(GzipUtils.getUncompressedFileName(s)).find();
     }
 
     private static boolean isLz4(String s) {
@@ -65,14 +67,14 @@ public enum ArchiveType {
 
     private static boolean isTarLzma(String s) {
         return LZMAUtils.isLZMACompressionAvailable()
-                && LZMAUtils.isCompressedFilename(s)
-                && Constants.TAR_PATTERN.matcher(LZMAUtils.getUncompressedFilename(s)).find();
+                && LZMAUtils.isCompressedFileName(s)
+                && Constants.TAR_PATTERN.matcher(LZMAUtils.getUncompressedFileName(s)).find();
     }
 
     private static boolean isTarXz(String s) {
         return XZUtils.isXZCompressionAvailable()
-                && XZUtils.isCompressedFilename(s)
-                && Constants.TAR_PATTERN.matcher(XZUtils.getUncompressedFilename(s)).find();
+                && XZUtils.isCompressedFileName(s)
+                && Constants.TAR_PATTERN.matcher(XZUtils.getUncompressedFileName(s)).find();
     }
 
     @Getter(onMethod_ = {@JsonValue})

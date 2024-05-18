@@ -28,7 +28,7 @@ public final class ZipArchiveSourceSpec extends AbstractArchiveSourceSpec {
     @Override
     protected void initArchive() throws IOException {
         if (zipFile == null) {
-            zipFile = new ZipFile(getPath().toFile());
+            zipFile = ZipFile.builder().setPath(getPath()).get();
         }
         if (entries == null) {
             entries = zipFile.getEntriesInPhysicalOrder();

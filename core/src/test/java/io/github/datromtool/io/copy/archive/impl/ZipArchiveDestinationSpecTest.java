@@ -6,7 +6,7 @@ import io.github.datromtool.io.copy.archive.ArchiveDestinationInternalSpec;
 import io.github.datromtool.io.copy.archive.ArchiveDestinationSpec;
 import io.github.datromtool.io.copy.impl.FileSourceSpec;
 import io.github.datromtool.util.ArchiveUtils;
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

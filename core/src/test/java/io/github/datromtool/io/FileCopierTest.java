@@ -1,6 +1,7 @@
 package io.github.datromtool.io;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.TestDirDependantTest;
 import io.github.datromtool.config.AppConfig;
@@ -16,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static io.github.datromtool.util.ArchiveUtils.normalizePath;
@@ -75,7 +77,7 @@ class FileCopierTest extends TestDirDependantTest {
                                                 .from(p)
                                                 .to(p)
                                                 .build())
-                                        .collect(ImmutableSet.toImmutableSet()))
+                                        .collect(ImmutableMap.toImmutableMap(FileCopier.ArchiveCopySpec.InternalSpec::getFrom, Function.identity(), (a, b) -> a)))
                                 .build();
                     }
                     return FileCopier.ArchiveCopySpec.builder()
@@ -89,7 +91,7 @@ class FileCopierTest extends TestDirDependantTest {
                                             .from(p)
                                             .to(p)
                                             .build())
-                                    .collect(ImmutableSet.toImmutableSet()))
+                                    .collect(ImmutableMap.toImmutableMap(FileCopier.ArchiveCopySpec.InternalSpec::getFrom, Function.identity(), (a, b) -> a)))
                             .build();
                 }).collect(ImmutableSet.toImmutableSet());
         FileCopier fc = new FileCopier(AppConfig.FileCopierConfig.builder().build(), ImmutableList.of());
