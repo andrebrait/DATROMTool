@@ -229,7 +229,7 @@ public final class ArchiveUtils {
                 case WINDOWS -> {
                     switch (SystemUtils.ARCHITECTURE) {
                         case X86_32 -> embeddedUnrarPath = copyToTempBinDir(
-                                "bin/unrar/windows/unrar-x86.exe",
+                                "bin/unrar/windows/unrar-x32.exe",
                                 "unrar.exe");
                         case X86_64 -> embeddedUnrarPath = copyToTempBinDir(
                                 "bin/unrar/windows/unrar-x64.exe",
