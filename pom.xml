@@ -37,7 +37,7 @@
         <junit.jupiter.pioneer.version>2.2.0</junit.jupiter.pioneer.version>
         <lombok.version>1.18.32</lombok.version>
         <commons-compress.version>1.26.1</commons-compress.version>
-        <commons-lang3.version>3.14.0</commons-lang3.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
         <commons-codec.version>1.17.0</commons-codec.version>
         <picocli.version>4.7.6</picocli.version>
         <slf4j-api.version>2.0.13</slf4j-api.version>
