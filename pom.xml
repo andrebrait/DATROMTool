@@ -45,7 +45,7 @@
         <guava.version>33.2.0-jre</guava.version>
         <jackson.version>2.17.1</jackson.version>
         <xz.version>1.9</xz.version>
-        <junrar.version>7.5.5</junrar.version>
+        <junrar.version>7.5.10</junrar.version>
         <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
         <mockito-core.version>5.12.0</mockito-core.version>
         <jline.version>3.26.1</jline.version>
