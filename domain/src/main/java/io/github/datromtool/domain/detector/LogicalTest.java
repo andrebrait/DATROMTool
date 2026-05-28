@@ -3,20 +3,16 @@ package io.github.datromtool.domain.detector;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import io.github.datromtool.domain.detector.exception.TestException;
 import io.github.datromtool.domain.detector.util.NumberUtils;
 import io.github.datromtool.domain.serialization.HexArrayDeserializer;
 import io.github.datromtool.domain.serialization.HexArraySerializer;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static lombok.AccessLevel.PRIVATE;
@@ -32,12 +28,11 @@ import static lombok.AccessLevel.PROTECTED;
 @JsonInclude(NON_DEFAULT)
 public abstract class LogicalTest extends BinaryTest {
 
-    @NonNull
     @JacksonXmlProperty(isAttribute = true)
     @JsonProperty(required = true)
     @JsonSerialize(using = HexArraySerializer.class)
     @JsonDeserialize(using = HexArrayDeserializer.class)
-    byte[] mask;
+    byte @NonNull [] mask;
 
     protected abstract byte operate(byte a, byte b);
 

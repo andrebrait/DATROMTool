@@ -1,6 +1,5 @@
 package io.github.datromtool.command;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -9,13 +8,7 @@ import io.github.datromtool.GameParser;
 import io.github.datromtool.GameSorter;
 import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.config.AppConfig;
-import io.github.datromtool.data.FileOutputOptions;
-import io.github.datromtool.data.Filter;
-import io.github.datromtool.data.OutputMode;
-import io.github.datromtool.data.ParsedGame;
-import io.github.datromtool.data.PostFilter;
-import io.github.datromtool.data.SortingPreference;
-import io.github.datromtool.data.TextOutputOptions;
+import io.github.datromtool.data.*;
 import io.github.datromtool.domain.datafile.logiqx.Clrmamepro;
 import io.github.datromtool.domain.datafile.logiqx.Datafile;
 import io.github.datromtool.domain.datafile.logiqx.Game;
@@ -33,6 +26,7 @@ import io.github.datromtool.sorting.GameNameComparator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.core.JacksonException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,12 +34,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -346,7 +335,7 @@ public final class OneGameOneRom {
                 case JSON -> helper.writeAsJson(newDat);
                 case YAML -> helper.writeAsYaml(newDat);
             };
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new ExecutionException(
                     format("Could not write to output file: %s", e.getMessage()),
                     e);
@@ -448,7 +437,7 @@ public final class OneGameOneRom {
                                                 .from(m.getResult().getArchivePath())
                                                 .to(baseDir.resolve(m.getRom().getName()))
                                                 .build())
-                                        .collect(ImmutableMap.toImmutableMap(FileCopier.ExtractionSpec.InternalSpec::getFrom, Function.identity(), (a, b) -> a)))
+                                        .collect(ImmutableMap.toImmutableMap(FileCopier.ExtractionSpec.InternalSpec::getFrom, Function.identity(), (a, _) -> a)))
                                 .build());
                     }
                 });
@@ -538,7 +527,7 @@ public final class OneGameOneRom {
                                 .from(m.getResult().getArchivePath())
                                 .to(m.getRom().getName())
                                 .build())
-                        .collect(ImmutableMap.toImmutableMap(FileCopier.ArchiveCopySpec.InternalSpec::getFrom, Function.identity(), (a, b) -> a)))
+                        .collect(ImmutableMap.toImmutableMap(FileCopier.ArchiveCopySpec.InternalSpec::getFrom, Function.identity(), (a, _) -> a)))
                 .build();
     }
 

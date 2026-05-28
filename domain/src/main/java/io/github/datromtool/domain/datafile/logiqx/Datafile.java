@@ -4,12 +4,12 @@ package io.github.datromtool.domain.datafile.logiqx;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.domain.datafile.logiqx.enumerations.YesNo;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
+import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static lombok.AccessLevel.PRIVATE;
@@ -27,7 +27,7 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor(access = PRIVATE)
 @NoArgsConstructor(access = PRIVATE, force = true)
 @JsonInclude(NON_DEFAULT)
-@JacksonXmlRootElement(localName = "datafile")
+@JsonRootName("datafile")
 public class Datafile {
 
     Header header;

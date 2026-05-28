@@ -1,16 +1,14 @@
 package io.github.datromtool.domain.serialization;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import org.apache.commons.codec.binary.Hex;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
-
-public final class SpacedHexArraySerializer extends JsonSerializer<byte[]> {
+public final class SpacedHexArraySerializer extends ValueSerializer<byte[]> {
 
     @Override
-    public void serialize(byte[] value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(byte[] value, JsonGenerator gen, SerializationContext serializers) {
         if (value == null) {
             gen.writeNull();
         } else {

@@ -1,19 +1,17 @@
 package io.github.datromtool.domain.serialization;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import io.github.datromtool.domain.detector.Rule;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.exc.InvalidFormatException;
 
-import java.io.IOException;
-
-public final class HexDeserializer extends JsonDeserializer<Long> {
+public final class HexDeserializer extends ValueDeserializer<Long> {
 
     @Override
-    public Long deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public Long deserialize(JsonParser p, DeserializationContext ctxt) {
+        String val = p.getValueAsString();
         try {
-            String val = p.getValueAsString();
             if (Rule.END_OF_FILE.equals(val)) {
                 return Long.MAX_VALUE;
             }
@@ -21,7 +19,9 @@ public final class HexDeserializer extends JsonDeserializer<Long> {
                 return Long.parseLong(val, 16);
             }
         } catch (NumberFormatException e) {
-            throw InvalidFormatException.from(p, "Invalid hex string", e);
+            InvalidFormatException ife = InvalidFormatException.from(p, "Invalid hex string", val, Long.class);
+            ife.initCause(e);
+            throw ife;
         }
         return null;
     }

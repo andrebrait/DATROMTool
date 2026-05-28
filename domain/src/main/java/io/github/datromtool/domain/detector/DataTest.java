@@ -2,7 +2,7 @@
 package io.github.datromtool.domain.detector;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import io.github.datromtool.domain.detector.util.NumberUtils;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE, force = true)
 @JsonInclude(NON_DEFAULT)
 @EqualsAndHashCode(callSuper = true)
-@JacksonXmlRootElement(localName = "data")
+@JsonRootName("data")
 public class DataTest extends BinaryTest {
 
     @Override

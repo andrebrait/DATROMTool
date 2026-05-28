@@ -1,25 +1,25 @@
 package io.github.datromtool.domain.serialization;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.exc.InvalidFormatException;
 
-import java.io.IOException;
-
-public final class HexArrayDeserializer extends JsonDeserializer<byte[]> {
+public final class HexArrayDeserializer extends ValueDeserializer<byte[]> {
 
     @Override
-    public byte[] deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+    public byte[] deserialize(JsonParser p, DeserializationContext ctxt) {
+        String valueAsString = p.getValueAsString();
         try {
-            String valueAsString = p.getValueAsString();
             if (valueAsString != null) {
                 return Hex.decodeHex(valueAsString);
             }
         } catch (DecoderException e) {
-            throw InvalidFormatException.from(p, "Invalid hex string", e);
+            InvalidFormatException ife = InvalidFormatException.from(p, "Invalid hex string", valueAsString, byte[].class);
+            ife.initCause(e);
+            throw ife;
         }
         return null;
     }

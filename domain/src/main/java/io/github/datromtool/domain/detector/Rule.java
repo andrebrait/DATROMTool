@@ -1,14 +1,7 @@
 
 package io.github.datromtool.domain.detector;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.annotation.*;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Bytes;
 import io.github.datromtool.domain.detector.enumerations.BinaryOperation;
@@ -16,12 +9,11 @@ import io.github.datromtool.domain.detector.exception.RuleException;
 import io.github.datromtool.domain.detector.util.NumberUtils;
 import io.github.datromtool.domain.serialization.HexDeserializer;
 import io.github.datromtool.domain.serialization.HexSerializer;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +40,7 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor(access = PRIVATE)
 @NoArgsConstructor(access = PRIVATE, force = true)
 @JsonInclude(NON_DEFAULT)
-@JacksonXmlRootElement(localName = "rule")
+@JsonRootName("rule")
 public class Rule {
 
     public static final String END_OF_FILE = "EOF";

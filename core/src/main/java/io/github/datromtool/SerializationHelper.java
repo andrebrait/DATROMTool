@@ -1,18 +1,6 @@
 package io.github.datromtool;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JacksonException;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.data.RegionData;
@@ -21,6 +9,15 @@ import io.github.datromtool.domain.detector.Detector;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.StreamWriteFeature;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.dataformat.xml.XmlMapper;
+import tools.jackson.dataformat.yaml.YAMLMapper;
+import tools.jackson.datatype.guava.GuavaModule;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -92,39 +89,33 @@ public final class SerializationHelper {
     private static XmlMapper createXmlMapper() {
         return XmlMapper.builder()
                 .defaultUseWrapper(false)
-                .addModule(new JavaTimeModule())
-                .addModule(new Jdk8Module())
                 .addModule(new GuavaModule())
                 .enable(SerializationFeature.INDENT_OUTPUT)
-                .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
+                .enable(StreamWriteFeature.WRITE_BIGDECIMAL_AS_PLAIN)
                 .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
-                .serializationInclusion(JsonInclude.Include.NON_NULL)
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
                 .build();
     }
 
     private static JsonMapper createJsonMapper() {
         return JsonMapper.builder()
-                .addModule(new JavaTimeModule())
-                .addModule(new Jdk8Module())
                 .addModule(new GuavaModule())
                 .enable(SerializationFeature.INDENT_OUTPUT)
-                .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
+                .enable(StreamWriteFeature.WRITE_BIGDECIMAL_AS_PLAIN)
                 .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                .serializationInclusion(JsonInclude.Include.NON_NULL)
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
                 .build();
     }
 
     private static YAMLMapper createYamlMapper() {
         return YAMLMapper.builder()
-                .addModule(new JavaTimeModule())
-                .addModule(new Jdk8Module())
                 .addModule(new GuavaModule())
                 .enable(SerializationFeature.INDENT_OUTPUT)
-                .enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN)
+                .enable(StreamWriteFeature.WRITE_BIGDECIMAL_AS_PLAIN)
                 .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                .serializationInclusion(JsonInclude.Include.NON_NULL)
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
                 .build();
     }
 
@@ -134,7 +125,7 @@ public final class SerializationHelper {
         }
     }
 
-    public <T> T loadXml(InputStream inputStream, Class<T> tClass) throws IOException {
+    public <T> T loadXml(InputStream inputStream, Class<T> tClass) {
         return xmlMapper.readValue(inputStream, tClass);
     }
 
@@ -159,7 +150,7 @@ public final class SerializationHelper {
         }
     }
 
-    public <T> T loadJson(InputStream inputStream, Class<T> tClass) throws IOException {
+    public <T> T loadJson(InputStream inputStream, Class<T> tClass) {
         return jsonMapper.readValue(inputStream, tClass);
     }
 
@@ -169,7 +160,7 @@ public final class SerializationHelper {
         }
     }
 
-    public <T> T loadYaml(InputStream inputStream, Class<T> tClass) throws IOException {
+    public <T> T loadYaml(InputStream inputStream, Class<T> tClass) {
         return yamlMapper.readValue(inputStream, tClass);
     }
 
@@ -237,7 +228,7 @@ public final class SerializationHelper {
         return AppConfig.builder().build();
     }
 
-    public ImmutableList<String> writeAsXml(Object object) throws JsonProcessingException {
+    public ImmutableList<String> writeAsXml(Object object) throws JacksonException {
         ImmutableList.Builder<String> builder = ImmutableList.builder();
         builder.add("<?xml version=\"1.0\"?>");
         if (object instanceof Datafile) {
@@ -248,11 +239,11 @@ public final class SerializationHelper {
         return builder.build();
     }
 
-    public ImmutableList<String> writeAsJson(Object object) throws JsonProcessingException {
+    public ImmutableList<String> writeAsJson(Object object) throws JacksonException {
         return ImmutableList.of(jsonMapper.writeValueAsString(object));
     }
 
-    public ImmutableList<String> writeAsYaml(Object object) throws JsonProcessingException {
+    public ImmutableList<String> writeAsYaml(Object object) throws JacksonException {
         return ImmutableList.of(
                 String.format("# Generated by DATROMTool v%s", getVersionString()),
                 yamlMapper.writeValueAsString(object));

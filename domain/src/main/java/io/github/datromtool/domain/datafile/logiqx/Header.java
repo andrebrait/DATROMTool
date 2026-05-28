@@ -4,15 +4,10 @@ package io.github.datromtool.domain.datafile.logiqx;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
-import lombok.With;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
+import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static lombok.AccessLevel.PRIVATE;
@@ -38,7 +33,7 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor(access = PRIVATE)
 @NoArgsConstructor(access = PRIVATE, force = true)
 @JsonInclude(NON_DEFAULT)
-@JacksonXmlRootElement(localName = "header")
+@JsonRootName("header")
 public class Header {
 
     @NonNull

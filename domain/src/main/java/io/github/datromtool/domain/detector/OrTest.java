@@ -2,7 +2,7 @@
 package io.github.datromtool.domain.detector;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Value;
@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE, force = true)
 @JsonInclude(NON_DEFAULT)
 @EqualsAndHashCode(callSuper = true)
-@JacksonXmlRootElement(localName = "or")
+@JsonRootName("or")
 public class OrTest extends LogicalTest {
 
     @Override
