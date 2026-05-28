@@ -34,7 +34,7 @@ jobs:
           - macos-latest
           - windows-latest
         java:
-          - 17
+          - 25
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -76,7 +76,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 25
           cache: maven
       - name: Build package
         run: >
