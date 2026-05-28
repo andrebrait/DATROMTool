@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build Commands
 
-All commands use Maven 3.9+ and Java 17+.
+All commands use Maven 3.9+ and Java 25.
 
 ### Standard Build
 ```bash
@@ -46,93 +46,96 @@ java -jar cli/target/cli-*-jar-with-dependencies.jar --help
 
 ## Architecture
 
-The project is organized as a Maven multi-module build:
+Maven multi-module build:
 
 - **`domain`** — Data models and domain logic
-  - `datafile/logiqx/` — Logiqx XML DAT format model (Jackson-serialized)
-  - `detector/` — File matching detector system (identifies ROM type/region/language from filenames)
-  - `serialization/` — Format-specific serialization adapters (JSON, YAML)
+  - `datafile/logiqx/` — Logiqx XML DAT format model (Jackson-serialized); `Datafile`, `Game`, `Rom`, `Header`
+  - `detector/` — File header detection (AND/OR/XOR logical tests for identifying ROM type from binary content)
+  - `serialization/` — Custom Jackson serializers/deserializers (hex encoding, comma-separated lists)
 
 - **`core`** — Core business logic
-  - `GameFilterer` — Filters games by criteria (region, language, type, version)
-  - `GameParser` — Parses ROM names using No-Intro naming convention
-  - `GameSorter` — Sorts games by user-defined preferences
-  - `SerializationHelper` — Handles Jackson serialization to JSON/YAML/XML
-  - `io/` — Archive handling (ZIP, 7z, TAR, RAR) and file copying
-  - `data/` — Data classes for options and configuration
-  - `sorting/` — Sorting strategies (game/rom/region ordering)
+  - `GameFilterer` — Filters games by region, language, type, version using predicates
+  - `GameParser` — Parses ROM names using No-Intro naming convention -> `ParsedGame`
+  - `GameSorter` — Sorts games using a chain of `SubComparator` implementations in `sorting/`
+  - `SerializationHelper` — Jackson serialization to JSON/YAML/XML
+  - `command/OneGameOneRom` — Main execution logic for the 1G1R command (CLI delegates here)
+  - `config/AppConfig` — Runtime app configuration (thread counts, paths to external tools)
+  - `io/FileScanner` — Scans directories/archives, computes hashes, returns scan results
+  - `io/FileCopier` — Copies/reorganizes files between archives and directories
+  - `io/ScanResultMatcher` — Matches `FileScanner` output against DAT entries using hash priority
+  - `io/compression/` — Compression algorithm abstractions (GZip, BZip2, LZMA, LZ4, XZ)
+  - `data/` — Data classes: `Filter`, `PostFilter`, `SortingPreference`, `ParsedGame`, `OutputMode`
+  - `display/` — `Displayable`/`Addressable` interfaces for progress and logging output
 
 - **`cli`** — Command-line interface
-  - Uses **picocli** for argument parsing and command structure
-  - `DatRomCommand` — Main entry point with subcommands
-  - `OneGameOneRomCommand` — Core command implementation
-  - `option/` — CLI option definitions (input, output, diagnostic)
-  - `converter/` — Custom picocli argument converters
-  - `argument/` — Complex argument types (datafile, patterns file)
+  - `DatRomCommand` — Main entry point with subcommands (uses picocli)
+  - `command/OneGameOneRomCommand` — CLI adapter; collects options and calls `core/command/OneGameOneRom`
+  - `option/` — Grouped CLI option mixins: `InputOptions`, `OutputOptions`, `FilteringOptions`, `SortingOptions`, `PostFilteringOptions`, `PerformanceOptions`, `DiagnosticOptions`
+  - `converter/` — picocli `ITypeConverter` implementations for complex arg types
+  - `argument/` — Complex argument types (`DatafileArgument`, `PatternsFileArgument`)
 
-- **`logging`** — Logging configuration (Logback with custom formatting)
+- **`logging`** — Logback configuration with ANSI color support via jansi
 
 ## Key Design Patterns
 
-1. **Jackson Serialization** — Domain models use Jackson annotations for flexible serialization (XML input, JSON/YAML output)
-2. **picocli Framework** — CLI uses picocli's annotation-driven command/option definitions with custom converters for complex types
-3. **Strategy Pattern** — `GameFilterer` and `GameSorter` accept predicates and comparators for flexible filtering/sorting
-4. **No-Intro Name Parsing** — `GameParser` decodes structured metadata from ROM filenames (regions, languages, version, pre-release status, type)
-5. **Archive Abstraction** — Pluggable archive handlers support multiple formats with consistent interface
+1. **Jackson 3 Serialization** — Domain models use Jackson 3 annotations; `lombok.config` sets `lombok.jacksonized.jacksonVersion += 3` for `@Jacksonized` compatibility. Jackson 3 uses groupId `tools.jackson` and package prefix `tools.jackson.*` (not `com.fasterxml.jackson.*` from Jackson 2).
+2. **picocli Framework** — CLI uses annotation-driven commands with option group mixins (`@ArgGroup` / `@Mixin`) for clean separation of concerns.
+3. **Strategy Pattern** — `GameFilterer` and `GameSorter` accept predicates/comparators; sorting uses a pluggable `SubComparator` chain.
+4. **No-Intro Name Parsing** — `GameParser` decodes structured metadata from ROM filenames (regions, languages, version, pre-release status, type).
+5. **Archive Abstraction** — `ArchiveSourceSpec`/`ArchiveDestinationSpec` hierarchies with factory classes; RAR5 delegates to external process (`ProcessArchiveSourceSpec`).
+6. **CLI → Core delegation** — `OneGameOneRomCommand` (CLI) builds config objects and delegates to `OneGameOneRom` (core), keeping CLI concerns out of business logic.
 
-## Testing Approach
+## Testing
 
-- **Unit tests** use JUnit 5 (Jupiter)
-- **Test data** stored in `test-data/` directory (DAT files, config files, ROM samples)
-- Key test classes: `ByteSizeTest`, `GameFiltererTest` (more coverage in respective modules)
-- Tests run during `mvn verify` phase
+- JUnit 5 + junit-pioneer; test data in `test-data/`
+- `ArchiveContentsDependantTest` / `TestDirDependantTest` — base classes for tests needing filesystem fixtures
+- Tests run during `mvn verify`
 
 ## Important Implementation Details
 
-1. **No-Intro Naming Convention** — Drives the parser for extracting region, language, version, and type metadata. The detector uses this to validate and flag divergences in DAT metadata.
-2. **Multiple Hash Support** — ROM matching prioritizes SHA-256 > SHA-1 > MD5 > (size + CRC)
-3. **Archive Format Support** — ZIP and 7z natively supported; RAR up to v4 is native, RAR5 requires external tool (UnRAR/7-Zip). Cross-platform executables included.
-4. **Lombok** — Used extensively for boilerplate reduction (`@Data`, `@AllArgsConstructor`, etc.)
-5. **Java 17+ Features** — Uses records and newer APIs; do not downgrade language level.
+1. **No-Intro Naming Convention** — Drives `GameParser` for region, language, version, type metadata; detector validates DAT metadata divergences.
+2. **Hash Priority** — ROM matching: SHA-256 > SHA-1 > MD5 > (size + CRC).
+3. **Archive Format Support** — ZIP and 7z native; RAR ≤ v4 via junrar; RAR5 requires external UnRAR or 7-Zip executable.
+4. **Lombok** — Used extensively (`@Data`, `@Value`, `@With`, `@Jacksonized`). `lombok.config` at root applies project-wide.
+5. **Java 25** — Minimum language level; do not downgrade.
 
-## Dependencies to Know
+## Dependencies
 
-- **Jackson** 2.17.1 — Serialization (XML, JSON, YAML)
-- **picocli** 4.7.6 — CLI framework
-- **Guava** 33.2.0 — Utilities
+- **Jackson** 3.1.3 (`tools.jackson` groupId) — Serialization (XML, JSON, YAML)
+- **picocli** 4.7.7 — CLI framework
+- **jline** + **jansi** — Terminal detection and ANSI color output
+- **Guava** 33.6.0-jre — Immutable collections and utilities
 - **Apache Commons** (compress, codec, lang3) — Archive and utility operations
-- **JUnit 5** + **Mockito** — Testing
+- **junrar** 7.6.0 — RAR ≤ v4 reading
+- **JUnit 5** + **junit-pioneer** + **Mockito** — Testing
 - **SLF4J + Logback** — Logging
 
 ## Common Workflows
 
 **Adding a new CLI option:**
-1. Add field to `DatRomCommand` or `OneGameOneRomCommand` with `@Option` annotation
-2. If complex type, implement a picocli `ITypeConverter` in `cli/converter/`
-3. Document in the description field of the `@Option` annotation
+1. Add field with `@Option` to the relevant option mixin in `cli/option/` (or to `OneGameOneRomCommand` directly)
+2. If complex type, implement `ITypeConverter` in `cli/converter/`
+3. Map the option value to a `core` data class in `OneGameOneRomCommand` before calling `OneGameOneRom`
 
 **Adding a new filter/sorter:**
-1. Implement filtering logic in `core` module
-2. Expose via `GameFilterer` or `GameSorter`
-3. Wire into `OneGameOneRomCommand`
+1. Implement logic in `core` — filters in `GameFilterer`, sorters as new `SubComparator` in `sorting/`
+2. Register comparator in `SubComparatorProvider` if applicable
+3. Expose via `Filter`/`PostFilter`/`SortingPreference` data classes; wire into `OneGameOneRom`
 
 **Parsing/modifying DAT files:**
-1. Domain classes are in `domain/datafile/logiqx/` (e.g., `Datafile`, `Game`, `Rom`)
-2. Use `SerializationHelper` to load/save
-3. Changes are automatically Jackson-serializable
+1. Domain classes in `domain/datafile/logiqx/` (`Datafile`, `Game`, `Rom`)
+2. Load/save via `SerializationHelper`; changes are automatically Jackson-serializable
 
 ## Release Process
 
 Releases are automated via GitHub Actions on version tags (`v*`):
-1. Tag commit with version (e.g., `v1.0.0` or `v1.0.0-rc1`)
-2. Push tag to origin
-3. CI builds, tests on Linux/macOS/Windows with Java 17
-4. Release job packages all modules and creates GitHub release with zip artifacts
-5. Automatically marks release as pre-release if tag contains `-rc`
+1. Tag commit (e.g., `v1.0.0` or `v1.0.0-rc1`) and push to origin
+2. CI builds and tests on Linux/macOS/Windows with Java 25
+3. Release job packages all modules, creates GitHub release with zip artifacts
+4. Tags containing `-rc` are automatically marked as pre-release
 
 ## Notes
 
 - **Master branch** is the main development branch (not `main`)
-- **Java 17** is the minimum (configured in pom.xml)
-- **No IDE-specific files committed** (IntelliJ, VS Code config is local)
+- **Java 25** is the minimum (set via `<maven.compiler.release>25</maven.compiler.release>` in root pom.xml)
 - **Configuration validation** happens at option parsing time via picocli converters, not at runtime
