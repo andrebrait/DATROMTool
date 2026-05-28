@@ -9,7 +9,6 @@ import io.github.datromtool.domain.datafile.logiqx.Game;
 import io.github.datromtool.domain.datafile.logiqx.Rom;
 import io.github.datromtool.util.ArchiveUtils;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,15 +17,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.github.datromtool.util.TestUtils.getFilename;
 import static io.github.datromtool.util.TestUtils.isRar5;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 
 class FileScannerTest extends TestDirDependantTest {
 
@@ -48,6 +46,29 @@ class FileScannerTest extends TestDirDependantTest {
                 .map(s -> s.split("\\s+"))
                 .peek(s -> s[1] = Paths.get(s[1]).getFileName().toString())
                 .collect(Collectors.toMap(s -> s[1], s -> s[0]));
+    }
+
+    private static Stream<String> sizeDirStream() {
+        return Stream.of("0016384", "0032768", "0065536", "0131072", "0262144", "0524288", "1048576", "1048577");
+    }
+
+    static Stream<Arguments> allSizeDirs() {
+        return sizeDirStream().map(name -> argumentSet(name, name, true));
+    }
+
+    static Stream<Arguments> sizeDirsForMinSizeLimit() {
+        Set<String> excluded = Set.of("0016384", "0032768");
+        return sizeDirStream().map(name -> argumentSet(name, name, !excluded.contains(name)));
+    }
+
+    static Stream<Arguments> sizeDirsForMaxSizeLimit() {
+        Set<String> excluded = Set.of("1048576", "1048577");
+        return sizeDirStream().map(name -> argumentSet(name, name, !excluded.contains(name)));
+    }
+
+    static Stream<Arguments> sizeDirsForMinAndMaxSizeLimit() {
+        Set<String> excluded = Set.of("0016384", "0032768", "1048576", "1048577");
+        return sizeDirStream().map(name -> argumentSet(name, name, !excluded.contains(name)));
     }
 
     @ParameterizedTest
@@ -79,111 +100,88 @@ class FileScannerTest extends TestDirDependantTest {
         }
     }
 
-    @Test
-    void testScan_defaultSettings() {
+    @ParameterizedTest
+    @MethodSource("allSizeDirs")
+    void testScan_defaultSettings(String sizeDirName, boolean expectResults) {
         boolean rar5Enabled = isRar5Available();
         FileScanner fileScanner = new FileScanner(
                 AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(),
                 ImmutableList.of(),
                 ImmutableList.of());
-        ImmutableList<FileScanner.Result> results =
-                fileScanner.scan(ImmutableList.of(scanTestDataSource));
-        assertFalse(results.isEmpty());
-        assertEquals(crc32sums.size() * (rar5Enabled ? 18 : 17), results.size());
-        for (FileScanner.Result i : results) {
-            assertEquals(i.getUnheaderedSize(), i.getSize());
-            if (!rar5Enabled && isRar5(i)) {
-                continue;
-            }
-            String filename = getFilename(i);
-            CrcKey crc32 = crc32sums.get(filename);
-            assertNotNull(crc32);
-            assertEquals((long) crc32.getSize(), i.getSize());
-            assertEquals(crc32.getCrc(), i.getDigest().getCrc());
-            assertEquals(md5sums.get(filename), i.getDigest().getMd5());
-            assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
-        }
+        ImmutableList<FileScanner.Result> results = fileScanner.scan(ImmutableList.of(
+                scanTestDataSource.resolve(sizeDirName),
+                scanTestDataSource.resolve("rar5").resolve(sizeDirName)));
+        verifyScanResults(results, expectResults, rar5Enabled);
     }
 
-    @Test
-    void testScan_minSizeLimit() {
+    @ParameterizedTest
+    @MethodSource("sizeDirsForMinSizeLimit")
+    void testScan_minSizeLimit(String sizeDirName, boolean expectResults) {
         boolean rar5Enabled = isRar5Available();
         FileScanner fileScanner = new FileScanner(
                 AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(buildDatafile(64 * 1024L, 64 * 1024L * 1024L)),
                 ImmutableList.of(),
                 ImmutableList.of());
-        ImmutableList<FileScanner.Result> results =
-                fileScanner.scan(ImmutableList.of(scanTestDataSource));
-        assertFalse(results.isEmpty());
-        assertEquals((crc32sums.size() - 4) * (rar5Enabled ? 18 : 17), results.size());
-        for (FileScanner.Result i : results) {
-            assertEquals(i.getUnheaderedSize(), i.getSize());
-            if (!rar5Enabled && isRar5(i)) {
-                continue;
-            }
-            String filename = getFilename(i);
-            CrcKey crc32 = crc32sums.get(filename);
-            assertNotNull(crc32);
-            assertEquals((long) crc32.getSize(), i.getSize());
-            assertEquals(crc32.getCrc(), i.getDigest().getCrc());
-            assertEquals(md5sums.get(filename), i.getDigest().getMd5());
-            assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
-        }
+        ImmutableList<FileScanner.Result> results = fileScanner.scan(ImmutableList.of(
+                scanTestDataSource.resolve(sizeDirName),
+                scanTestDataSource.resolve("rar5").resolve(sizeDirName)));
+        verifyScanResults(results, expectResults, rar5Enabled);
     }
 
-    @Test
-    void testScan_maxSizeLimit() {
+    @ParameterizedTest
+    @MethodSource("sizeDirsForMaxSizeLimit")
+    void testScan_maxSizeLimit(String sizeDirName, boolean expectResults) {
         boolean rar5Enabled = isRar5Available();
         FileScanner fileScanner = new FileScanner(
                 AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(buildDatafile(16 * 1024L, 768 * 1024L)),
                 ImmutableList.of(),
                 ImmutableList.of());
-        ImmutableList<FileScanner.Result> results =
-                fileScanner.scan(ImmutableList.of(scanTestDataSource));
-        assertFalse(results.isEmpty());
-        assertEquals((crc32sums.size() - 4) * (rar5Enabled ? 18 : 17), results.size());
-        for (FileScanner.Result i : results) {
-            assertEquals(i.getUnheaderedSize(), i.getSize());
-            if (!rar5Enabled && isRar5(i)) {
-                continue;
-            }
-            String filename = getFilename(i);
-            CrcKey crc32 = crc32sums.get(filename);
-            assertNotNull(crc32);
-            assertEquals((long) crc32.getSize(), i.getSize());
-            assertEquals(crc32.getCrc(), i.getDigest().getCrc());
-            assertEquals(md5sums.get(filename), i.getDigest().getMd5());
-            assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
-        }
+        ImmutableList<FileScanner.Result> results = fileScanner.scan(ImmutableList.of(
+                scanTestDataSource.resolve(sizeDirName),
+                scanTestDataSource.resolve("rar5").resolve(sizeDirName)));
+        verifyScanResults(results, expectResults, rar5Enabled);
     }
 
-    @Test
-    void testScan_minAndMaxSizeLimit() {
+    @ParameterizedTest
+    @MethodSource("sizeDirsForMinAndMaxSizeLimit")
+    void testScan_minAndMaxSizeLimit(String sizeDirName, boolean expectResults) {
         boolean rar5Enabled = isRar5Available();
         FileScanner fileScanner = new FileScanner(
                 AppConfig.FileScannerConfig.builder().build(),
                 ImmutableList.of(buildDatafile(64 * 1024L, 768 * 1024L)),
                 ImmutableList.of(),
                 ImmutableList.of());
-        ImmutableList<FileScanner.Result> results =
-                fileScanner.scan(ImmutableList.of(scanTestDataSource));
-        assertFalse(results.isEmpty());
-        assertEquals((crc32sums.size() - 8) * (rar5Enabled ? 18 : 17), results.size());
-        for (FileScanner.Result i : results) {
-            assertEquals(i.getUnheaderedSize(), i.getSize());
-            if (!rar5Enabled && isRar5(i)) {
-                continue;
+        ImmutableList<FileScanner.Result> results = fileScanner.scan(ImmutableList.of(
+                scanTestDataSource.resolve(sizeDirName),
+                scanTestDataSource.resolve("rar5").resolve(sizeDirName)));
+        verifyScanResults(results, expectResults, rar5Enabled);
+    }
+
+    private void verifyScanResults(
+            ImmutableList<FileScanner.Result> results,
+            boolean expectResults,
+            boolean rar5Enabled) {
+        if (expectResults) {
+            assertFalse(results.isEmpty());
+            assertEquals(2 * (rar5Enabled ? 18 : 17), results.size());
+            for (FileScanner.Result i : results) {
+                assertEquals(i.getUnheaderedSize(), i.getSize());
+                if (!rar5Enabled && isRar5(i)) {
+                    continue;
+                }
+                String filename = getFilename(i);
+                CrcKey crc32 = crc32sums.get(filename);
+                assertNotNull(crc32);
+                assertEquals((long) crc32.getSize(), i.getSize());
+                assertEquals(crc32.getCrc(), i.getDigest().getCrc());
+                assertEquals(md5sums.get(filename), i.getDigest().getMd5());
+                assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
             }
-            String filename = getFilename(i);
-            CrcKey crc32 = crc32sums.get(filename);
-            assertNotNull(crc32);
-            assertEquals((long) crc32.getSize(), i.getSize());
-            assertEquals(crc32.getCrc(), i.getDigest().getCrc());
-            assertEquals(md5sums.get(filename), i.getDigest().getMd5());
-            assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
+        } else {
+            assertTrue(results.isEmpty());
         }
     }
 

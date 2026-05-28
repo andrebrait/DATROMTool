@@ -7,8 +7,11 @@ import io.github.datromtool.TestDirDependantTest;
 import io.github.datromtool.config.AppConfig;
 import io.github.datromtool.util.ArchiveUtils;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,14 +21,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static io.github.datromtool.util.ArchiveUtils.normalizePath;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 
 class FileCopierTest extends TestDirDependantTest {
 
+    private static FileScanner fileScanner;
+    private static ImmutableList<FileScanner.Result> allResults;
+
     private Path tempDir;
+
+    @BeforeAll
+    static void setupScanner() {
+        fileScanner = new FileScanner(
+                AppConfig.FileScannerConfig.builder().build(),
+                ImmutableList.of(),
+                ImmutableList.of(),
+                ImmutableList.of());
+        allResults = fileScanner.scan(ImmutableList.of(scanTestDataSource));
+    }
 
     @BeforeEach
     void setup() throws Exception {
@@ -37,14 +56,27 @@ class FileCopierTest extends TestDirDependantTest {
         ArchiveUtils.deleteFolder(tempDir);
     }
 
-    @Test
-    void testCopy() {
-        FileScanner fs = new FileScanner(
-                AppConfig.FileScannerConfig.builder().build(),
-                ImmutableList.of(),
-                ImmutableList.of(),
-                ImmutableList.of());
-        ImmutableList<FileScanner.Result> results = fs.scan(ImmutableList.of(scanTestDataSource));
+    static Stream<Arguments> archiveTypes() {
+        return Stream.of(
+                argumentSet("plain", (Predicate<FileScanner.Result>) r -> r.getArchiveType() == null),
+                argumentSet(ArchiveType.ZIP.getAlias(), (Predicate<FileScanner.Result>) r -> r.getArchiveType() == ArchiveType.ZIP),
+                argumentSet(ArchiveType.SEVEN_ZIP.getAlias(), (Predicate<FileScanner.Result>) r -> r.getArchiveType() == ArchiveType.SEVEN_ZIP),
+                argumentSet(ArchiveType.RAR.getAlias(), (Predicate<FileScanner.Result>) r -> r.getArchiveType() == ArchiveType.RAR),
+                argumentSet(ArchiveType.TAR.getAlias(), (Predicate<FileScanner.Result>) r -> r.getArchiveType() == ArchiveType.TAR),
+                argumentSet(ArchiveType.TAR_BZ2.getAlias(), (Predicate<FileScanner.Result>) r -> r.getArchiveType() == ArchiveType.TAR_BZ2),
+                argumentSet(ArchiveType.TAR_GZ.getAlias(), (Predicate<FileScanner.Result>) r -> r.getArchiveType() == ArchiveType.TAR_GZ),
+                argumentSet(ArchiveType.TAR_LZ4.getAlias(), (Predicate<FileScanner.Result>) r -> r.getArchiveType() == ArchiveType.TAR_LZ4),
+                argumentSet(ArchiveType.TAR_LZMA.getAlias(), (Predicate<FileScanner.Result>) r -> r.getArchiveType() == ArchiveType.TAR_LZMA),
+                argumentSet(ArchiveType.TAR_XZ.getAlias(), (Predicate<FileScanner.Result>) r -> r.getArchiveType() == ArchiveType.TAR_XZ)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("archiveTypes")
+    void testCopy(Predicate<FileScanner.Result> filter) {
+        List<FileScanner.Result> results = allResults.stream()
+                .filter(filter)
+                .collect(Collectors.toList());
         Map<Path, List<FileScanner.Result>> resultsForArchive =
                 results.stream().collect(Collectors.groupingBy(FileScanner.Result::getPath));
         ImmutableSet<FileCopier.Spec> specs = resultsForArchive.entrySet()
@@ -77,7 +109,10 @@ class FileCopierTest extends TestDirDependantTest {
                                                 .from(p)
                                                 .to(p)
                                                 .build())
-                                        .collect(ImmutableMap.toImmutableMap(FileCopier.ArchiveCopySpec.InternalSpec::getFrom, Function.identity(), (a, b) -> a)))
+                                        .collect(ImmutableMap.toImmutableMap(
+                                                FileCopier.ArchiveCopySpec.InternalSpec::getFrom,
+                                                Function.identity(),
+                                                (a, _) -> a)))
                                 .build();
                     }
                     return FileCopier.ArchiveCopySpec.builder()
@@ -91,12 +126,16 @@ class FileCopierTest extends TestDirDependantTest {
                                             .from(p)
                                             .to(p)
                                             .build())
-                                    .collect(ImmutableMap.toImmutableMap(FileCopier.ArchiveCopySpec.InternalSpec::getFrom, Function.identity(), (a, b) -> a)))
+                                    .collect(ImmutableMap.toImmutableMap(
+                                            FileCopier.ArchiveCopySpec.InternalSpec::getFrom,
+                                            Function.identity(),
+                                            (a, _) -> a)))
                             .build();
-                }).collect(ImmutableSet.toImmutableSet());
+                })
+                .collect(ImmutableSet.toImmutableSet());
         FileCopier fc = new FileCopier(AppConfig.FileCopierConfig.builder().build(), ImmutableList.of());
         fc.copy(specs);
-        ImmutableList<FileScanner.Result> afterCopy = fs.scan(ImmutableList.of(tempDir));
+        ImmutableList<FileScanner.Result> afterCopy = fileScanner.scan(ImmutableList.of(tempDir));
         assertEquals(results.size(), afterCopy.size());
         assertAllResultsAreEqual(results, afterCopy);
     }
