@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -121,10 +120,10 @@ public final class GameParser {
         if (shouldLogDivergences(detected, provided)) {
             List<String> detectedCodes = detected.stream()
                     .map(RegionData.RegionDataEntry::getCode)
-                    .collect(Collectors.toList());
+                    .toList();
             List<String> providedCodes = provided.stream()
                     .map(RegionData.RegionDataEntry::getCode)
-                    .collect(Collectors.toList());
+                    .toList();
             log.warn(
                     "Detected regions by name do not match with the ones provided by the DAT. "
                             + "Difference(detected={}, provided={}, game={})",

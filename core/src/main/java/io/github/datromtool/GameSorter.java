@@ -64,7 +64,7 @@ public final class GameSorter {
                 .stream()
                 .map(ParsedGame::getGame)
                 .map(Game::getName)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private ImmutableList<ParsedGame> toSortedCandidatesList(Map.Entry<String, List<ParsedGame>> e) {

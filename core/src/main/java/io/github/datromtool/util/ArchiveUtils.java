@@ -414,8 +414,8 @@ public final class ArchiveUtils {
     }
 
     private static boolean isFileNotFoundError(IOException e) {
-        while (e.getCause() instanceof IOException) {
-            e = (IOException) e.getCause();
+        while (e.getCause() instanceof IOException cause) {
+            e = cause;
         }
         return COMMAND_NOT_FOUND.matcher(e.getMessage()).find();
     }

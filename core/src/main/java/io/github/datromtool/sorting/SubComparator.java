@@ -46,8 +46,8 @@ public abstract class SubComparator implements Comparator<ParsedGame> {
     }
 
     public final boolean isReverseOf(Class<? extends SubComparator> tClass) {
-        return this instanceof ReversedSubComparator
-                && tClass.isInstance(((ReversedSubComparator) this).delegate);
+        return this instanceof ReversedSubComparator r
+                && tClass.isInstance(r.delegate);
     }
 
     protected int comparePatterns(

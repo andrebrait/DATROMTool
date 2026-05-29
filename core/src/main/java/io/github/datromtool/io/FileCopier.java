@@ -235,16 +235,12 @@ public final class FileCopier {
     }
 
     private void copy(Spec spec) {
-        if (spec instanceof CopySpec) {
-            copy((CopySpec) spec);
-        } else if (spec instanceof ExtractionSpec) {
-            copy((ExtractionSpec) spec);
-        } else if (spec instanceof CompressionSpec) {
-            copy((CompressionSpec) spec);
-        } else if (spec instanceof ArchiveCopySpec) {
-            copy((ArchiveCopySpec) spec);
-        } else {
-            throw new InvalidParameterException("Cannot handle " + spec);
+        switch (spec) {
+            case CopySpec s -> copy(s);
+            case ExtractionSpec s -> copy(s);
+            case CompressionSpec s -> copy(s);
+            case ArchiveCopySpec s -> copy(s);
+            default -> throw new InvalidParameterException("Cannot handle " + spec);
         }
     }
 

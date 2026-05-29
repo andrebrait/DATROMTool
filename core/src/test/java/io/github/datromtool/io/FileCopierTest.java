@@ -76,7 +76,7 @@ class FileCopierTest extends TestDirDependantTest {
     void testCopy(Predicate<FileScanner.Result> filter) {
         List<FileScanner.Result> results = allResults.stream()
                 .filter(filter)
-                .collect(Collectors.toList());
+                .toList();
         Map<Path, List<FileScanner.Result>> resultsForArchive =
                 results.stream().collect(Collectors.groupingBy(FileScanner.Result::getPath));
         ImmutableSet<FileCopier.Spec> specs = resultsForArchive.entrySet()

@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -36,7 +35,7 @@ public final class GameFilterer {
                     input.stream()
                             .map(ParsedGame::getGame)
                             .map(Game::getName)
-                            .collect(Collectors.toList()),
+                            .toList(),
                     filter);
         }
         ImmutableList<ParsedGame> result = input.stream()
@@ -57,7 +56,7 @@ public final class GameFilterer {
                     result.stream()
                             .map(ParsedGame::getGame)
                             .map(Game::getName)
-                            .collect(Collectors.toList()));
+                            .toList());
         }
         return result;
     }
@@ -166,7 +165,7 @@ public final class GameFilterer {
                     input.stream()
                             .map(ParsedGame::getGame)
                             .map(Game::getName)
-                            .collect(Collectors.toList()),
+                            .toList(),
                     filter);
         }
         for (Pattern exclude : postFilter.getExcludes()) {
@@ -181,7 +180,7 @@ public final class GameFilterer {
                             input.stream()
                                     .map(ParsedGame::getGame)
                                     .map(Game::getName)
-                                    .collect(Collectors.toList()));
+                                    .toList());
                 }
                 return ImmutableList.of();
             }
