@@ -50,13 +50,13 @@ public final class TarArchiveDestinationSpec extends AbstractArchiveDestinationS
         TarArchiveEntry tarArchiveEntry = new TarArchiveEntry(name);
         tarArchiveEntry.setSize(sourceSpec.getSize());
         FileTimes fileTimes = sourceSpec.getFileTimes();
-        if (fileTimes.getLastModifiedTime() != null) {
-            tarArchiveEntry.setModTime(fileTimes.getLastModifiedTime());
+        if (fileTimes.lastModifiedTime() != null) {
+            tarArchiveEntry.setModTime(fileTimes.lastModifiedTime());
         }
         // Workaround for this not being handled in Apache Commons Compress
-        addPaxHeader(tarArchiveEntry, "mtime", fileTimes.getLastModifiedTime());
-        addPaxHeader(tarArchiveEntry, "ctime", fileTimes.getCreationTime());
-        addPaxHeader(tarArchiveEntry, "atime", fileTimes.getLastAccessTime());
+        addPaxHeader(tarArchiveEntry, "mtime", fileTimes.lastModifiedTime());
+        addPaxHeader(tarArchiveEntry, "ctime", fileTimes.creationTime());
+        addPaxHeader(tarArchiveEntry, "atime", fileTimes.lastAccessTime());
         tarArchiveOutputStream.putArchiveEntry(tarArchiveEntry);
         return new TarArchiveDestinationInternalSpec(this, tarArchiveOutputStream, tarArchiveEntry);
     }

@@ -45,14 +45,14 @@ public final class ZipArchiveDestinationSpec extends AbstractArchiveDestinationS
 
     private static void setTimes(FileTimes fileTimes, ZipArchiveEntry entry) {
         // These do not seem to have any effect on Apache ZipArchiveEntry, but setting it just in case
-        if (fileTimes.getLastModifiedTime() !=null) {
-            entry.setLastModifiedTime(fileTimes.getLastModifiedTime());
+        if (fileTimes.lastModifiedTime() !=null) {
+            entry.setLastModifiedTime(fileTimes.lastModifiedTime());
         }
-        if (fileTimes.getLastAccessTime() != null) {
-            entry.setLastAccessTime(fileTimes.getLastAccessTime());
+        if (fileTimes.lastAccessTime() != null) {
+            entry.setLastAccessTime(fileTimes.lastAccessTime());
         }
-        if (fileTimes.getCreationTime() != null) {
-            entry.setCreationTime(fileTimes.getCreationTime());
+        if (fileTimes.creationTime() != null) {
+            entry.setCreationTime(fileTimes.creationTime());
         }
         // The implementation does not seem to handle the extra fields correctly
         // We need to fill and add them manually
@@ -66,24 +66,24 @@ public final class ZipArchiveDestinationSpec extends AbstractArchiveDestinationS
 
     private static void addNTFSTimestamp(FileTimes fileTimes, ZipArchiveEntry entry) {
         X000A_NTFS timestamp = new X000A_NTFS();
-        timestamp.setModifyTime(toWindowsTime(fileTimes.getLastModifiedTime()));
-        timestamp.setAccessTime(toWindowsTime(fileTimes.getLastAccessTime()));
-        timestamp.setCreateTime(toWindowsTime(fileTimes.getCreationTime()));
+        timestamp.setModifyTime(toWindowsTime(fileTimes.lastModifiedTime()));
+        timestamp.setAccessTime(toWindowsTime(fileTimes.lastAccessTime()));
+        timestamp.setCreateTime(toWindowsTime(fileTimes.creationTime()));
         entry.addExtraField(timestamp);
     }
 
     private static void addExtendedTimestamp(FileTimes fileTimes, ZipArchiveEntry entry) {
         X5455_ExtendedTimestamp timestamp = new X5455_ExtendedTimestamp();
-        timestamp.setModifyTime(toUnixTime(fileTimes.getLastModifiedTime()));
-        timestamp.setAccessTime(toUnixTime(fileTimes.getLastAccessTime()));
-        timestamp.setCreateTime(toUnixTime(fileTimes.getCreationTime()));
+        timestamp.setModifyTime(toUnixTime(fileTimes.lastModifiedTime()));
+        timestamp.setAccessTime(toUnixTime(fileTimes.lastAccessTime()));
+        timestamp.setCreateTime(toUnixTime(fileTimes.creationTime()));
         entry.addExtraField(timestamp);
     }
 
     private static boolean requiresNTFSExtraField(FileTimes fileTimes) {
-        return requiresNTFSExtraField(fileTimes.getLastModifiedTime())
-                || requiresNTFSExtraField(fileTimes.getLastAccessTime())
-                || requiresNTFSExtraField(fileTimes.getCreationTime());
+        return requiresNTFSExtraField(fileTimes.lastModifiedTime())
+                || requiresNTFSExtraField(fileTimes.lastAccessTime())
+                || requiresNTFSExtraField(fileTimes.creationTime());
     }
 
     private static boolean requiresNTFSExtraField(@Nullable FileTime fileTime) {

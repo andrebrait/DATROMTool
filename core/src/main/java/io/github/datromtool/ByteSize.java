@@ -1,7 +1,6 @@
 package io.github.datromtool;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Value;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -11,17 +10,13 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static java.lang.String.format;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
-@Value
 @JsonInclude(NON_NULL)
-public class ByteSize implements Comparable<ByteSize> {
+public record ByteSize(double size, ByteUnit unit) implements Comparable<ByteSize> {
 
     private static final Pattern PARSE_PATTERN = Pattern.compile(
             "^\\s*(\\d+(?:\\.\\d+)?)\\s*([KMGTPE]?B?)?\\s*$",
             CASE_INSENSITIVE
     );
-
-    double size;
-    ByteUnit unit;
 
     public static ByteSize fromBytes(double bytes) {
         ByteUnit normalizedUnit = ByteUnit.getUnit(bytes);
@@ -63,9 +58,7 @@ public class ByteSize implements Comparable<ByteSize> {
         return format(Locale.US, "%.2f %s", size, unit.getSymbol());
     }
 
-    /**
-     * Only guaranteed to be of a fixed size if normalized
-     */
+    /** Only guaranteed to be of a fixed size if normalized */
     public String toFixedSizeFormattedString() {
         return format(Locale.US, "%7.2f %2s", size, unit.getSymbol());
     }

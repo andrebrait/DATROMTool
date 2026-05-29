@@ -1,7 +1,5 @@
 package io.github.datromtool.io.copy;
 
-import lombok.Value;
-
 import org.apache.commons.lang3.SystemUtils;
 
 import javax.annotation.Nullable;
@@ -14,27 +12,31 @@ import java.nio.file.attribute.FileTime;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-@Value
-public class FileTimes {
+public record FileTimes(
+        @Nullable FileTime lastModifiedTime,
+        @Nullable FileTime lastAccessTime,
+        @Nullable FileTime creationTime) {
 
     public static final long ONE_MILLISECOND_IN_NANOS = TimeUnit.MILLISECONDS.toNanos(1);
-
-    @Nullable
-    FileTime lastModifiedTime;
-    @Nullable
-    FileTime lastAccessTime;
-    @Nullable
-    FileTime creationTime;
 
     /**
      * Constructs a new FileTimes from the provided parameters. Each one is truncated to microseconds, which is the
      * highest precision correctly handled by current libraries.
      */
-    public static FileTimes from(@Nullable FileTime lastModifiedTime, @Nullable FileTime lastAccessTime, @Nullable FileTime creationTime) {
-        return new FileTimes(truncateToWindowsTime(lastModifiedTime), truncateToWindowsTime(lastAccessTime), truncateToWindowsTime(creationTime));
+    public static FileTimes from(
+            @Nullable FileTime lastModifiedTime,
+            @Nullable FileTime lastAccessTime,
+            @Nullable FileTime creationTime) {
+        return new FileTimes(
+                truncateToWindowsTime(lastModifiedTime),
+                truncateToWindowsTime(lastAccessTime),
+                truncateToWindowsTime(creationTime));
     }
 
-    public static FileTimes from(@Nullable Date lastModifiedTime, @Nullable Date lastAccessTime, @Nullable Date creationTime) {
+    public static FileTimes from(
+            @Nullable Date lastModifiedTime,
+            @Nullable Date lastAccessTime,
+            @Nullable Date creationTime) {
         return new FileTimes(fromDate(lastModifiedTime), fromDate(lastAccessTime), fromDate(creationTime));
     }
 
@@ -48,7 +50,7 @@ public class FileTimes {
     }
 
     /**
-     * Constructs a new FileTimes from aa file's basic attributes. Each time is truncated to microseconds.
+     * Constructs a new FileTimes from a file's basic attributes. Each time is truncated to microseconds.
      *
      * @see FileTimes#from(FileTime, FileTime, FileTime)
      */
@@ -60,11 +62,6 @@ public class FileTimes {
         return from(attributes.lastModifiedTime(), attributes.lastAccessTime(), creationTime);
     }
 
-    /**
-     * Truncates the dates to microseconds. This is the highest granularity possible in most archive formats.
-     * Windows stores dates in 100-ns increments, but most implementations that use these dates only handle
-     * microseconds. We are assuming no one is going to miss these tenths of microseconds.
-     */
     @Nullable
     private static FileTime truncateToWindowsTime(@Nullable FileTime fileTime) {
         return truncate(fileTime, TimeUnit.MICROSECONDS);
@@ -79,18 +76,15 @@ public class FileTimes {
     }
 
     public FileTimes truncate(TimeUnit timeUnit) {
-        return new FileTimes(truncate(lastModifiedTime, timeUnit), truncate(lastAccessTime, timeUnit), truncate(creationTime, timeUnit));
+        return new FileTimes(
+                truncate(lastModifiedTime, timeUnit),
+                truncate(lastAccessTime, timeUnit),
+                truncate(creationTime, timeUnit));
     }
 
     @Nullable
     private static FileTime truncate(@Nullable FileTime fileTime, TimeUnit timeUnit) {
         return fileTime != null ? FileTime.from(fileTime.to(timeUnit), timeUnit) : null;
-    }
-
-    private FileTimes(@Nullable FileTime lastModifiedTime, @Nullable FileTime lastAccessTime, @Nullable FileTime creationTime) {
-        this.lastModifiedTime = lastModifiedTime;
-        this.lastAccessTime = lastAccessTime;
-        this.creationTime = creationTime;
     }
 
     @Nullable
