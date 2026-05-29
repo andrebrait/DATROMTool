@@ -477,7 +477,7 @@ public final class FileCopier {
             int index,
             UnrarArchiveEntry entry,
             InputStream processInputStream) throws IOException {
-        String name = entry.getName();
+        String name = entry.name();
         ExtractionSpec.InternalSpec internal = findInternalSpec(spec, name);
         if (internal == null) {
             return;
@@ -485,7 +485,7 @@ public final class FileCopier {
         Path to = internal.getTo();
         try (OutputStream outputStream = Files.newOutputStream(to)) {
             Path source = spec.getFrom().resolve(name);
-            long size = entry.getSize();
+            long size = entry.size();
             copyWithProgress(
                     index,
                     size,
@@ -500,7 +500,7 @@ public final class FileCopier {
             throw e;
         }
         BasicFileAttributeView toAttrib = Files.getFileAttributeView(to, BasicFileAttributeView.class);
-        toAttrib.setTimes(from(entry.getModificationTime()), null, null);
+        toAttrib.setTimes(from(entry.modificationTime()), null, null);
     }
 
     private void extractSevenZipEntries(ExtractionSpec spec, int index) throws IOException {
@@ -904,7 +904,7 @@ public final class FileCopier {
             ZipArchiveOutputStream zipArchiveOutputStream,
             UnrarArchiveEntry entry,
             InputStream processInputStream) throws IOException {
-        String name = entry.getName();
+        String name = entry.name();
         ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
         if (internal == null) {
             return;
@@ -916,10 +916,10 @@ public final class FileCopier {
                 spec,
                 internal,
                 name,
-                from(entry.getModificationTime()),
+                from(entry.modificationTime()),
                 null,
                 null,
-                entry.getSize());
+                entry.size());
     }
 
     private void fromRarToSevenZip(ArchiveCopySpec spec, int index) throws Exception {
@@ -999,7 +999,7 @@ public final class FileCopier {
             SevenZOutputFile sevenZOutputFile,
             UnrarArchiveEntry entry,
             InputStream processInputStream) throws IOException {
-        String name = entry.getName();
+        String name = entry.name();
         ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
         if (internal == null) {
             return;
@@ -1011,10 +1011,10 @@ public final class FileCopier {
                 spec,
                 internal,
                 name,
-                toDate(entry.getModificationTime()),
+                toDate(entry.modificationTime()),
                 null,
                 null,
-                entry.getSize());
+                entry.size());
     }
 
     private void fromRarToTar(ArchiveCopySpec spec, int index) throws Exception {
@@ -1116,7 +1116,7 @@ public final class FileCopier {
             TarArchiveOutputStream tarOutputStream,
             UnrarArchiveEntry entry,
             InputStream processInputStream) throws IOException {
-        String name = entry.getName();
+        String name = entry.name();
         ArchiveCopySpec.InternalSpec internal = findInternalSpec(spec, name);
         if (internal == null) {
             return;
@@ -1128,8 +1128,8 @@ public final class FileCopier {
                 spec,
                 internal,
                 name,
-                toDate(entry.getModificationTime()),
-                entry.getSize());
+                toDate(entry.modificationTime()),
+                entry.size());
     }
 
     private void fromSevenZipToZip(ArchiveCopySpec spec, int index) throws IOException {

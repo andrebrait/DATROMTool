@@ -48,10 +48,7 @@ public final class OutputOptions {
         private OutputMode outputMode;
 
         public TextOutputOptions toTextOutputOptions() {
-            return TextOutputOptions.builder()
-                    .outputFile(outputFile)
-                    .outputMode(outputMode)
-                    .build();
+            return new TextOutputOptions(outputFile, outputMode);
         }
     }
 
@@ -99,17 +96,11 @@ public final class OutputOptions {
         private GroupingOptions groupingOptions;
 
         public FileOutputOptions toFileOutputOptions() {
-            FileOutputOptions.FileOutputOptionsBuilder
-                    builder = FileOutputOptions.builder();
-            builder = builder
-                    .outputDir(outputDir)
-                    .alphabetic(alphabetic);
-            if (groupingOptions != null) {
-                builder = builder
-                        .archiveType(groupingOptions.getArchiveType())
-                        .forceSubfolder(groupingOptions.isForceSubfolder());
-            }
-            return builder.build();
+            return new FileOutputOptions(
+                    outputDir,
+                    alphabetic,
+                    groupingOptions != null ? groupingOptions.getArchiveType() : null,
+                    groupingOptions != null && groupingOptions.isForceSubfolder());
         }
 
     }

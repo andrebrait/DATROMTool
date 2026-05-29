@@ -459,15 +459,14 @@ public final class ArchiveUtils {
             ImmutableList<UnrarArchiveEntry> fileList = readStdout(process)
                     .map(RAR_LIST::matcher)
                     .filter(Matcher::matches)
-                    .map(m -> UnrarArchiveEntry.builder()
-                            .name(m.group(4))
-                            .size(Long.parseLong(m.group(1)))
-                            .modificationTime(LocalDateTime.parse(String.format(
+                    .map(m -> new UnrarArchiveEntry(
+                            m.group(4),
+                            Long.parseLong(m.group(1)),
+                            LocalDateTime.parse(String.format(
                                     "%sT%s:00",
                                     m.group(2),
-                                    m.group(3))))
-                            .build())
-                    .filter(e -> e.getSize() > 0)
+                                    m.group(3)))))
+                    .filter(e -> e.size() > 0)
                     .collect(ImmutableList.toImmutableList());
             int exitCode = process.waitFor();
             if (exitCode != 0) {
@@ -487,14 +486,14 @@ public final class ArchiveUtils {
             throws IOException, RarException, T {
         ImmutableList<UnrarArchiveEntry> allEntries = listRarEntriesWithUnrar(path);
         ImmutableList<UnrarArchiveEntry> desiredEntries = allEntries.stream()
-                .filter(e -> desiredEntryNames.contains(e.getName()))
+                .filter(e -> desiredEntryNames.contains(e.name()))
                 .collect(ImmutableList.toImmutableList());
         List<String> arguments = ImmutableList.<String>builder()
                 .add(unrarPath)
                 .add("p")
                 .add("-inul")
                 .add(path.toAbsolutePath().normalize().toString())
-                .addAll(desiredEntries.stream().map(UnrarArchiveEntry::getName).iterator())
+                .addAll(desiredEntries.stream().map(UnrarArchiveEntry::name).iterator())
                 .build();
         ProcessBuilder pb = new ProcessBuilder(arguments);
         try {
@@ -527,15 +526,14 @@ public final class ArchiveUtils {
             ImmutableList<UnrarArchiveEntry> fileList = readStdout(process)
                     .map(SEVEN_ZIP_LIST::matcher)
                     .filter(Matcher::matches)
-                    .map(m -> UnrarArchiveEntry.builder()
-                            .name(m.group(4))
-                            .size(Long.parseLong(m.group(3)))
-                            .modificationTime(LocalDateTime.parse(String.format(
+                    .map(m -> new UnrarArchiveEntry(
+                            m.group(4),
+                            Long.parseLong(m.group(3)),
+                            LocalDateTime.parse(String.format(
                                     "%sT%s",
                                     m.group(1),
-                                    m.group(2))))
-                            .build())
-                    .filter(e -> e.getSize() > 0)
+                                    m.group(2)))))
+                    .filter(e -> e.size() > 0)
                     .collect(ImmutableList.toImmutableList());
             int exitCode = process.waitFor();
             if (exitCode != 0) {
@@ -555,7 +553,7 @@ public final class ArchiveUtils {
             throws IOException, RarException, T {
         ImmutableList<UnrarArchiveEntry> allEntries = listRarEntriesWithSevenZip(path);
         ImmutableList<UnrarArchiveEntry> desiredEntries = allEntries.stream()
-                .filter(e -> desiredEntryNames.contains(e.getName()))
+                .filter(e -> desiredEntryNames.contains(e.name()))
                 .collect(ImmutableList.toImmutableList());
         List<String> arguments = ImmutableList.<String>builder()
                 .add(sevenZipPath)
@@ -564,7 +562,7 @@ public final class ArchiveUtils {
                 .add("-bd")
                 .add("-ba")
                 .add(path.toAbsolutePath().normalize().toString())
-                .addAll(desiredEntries.stream().map(UnrarArchiveEntry::getName).iterator())
+                .addAll(desiredEntries.stream().map(UnrarArchiveEntry::name).iterator())
                 .build();
         ProcessBuilder pb = new ProcessBuilder(arguments);
         try {

@@ -432,8 +432,8 @@ public final class FileScanner {
         ImmutableSet<String> desiredEntryNames =
                 ArchiveUtils.listRarEntriesWithUnrar(file)
                         .stream()
-                        .filter(e -> !shouldSkip(file.resolve(e.getName()), index, e.getSize()))
-                        .map(UnrarArchiveEntry::getName)
+                        .filter(e -> !shouldSkip(file.resolve(e.name()), index, e.size()))
+                        .map(UnrarArchiveEntry::name)
                         .collect(ImmutableSet.toImmutableSet());
         if (desiredEntryNames.isEmpty()) {
             return;
@@ -451,8 +451,8 @@ public final class FileScanner {
         ImmutableSet<String> desiredEntryNames =
                 ArchiveUtils.listRarEntriesWithSevenZip(file)
                         .stream()
-                        .filter(e -> !shouldSkip(file.resolve(e.getName()), index, e.getSize()))
-                        .map(UnrarArchiveEntry::getName)
+                        .filter(e -> !shouldSkip(file.resolve(e.name()), index, e.size()))
+                        .map(UnrarArchiveEntry::name)
                         .collect(ImmutableSet.toImmutableSet());
         if (desiredEntryNames.isEmpty()) {
             return;
@@ -469,8 +469,8 @@ public final class FileScanner {
             ImmutableList.Builder<Result> builder,
             UnrarArchiveEntry unrarArchiveEntry,
             InputStream processInputStream) throws IOException {
-        long size = unrarArchiveEntry.getSize();
-        String name = unrarArchiveEntry.getName();
+        long size = unrarArchiveEntry.size();
+        String name = unrarArchiveEntry.name();
         Path entryPath = file.resolve(name);
         ProcessingResult processingResult = process(
                 entryPath,

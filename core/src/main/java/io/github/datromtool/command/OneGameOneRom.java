@@ -72,7 +72,7 @@ public final class OneGameOneRom {
                             appConfig,
                             datafiles,
                             inputDirs,
-                            fileOutputOptions.getArchiveType(),
+                            fileOutputOptions.archiveType(),
                             fileScannerListeners,
                             filteredAndGrouped);
             ImmutableSet<FileCopier.Spec> specs = createCopySpecs(fileOutputOptions, presentGames);
@@ -205,7 +205,7 @@ public final class OneGameOneRom {
             @Nullable Collection<Path> inputDirs,
             @Nullable FileOutputOptions fileOutputOptions) {
         if (fileOutputOptions != null
-                && fileOutputOptions.getOutputDir() != null
+                && fileOutputOptions.outputDir() != null
                 && inputDirs != null
                 && inputDirs.isEmpty()) {
             throw new IllegalArgumentException(
@@ -215,8 +215,8 @@ public final class OneGameOneRom {
 
     private static void validate(@Nullable TextOutputOptions textOutputOptions) {
         if (textOutputOptions != null
-                && textOutputOptions.getOutputMode() == null
-                && textOutputOptions.getOutputFile() == null) {
+                && textOutputOptions.outputMode() == null
+                && textOutputOptions.outputFile() == null) {
             throw new IllegalArgumentException(
                     "TextOutputOption must contain at least one non-null value");
         }
@@ -227,7 +227,7 @@ public final class OneGameOneRom {
             @Nullable TextOutputOptions textOutputOptions)
             throws InvalidDatafileException {
         if (textOutputOptions != null
-                && textOutputOptions.getOutputMode() != null
+                && textOutputOptions.outputMode() != null
                 && datafiles.size() > 1
                 && detectorsStream(datafiles).distinct().count() > 1) {
             throw new InvalidDatafileException(
@@ -255,8 +255,8 @@ public final class OneGameOneRom {
         if (textOutputOptions == null) {
             textOutputConsumer.accept(getSortedGameNames(filteredAndGrouped));
         } else {
-            Path outputFile = textOutputOptions.getOutputFile();
-            OutputMode outputMode = textOutputOptions.getOutputMode();
+            Path outputFile = textOutputOptions.outputFile();
+            OutputMode outputMode = textOutputOptions.outputMode();
             if (outputFile == null && outputMode == null) {
                 textOutputConsumer.accept(getSortedGameNames(filteredAndGrouped));
             } else if (outputFile == null) {
@@ -388,7 +388,7 @@ public final class OneGameOneRom {
                     gameMatchList.getRomMatches();
             Map<Path, List<ScanResultMatcher.RomMatch>> perFile = matches.stream()
                     .collect(Collectors.groupingBy(p -> p.getResult().getPath()));
-            ArchiveType toType = fileOutputOptions.getArchiveType();
+            ArchiveType toType = fileOutputOptions.archiveType();
             if (toType == null) {
                 // Simple copy/extraction
                 return simpleCopyOrExtractionStream(baseDir, perFile);
@@ -535,8 +535,8 @@ public final class OneGameOneRom {
     private static Path createBaseDirectory(
             @Nonnull Game game,
             @Nonnull FileOutputOptions fileOutputOptions) throws ExecutionException {
-        Path baseDir = fileOutputOptions.getOutputDir();
-        if (fileOutputOptions.isAlphabetic()) {
+        Path baseDir = fileOutputOptions.outputDir();
+        if (fileOutputOptions.alphabetic()) {
             char firstLetter = game.getName().toLowerCase().charAt(0);
             if (firstLetter >= 'a' && firstLetter <= 'z') {
                 baseDir = baseDir.resolve(String.valueOf(firstLetter));
@@ -544,7 +544,7 @@ public final class OneGameOneRom {
                 baseDir = baseDir.resolve("#");
             }
         }
-        if (fileOutputOptions.isForceSubfolder() || game.getRoms().size() > 1) {
+        if (fileOutputOptions.forceSubfolder() || game.getRoms().size() > 1) {
             baseDir = baseDir.resolve(game.getName());
         }
         createDirectory(baseDir);
