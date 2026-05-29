@@ -2,6 +2,8 @@ package io.github.datromtool.io.copy;
 
 import lombok.Value;
 
+import org.apache.commons.lang3.SystemUtils;
+
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -51,7 +53,11 @@ public class FileTimes {
      * @see FileTimes#from(FileTime, FileTime, FileTime)
      */
     public static FileTimes from(BasicFileAttributes attributes) {
-        return from(attributes.lastModifiedTime(), attributes.lastAccessTime(), attributes.creationTime());
+        // Linux cannot set birth time via setTimes(); fall back to mtime to keep source/dest consistent
+        FileTime creationTime = SystemUtils.IS_OS_LINUX
+                ? attributes.lastModifiedTime()
+                : attributes.creationTime();
+        return from(attributes.lastModifiedTime(), attributes.lastAccessTime(), creationTime);
     }
 
     /**
