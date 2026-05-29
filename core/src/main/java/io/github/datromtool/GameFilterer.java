@@ -192,8 +192,8 @@ public final class GameFilterer {
             Map<String, ? extends Collection<ParsedGame>> input) {
         return input.entrySet().stream()
                 .map(e -> Pair.of(e.getKey(), postFilter(e.getValue())))
-                .filter(p -> !p.getRight().isEmpty())
-                .collect(ImmutableMap.toImmutableMap(Pair::getLeft, Pair::getRight));
+                .filter(p -> !p.right().isEmpty())
+                .collect(ImmutableMap.toImmutableMap(Pair::left, Pair::right));
     }
 
 }

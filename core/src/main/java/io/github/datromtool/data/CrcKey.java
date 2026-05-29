@@ -3,23 +3,17 @@ package io.github.datromtool.data;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.datromtool.domain.datafile.logiqx.Rom;
 import io.github.datromtool.io.FileScanner;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
 
 import javax.annotation.Nonnull;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
-@Value
-@AllArgsConstructor(staticName = "of")
 @JsonInclude(NON_NULL)
-public class CrcKey {
+public record CrcKey(@Nonnull Long size, @Nonnull String crc) {
 
-    @NonNull
-    Long size;
-    @NonNull
-    String crc;
+    public static CrcKey of(@Nonnull Long size, @Nonnull String crc) {
+        return new CrcKey(size, crc);
+    }
 
     @Nonnull
     public static CrcKey from(@Nonnull Rom rom) {

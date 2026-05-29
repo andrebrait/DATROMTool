@@ -30,23 +30,23 @@ final class ProcessArchiveSourceInternalSpec extends CachingAbstractArchiveSourc
     @Nonnull
     @Override
     protected String getNameForCache() {
-        return ArchiveUtils.normalizePath(file.getName());
+        return ArchiveUtils.normalizePath(file.name());
     }
 
     @Override
     public long getSize() {
-        return file.getSize();
+        return file.size();
     }
 
     @Override
     public FileTimes getFileTimes() {
-        return file.getFileTimes();
+        return file.fileTimes();
     }
 
     @Override
     public InputStream getInputStream() {
         if (inputStream == null) {
-            BoundedInputStream boundedInputStream = new BoundedInputStream(processInputStream, file.getSize());
+            BoundedInputStream boundedInputStream = new BoundedInputStream(processInputStream, file.size());
             boundedInputStream.setPropagateClose(false);
             inputStream = boundedInputStream;
         }

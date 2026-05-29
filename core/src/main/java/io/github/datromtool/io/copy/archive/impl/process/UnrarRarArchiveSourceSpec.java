@@ -49,7 +49,7 @@ public final class UnrarRarArchiveSourceSpec extends ZonedTimeProcessArchiveSour
                                 parseFileTime(getFirstNonNullKey(map, "Modified", "mtime")),
                                 parseFileTime(getFirstNonNullKey(map, "Accessed", "atime")),
                                 parseFileTime(getFirstNonNullKey(map, "Created", "ctime")))))
-                .filter(f -> f.getSize() > 0)
+                .filter(f -> f.size() > 0)
                 .collect(ImmutableList.toImmutableList());
     }
 
@@ -94,7 +94,7 @@ public final class UnrarRarArchiveSourceSpec extends ZonedTimeProcessArchiveSour
                 .add("p")
                 .add("-inul")
                 .add(getPath().toString())
-                .addAll(contents.stream().map(ProcessArchiveFile::getName).iterator())
+                .addAll(contents.stream().map(ProcessArchiveFile::name).iterator())
                 .build();
     }
 }

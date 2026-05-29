@@ -143,9 +143,9 @@ public final class ScanResultMatcher {
                         .filter(r -> r.getArchiveType() != null)
                         .map(r -> Pair.of(r.getPath(), new RomMatch(s.getRom(), r))))
                 .collect(Collectors.groupingBy(
-                        Pair::getLeft,
+                        Pair::left,
                         LinkedHashMap::new,
-                        Collectors.mapping(Pair::getRight, ImmutableList.toImmutableList())))
+                        Collectors.mapping(Pair::right, ImmutableList.toImmutableList())))
                 .entrySet()
                 .stream()
                 .sorted(Comparator.comparing(e -> -e.getValue().size()))
@@ -182,8 +182,8 @@ public final class ScanResultMatcher {
                                 .map(pg -> new GameMatchList(pg, match(pg, toType)))
                                 .filter(m -> !m.getRomMatches().isEmpty())
                                 .collect(ImmutableList.toImmutableList())))
-                .filter(p -> !p.getRight().isEmpty())
-                .collect(ImmutableMap.toImmutableMap(Pair::getLeft, Pair::getRight));
+                .filter(p -> !p.right().isEmpty())
+                .collect(ImmutableMap.toImmutableMap(Pair::left, Pair::right));
     }
 
 }

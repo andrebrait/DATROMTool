@@ -91,7 +91,7 @@ public abstract class ProcessArchiveSourceSpec implements ArchiveSourceSpec {
         ImmutableList.Builder<ProcessArchiveFile> result = ImmutableList.builder();
         HashSet<String> mutableNames = new LinkedHashSet<>(names);
         for (ProcessArchiveFile file : archiveContents) {
-            if (mutableNames.remove(ArchiveUtils.normalizePath(file.getName()))) {
+            if (mutableNames.remove(ArchiveUtils.normalizePath(file.name()))) {
                 result.add(file);
             }
         }

@@ -89,7 +89,7 @@ public final class SevenZipRarArchiveSourceSpec extends ZonedTimeProcessArchiveS
                 .add("-bd")
                 .add("-ba")
                 .add(getPath().toString())
-                .addAll(contents.stream().map(ProcessArchiveFile::getName).iterator())
+                .addAll(contents.stream().map(ProcessArchiveFile::name).iterator())
                 .build();
     }
 }
