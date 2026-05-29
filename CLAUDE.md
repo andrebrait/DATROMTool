@@ -78,7 +78,7 @@ Maven multi-module build:
 
 ## Key Design Patterns
 
-1. **Jackson 3 Serialization** — Domain models use Jackson 3 annotations; `lombok.config` sets `lombok.jacksonized.jacksonVersion += 3` for `@Jacksonized` compatibility. Jackson 3 uses groupId `tools.jackson` and package prefix `tools.jackson.*` (not `com.fasterxml.jackson.*` from Jackson 2).
+1. **Jackson 3 Serialization** — Domain models use Jackson 3 annotations; `lombok.config` sets `lombok.jacksonized.jacksonVersion += 3` for `@Jacksonized` compatibility. Jackson 3 split into two package namespaces: `jackson-annotations` keeps `com.fasterxml.jackson.annotation.*` (backward-compatible by design), while `jackson-core`, `jackson-databind`, and `jackson-dataformat-*` moved to `tools.jackson.*`. Imports of `com.fasterxml.jackson.annotation.*` (e.g. `@JsonInclude`, `@JsonProperty`) are therefore correct for Jackson 3.
 2. **picocli Framework** — CLI uses annotation-driven commands with option group mixins (`@ArgGroup` / `@Mixin`) for clean separation of concerns.
 3. **Strategy Pattern** — `GameFilterer` and `GameSorter` accept predicates/comparators; sorting uses a pluggable `SubComparator` chain.
 4. **No-Intro Name Parsing** — `GameParser` decodes structured metadata from ROM filenames (regions, languages, version, pre-release status, type).
@@ -97,7 +97,7 @@ Maven multi-module build:
 2. **Hash Priority** — ROM matching: SHA-256 > SHA-1 > MD5 > (size + CRC).
 3. **Archive Format Support** — ZIP and 7z native; RAR ≤ v4 via junrar; RAR5 requires external UnRAR or 7-Zip executable.
 4. **Lombok** — Used extensively (`@Data`, `@Value`, `@With`, `@Jacksonized`). `lombok.config` at root applies project-wide.
-5. **Java 25** — Minimum language level; do not downgrade.
+5. **Java 25** — Minimum language level; do not downgrade. Use Java 25 idioms: pattern switch (`switch (x) { case Foo f -> ... }`), pattern variables in `instanceof` (`x instanceof Foo f`), and `Stream.toList()` instead of `Collectors.toList()` for read-only results.
 
 ## Dependencies
 
