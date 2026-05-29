@@ -1,4 +1,3 @@
-
 package io.github.datromtool.domain.datafile.logiqx;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -7,42 +6,37 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import io.github.datromtool.domain.datafile.logiqx.enumerations.ForceMerging;
 import io.github.datromtool.domain.datafile.logiqx.enumerations.ForceNoDump;
 import io.github.datromtool.domain.datafile.logiqx.enumerations.ForcePacking;
-import lombok.*;
-import lombok.extern.jackson.Jacksonized;
 import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
-import static lombok.AccessLevel.PRIVATE;
+import javax.annotation.Nonnull;
 
-@Value
-@Jacksonized
-@Builder(toBuilder = true)
-@AllArgsConstructor(access = PRIVATE)
-@NoArgsConstructor(access = PRIVATE, force = true)
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
+
 @JsonInclude(NON_DEFAULT)
 @JsonRootName("clrmamepro")
-public class Clrmamepro {
+public record Clrmamepro(
+        @JacksonXmlProperty(localName = "header", isAttribute = true)
+        @JsonProperty("header")
+        String headerFile,
 
-    @JacksonXmlProperty(localName = "header", isAttribute = true)
-    @JsonProperty("header")
-    String headerFile;
+        @Nonnull
+        @JacksonXmlProperty(localName = "forcemerging", isAttribute = true)
+        @JsonProperty(defaultValue = "split")
+        ForceMerging forceMerging,
 
-    @NonNull
-    @Builder.Default
-    @JacksonXmlProperty(localName = "forcemerging", isAttribute = true)
-    @JsonProperty(defaultValue = "split")
-    ForceMerging forceMerging = ForceMerging.SPLIT;
+        @Nonnull
+        @JacksonXmlProperty(localName = "forcenodump", isAttribute = true)
+        @JsonProperty(defaultValue = "obsolete")
+        ForceNoDump forceNoDump,
 
-    @NonNull
-    @Builder.Default
-    @JacksonXmlProperty(localName = "forcenodump", isAttribute = true)
-    @JsonProperty(defaultValue = "obsolete")
-    ForceNoDump forceNoDump = ForceNoDump.OBSOLETE;
+        @Nonnull
+        @JacksonXmlProperty(localName = "forcepacking", isAttribute = true)
+        @JsonProperty(defaultValue = "zip")
+        ForcePacking forcePacking) {
 
-    @NonNull
-    @Builder.Default
-    @JacksonXmlProperty(localName = "forcepacking", isAttribute = true)
-    @JsonProperty(defaultValue = "zip")
-    ForcePacking forcePacking = ForcePacking.ZIP;
-
+    public Clrmamepro {
+        if (forceMerging == null) forceMerging = ForceMerging.SPLIT;
+        if (forceNoDump == null) forceNoDump = ForceNoDump.OBSOLETE;
+        if (forcePacking == null) forcePacking = ForcePacking.ZIP;
+    }
 }

@@ -1,4 +1,3 @@
-
 package io.github.datromtool.domain.datafile.logiqx;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -7,60 +6,54 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import io.github.datromtool.domain.datafile.logiqx.enumerations.SampleMode;
 import io.github.datromtool.domain.datafile.logiqx.enumerations.SetMode;
 import io.github.datromtool.domain.datafile.logiqx.enumerations.YesNo;
-import lombok.*;
-import lombok.extern.jackson.Jacksonized;
 import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
+import javax.annotation.Nonnull;
+
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
-import static lombok.AccessLevel.PRIVATE;
 
-
-@Value
-@Jacksonized
-@Builder(toBuilder = true)
-@AllArgsConstructor(access = PRIVATE)
-@NoArgsConstructor(access = PRIVATE, force = true)
 @JsonInclude(NON_DEFAULT)
 @JsonRootName("romcenter")
-public class RomCenter {
+public record RomCenter(
+        @JacksonXmlProperty(isAttribute = true)
+        String plugin,
 
-    @JacksonXmlProperty(isAttribute = true)
-    String plugin;
+        @Nonnull
+        @JacksonXmlProperty(localName = "rommode", isAttribute = true)
+        @JsonProperty(defaultValue = "split")
+        SetMode romMode,
 
-    @NonNull
-    @Builder.Default
-    @JacksonXmlProperty(localName = "rommode", isAttribute = true)
-    @JsonProperty(defaultValue = "split")
-    SetMode romMode = SetMode.SPLIT;
+        @Nonnull
+        @JacksonXmlProperty(localName = "biosmode", isAttribute = true)
+        @JsonProperty(defaultValue = "split")
+        SetMode biosMode,
 
-    @NonNull
-    @Builder.Default
-    @JacksonXmlProperty(localName = "biosmode", isAttribute = true)
-    @JsonProperty(defaultValue = "split")
-    SetMode biosMode = SetMode.SPLIT;
+        @Nonnull
+        @JacksonXmlProperty(localName = "samplemode", isAttribute = true)
+        @JsonProperty(defaultValue = "merged")
+        SampleMode sampleMode,
 
-    @NonNull
-    @Builder.Default
-    @JacksonXmlProperty(localName = "samplemode", isAttribute = true)
-    @JsonProperty(defaultValue = "merged")
-    SampleMode sampleMode = SampleMode.MERGED;
+        @Nonnull
+        @JacksonXmlProperty(localName = "lockrommode", isAttribute = true)
+        @JsonProperty(defaultValue = "no")
+        YesNo isLockRomMode,
 
-    @NonNull
-    @Builder.Default
-    @JacksonXmlProperty(localName = "lockrommode", isAttribute = true)
-    @JsonProperty(defaultValue = "no")
-    YesNo isLockRomMode = YesNo.NO;
+        @Nonnull
+        @JacksonXmlProperty(localName = "lockbiosmode", isAttribute = true)
+        @JsonProperty(defaultValue = "no")
+        YesNo isLockBiosMode,
 
-    @NonNull
-    @Builder.Default
-    @JacksonXmlProperty(localName = "lockbiosmode", isAttribute = true)
-    @JsonProperty(defaultValue = "no")
-    YesNo isLockBiosMode = YesNo.NO;
+        @Nonnull
+        @JacksonXmlProperty(localName = "locksamplemode", isAttribute = true)
+        @JsonProperty(defaultValue = "no")
+        YesNo isLockSampleMode) {
 
-    @NonNull
-    @Builder.Default
-    @JacksonXmlProperty(localName = "locksamplemode", isAttribute = true)
-    @JsonProperty(defaultValue = "no")
-    YesNo isLockSampleMode = YesNo.NO;
-
+    public RomCenter {
+        if (romMode == null) romMode = SetMode.SPLIT;
+        if (biosMode == null) biosMode = SetMode.SPLIT;
+        if (sampleMode == null) sampleMode = SampleMode.MERGED;
+        if (isLockRomMode == null) isLockRomMode = YesNo.NO;
+        if (isLockBiosMode == null) isLockBiosMode = YesNo.NO;
+        if (isLockSampleMode == null) isLockSampleMode = YesNo.NO;
+    }
 }
