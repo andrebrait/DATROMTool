@@ -72,19 +72,19 @@ class FileScannerParameters {
         final long maxRomSize;
         final boolean useLazyDetector;
         final ImmutableSet<ArchiveType> alsoScanArchives = toRomStream(datafiles)
-                .map(Rom::getName)
+                .map(Rom::name)
                 .map(ArchiveType::parse)
                 .filter(Objects::nonNull)
                 .collect(ImmutableSet.toImmutableSet());
         final long minRomSize = toRomStream(datafiles)
-                .mapToLong(Rom::getSize)
+                .mapToLong(r -> r.size())
                 .min()
                 .orElse(0);
         if (detectors.isEmpty()) {
             bufferSize = config.getDefaultBufferSize();
             useLazyDetector = false;
             maxRomSize = toRomStream(datafiles)
-                    .mapToLong(Rom::getSize)
+                    .mapToLong(r -> r.size())
                     .max()
                     .orElse(Long.MAX_VALUE);
         } else {
@@ -97,7 +97,7 @@ class FileScannerParameters {
                     .min()
                     .orElse(Long.MAX_VALUE);
             long maxUnheaderedSize = toRomStream(datafiles)
-                    .mapToLong(Rom::getSize)
+                    .mapToLong(r -> r.size())
                     .max()
                     .orElse(Long.MAX_VALUE);
             if (maxStartOffset < 0) {
@@ -163,7 +163,7 @@ class FileScannerParameters {
                 .map(Game::getRoms)
                 .flatMap(Collection::stream)
                 // filtering for ROMs which have a size, given it is optional as of DTD Revision 1.8_2022-02-24
-                .filter(r -> r.getSize() != null);
+                .filter(r -> r.size() != null);
     }
 
     private static Stream<Rule> toRuleStream(@Nonnull Collection<Detector> detectors) {

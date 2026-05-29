@@ -48,10 +48,7 @@ class FileScannerParametersTest {
                 .games(ImmutableList.of(Game.builder()
                         .name("Test game 1")
                         .description("Test game 1")
-                        .roms(ImmutableList.of(Rom.builder()
-                                .name("Test rom 1.ext")
-                                .size(8 * 1024L)
-                                .build()))
+                        .roms(ImmutableList.of(new Rom("Test rom 1.ext", 8 * 1024L)))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
                 AppConfig.FileScannerConfig.builder().build(),
@@ -74,14 +71,8 @@ class FileScannerParametersTest {
                         .name("Test game 1")
                         .description("Test game 1")
                         .roms(ImmutableList.of(
-                                Rom.builder()
-                                        .name("Test rom 1.ext")
-                                        .size(8 * 1024L)
-                                        .build(),
-                                Rom.builder()
-                                        .name("Test rom 2.zip")
-                                        .size(16 * 1024L)
-                                        .build()))
+                                new Rom("Test rom 1.ext", 8 * 1024L),
+                                new Rom("Test rom 2.zip", 16 * 1024L)))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
                 AppConfig.FileScannerConfig.builder().build(),
@@ -106,27 +97,15 @@ class FileScannerParametersTest {
                                 .name("Test game 1")
                                 .description("Test game 1")
                                 .roms(ImmutableList.of(
-                                        Rom.builder()
-                                                .name("Test rom 1.ext")
-                                                .size(8 * 1024L)
-                                                .build(),
-                                        Rom.builder()
-                                                .name("Test rom 2.zip")
-                                                .size(16 * 1024L)
-                                                .build()))
+                                        new Rom("Test rom 1.ext", 8 * 1024L),
+                                        new Rom("Test rom 2.zip", 16 * 1024L)))
                                 .build(),
                         Game.builder()
                                 .name("Test game 2")
                                 .description("Test game 2")
                                 .roms(ImmutableList.of(
-                                        Rom.builder()
-                                                .name("Test rom 2-1.7z")
-                                                .size(4 * 1024L)
-                                                .build(),
-                                        Rom.builder()
-                                                .name("Test rom 2-2.rar")
-                                                .size(27 * 1024L * 1024L)
-                                                .build()))
+                                        new Rom("Test rom 2-1.7z", 4 * 1024L),
+                                        new Rom("Test rom 2-2.rar", 27 * 1024L * 1024L)))
                                 .build()))
                 .build();
         FileScannerParameters parameters = forDatWithDetector(
@@ -157,10 +136,7 @@ class FileScannerParametersTest {
                 .games(ImmutableList.of(Game.builder()
                         .name("Test game 1")
                         .description("Test game 1")
-                        .roms(ImmutableList.of(Rom.builder()
-                                .name("Test rom 1.ext")
-                                .size(8 * 1024L)
-                                .build()))
+                        .roms(ImmutableList.of(new Rom("Test rom 1.ext", 8 * 1024L)))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
                 AppConfig.FileScannerConfig.builder().build(),
@@ -188,10 +164,7 @@ class FileScannerParametersTest {
                 .games(ImmutableList.of(Game.builder()
                         .name("Test game 1")
                         .description("Test game 1")
-                        .roms(ImmutableList.of(Rom.builder()
-                                .name("Test rom 1.ext")
-                                .size(8 * 1024L)
-                                .build()))
+                        .roms(ImmutableList.of(new Rom("Test rom 1.ext", 8 * 1024L)))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
                 AppConfig.FileScannerConfig.builder().build(),
@@ -221,27 +194,15 @@ class FileScannerParametersTest {
                                 .name("Test game 1")
                                 .description("Test game 1")
                                 .roms(ImmutableList.of(
-                                        Rom.builder()
-                                                .name("Test rom 1.ext")
-                                                .size(8 * 1024L)
-                                                .build(),
-                                        Rom.builder()
-                                                .name("Test rom 2.zip")
-                                                .size(16 * 1024L)
-                                                .build()))
+                                        new Rom("Test rom 1.ext", 8 * 1024L),
+                                        new Rom("Test rom 2.zip", 16 * 1024L)))
                                 .build(),
                         Game.builder()
                                 .name("Test game 2")
                                 .description("Test game 2")
                                 .roms(ImmutableList.of(
-                                        Rom.builder()
-                                                .name("Test rom 2-1.7z")
-                                                .size(4 * 1024L)
-                                                .build(),
-                                        Rom.builder()
-                                                .name("Test rom 2-2.rar")
-                                                .size(27 * 1024L * 1024L)
-                                                .build()))
+                                        new Rom("Test rom 2-1.7z", 4 * 1024L),
+                                        new Rom("Test rom 2-2.rar", 27 * 1024L * 1024L)))
                                 .build()))
                 .build();
         FileScannerParameters parameters = forDatWithDetector(
@@ -278,10 +239,7 @@ class FileScannerParametersTest {
                 .games(ImmutableList.of(Game.builder()
                         .name("Test game 1")
                         .description("Test game 1")
-                        .roms(ImmutableList.of(Rom.builder()
-                                .name("Test rom 1.ext")
-                                .size(8 * 1024L)
-                                .build()))
+                        .roms(ImmutableList.of(new Rom("Test rom 1.ext", 8 * 1024L)))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
                 AppConfig.FileScannerConfig.builder().build(),
@@ -313,10 +271,7 @@ class FileScannerParametersTest {
                 .games(ImmutableList.of(Game.builder()
                         .name("Test game 1")
                         .description("Test game 1")
-                        .roms(ImmutableList.of(Rom.builder()
-                                .name("Test rom 1.ext")
-                                .size(8 * 1024L)
-                                .build()))
+                        .roms(ImmutableList.of(new Rom("Test rom 1.ext", 8 * 1024L)))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
                 AppConfig.FileScannerConfig.builder().build(),
@@ -348,10 +303,7 @@ class FileScannerParametersTest {
                 .games(ImmutableList.of(Game.builder()
                         .name("Test game 1")
                         .description("Test game 1")
-                        .roms(ImmutableList.of(Rom.builder()
-                                .name("Test rom 1.ext")
-                                .size(8 * 1024L)
-                                .build()))
+                        .roms(ImmutableList.of(new Rom("Test rom 1.ext", 8 * 1024L)))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
                 AppConfig.FileScannerConfig.builder().build(),
@@ -381,10 +333,7 @@ class FileScannerParametersTest {
                 .games(ImmutableList.of(Game.builder()
                         .name("Test game 1")
                         .description("Test game 1")
-                        .roms(ImmutableList.of(Rom.builder()
-                                .name("Test rom 1.ext")
-                                .size(8 * 1024L)
-                                .build()))
+                        .roms(ImmutableList.of(new Rom("Test rom 1.ext", 8 * 1024L)))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
                 AppConfig.FileScannerConfig.builder().build(),
@@ -419,10 +368,7 @@ class FileScannerParametersTest {
                 .games(ImmutableList.of(Game.builder()
                         .name("Test game 1")
                         .description("Test game 1")
-                        .roms(ImmutableList.of(Rom.builder()
-                                .name("Test rom 1.ext")
-                                .size(8 * 1024L)
-                                .build()))
+                        .roms(ImmutableList.of(new Rom("Test rom 1.ext", 8 * 1024L)))
                         .build())).build();
         FileScannerParameters parameters = forDatWithDetector(
                 AppConfig.FileScannerConfig.builder().build(),

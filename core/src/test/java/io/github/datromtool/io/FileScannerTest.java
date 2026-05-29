@@ -212,18 +212,12 @@ class FileScannerTest extends TestDirDependantTest {
                 Game.builder()
                         .name("Test game 1")
                         .description("Test game 1")
-                        .roms(ImmutableList.of(Rom.builder()
-                                .name("Test rom 1.ext")
-                                .size(minSize)
-                                .build()))
+                        .roms(ImmutableList.of(new Rom("Test rom 1.ext", minSize)))
                         .build(),
                 Game.builder()
                         .name("Test game 2")
                         .description("Test game 2")
-                        .roms(ImmutableList.of(Rom.builder()
-                                .name("Test rom 2.ext")
-                                .size(maxSize)
-                                .build()))
+                        .roms(ImmutableList.of(new Rom("Test rom 2.ext", maxSize)))
                         .build()))
                 .build();
     }

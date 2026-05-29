@@ -3,49 +3,32 @@ package io.github.datromtool.data;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.Patterns;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Value;
-import lombok.extern.jackson.Jacksonized;
 
+import javax.annotation.Nonnull;
 import java.util.regex.Pattern;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
-import static lombok.AccessLevel.PRIVATE;
 
-@Value
-@Jacksonized
-@Builder(toBuilder = true)
-@AllArgsConstructor(access = PRIVATE)
-@NoArgsConstructor(access = PRIVATE, force = true)
 @JsonInclude(NON_DEFAULT)
-public class RegionData {
+public record RegionData(@Nonnull ImmutableSet<RegionDataEntry> regions) {
 
-    @Value
-    @Jacksonized
-    @Builder(toBuilder = true)
-    @AllArgsConstructor(access = PRIVATE)
-    @NoArgsConstructor(access = PRIVATE, force = true)
-    @JsonInclude(NON_DEFAULT)
-    public static class RegionDataEntry {
-
-        @NonNull
-        String code;
-
-        @NonNull
-        @Builder.Default
-        Pattern pattern = Patterns.NO_MATCH;
-
-        @NonNull
-        @Builder.Default
-        ImmutableSet<String> languages = ImmutableSet.of();
-
+    public RegionData {
+        if (regions == null) regions = ImmutableSet.of();
     }
 
-    @NonNull
-    @Builder.Default
-    ImmutableSet<RegionDataEntry> regions = ImmutableSet.of();
+    @JsonInclude(NON_DEFAULT)
+    public record RegionDataEntry(
+            @Nonnull String code,
+            @Nonnull Pattern pattern,
+            @Nonnull ImmutableSet<String> languages) {
 
+        public RegionDataEntry {
+            if (pattern == null) pattern = Patterns.NO_MATCH;
+            if (languages == null) languages = ImmutableSet.of();
+        }
+
+        public RegionDataEntry(String code) {
+            this(code, Patterns.NO_MATCH, ImmutableSet.of());
+        }
+    }
 }

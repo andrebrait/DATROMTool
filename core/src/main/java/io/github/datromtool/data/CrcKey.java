@@ -17,7 +17,7 @@ public record CrcKey(@Nonnull Long size, @Nonnull String crc) {
 
     @Nonnull
     public static CrcKey from(@Nonnull Rom rom) {
-        return of(rom.getSize(), rom.getCrc());
+        return of(rom.size(), rom.crc());
     }
 
     @Nonnull

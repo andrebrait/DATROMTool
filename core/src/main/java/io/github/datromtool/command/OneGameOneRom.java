@@ -360,7 +360,7 @@ public final class OneGameOneRom {
                 .filter(Objects::nonNull)
                 .map(Header::getClrmamepro)
                 .filter(Objects::nonNull)
-                .map(Clrmamepro::getHeaderFile)
+                .map(Clrmamepro::headerFile)
                 .filter(Objects::nonNull);
     }
 
@@ -425,7 +425,7 @@ public final class OneGameOneRom {
                                 .map(ScanResultMatcher.RomMatch::getRom)
                                 .map(rom -> FileCopier.CopySpec.builder()
                                         .from(from)
-                                        .to(baseDir.resolve(rom.getName()))
+                                        .to(baseDir.resolve(rom.name()))
                                         .build());
                     } else {
                         // Extraction
@@ -435,7 +435,7 @@ public final class OneGameOneRom {
                                 .internalSpecs(list.stream()
                                         .map(m -> FileCopier.ExtractionSpec.InternalSpec.builder()
                                                 .from(m.getResult().getArchivePath())
-                                                .to(baseDir.resolve(m.getRom().getName()))
+                                                .to(baseDir.resolve(m.getRom().name()))
                                                 .build())
                                         .collect(ImmutableMap.toImmutableMap(FileCopier.ExtractionSpec.InternalSpec::getFrom, Function.identity(), (a, _) -> a)))
                                 .build());
@@ -491,7 +491,7 @@ public final class OneGameOneRom {
                     .internalSpecs(forCompression.stream()
                             .map(p -> FileCopier.CompressionSpec.InternalSpec.builder()
                                     .from(p.getResult().getPath())
-                                    .to(p.getRom().getName())
+                                    .to(p.getRom().name())
                                     .build())
                             .collect(ImmutableSet.toImmutableSet()))
                     .build());
@@ -525,7 +525,7 @@ public final class OneGameOneRom {
                 .internalSpecs(list.stream()
                         .map(m -> FileCopier.ArchiveCopySpec.InternalSpec.builder()
                                 .from(m.getResult().getArchivePath())
-                                .to(m.getRom().getName())
+                                .to(m.getRom().name())
                                 .build())
                         .collect(ImmutableMap.toImmutableMap(FileCopier.ArchiveCopySpec.InternalSpec::getFrom, Function.identity(), (a, _) -> a)))
                 .build();

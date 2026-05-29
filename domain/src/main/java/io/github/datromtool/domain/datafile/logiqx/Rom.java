@@ -1,4 +1,3 @@
-
 package io.github.datromtool.domain.datafile.logiqx;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -8,68 +7,68 @@ import io.github.datromtool.domain.datafile.logiqx.enumerations.Status;
 import io.github.datromtool.domain.datafile.logiqx.enumerations.YesNo;
 import io.github.datromtool.domain.serialization.SpacedHexArrayDeserializer;
 import io.github.datromtool.domain.serialization.SpacedHexArraySerializer;
-import lombok.*;
-import lombok.extern.jackson.Jacksonized;
 import tools.jackson.databind.annotation.JsonDeserialize;
 import tools.jackson.databind.annotation.JsonSerialize;
 import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
-import static lombok.AccessLevel.PRIVATE;
+import javax.annotation.Nonnull;
 
-@Value
-@Jacksonized
-@Builder(toBuilder = true)
-@AllArgsConstructor(access = PRIVATE)
-@NoArgsConstructor(access = PRIVATE, force = true)
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
+
 @JsonInclude(NON_DEFAULT)
 @JsonRootName("rom")
-public class Rom {
+public record Rom(
+        @Nonnull
+        @JacksonXmlProperty(isAttribute = true)
+        @JsonProperty(required = true)
+        String name,
 
-    @NonNull
-    @JacksonXmlProperty(isAttribute = true)
-    @JsonProperty(required = true)
-    String name;
+        /**
+         * Optional for parsing: No-Intro uses nodumps without setting a size.
+         * Should never be empty for real ROMs or output.
+         */
+        @JacksonXmlProperty(isAttribute = true)
+        Long size,
 
-    /**
-     * This is optional for parsing purposes only due to No-Intro using nodumps without settings a size
-     * This should never be empty for real ROMs or anything we will output
-     */
-    @JacksonXmlProperty(isAttribute = true)
-    Long size;
+        @JacksonXmlProperty(isAttribute = true)
+        @JsonSerialize(using = SpacedHexArraySerializer.class)
+        @JsonDeserialize(using = SpacedHexArrayDeserializer.class)
+        byte[] header,
 
-    @JacksonXmlProperty(isAttribute = true)
-    @JsonSerialize(using = SpacedHexArraySerializer.class)
-    @JsonDeserialize(using = SpacedHexArrayDeserializer.class)
-    byte[] header;
+        @Nonnull
+        @JacksonXmlProperty(isAttribute = true)
+        @JsonProperty(defaultValue = "no")
+        YesNo mia,
 
-    @NonNull
-    @Builder.Default
-    @JacksonXmlProperty(isAttribute = true)
-    @JsonProperty(defaultValue = "no")
-    YesNo mia = YesNo.NO;
+        @JacksonXmlProperty(isAttribute = true)
+        String crc,
 
-    @JacksonXmlProperty(isAttribute = true)
-    String crc;
+        @JacksonXmlProperty(isAttribute = true)
+        String md5,
 
-    @JacksonXmlProperty(isAttribute = true)
-    String md5;
+        @JacksonXmlProperty(isAttribute = true)
+        String sha1,
 
-    @JacksonXmlProperty(isAttribute = true)
-    String sha1;
+        @JacksonXmlProperty(isAttribute = true)
+        String sha256,
 
-    @JacksonXmlProperty(isAttribute = true)
-    String sha256;
+        @JacksonXmlProperty(isAttribute = true)
+        String merge,
 
-    @JacksonXmlProperty(isAttribute = true)
-    String merge;
+        @JacksonXmlProperty(isAttribute = true)
+        Status status,
 
-    @JacksonXmlProperty(isAttribute = true)
-    Status status;
+        @JacksonXmlProperty(isAttribute = true)
+        String date,
 
-    @JacksonXmlProperty(isAttribute = true)
-    String date;
+        @JacksonXmlProperty(isAttribute = true)
+        String serial) {
 
-    @JacksonXmlProperty(isAttribute = true)
-    String serial;
+    public Rom {
+        if (mia == null) mia = YesNo.NO;
+    }
+
+    public Rom(String name, Long size) {
+        this(name, size, null, YesNo.NO, null, null, null, null, null, null, null, null);
+    }
 }

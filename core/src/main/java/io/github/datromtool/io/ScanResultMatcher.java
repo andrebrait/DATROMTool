@@ -92,20 +92,20 @@ public final class ScanResultMatcher {
     @Nonnull
     public ImmutableList<FileScanner.Result> match(Rom rom) {
         ImmutableList<FileScanner.Result> results = null;
-        if (rom.getSha1() != null) {
-            results = resultsForSha1.get(rom.getSha1());
+        if (rom.sha1() != null) {
+            results = resultsForSha1.get(rom.sha1());
         }
-        if (results == null && rom.getMd5() != null) {
-            results = resultsForMd5.get(rom.getMd5());
+        if (results == null && rom.md5() != null) {
+            results = resultsForMd5.get(rom.md5());
         }
-        if (results == null && rom.getCrc() != null) {
+        if (results == null && rom.crc() != null) {
             results = resultsForCrc.get(CrcKey.from(rom));
         }
         if (results == null) {
             results = ImmutableList.of();
         }
         if (results.isEmpty()) {
-            log.warn("Missing ROM file: '{}'", rom.getName());
+            log.warn("Missing ROM file: '{}'", rom.name());
         }
         return results;
     }

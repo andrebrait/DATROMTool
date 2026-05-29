@@ -73,8 +73,8 @@ public class ParsedGame {
 
     @JsonIgnore
     public Stream<String> getRegionsStream() {
-        return regionData.getRegions().stream()
-                .map(RegionDataEntry::getCode);
+        return regionData.regions().stream()
+                .map(RegionDataEntry::code);
     }
 
     @JsonIgnore
@@ -82,8 +82,8 @@ public class ParsedGame {
         if (!languages.isEmpty()) {
             return languages.stream();
         }
-        return regionData.getRegions().stream()
-                .map(RegionDataEntry::getLanguages)
+        return regionData.regions().stream()
+                .map(RegionDataEntry::languages)
                 .flatMap(Collection::stream);
     }
 

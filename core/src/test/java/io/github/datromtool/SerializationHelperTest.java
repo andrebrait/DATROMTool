@@ -151,53 +151,53 @@ class SerializationHelperTest extends TestDirDependantTest {
     void testLoadRegionData() throws Exception {
         RegionData regionData = emptyHelper.loadRegionData(ClassLoader.getSystemResource("region-data-test.yaml"));
         assertNotNull(regionData);
-        assertNotNull(regionData.getRegions());
-        assertEquals(2, regionData.getRegions().size());
-        Iterator<RegionData.RegionDataEntry> iterator = regionData.getRegions().iterator();
+        assertNotNull(regionData.regions());
+        assertEquals(2, regionData.regions().size());
+        Iterator<RegionData.RegionDataEntry> iterator = regionData.regions().iterator();
         RegionData.RegionDataEntry r1 = iterator.next();
-        assertEquals("TST", r1.getCode());
-        assertTrue(r1.getPattern().matcher("Test").matches());
-        assertTrue(r1.getPattern().matcher("test").matches());
-        assertFalse(r1.getPattern().matcher("test2").matches());
-        assertEquals(ImmutableSet.of("tt"), r1.getLanguages());
+        assertEquals("TST", r1.code());
+        assertTrue(r1.pattern().matcher("Test").matches());
+        assertTrue(r1.pattern().matcher("test").matches());
+        assertFalse(r1.pattern().matcher("test2").matches());
+        assertEquals(ImmutableSet.of("tt"), r1.languages());
         RegionData.RegionDataEntry r2 = iterator.next();
-        assertEquals("TS2", r2.getCode());
-        assertTrue(r2.getPattern().matcher("Test2").matches());
-        assertTrue(r2.getPattern().matcher("test2").matches());
-        assertFalse(r2.getPattern().matcher("test").matches());
-        assertEquals(ImmutableSet.of("tt", "ts"), r2.getLanguages());
+        assertEquals("TS2", r2.code());
+        assertTrue(r2.pattern().matcher("Test2").matches());
+        assertTrue(r2.pattern().matcher("test2").matches());
+        assertFalse(r2.pattern().matcher("test").matches());
+        assertEquals(ImmutableSet.of("tt", "ts"), r2.languages());
     }
 
     @Test
     void testLoadRegionDataFromFile() throws Exception {
         RegionData regionData = testHelper.loadRegionData();
         assertNotNull(regionData);
-        assertNotNull(regionData.getRegions());
-        assertEquals(2, regionData.getRegions().size());
-        Iterator<RegionData.RegionDataEntry> iterator = regionData.getRegions().iterator();
+        assertNotNull(regionData.regions());
+        assertEquals(2, regionData.regions().size());
+        Iterator<RegionData.RegionDataEntry> iterator = regionData.regions().iterator();
         RegionData.RegionDataEntry r1 = iterator.next();
-        assertEquals("BRA", r1.getCode());
-        assertTrue(r1.getPattern().matcher("Brazil").matches());
-        assertTrue(r1.getPattern().matcher("brazil").matches());
-        assertFalse(r1.getPattern().matcher("brazil2").matches());
-        assertEquals(ImmutableSet.of("pt"), r1.getLanguages());
+        assertEquals("BRA", r1.code());
+        assertTrue(r1.pattern().matcher("Brazil").matches());
+        assertTrue(r1.pattern().matcher("brazil").matches());
+        assertFalse(r1.pattern().matcher("brazil2").matches());
+        assertEquals(ImmutableSet.of("pt"), r1.languages());
         RegionData.RegionDataEntry r2 = iterator.next();
-        assertEquals("EUR", r2.getCode());
-        assertTrue(r2.getPattern().matcher("Europe").matches());
-        assertTrue(r2.getPattern().matcher("europe").matches());
-        assertTrue(r2.getPattern().matcher("World").matches());
-        assertTrue(r2.getPattern().matcher("world").matches());
-        assertFalse(r2.getPattern().matcher("europe2").matches());
-        assertFalse(r2.getPattern().matcher("world2").matches());
-        assertEquals(ImmutableSet.of("en"), r2.getLanguages());
+        assertEquals("EUR", r2.code());
+        assertTrue(r2.pattern().matcher("Europe").matches());
+        assertTrue(r2.pattern().matcher("europe").matches());
+        assertTrue(r2.pattern().matcher("World").matches());
+        assertTrue(r2.pattern().matcher("world").matches());
+        assertFalse(r2.pattern().matcher("europe2").matches());
+        assertFalse(r2.pattern().matcher("world2").matches());
+        assertEquals(ImmutableSet.of("en"), r2.languages());
     }
 
     @Test
     void testLoadDefaultRegionData() throws Exception {
         RegionData regionData = emptyHelper.loadRegionData();
         assertNotNull(regionData);
-        assertNotNull(regionData.getRegions());
-        assertFalse(regionData.getRegions().isEmpty());
+        assertNotNull(regionData.regions());
+        assertFalse(regionData.regions().isEmpty());
     }
 
     static Stream<Arguments> validLogiqxDats() throws Exception {

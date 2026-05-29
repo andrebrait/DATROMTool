@@ -75,8 +75,8 @@ public final class GameParser {
 
     private static boolean detectIsBad(Game g) {
         boolean result = Patterns.BAD.matcher(g.getName()).find()
-                || g.getRoms().stream().map(Rom::getStatus).anyMatch(Status.BAD_DUMP::equals)
-                || g.getDisks().stream().map(Disk::getStatus).anyMatch(Status.BAD_DUMP::equals);
+                || g.getRoms().stream().map(Rom::status).anyMatch(Status.BAD_DUMP::equals)
+                || g.getDisks().stream().map(Disk::status).anyMatch(Status.BAD_DUMP::equals);
         if (result) {
             log.debug("'{}' detected as Bad Dump", g.getName());
         }
@@ -88,11 +88,11 @@ public final class GameParser {
         Matcher matcher = Patterns.SECTIONS.matcher(game.getName());
         while (matcher.find()) {
             for (String element : matcher.group(1).split(",")) {
-                for (RegionData.RegionDataEntry regionDataEntry : regionData.getRegions()) {
-                    if (regionDataEntry.getPattern().matcher(element.trim()).matches()) {
+                for (RegionData.RegionDataEntry regionDataEntry : regionData.regions()) {
+                    if (regionDataEntry.pattern().matcher(element.trim()).matches()) {
                         log.debug(
                                 "Detected region '{}' for '{}'",
-                                regionDataEntry.getCode(),
+                                regionDataEntry.code(),
                                 game.getName());
                         detected.add(regionDataEntry);
                     }
@@ -101,40 +101,38 @@ public final class GameParser {
         }
         Set<RegionData.RegionDataEntry> provided = new LinkedHashSet<>();
         for (Release release : game.getReleases()) {
-            if (!release.getRegion().isEmpty()) {
-                String code = release.getRegion().trim().toUpperCase();
-                RegionData.RegionDataEntry regionDataEntry = regionData.getRegions().stream()
-                        .filter(e -> e.getCode().equals(code))
+            if (!release.region().isEmpty()) {
+                String code = release.region().trim().toUpperCase();
+                RegionData.RegionDataEntry regionDataEntry = regionData.regions().stream()
+                        .filter(e -> e.code().equals(code))
                         .findFirst()
                         .orElseGet(() -> {
                             log.warn("Unrecognized region: '{}' in {}", code, release);
-                            return RegionData.RegionDataEntry.builder().code(code).build();
+                            return new RegionData.RegionDataEntry(code);
                         });
                 log.debug(
                         "DAT provided region '{}' for '{}'",
-                        regionDataEntry.getCode(),
+                        regionDataEntry.code(),
                         game.getName());
                 provided.add(regionDataEntry);
             }
         }
         if (shouldLogDivergences(detected, provided)) {
             List<String> detectedCodes = detected.stream()
-                    .map(RegionData.RegionDataEntry::getCode)
+                    .map(RegionData.RegionDataEntry::code)
                     .toList();
             List<String> providedCodes = provided.stream()
-                    .map(RegionData.RegionDataEntry::getCode)
+                    .map(RegionData.RegionDataEntry::code)
                     .toList();
             log.warn(
                     "Detected regions by name do not match with the ones provided by the DAT. "
                             + "Difference(detected={}, provided={}, game={})",
                     detectedCodes, providedCodes, game.getName());
         }
-        return RegionData.builder()
-                .regions(ImmutableSet.<RegionData.RegionDataEntry>builder()
-                        .addAll(detected)
-                        .addAll(provided)
-                        .build())
-                .build();
+        return new RegionData(ImmutableSet.<RegionData.RegionDataEntry>builder()
+                .addAll(detected)
+                .addAll(provided)
+                .build());
     }
 
     private ImmutableSet<String> detectLanguages(Game game) {
@@ -154,8 +152,8 @@ public final class GameParser {
         }
         Set<String> provided = new LinkedHashSet<>();
         for (Release release : game.getReleases()) {
-            if (release.getLanguage() != null && !release.getLanguage().isEmpty()) {
-                for (String part : COMMA_OR_PLUS.split(release.getLanguage())) {
+            if (release.language() != null && !release.language().isEmpty()) {
+                for (String part : COMMA_OR_PLUS.split(release.language())) {
                     String language = part.trim().toLowerCase();
                     if (!language.isEmpty()) {
                         log.debug(

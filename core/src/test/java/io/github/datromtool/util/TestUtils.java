@@ -30,12 +30,10 @@ public final class TestUtils {
 
     public static RegionData getRegionByCode(RegionData regionData, String code, String... codes) {
         List<String> codeList = Arrays.asList(codes);
-        return RegionData.builder()
-                .regions(regionData.getRegions()
-                        .stream()
-                        .filter(r -> code.equals(r.getCode()) || codeList.contains(r.getCode()))
-                        .collect(ImmutableSet.toImmutableSet()))
-                .build();
+        return new RegionData(regionData.regions()
+                .stream()
+                .filter(r -> code.equals(r.code()) || codeList.contains(r.code()))
+                .collect(ImmutableSet.toImmutableSet()));
     }
 
     public static boolean isRar5(FileScanner.Result i) {
