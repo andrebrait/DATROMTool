@@ -177,15 +177,15 @@ public abstract class ArchiveContentsDependantTest extends TestDirDependantTest 
             switch (field) {
                 case MTIME -> {
                     // workaround for missing mtime PAX header in Tar
-                    FileTime truncated = truncate(actual.getLastModifiedTime(), TimeUnit.SECONDS);
-                    if (truncated != null && truncated.equals(actual.getLastModifiedTime())) {
-                        assertEquals(truncate(expected.getLastModifiedTime(), TimeUnit.SECONDS), truncated);
+                    FileTime truncated = truncate(actual.lastModifiedTime(), TimeUnit.SECONDS);
+                    if (truncated != null && truncated.equals(actual.lastModifiedTime())) {
+                        assertEquals(truncate(expected.lastModifiedTime(), TimeUnit.SECONDS), truncated);
                     } else {
-                        assertEquals(expected.getLastModifiedTime(), actual.getLastModifiedTime());
+                        assertEquals(expected.lastModifiedTime(), actual.lastModifiedTime());
                     }
                 }
-                case ATIME -> assertEquals(expected.getLastAccessTime(), actual.getLastAccessTime());
-                case CTIME -> assertEquals(expected.getCreationTime(), actual.getCreationTime());
+                case ATIME -> assertEquals(expected.lastAccessTime(), actual.lastAccessTime());
+                case CTIME -> assertEquals(expected.creationTime(), actual.creationTime());
             }
         }
     }

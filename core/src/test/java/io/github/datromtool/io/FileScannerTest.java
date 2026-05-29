@@ -90,8 +90,8 @@ class FileScannerTest extends TestDirDependantTest {
                 String filename = getFilename(i);
                 CrcKey crc32 = crc32sums.get(filename);
                 assertNotNull(crc32);
-                assertEquals((long) crc32.getSize(), i.getSize());
-                assertEquals(crc32.getCrc(), i.getDigest().getCrc());
+                assertEquals((long) crc32.size(), i.getSize());
+                assertEquals(crc32.crc(), i.getDigest().getCrc());
                 assertEquals(md5sums.get(filename), i.getDigest().getMd5());
                 assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
             }
@@ -175,8 +175,8 @@ class FileScannerTest extends TestDirDependantTest {
                 String filename = getFilename(i);
                 CrcKey crc32 = crc32sums.get(filename);
                 assertNotNull(crc32);
-                assertEquals((long) crc32.getSize(), i.getSize());
-                assertEquals(crc32.getCrc(), i.getDigest().getCrc());
+                assertEquals((long) crc32.size(), i.getSize());
+                assertEquals(crc32.crc(), i.getDigest().getCrc());
                 assertEquals(md5sums.get(filename), i.getDigest().getMd5());
                 assertEquals(sha1sums.get(filename), i.getDigest().getSha1());
             }

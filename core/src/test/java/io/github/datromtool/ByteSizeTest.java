@@ -10,32 +10,32 @@ class ByteSizeTest {
     @Test
     void testFromBytes_noScaling() {
         ByteSize size = ByteSize.fromBytes(1000);
-        assertEquals(1000.0, size.getSize());
-        assertEquals(ByteUnit.BYTE, size.getUnit());
+        assertEquals(1000.0, size.size());
+        assertEquals(ByteUnit.BYTE, size.unit());
     }
 
     @Test
     void testFromBytes_scaleToKiloBytes() {
         // 1 KB
         ByteSize size = ByteSize.fromBytes(KILOBYTE.getSize());
-        assertEquals(1.0, size.getSize());
-        assertEquals(KILOBYTE, size.getUnit());
+        assertEquals(1.0, size.size());
+        assertEquals(KILOBYTE, size.unit());
     }
 
     @Test
     void testFromBytes_scaleToKiloBytes_fraction() {
         // 1 KB + 512 B
         ByteSize size = ByteSize.fromBytes(KILOBYTE.getSize() + 512);
-        assertEquals(1.5, size.getSize());
-        assertEquals(KILOBYTE, size.getUnit());
+        assertEquals(1.5, size.size());
+        assertEquals(KILOBYTE, size.unit());
     }
 
     @Test
     void testFromBytes_scaleToMegaBytes() {
         // 456 MB + 256 KB
         ByteSize size = ByteSize.fromBytes(MEGABYTE.getSize() * 456 + KILOBYTE.getSize() * 256);
-        assertEquals(456.25, size.getSize());
-        assertEquals(MEGABYTE, size.getUnit());
+        assertEquals(456.25, size.size());
+        assertEquals(MEGABYTE, size.unit());
     }
 
     @Test
