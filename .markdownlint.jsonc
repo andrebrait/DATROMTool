@@ -1,0 +1,27 @@
+{
+  // DATROMTool markdown lint config.
+  // Read by the VS Code "markdownlint" extension and markdownlint-cli2
+  // (run: `npx markdownlint-cli2`). Pragmatic ruleset: structural/consistency
+  // rules are enforced; style rules that fight the deliberate documentation
+  // style are disabled.
+  "default": true,
+
+  // line-length: policy docs and README use long prose and wide tables on purpose.
+  "MD013": false,
+
+  // table-column-style: compact (unaligned) pipe tables are the house style.
+  "MD060": false,
+
+  // emphasis-as-heading: caveman/ponytail skill docs use **bold** inline labels.
+  "MD036": false,
+
+  // first-line-heading: frontmatter-led files (e.g. skills/*.md) begin with a
+  // YAML block rather than an H1.
+  "MD041": false,
+
+  // duplicate-heading: allow the same heading text under different parents.
+  "MD024": { "siblings_only": true },
+
+  // inline-html: only the elements a centered README header needs.
+  "MD033": { "allowed_elements": ["div", "img", "h1", "p", "strong", "a", "em", "br"] }
+}

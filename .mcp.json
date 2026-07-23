@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "token-savior-recall": {
+            "command": "sh",
+            "args": ["scripts/mcp-token-savior.sh"],
+            "env": {
+                "TOKEN_SAVIOR_CLIENT": "claude-code"
+            }
+        }
+    }
+}

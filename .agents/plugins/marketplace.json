@@ -1,0 +1,20 @@
+{
+  "name": "codex-marketplace-datromtool",
+  "interface": {
+    "displayName": "Codex Plugins (DATROMTool)"
+  },
+  "plugins": [
+    {
+      "name": "ponytail",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ponytail"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

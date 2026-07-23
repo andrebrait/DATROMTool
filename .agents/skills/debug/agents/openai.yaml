@@ -1,0 +1,5 @@
+interface:
+  display_name: "Debug"
+  short_description: "Hypothesis-ledger debugging for hard bugs"
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,81 @@
+#!/bin/sh
+# pre-push: (a) enforce the release tag scheme, and (b) apply
+# --force-with-lease semantics by EFFECT to agent branch pushes.
+#
+# git feeds the pushed refs on stdin, one per line:
+#   <local ref> <local oid> <remote ref> <remote oid>
+#
+# (a) A pushed tag refs/tags/v* must be either
+#       vX.Y.Z          -> stable      (numeric X.Y.Z, no suffix)
+#       vX.Y.Z-rc<N>    -> prerelease  (e.g. v1.0.0-rc1)
+#     any other v* tag shape is rejected.
+#
+# (b) An agent (CLAUDECODE=1 or CODEX_THREAD_ID set) branch push that is not a
+#     fast-forward is allowed only when the advertised remote oid equals the
+#     local remote-tracking ref — i.e. the history being overwritten was
+#     fetched. This is --force-with-lease's check applied to the push's effect.
+#     Tags and normal fast-forwards are never blocked here.
+#
+# Enable: git config core.hooksPath .githooks
+
+z40="0000000000000000000000000000000000000000"
+
+# Both loops consume the per-ref update list, so capture stdin once.
+updates=$(cat)
+
+# --- (a) release tag scheme --------------------------------------------------
+while IFS=' ' read -r _local_ref local_sha remote_ref _remote_sha; do
+	case "$remote_ref" in refs/tags/*) ;; *) continue ;; esac
+	[ "$local_sha" = "$z40" ] && continue   # tag deletion
+
+	tag="${remote_ref#refs/tags/}"
+	case "$tag" in v*) ;; *) continue ;; esac  # only guard v* release tags
+
+	# Accept vX.Y.Z (stable) or vX.Y.Z-rc<N> (prerelease); reject anything else.
+	case "$tag" in
+		v[0-9]*.[0-9]*.[0-9]*-rc[0-9]*) ok=1 ;;
+		v[0-9]*.[0-9]*.[0-9]*)          ok=1 ;;
+		*)                              ok=0 ;;
+	esac
+	# Reject stray extra characters the coarse globs let through (e.g. trailing
+	# junk, non-numeric segments) by re-checking against a strict grep.
+	if [ "$ok" = 1 ]; then
+		printf '%s\n' "$tag" \
+			| grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$' || ok=0
+	fi
+	if [ "$ok" != 1 ]; then
+		echo "error: tag '$tag' does not match the release scheme." >&2
+		echo "       stable: vX.Y.Z   prerelease: vX.Y.Z-rc<N>  (e.g. v1.0.0, v1.0.0-rc1)" >&2
+		exit 1
+	fi
+done <<DATROMTOOL_TAG_UPDATES
+$updates
+DATROMTOOL_TAG_UPDATES
+
+# --- (b) agent lease-by-effect guard ----------------------------------------
+agent_runtime=0
+[ "${CLAUDECODE:-}" = "1" ] && agent_runtime=1
+[ -n "${CODEX_THREAD_ID:-}" ] && agent_runtime=1
+if [ "$agent_runtime" = "1" ]; then
+	remote_name="${1:-origin}"
+	while IFS=' ' read -r _local_ref local_sha remote_ref remote_sha; do
+		case "$remote_ref" in refs/heads/*) ;; *) continue ;; esac
+		[ "$local_sha" = "$z40" ] && continue   # branch deletion
+		[ "$remote_sha" = "$z40" ] && continue  # branch creation
+		# Fast-forward (remote oid is an ancestor of what we push) → allow.
+		git merge-base --is-ancestor "$remote_sha" "$local_sha" 2>/dev/null && continue
+		branch="${remote_ref#refs/heads/}"
+		tracking=$(git rev-parse --verify "refs/remotes/${remote_name}/${branch}" 2>/dev/null) || tracking=""
+		if [ "$remote_sha" != "$tracking" ]; then
+			echo "error: agent push would rewrite unfetched history of '${branch}'." >&2
+			echo "       The remote moved past your remote-tracking ref: run 'git fetch ${remote_name}'," >&2
+			echo "       rebase onto the new tip, then push with --force-with-lease." >&2
+			exit 1
+		fi
+	done <<DATROMTOOL_LEASE_UPDATES
+$updates
+DATROMTOOL_LEASE_UPDATES
+fi
+unset agent_runtime
+
+exit 0

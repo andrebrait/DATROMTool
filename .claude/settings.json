@@ -1,0 +1,119 @@
+{
+  "env": {
+    "SHELL": "bash",
+    "MCP_TIMEOUT": "120000"
+  },
+  "enableAllProjectMcpServers": true,
+  "statusLine": {
+    "type": "command",
+    "command": "sh \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/statusline.sh\""
+  },
+  "enabledPlugins": {
+    "ponytail@ponytail": true,
+    "caveman@caveman": true
+  },
+  "extraKnownMarketplaces": {
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    }
+  },
+  "permissions": {
+    "allow": [
+      "Bash(gh pr merge:*)",
+      "Bash(rtk gh pr merge:*)"
+    ],
+    "deny": [
+      "Bash(git stash)",
+      "Bash(git stash:*)",
+      "Bash(rtk git stash)",
+      "Bash(rtk git stash:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/rtk-hook.sh\"",
+            "timeout": 2000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash|WebFetch|Read|Grep|mcp__token-savior-recall__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PROJECT_DIR:-.}/scripts/ts-hook.sh\" tool_capture_hook",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/caveman-stats-refresh.sh\""
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v zstd >/dev/null 2>&1 || python3 -c 'import zstandard' 2>/dev/null || pip3 install -q zstandard >/dev/null 2>&1 || true"
+          },
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/rtk-install.sh\""
+          },
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/session-branch-sync.sh\""
+          },
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"MANDATORY: AGENTS.md is the canonical agent bootstrap of this repo (CLAUDE.md is the thin Claude adapter importing it) — follow it, especially Working principles (investigate, do not assume; confirm genuine forks) and the never-list. The .agents/policy/ and .agents/context/ files are POLICY, binding like the bootstrap itself; read the relevant file whenever a routing-table trigger matches the task. Activate BOTH modes: ponytail at full (/ponytail:ponytail plugin form or /ponytail vendored form, whichever exists — laziest working solution) and /caveman (terse, no filler, full technical accuracy); when only one mode exists, activate it alone. This step CANNOT be skipped. Exception for external or public-facing text and documentation (GitHub issue and PR comments, PR bodies, commit messages, docs): stay concise and to the point but use normal professional grammar, toning the caveman style down. This is a Java/Maven project: master is the single mainline (no devel/main split); all code work (module src/, tests, pom.xml, CI) happens in a dedicated git worktree via a rebase-only PR; dev-only classes (docs, agent config under .claude/.codex/.agents, skills) commit directly to master after fetch+rebase. The gate is mvn verify.\"}}'"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"SubagentStart\",\"additionalContext\":\"DELEGATE MODES (repo policy, injected into every subagent): (1) PONYTAIL full — build the laziest working solution: YAGNI, reuse what already exists in this codebase, stdlib/platform before dependencies, shortest correct diff; never simplify away input validation, error handling, security, tests, or anything the brief explicitly requires. EXCEPTION: if your task is review/verification only, ponytail does not govern it — you build nothing; hunt with full thoroughness. (2) CAVEMAN full — write your report/handoff terse: drop articles, filler, hedging; fragments OK. (3) WORKTREE BASE CHECK — before your first edit, git fetch origin and confirm your worktree is cut from the intended base (default origin/master): a fresh worktree where git rev-list --count HEAD..origin/master is nonzero was cut from a wrong or stale branch — rebase onto or re-cut from the true base before working, and record it in your handoff. (4) TOKEN-SAVIOR MCP — load the mcp__token-savior-recall__ tools via ToolSearch and prefer them over raw Grep/Read whole-file dumps when locating symbols or reading a single method/class body. (5) ROLE ROUTING — load only the bootstrap routing-table rows your task touches plus your role floor; do not read policy docs outside them. VERBATIM EVIDENCE RULE: pasted command outputs, test results, red->green runs, error strings, and code stay byte-exact and complete — caveman compresses connective prose only. Fill EVERY required handoff/output field; a missing field is a gate failure. Public-facing text (PR/issue comments, commit messages, docs) uses normal professional grammar. These modes govern style and scope, never rigor: run every gate, paste real outputs.\"}}'"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"UserPromptSubmit\",\"additionalContext\":\"DISCIPLINE (bootstrap invariants, verbatim from AGENTS.md; every turn): Never assume — read the source of truth, investigate the live state, and confirm a genuine fork before building. · a claim without a run artifact is ASSUMED · environmental claims written into artifacts are probed in-session first · debugging lists ≥2 hypotheses + a discriminating probe before any fix edit · no self-exemption from a MUST rule without quoting the authorizing user message · A behaviour change needs its test-first red→green proof: reproduction test executed RED before any production edit, frozen byte-identical, re-run GREEN unchanged — executed runs, never reasoned through. · Every change ships WITH its tests; no coverage theater (every test carries an assertion that fails on regression) · substantial coding work is planned/gated by the top tier, implemented by small-tier sub-agents, every step gated by an independent small-tier verifier via the brief → handoff → gate contract · Session-start hooks activate ponytail (build lazy) + caveman (talk terse) · Read the whole GitHub issue (title, body, every comment) before working it.\"}}'"
+          }
+        ]
+      }
+    ]
+  }
+}

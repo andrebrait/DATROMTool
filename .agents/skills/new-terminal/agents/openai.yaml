@@ -1,0 +1,5 @@
+interface:
+  display_name: "New Terminal"
+  short_description: "Launch a detached Claude Code instance"
+policy:
+  allow_implicit_invocation: false

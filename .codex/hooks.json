@@ -1,0 +1,36 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "root=$(git rev-parse --show-toplevel) && exec sh \"$root/.claude/hooks/rtk-install.sh\"",
+            "timeout": 120,
+            "statusMessage": "Preparing RTK filters"
+          },
+          {
+            "type": "command",
+            "command": "root=$(git rev-parse --show-toplevel) && exec sh \"$root/.claude/hooks/session-branch-sync.sh\"",
+            "timeout": 120,
+            "statusMessage": "Checking branch freshness"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "^(Bash|mcp__token-savior-recall__.*)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "root=$(git rev-parse --show-toplevel) && exec sh \"$root/scripts/ts-hook.sh\" tool_capture_hook",
+            "timeout": 5,
+            "statusMessage": "Capturing large tool output with Token Savior"
+          }
+        ]
+      }
+    ]
+  }
+}

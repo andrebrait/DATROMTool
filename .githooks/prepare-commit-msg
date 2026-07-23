@@ -1,0 +1,82 @@
+#!/bin/sh
+# prepare-commit-msg: (a) block agent commits in the primary checkout, then
+# (b) credit the human owner with a Co-authored-by trailer.
+#
+# (a) In agent / managed-remote environments the *committer* is the agent
+#     (Claude/Codex); agents must commit only in a linked worktree, never the
+#     primary checkout. Detected by state (--git-dir == --git-common-dir), not
+#     command text. Opt out in an agent-dedicated checkout with either
+#     DATROMTOOL_USER_EMAIL set (managed-remote) or
+#     `git config datromtool.allowprimarycommit true`.
+#
+# (b) With the agent as committer, GitHub credits only the committer; append a
+#     Co-authored-by trailer for the human owner so they stay visible. Owner is
+#     resolved generically: coauthor.email/coauthor.name git config, else
+#     $DATROMTOOL_USER_EMAIL, else the commit author. No-op when the human is
+#     already the committer or already credited. Runs even under --no-verify.
+#
+# Enable: git config core.hooksPath .githooks
+
+set -u
+
+# --- (a) agent primary-checkout guard ---------------------------------------
+agent_runtime=0
+[ "${CLAUDECODE:-}" = "1" ] && agent_runtime=1
+[ -n "${CODEX_THREAD_ID:-}" ] && agent_runtime=1
+if [ "$agent_runtime" = "1" ] && [ -z "${DATROMTOOL_USER_EMAIL:-}" ] &&
+	[ "$(git config --bool --get datromtool.allowprimarycommit 2>/dev/null)" != "true" ]; then
+	unset CDPATH # a CDPATH hit makes cd echo the dir, corrupting $(cd ... && pwd -P)
+	git_dir=$(cd "$(git rev-parse --git-dir)" && pwd -P)
+	common_dir=$(cd "$(git rev-parse --git-common-dir)" && pwd -P)
+	if [ "$git_dir" = "$common_dir" ]; then
+		echo "prepare-commit-msg: agent commit in the primary checkout blocked — agents commit only in a linked worktree." >&2
+		echo "If this checkout is dedicated to the agent: git config datromtool.allowprimarycommit true" >&2
+		exit 1
+	fi
+fi
+unset agent_runtime
+
+# --- (b) co-authored-by owner trailer ---------------------------------------
+msg_file=$1
+msg_type=${2:-}
+
+# Leave merge/squash messages alone.
+case "$msg_type" in
+	merge|squash) exit 0 ;;
+esac
+
+ident_email() {
+	# Extract <email> from a "Name <email> ts tz" ident line.
+	printf '%s\n' "$1" | sed -n 's/.*<\(.*\)>.*/\1/p'
+}
+
+committer_ident=$(git var GIT_COMMITTER_IDENT 2>/dev/null) || exit 0
+committer_email=$(ident_email "$committer_ident")
+
+# Resolve the owner email: git config, then env, then the commit author.
+email=$(git config --get coauthor.email 2>/dev/null || true)
+[ -n "$email" ] || email=${DATROMTOOL_USER_EMAIL:-}
+if [ -z "$email" ]; then
+	author_email=$(ident_email "$(git var GIT_AUTHOR_IDENT 2>/dev/null || true)")
+	[ -n "$author_email" ] && [ "$author_email" != "$committer_email" ] && email=$author_email
+fi
+
+# Nothing to credit, or the human IS the committer → no-op.
+[ -n "$email" ] || exit 0
+[ "$email" != "$committer_email" ] || exit 0
+
+# Already credited (case-insensitive, literal email) → no-op.
+if grep -i 'co-authored-by:' "$msg_file" 2>/dev/null | grep -qiF "<$email>"; then
+	exit 0
+fi
+
+# Resolve a display name (cosmetic — GitHub matches by email).
+name=$(git config --get coauthor.name 2>/dev/null || true)
+[ -n "$name" ] || name=$(git log -1 --author="$email" --format='%an' 2>/dev/null || true)
+[ -n "$name" ] || name=${email%@*}
+
+# Append as a real trailer; fall back to a plain append if interpret-trailers
+# is unavailable.
+git interpret-trailers --in-place \
+	--trailer "Co-authored-by: $name <$email>" "$msg_file" 2>/dev/null \
+	|| printf '\nCo-authored-by: %s <%s>\n' "$name" "$email" >>"$msg_file"

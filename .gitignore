@@ -48,3 +48,8 @@ test-out/
 build/
 # macOS
 .DS_Store
+
+# Agent worktrees + local agent state (see AGENTS.md / .agents/policy/git.md)
+.claude/worktrees/
+.claude/settings.local.json
+.codex/*.local.*
