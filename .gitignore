@@ -46,3 +46,5 @@ core/src/test/resources/valid/dats/no-intro/*.dat
 !test-data/**
 test-out/
 build/
+# macOS
+.DS_Store
