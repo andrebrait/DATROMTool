@@ -16,10 +16,25 @@ import static org.junit.jupiter.api.Assertions.*;
 class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
 
     static Path rarFile;
+    static Path rar5File;
 
     @BeforeAll
     static void resolveFile() {
         rarFile = archiveTestDataSource.resolve("archives").resolve("files.rar4.rar");
+        rar5File = archiveTestDataSource.resolve("archives").resolve("files.rar");
+    }
+
+    /**
+     * junrar (>= 8.0.0) reads RAR5 natively, so a RAR5 archive opens and operates exactly like
+     * a real unrar would: same entries, same contents, in physical order.
+     */
+    @Test
+    void testReadRar5Contents() throws IOException {
+        try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rar5File)) {
+            assertIsLoremIpsum(spec.getNextInternalSpec(), true);
+            assertIsShortText(spec.getNextInternalSpec(), true);
+            assertNull(spec.getNextInternalSpec());
+        }
     }
 
     @Test

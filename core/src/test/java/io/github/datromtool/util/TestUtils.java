@@ -36,11 +36,6 @@ public final class TestUtils {
                 .collect(ImmutableSet.toImmutableSet()));
     }
 
-    public static boolean isRar5(FileScanner.Result i) {
-        return i.getArchivePath() == null
-                && i.getPath().getFileName().toString().endsWith(".txt.rar");
-    }
-
     public static String getFilename(FileScanner.Result i) {
         return i.getArchivePath() != null
                 ? Paths.get(i.getArchivePath()).getFileName().toString()

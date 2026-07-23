@@ -9,9 +9,6 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 public final class ArchiveDestinationSpecFactory {
 
-    private final boolean forceSevenZip;
-    private final boolean forceUnrar;
-
     @Nonnull
     public ArchiveDestinationSpec buildSourceSpec(@Nonnull Path path, @Nonnull ArchiveType archiveType) {
         return null;

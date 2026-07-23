@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
-import java.nio.file.Path;
-
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -38,15 +36,6 @@ public class AppConfig {
         @Builder.Default
         @NonNull
         Integer threads = Math.max(1, Runtime.getRuntime().availableProcessors() / 2);
-
-        Path customUnrarPath;
-        Path customSevenZipPath;
-
-        @Builder.Default
-        boolean forceUnrar = false;
-
-        @Builder.Default
-        boolean forceSevenZip = false;
     }
 
     @With
@@ -68,15 +57,6 @@ public class AppConfig {
 
         @Builder.Default
         boolean allowRawZipCopy = false;
-
-        Path customUnrarPath;
-        Path customSevenZipPath;
-
-        @Builder.Default
-        boolean forceUnrar = false;
-
-        @Builder.Default
-        boolean forceSevenZip = false;
     }
 
     @NonNull

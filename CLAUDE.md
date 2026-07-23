@@ -82,7 +82,7 @@ Maven multi-module build:
 2. **picocli Framework** — CLI uses annotation-driven commands with option group mixins (`@ArgGroup` / `@Mixin`) for clean separation of concerns.
 3. **Strategy Pattern** — `GameFilterer` and `GameSorter` accept predicates/comparators; sorting uses a pluggable `SubComparator` chain.
 4. **No-Intro Name Parsing** — `GameParser` decodes structured metadata from ROM filenames (regions, languages, version, pre-release status, type).
-5. **Archive Abstraction** — `ArchiveSourceSpec`/`ArchiveDestinationSpec` hierarchies with factory classes; RAR5 delegates to external process (`ProcessArchiveSourceSpec`).
+5. **Archive Abstraction** — `ArchiveSourceSpec`/`ArchiveDestinationSpec` hierarchies with factory classes; RAR (v4 and v5) is read natively via junrar.
 6. **CLI → Core delegation** — `OneGameOneRomCommand` (CLI) builds config objects and delegates to `OneGameOneRom` (core), keeping CLI concerns out of business logic.
 
 ## Testing
@@ -95,7 +95,7 @@ Maven multi-module build:
 
 1. **No-Intro Naming Convention** — Drives `GameParser` for region, language, version, type metadata; detector validates DAT metadata divergences.
 2. **Hash Priority** — ROM matching: SHA-256 > SHA-1 > MD5 > (size + CRC).
-3. **Archive Format Support** — ZIP and 7z native; RAR ≤ v4 via junrar; RAR5 requires external UnRAR or 7-Zip executable.
+3. **Archive Format Support** — ZIP and 7z native; RAR (v4 and v5) via junrar.
 4. **Lombok** — Used extensively (`@Data`, `@Value`, `@With`, `@Jacksonized`). `lombok.config` at root applies project-wide.
 5. **Java 25** — Minimum language level; do not downgrade. Use Java 25 idioms: pattern switch (`switch (x) { case Foo f -> ... }`), pattern variables in `instanceof` (`x instanceof Foo f`), and `Stream.toList()` instead of `Collectors.toList()` for read-only results.
 
@@ -106,7 +106,7 @@ Maven multi-module build:
 - **jline** + **jansi** — Terminal detection and ANSI color output
 - **Guava** 33.6.0-jre — Immutable collections and utilities
 - **Apache Commons** (compress, codec, lang3) — Archive and utility operations
-- **junrar** 7.6.0 — RAR ≤ v4 reading
+- **junrar** 8.0.0 — RAR reading (v4 and v5)
 - **JUnit 5** + **junit-pioneer** + **Mockito** — Testing
 - **SLF4J + Logback** — Logging
 

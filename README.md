@@ -85,19 +85,11 @@ DATROMTool can work with the following archive formats:
 | Format | Read | Write |
 |--------|------|-------|
 | Zip    | ✅    | ✅     |
-| RAR    | ✅*   | ❌     |
+| RAR    | ✅    | ❌     |
 | 7z     | ✅    | ✅     |
 | TAR    | ✅    | ✅     |
 
-- RAR up to version 4 is natively supported
-- RAR 5 is supported through external executables
-    - UnRAR, if present in your `PATH`
-    - 7-Zip
-    - DATROMTool includes executables for either UnRAR and 7-Zip for the following platforms and architectures, meaning you shouldn't have to install anything in order to use it:
-        - Windows (x86, x64 and ARM64)
-        - Linux (x86, x64, ARM and ARM64)
-        - macOS (x64 and ARM64)
-        - BSD (x86 and x64)
+- RAR (both version 4 and version 5) is natively supported through junrar; no external executables are required
 
 The following compression algorithms are supoorted either plain or used in conjunction with TAR archives (both read and write):
 
