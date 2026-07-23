@@ -27,12 +27,17 @@ class RarArchiveSourceSpecTest extends ArchiveContentsDependantTest {
     /**
      * junrar (>= 8.0.0) reads RAR5 natively, so a RAR5 archive opens and operates exactly like
      * a real unrar would: same entries, same contents, in physical order.
+     *
+     * <p>RAR5 stores modification times as absolute UTC (unlike RAR4's timezone-less MS-DOS
+     * local time), so the times are asserted against the absolute UTC expectations — no
+     * timezone conversion — exactly like the Zip and 7z source specs. Asserting the DOS-local
+     * variant made this test pass only under a UTC+1 default timezone and fail under UTC (CI).
      */
     @Test
     void testReadRar5Contents() throws IOException {
         try (RarArchiveSourceSpec spec = new RarArchiveSourceSpec(rar5File)) {
-            assertIsLoremIpsum(spec.getNextInternalSpec(), true);
-            assertIsShortText(spec.getNextInternalSpec(), true);
+            assertIsLoremIpsum(spec.getNextInternalSpec());
+            assertIsShortText(spec.getNextInternalSpec());
             assertNull(spec.getNextInternalSpec());
         }
     }
