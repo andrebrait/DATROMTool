@@ -91,6 +91,15 @@ class OneGameOneRomCommandDivergenceTest {
     // pipeline (past GameParser.parse + the post-parse validate call) rather than at option
     // parsing — proving the option value flows all the way through OneGameOneRom.generate() for
     // every mode, not just the default.
+    //
+    // CodeRabbit finding: asserting only the identical downstream error does NOT discriminate
+    // which mode actually reached OneGameOneRom -- a call() that hardcoded ONE_WAY at the
+    // OneGameOneRom construction call site (ignoring the parsed `divergenceDetection` field)
+    // would pass this identically for every mode. The added assertion below inspects
+    // `command.oneGameOneRom` (package-private, set by call() itself) via
+    // OneGameOneRom#getDivergenceDetection(), not the command's own field/getter, so a
+    // call-site hardcode is caught: mutation-tested (see handoff) by temporarily hardcoding
+    // ONE_WAY at that call site, which fails this assertion for every non-ONE_WAY mode.
     @Test
     void everyDivergenceValueReachesOneGameOneRomConstruction() {
         for (GameParser.DivergenceDetection mode : GameParser.DivergenceDetection.values()) {
@@ -107,6 +116,32 @@ class OneGameOneRomCommandDivergenceTest {
                     ex.getMessage().contains("Parent/Clone information"),
                     "mode " + mode + " must fail with the same downstream DAT-shape error, got: "
                             + ex.getMessage());
+            assertEquals(mode, command.oneGameOneRom.getDivergenceDetection(),
+                    "mode " + mode + " must be the exact value that reached OneGameOneRom's "
+                            + "constructor, not just the command's own parsed field");
         }
+    }
+
+    // Explicit, named pins for the two specific values the correction round asked for: the
+    // non-default "always" and the default-when-absent "one_way", each verified against the
+    // constructed OneGameOneRom instance (not the command's own field).
+    @Test
+    void divergenceAlwaysReachesOneGameOneRomConstructionAsAlways() {
+        OneGameOneRomCommand command = new OneGameOneRomCommand();
+        CommandLine commandLine = newCommandLine(command);
+        commandLine.parseArgs("--divergence", "always", fixture("minimal.dat").toString());
+        assertThrows(CommandLine.ParameterException.class, command::call);
+        assertEquals(GameParser.DivergenceDetection.ALWAYS, command.oneGameOneRom.getDivergenceDetection(),
+                "--divergence always must reach OneGameOneRom's constructor as ALWAYS");
+    }
+
+    @Test
+    void absentDivergenceReachesOneGameOneRomConstructionAsOneWay() {
+        OneGameOneRomCommand command = new OneGameOneRomCommand();
+        CommandLine commandLine = newCommandLine(command);
+        commandLine.parseArgs(fixture("minimal.dat").toString());
+        assertThrows(CommandLine.ParameterException.class, command::call);
+        assertEquals(GameParser.DivergenceDetection.ONE_WAY, command.oneGameOneRom.getDivergenceDetection(),
+                "absent --divergence must reach OneGameOneRom's constructor as ONE_WAY");
     }
 }

@@ -37,6 +37,15 @@ class GameParserTest {
         return Datafile.builder().games(ImmutableList.of(game)).build();
     }
 
+    // A name-implied language ("En" -> "en") with no <release> element at all: "provided" is
+    // empty. Mirrors gameWithNameOnlyRegion for the language side of GameParser.detectLanguages.
+    private static Game gameWithNameOnlyLanguage() {
+        return Game.builder()
+                .name("Test Game (En)")
+                .description("Test Game (En)")
+                .build();
+    }
+
     @Test
     void oneWayModeIgnoresADivergenceWhenTheDatDeclaresNoRegionAtAll() throws Exception {
         RegionData regionData = TestUtils.loadRegionData();
@@ -107,5 +116,60 @@ class GameParserTest {
         assertEquals(1, twoWayParsed.getDivergences().size(),
                 "TWO_WAY must flag a provided superset that isn't an exact match, got: "
                         + twoWayParsed.getDivergences());
+    }
+
+    // Second correction round: the "language" divergence path (GameParser.detectLanguages ->
+    // divergences.add("language", ...)) had zero test coverage. Mirrors the region cases above.
+
+    @Test
+    void oneWayModeIgnoresALanguageDivergenceWhenTheDatDeclaresNoLanguageAtAll() throws Exception {
+        RegionData regionData = TestUtils.loadRegionData();
+        GameParser gameParser = new GameParser(regionData, GameParser.DivergenceDetection.ONE_WAY);
+
+        ParsedGame parsedGame = gameParser.parse(datafileOf(gameWithNameOnlyLanguage())).get(0);
+
+        assertTrue(parsedGame.getDivergences().isEmpty(),
+                "ONE_WAY must not flag a language divergence when the DAT declares no language "
+                        + "at all, got: " + parsedGame.getDivergences());
+    }
+
+    @Test
+    void alwaysModeFlagsTheSameLanguageCaseOneWayIgnores() throws Exception {
+        RegionData regionData = TestUtils.loadRegionData();
+        GameParser gameParser = new GameParser(regionData, GameParser.DivergenceDetection.ALWAYS);
+
+        ParsedGame parsedGame = gameParser.parse(datafileOf(gameWithNameOnlyLanguage())).get(0);
+
+        assertEquals(1, parsedGame.getDivergences().size(),
+                "ALWAYS must flag a language divergence when name-implied metadata has no "
+                        + "DAT-declared counterpart at all, got: " + parsedGame.getDivergences());
+        ParsedGame.Divergence divergence = parsedGame.getDivergences().get(0);
+        assertEquals("language", divergence.field());
+        assertEquals(Set.of("en"), divergence.detected());
+        assertTrue(divergence.provided().isEmpty());
+    }
+
+    @Test
+    void oneWayModeFlagsAGenuineLanguageMismatch() throws Exception {
+        RegionData regionData = TestUtils.loadRegionData();
+        GameParser gameParser = new GameParser(regionData, GameParser.DivergenceDetection.ONE_WAY);
+        // region="" (present but empty) so the release contributes no region at all, keeping
+        // this case isolated to the language field only.
+        Game game = Game.builder()
+                .name("Test Game (En)")
+                .description("Test Game (En)")
+                .releases(ImmutableList.of(
+                        new Release("Test Game", "", "fr", null, YesNo.NO)))
+                .build();
+
+        ParsedGame parsedGame = gameParser.parse(datafileOf(game)).get(0);
+
+        assertEquals(1, parsedGame.getDivergences().size(),
+                "ONE_WAY must flag a genuine language mismatch (both sides non-empty, no "
+                        + "overlap), got: " + parsedGame.getDivergences());
+        ParsedGame.Divergence divergence = parsedGame.getDivergences().get(0);
+        assertEquals("language", divergence.field());
+        assertEquals(Set.of("en"), divergence.detected());
+        assertEquals(Set.of("fr"), divergence.provided());
     }
 }

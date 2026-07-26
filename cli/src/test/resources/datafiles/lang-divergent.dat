@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Language Divergent DAT</name>
+		<description>Language Divergent DAT</description>
+		<version>1.0</version>
+		<author>Test Author</author>
+	</header>
+	<game name="Test Game (En)">
+		<description>Test Game (En)</description>
+		<release name="Test Game" region="" language="fr"/>
+		<rom name="test.rom" size="1" crc="00000000"/>
+	</game>
+</datafile>

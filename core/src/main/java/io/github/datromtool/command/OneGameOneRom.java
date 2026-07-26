@@ -23,6 +23,7 @@ import io.github.datromtool.io.FileScanner;
 import io.github.datromtool.io.ScanResultMatcher;
 import io.github.datromtool.sorting.GameComparator;
 import io.github.datromtool.sorting.GameNameComparator;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +53,11 @@ public final class OneGameOneRom {
     private final PostFilter postFilter;
     @NonNull
     private final SortingPreference sortingPreference;
+    // Public getter (not just a private field) so a CLI-level test can pin that the mode it
+    // parsed is the one that actually reached this constructor, rather than only re-reading the
+    // command's own field (which a hardcoded-at-the-call-site regression wouldn't affect).
     @NonNull
+    @Getter
     private final GameParser.DivergenceDetection divergenceDetection;
 
     public void generate(
