@@ -1,6 +1,7 @@
 package io.github.datromtool.cli;
 
 import io.github.datromtool.ByteSize;
+import io.github.datromtool.GameParser;
 import io.github.datromtool.cli.argument.DatafileArgument;
 import io.github.datromtool.cli.argument.PatternsFileArgument;
 import io.github.datromtool.cli.command.DatCommand;
@@ -44,6 +45,7 @@ public final class DatRomCommand {
         cmd.registerConverter(ScanBufferSize.class, new ScanBufferSizeConverter());
         cmd.registerConverter(ScanMaxBufferSize.class, new ScanMaxBufferSizeConverter());
         cmd.registerConverter(CopyBufferSize.class, new CopyBufferSizeConverter());
+        cmd.registerConverter(GameParser.DivergenceDetection.class, new DivergenceDetectionConverter());
         int exitCode = cmd.execute(args);
         System.exit(exitCode);
     }

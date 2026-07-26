@@ -4,7 +4,7 @@ import io.github.datromtool.cli.GitVersionProvider;
 import picocli.CommandLine;
 
 /**
- * Command group for DAT-file-level operations (currently just {@code convert}). Deliberately
+ * Command group for DAT-file-level operations ({@code convert}, {@code check}). Deliberately
  * not {@code Callable}: picocli's default handling of a bare group prints
  * "Missing required subcommand" plus usage on stderr and exits with the usage code, matching
  * the top-level {@code datrom} group's behavior.
@@ -16,6 +16,6 @@ import picocli.CommandLine;
         abbreviateSynopsis = true,
         versionProvider = GitVersionProvider.class,
         mixinStandardHelpOptions = true,
-        subcommands = {DatConvertCommand.class})
+        subcommands = {DatConvertCommand.class, DatCheckCommand.class})
 public final class DatCommand {
 }

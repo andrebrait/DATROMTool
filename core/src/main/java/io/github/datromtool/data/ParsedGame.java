@@ -13,6 +13,7 @@ import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.stream.Stream;
 
@@ -70,6 +71,22 @@ public class ParsedGame {
     @NonNull
     @Builder.Default
     ImmutableList<Long> version = ImmutableList.of();
+
+    @NonNull
+    @Builder.Default
+    ImmutableList<Divergence> divergences = ImmutableList.of();
+
+    @JsonInclude(NON_DEFAULT)
+    public record Divergence(
+            @Nonnull String field,
+            @Nonnull ImmutableSet<String> detected,
+            @Nonnull ImmutableSet<String> provided) {
+
+        public Divergence {
+            if (detected == null) detected = ImmutableSet.of();
+            if (provided == null) provided = ImmutableSet.of();
+        }
+    }
 
     @JsonIgnore
     public Stream<String> getRegionsStream() {
