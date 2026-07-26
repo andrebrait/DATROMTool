@@ -185,7 +185,7 @@ public final class FileScanner {
 
     public ImmutableList<Result> scan(Collection<Path> directories) {
         ExecutorService executorService = Executors.newFixedThreadPool(
-                config.getThreads(),
+                config.getThreads().value(),
                 new IndexedThreadFactory(log, "SCANNER"));
         if (!LZMAUtils.isLZMACompressionAvailable()) {
             log.warn("LZMA compression support is disabled");
@@ -208,7 +208,7 @@ public final class FileScanner {
             ImmutableList<FileMetadata> paths = pathsBuilder.build();
             for (Listener listener : listeners) {
                 listener.reportFinishedListing(paths.size());
-                listener.init(config.getThreads());
+                listener.init(config.getThreads().value());
                 listener.reportTotalItems(paths.size());
             }
             ImmutableList<Result> results = paths.stream()

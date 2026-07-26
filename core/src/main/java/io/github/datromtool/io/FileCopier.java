@@ -189,7 +189,7 @@ public final class FileCopier {
             @Nonnull List<Listener> listeners) {
         this.config = config;
         this.listeners = processListenerList(requireNonNull(listeners));
-        this.threadLocalBuffer = ThreadLocal.withInitial(() -> new byte[config.getBufferSize()]);
+        this.threadLocalBuffer = ThreadLocal.withInitial(() -> new byte[config.getBufferSize().bytes()]);
     }
 
     @Nonnull
@@ -203,7 +203,7 @@ public final class FileCopier {
     public void copy(Set<? extends Spec> definitions) {
         log.debug("Copying selected files: {}", definitions);
         ExecutorService executorService = Executors.newFixedThreadPool(
-                config.getThreads(),
+                config.getThreads().value(),
                 new IndexedThreadFactory(log, "COPIER"));
         if (!LZMAUtils.isLZMACompressionAvailable()) {
             log.warn("LZMA compression support is disabled");
@@ -212,7 +212,7 @@ public final class FileCopier {
             log.warn("XZ compression support is disabled");
         }
         for (Listener listener : listeners) {
-            listener.init(config.getThreads());
+            listener.init(config.getThreads().value());
             listener.reportTotalItems(definitions.size());
         }
         definitions.stream()
