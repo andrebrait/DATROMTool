@@ -102,6 +102,18 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
     @Setter(NONE)
     private CommandLine.Model.CommandSpec commandSpec;
 
+    // Package-private (not private), no lombok-generated accessor: exists purely so
+    // OneGameOneRomCommandDivergenceTest (same package) can pin that the parsed --divergence
+    // value is the one that actually reached OneGameOneRom's constructor, mirroring
+    // ScanCommand.PROGRESS_OUTPUT's test-only visibility pattern. Re-reading this field's own
+    // getDivergenceDetection() getter would not catch a regression where call() hardcodes a mode
+    // at the OneGameOneRom construction call site instead of using the parsed field.
+    @ToString.Exclude
+    @JsonIgnore
+    @Getter(NONE)
+    @Setter(NONE)
+    OneGameOneRom oneGameOneRom;
+
     @CommandLine.Parameters(
             description = "DAT file to use when generating the 1G1R set",
             arity = "0..*",
@@ -224,7 +236,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                             OutputOptions.FileOptions.OUT_DIR_OPTION,
                             InputOptions.IN_DIR_OPTION));
         }
-        OneGameOneRom oneGameOneRom = new OneGameOneRom(filter, postFilter, sortingPreference, divergenceDetection);
+        oneGameOneRom = new OneGameOneRom(filter, postFilter, sortingPreference, divergenceDetection);
         List<Datafile> realDataFiles = datafiles.stream()
                 .map(DatafileArgument::getDatafile)
                 .collect(ImmutableList.toImmutableList());

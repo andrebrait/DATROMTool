@@ -131,6 +131,42 @@ class DatCheckCommandTest {
                 "report must show the region divergence under --divergence always, got:\n" + report);
     }
 
+    // Second correction round: the "language" divergence report path (GameParser.detectLanguages
+    // -> divergences.add("language", ...) -> this command's per-divergence print loop) had zero
+    // test coverage. Pins a language-only divergence is named and reported, and exits 1.
+    @Test
+    void languageDivergentDatReportsLanguageDivergenceAndExitsOne() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        int exitCode = run(out, fixture("lang-divergent.dat").toString());
+        String report = out.toString();
+        assertEquals(1, exitCode, "a language-divergent DAT must exit 1");
+        assertTrue(report.contains("Test Game (En)"),
+                "report must name the divergent game, got:\n" + report);
+        assertTrue(report.contains("language divergence"),
+                "report must name the divergence kind, got:\n" + report);
+        assertTrue(report.contains("detected=[en]") && report.contains("provided=[fr]"),
+                "report must show detected vs. provided values, got:\n" + report);
+    }
+
+    // Pins that a single game with BOTH a region and a language divergence gets both rows in the
+    // report, not just one (region and language divergences are collected/printed independently).
+    @Test
+    void multiDivergentGameReportsBothRegionAndLanguageDivergenceRows() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        int exitCode = run(out, fixture("multi-divergent.dat").toString());
+        String report = out.toString();
+        assertEquals(1, exitCode, "a multi-divergent DAT must exit 1");
+        assertTrue(report.contains("Test Game (Europe) (En): region divergence: detected=[EUR], provided=[ITA]"),
+                "report must include the region divergence row, got:\n" + report);
+        assertTrue(report.contains("Test Game (Europe) (En): language divergence: detected=[en], provided=[fr]"),
+                "report must include the language divergence row, got:\n" + report);
+        long gameRowCount = report.lines()
+                .filter(line -> line.contains("Test Game (Europe) (En)") && line.contains("divergence:"))
+                .count();
+        assertEquals(2, gameRowCount,
+                "both divergence rows must appear under the same game, got:\n" + report);
+    }
+
     // Row 6: stdout carries only the report; no logging/progress noise mixed in.
     @Test
     void stdoutCarriesOnlyTheReport() {
