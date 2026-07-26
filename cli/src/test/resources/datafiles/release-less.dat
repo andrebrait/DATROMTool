@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Release-less DAT</name>
+		<description>Release-less DAT</description>
+		<version>1.0</version>
+		<author>Test Author</author>
+	</header>
+	<game name="Test Game (Europe)">
+		<description>Test Game (Europe)</description>
+		<rom name="test.rom" size="1" crc="00000000"/>
+	</game>
+</datafile>

@@ -1,7 +1,9 @@
 package io.github.datromtool.cli.command;
 
+import io.github.datromtool.GameParser;
 import io.github.datromtool.cli.argument.DatafileArgument;
 import io.github.datromtool.cli.converter.DatafileConverter;
+import io.github.datromtool.cli.converter.DivergenceDetectionConverter;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
@@ -38,6 +40,7 @@ class DatCheckCommandTest {
     private static CommandLine newCommandLine(DatCheckCommand command) {
         CommandLine commandLine = new CommandLine(command);
         commandLine.registerConverter(DatafileArgument.class, new DatafileConverter());
+        commandLine.registerConverter(GameParser.DivergenceDetection.class, new DivergenceDetectionConverter());
         return commandLine;
     }
 
@@ -98,6 +101,34 @@ class DatCheckCommandTest {
                 "report must show the clean DAT's own group as clean, got:\n" + report);
         assertTrue(report.contains("region divergence"),
                 "report must show the divergent DAT's own group with its finding, got:\n" + report);
+    }
+
+    // Correction round: dat check's default divergence mode must be ONE_WAY (not the previously
+    // hardcoded ALWAYS), which requires both detected and provided to be non-empty before
+    // comparing. A release-less DAT (name implies a region, zero <release> elements at all) is
+    // the common real-world No-Intro DAT shape a verifier probe found 5/5 games falsely flagged
+    // under ALWAYS. Under ONE_WAY, "provided" is empty, so no comparison is made at all: no
+    // divergence, exit 0.
+    @Test
+    void defaultModeReportsNoDivergencesForAReleaseLessDat() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        int exitCode = run(out, fixture("release-less.dat").toString());
+        String report = out.toString();
+        assertEquals(0, exitCode, "a release-less DAT must not be flagged under the ONE_WAY default");
+        assertTrue(report.contains("no divergences"),
+                "report must state the release-less DAT is clean under the default mode, got:\n" + report);
+    }
+
+    // Escape hatch: --divergence always still flags the same release-less DAT, pinning that the
+    // stricter mode remains reachable for users who want it.
+    @Test
+    void explicitAlwaysFlagsTheSameReleaseLessDat() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        int exitCode = run(out, "--divergence", "always", fixture("release-less.dat").toString());
+        String report = out.toString();
+        assertEquals(1, exitCode, "--divergence always must flag a release-less DAT's name-implied region");
+        assertTrue(report.contains("region divergence"),
+                "report must show the region divergence under --divergence always, got:\n" + report);
     }
 
     // Row 6: stdout carries only the report; no logging/progress noise mixed in.

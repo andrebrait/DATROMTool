@@ -6,6 +6,7 @@ import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.cli.GitVersionProvider;
 import io.github.datromtool.cli.argument.DatafileArgument;
 import io.github.datromtool.cli.converter.DatafileConverter;
+import io.github.datromtool.cli.converter.DivergenceDetectionConverter;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.domain.datafile.logiqx.Game;
 import picocli.CommandLine;
@@ -19,11 +20,19 @@ import static java.lang.String.format;
 /**
  * Issue #18: surfaces {@link GameParser}'s divergence detection (previously only visible as a
  * {@code log.warn}, invisible to a normal run) as a standalone report. Detection logic stays in
- * core: this command only runs {@link GameParser#parse} per DAT (in
- * {@link GameParser.DivergenceDetection#ALWAYS}, the strictest mode, so name-implied metadata is
- * compared against DAT-declared metadata unconditionally) and formats
+ * core: this command only runs {@link GameParser#parse} per DAT and formats
  * {@link ParsedGame#getDivergences()} it already collects, grouped per input DAT. Exit code
  * mirrors {@code scan}'s convention: 0 when every DAT is clean, 1 when any divergence is found.
+ *
+ * <p>Correction round: {@code --divergence} defaults to
+ * {@link GameParser.DivergenceDetection#ONE_WAY}, not {@link GameParser.DivergenceDetection#ALWAYS}.
+ * A verifier probe found {@code ALWAYS} (the previously hardcoded mode) flags 5/5 games on a
+ * release-less DAT (name implies a region, zero {@code <release>} elements at all) — the common
+ * real-world No-Intro DAT shape, since {@code ALWAYS} compares name-detected metadata against
+ * DAT-declared metadata even when the DAT declares none at all. {@code ONE_WAY} (mirroring
+ * {@code 1g1r}'s own default) only compares when both sides are non-empty, so a release-less DAT
+ * reports clean by default; {@code --divergence always} remains available as an explicit,
+ * stricter opt-in.
  */
 @CommandLine.Command(
         name = "check",
@@ -45,13 +54,23 @@ public final class DatCheckCommand implements Callable<Integer> {
             converter = DatafileConverter.class)
     private List<DatafileArgument> datafiles;
 
+    @CommandLine.Option(
+            names = "--divergence",
+            paramLabel = "MODE",
+            converter = DivergenceDetectionConverter.class,
+            completionCandidates = DivergenceDetectionConverter.class,
+            description = "How strictly to flag divergences between No-Intro parsed names and "
+                    + "DAT-declared region/language metadata. Options: ${COMPLETION-CANDIDATES} "
+                    + "(default: one_way).")
+    private GameParser.DivergenceDetection divergenceDetection = GameParser.DivergenceDetection.ONE_WAY;
+
     @Override
     public Integer call() {
         GameParser gameParser;
         try {
             gameParser = new GameParser(
                     SerializationHelper.getInstance().loadRegionData(),
-                    GameParser.DivergenceDetection.ALWAYS);
+                    divergenceDetection);
         } catch (IOException e) {
             throw new CommandLine.ParameterException(
                     commandSpec.commandLine(),
