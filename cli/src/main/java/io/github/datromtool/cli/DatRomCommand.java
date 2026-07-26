@@ -6,6 +6,7 @@ import io.github.datromtool.cli.argument.PatternsFileArgument;
 import io.github.datromtool.cli.command.OneGameOneRomCommand;
 import io.github.datromtool.cli.converter.*;
 import io.github.datromtool.data.GameCategory;
+import io.github.datromtool.data.OrderPreference;
 import io.github.datromtool.data.OutputMode;
 import io.github.datromtool.io.ArchiveType;
 import picocli.CommandLine;
@@ -26,6 +27,7 @@ public final class DatRomCommand {
         CommandLine cmd = new CommandLine(new DatRomCommand());
         cmd.registerConverter(ArchiveType.class, new ArchiveTypeConverter());
         cmd.registerConverter(GameCategory.class, new GameCategoryConverter());
+        cmd.registerConverter(OrderPreference.class, new OrderPreferenceConverter());
         cmd.registerConverter(OutputMode.class, new OutputModeConverter());
         cmd.registerConverter(PatternsFileArgument.class, new PatternsFileConverter());
         cmd.registerConverter(DatafileArgument.class, new DatafileConverter());

@@ -3,6 +3,7 @@ package io.github.datromtool.sorting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.SerializationHelper;
+import io.github.datromtool.data.OrderPreference;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.RegionData;
 import io.github.datromtool.data.SortingPreference;
@@ -615,7 +616,7 @@ class GameComparatorTest {
     void testCompare_shouldPreferEarlyRevisionsIfEarlyRevisions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyRevisions(true)
+                        .revisions(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -632,10 +633,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldKeepOrderIfSameRevision_earlyRevisions() {
+    void testCompare_shouldKeepOrderIfSameRevision_revisionsEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyRevisions(true)
+                        .revisions(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -653,10 +654,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferEarlyRevision_minorDiff_earlyRevisions() {
+    void testCompare_shouldPreferEarlyRevision_minorDiff_revisionsEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyRevisions(true)
+                        .revisions(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -674,10 +675,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferEarlyRevision_majorDiff_earlyRevisions() {
+    void testCompare_shouldPreferEarlyRevision_majorDiff_revisionsEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyRevisions(true)
+                        .revisions(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -797,7 +798,7 @@ class GameComparatorTest {
     void testCompare_shouldPreferEarlyVersionsIfEarlyVersions() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyVersions(true)
+                        .versions(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -814,10 +815,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldKeepOrderIfSameVersion_earlyVersions() {
+    void testCompare_shouldKeepOrderIfSameVersion_versionsEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyVersions(true)
+                        .versions(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -835,10 +836,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferEarlyVersion_minorDiff_earlyVersions() {
+    void testCompare_shouldPreferEarlyVersion_minorDiff_versionsEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyVersions(true)
+                        .versions(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -856,10 +857,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferEarlyVersion_majorDiff_earlyVersions() {
+    void testCompare_shouldPreferEarlyVersion_majorDiff_versionsEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyVersions(true)
+                        .versions(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -960,7 +961,7 @@ class GameComparatorTest {
     void testCompare_shouldPreferEarlySamplesIfEarlySamples() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -978,10 +979,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldKeepOrderIfSameSample_earlyPrereleases() {
+    void testCompare_shouldKeepOrderIfSameSample_prereleasesEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -999,10 +1000,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferEarlySample_minorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlySample_minorDiff_prereleasesEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1020,10 +1021,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferEarlySample_majorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlySample_majorDiff_prereleasesEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1124,7 +1125,7 @@ class GameComparatorTest {
     void testCompare_shouldPreferEarlyDemosIfEarlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1141,10 +1142,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldKeepOrderIfSameDemo_earlyPrereleases() {
+    void testCompare_shouldKeepOrderIfSameDemo_prereleasesEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1162,10 +1163,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferEarlyDemo_minorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlyDemo_minorDiff_prereleasesEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1183,10 +1184,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferEarlyDemo_majorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlyDemo_majorDiff_prereleasesEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1287,7 +1288,7 @@ class GameComparatorTest {
     void testCompare_shouldPreferEarlyBetasIfEarlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1304,10 +1305,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldKeepOrderIfSameBeta_earlyPrereleases() {
+    void testCompare_shouldKeepOrderIfSameBeta_prereleasesEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1325,10 +1326,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferEarlyBeta_minorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlyBeta_minorDiff_prereleasesEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1346,10 +1347,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferEarlyBeta_majorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlyBeta_majorDiff_prereleasesEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1450,7 +1451,7 @@ class GameComparatorTest {
     void testCompare_shouldPreferEarlyProtosIfEarlyPrereleases() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1467,10 +1468,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldKeepOrderIfSameProto_earlyPrereleases() {
+    void testCompare_shouldKeepOrderIfSameProto_prereleasesEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1488,10 +1489,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferEarlyProto_minorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlyProto_minorDiff_prereleasesEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1509,10 +1510,10 @@ class GameComparatorTest {
     }
 
     @Test
-    void testCompare_shouldPreferEarlyProto_majorDiff_earlyPrereleases() {
+    void testCompare_shouldPreferEarlyProto_majorDiff_prereleasesEarliest() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))

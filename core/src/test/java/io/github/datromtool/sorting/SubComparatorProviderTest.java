@@ -1,6 +1,7 @@
 package io.github.datromtool.sorting;
 
 import com.google.common.collect.ImmutableList;
+import io.github.datromtool.data.OrderPreference;
 import io.github.datromtool.data.SortingPreference;
 import org.junit.jupiter.api.Test;
 
@@ -122,10 +123,10 @@ class SubComparatorProviderTest {
     }
 
     @Test
-    void testToList_earlyRevisions() {
+    void testToList_revisionsEarliest() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
-                        .earlyRevisions(true)
+                        .revisions(OrderPreference.EARLIEST)
                         .build());
         assertNotNull(subComparators);
         assertEquals(15, subComparators.size());
@@ -149,10 +150,10 @@ class SubComparatorProviderTest {
     }
 
     @Test
-    void testToList_earlyVersions() {
+    void testToList_versionsEarliest() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
-                        .earlyVersions(true)
+                        .versions(OrderPreference.EARLIEST)
                         .build());
         assertNotNull(subComparators);
         assertEquals(15, subComparators.size());
@@ -176,10 +177,10 @@ class SubComparatorProviderTest {
     }
 
     @Test
-    void testToList_earlyPrereleases() {
+    void testToList_prereleasesEarliest() {
         ImmutableList<SubComparator> subComparators =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder()
-                        .earlyPrereleases(true)
+                        .prereleases(OrderPreference.EARLIEST)
                         .build());
         assertNotNull(subComparators);
         assertEquals(15, subComparators.size());
