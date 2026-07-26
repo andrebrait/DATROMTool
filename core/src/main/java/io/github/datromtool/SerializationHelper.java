@@ -184,23 +184,33 @@ public final class SerializationHelper {
 
     private JsonNode readProfileTree(Path path) throws IOException {
         String fileName = path.getFileName().toString();
+        JsonNode node;
         try {
             if (JSON_PATTERN.matcher(fileName).matches()) {
-                return readTree(path, jsonMapper);
+                node = readTree(path, jsonMapper);
             } else if (YAML_PATTERN.matcher(fileName).matches()) {
-                return readTree(path, yamlMapper);
-            }
-            // We have no idea what this file is, so let's try JSON first and then YAML if it fails.
-            // Each attempt re-opens the file: a mapper that fails partway through may have already
-            // consumed part of a shared stream, so a fresh stream per attempt is required.
-            try {
-                return readTree(path, jsonMapper);
-            } catch (JacksonException ignore) {
-                return readTree(path, yamlMapper);
+                node = readTree(path, yamlMapper);
+            } else {
+                // We have no idea what this file is, so let's try JSON first and then YAML if
+                // it fails. Each attempt re-opens the file: a mapper that fails partway through
+                // may have already consumed part of a shared stream, so a fresh stream per
+                // attempt is required.
+                try {
+                    node = readTree(path, jsonMapper);
+                } catch (JacksonException ignore) {
+                    node = readTree(path, yamlMapper);
+                }
             }
         } catch (JacksonException e) {
             throw new IOException("Failed to parse profile file '" + path + "': " + e.getMessage(), e);
         }
+        // A document that is valid JSON/YAML but literally `null` (no object) binds to a null
+        // Profile; without this guard that null reaches Profile#validate() as an NPE instead of
+        // the documented path-naming IOException every other malformed-profile case surfaces.
+        if (node == null || node.isNull()) {
+            throw new IOException("Profile file '" + path + "' does not contain a profile document (parsed to null)");
+        }
+        return node;
     }
 
     private static JsonNode readTree(Path path, ObjectMapper mapper) throws IOException {

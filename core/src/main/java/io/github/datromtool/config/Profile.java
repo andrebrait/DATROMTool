@@ -34,8 +34,11 @@ import static lombok.AccessLevel.PRIVATE;
  * field by field, so setting one field of a section in a later file leaves that section's other
  * fields — set by an earlier file — untouched; everything else (scalars, and lists/sets such as
  * {@code sort.regions} or {@code filter.includes}) is replaced wholesale by the later file's
- * value, never appended to or spliced with the earlier one. A section entirely absent from a
- * later file leaves the earlier file's section untouched.
+ * value, never appended to or spliced with the earlier one. A field genuinely <em>absent</em>
+ * from a later file leaves the earlier file's value untouched, but an explicit {@code null} for
+ * a field in a later file (e.g. {@code output: {file: null}}) <em>clears</em> that field
+ * (RFC 7386 JSON merge patch semantics), falling back to its class's own default exactly as if
+ * no file had ever set it — see {@link io.github.datromtool.config.JsonNodeMerge}.
  */
 @Value
 @Jacksonized

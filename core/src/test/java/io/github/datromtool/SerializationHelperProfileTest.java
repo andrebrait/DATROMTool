@@ -3,6 +3,7 @@ package io.github.datromtool;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.config.Profile;
+import io.github.datromtool.data.OutputMode;
 import io.github.datromtool.util.ArchiveUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +15,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -191,6 +194,65 @@ class SerializationHelperProfileTest {
     @Test
     void loadProfileWrapsUnparsableFileWithFilePath() throws Exception {
         Path file = writeFile("unparsable.json", "{ this is not valid json or yaml : [ ");
+        IOException thrown = assertThrows(IOException.class, () -> helper.loadProfile(file));
+        assertTrue(
+                thrown.getMessage().contains(file.toString()),
+                "exception message must contain the offending file's path, got: " + thrown.getMessage());
+    }
+
+    // Issue #31 review fix B: an explicit null in a later profile file CLEARS the earlier
+    // file's value (RFC 7386 JSON merge patch semantics) rather than being treated as an
+    // absent field. Layering a file-output profile with a second file that nulls
+    // output.file and sets output.text must merge to text-only output that passes
+    // Profile#validate() (output.file/output.text are mutually exclusive).
+    @Test
+    void loadProfilesExplicitNullClearsEarlierFileOutputSection() throws Exception {
+        Path first = writeFile("first.json", """
+                {
+                  "output": {
+                    "file": {"outputDir": "out", "alphabetic": false, "forceSubfolder": false}
+                  }
+                }
+                """);
+        Path second = writeFile("second.json", """
+                {
+                  "output": {
+                    "file": null,
+                    "text": {"outputMode": "json"}
+                  }
+                }
+                """);
+
+        Profile merged = helper.loadProfiles(List.of(first, second));
+
+        assertDoesNotThrow(
+                merged::validate,
+                "explicit null on output.file must clear it, leaving only output.text set");
+        assertNull(
+                merged.getOutput().getFile(),
+                "output.file must be cleared by the second file's explicit null");
+        assertEquals(
+                OutputMode.JSON,
+                merged.getOutput().getText().outputMode(),
+                "output.text must come from the second file");
+    }
+
+    // Issue #31 review fix C: a profile file whose entire document is a literal `null` (valid
+    // YAML/JSON, but not an object) must not proceed to Profile#validate() on a null Profile
+    // reference (NullPointerException) -- it must fail cleanly as an IOException naming the
+    // file, exactly like every other malformed-profile case above.
+    @Test
+    void loadProfileRejectsNullYamlDocumentWithFilePath() throws Exception {
+        Path file = writeFile("null-document.yaml", "null\n");
+        IOException thrown = assertThrows(IOException.class, () -> helper.loadProfile(file));
+        assertTrue(
+                thrown.getMessage().contains(file.toString()),
+                "exception message must contain the offending file's path, got: " + thrown.getMessage());
+    }
+
+    @Test
+    void loadProfileRejectsNullJsonDocumentWithFilePath() throws Exception {
+        Path file = writeFile("null-document.json", "null");
         IOException thrown = assertThrows(IOException.class, () -> helper.loadProfile(file));
         assertTrue(
                 thrown.getMessage().contains(file.toString()),
