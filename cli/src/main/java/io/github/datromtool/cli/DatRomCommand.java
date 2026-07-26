@@ -3,6 +3,7 @@ package io.github.datromtool.cli;
 import io.github.datromtool.ByteSize;
 import io.github.datromtool.cli.argument.DatafileArgument;
 import io.github.datromtool.cli.argument.PatternsFileArgument;
+import io.github.datromtool.cli.command.DatCommand;
 import io.github.datromtool.cli.command.OneGameOneRomCommand;
 import io.github.datromtool.cli.converter.*;
 import io.github.datromtool.config.CopyBufferSize;
@@ -24,7 +25,7 @@ import picocli.CommandLine;
         versionProvider = GitVersionProvider.class,
         mixinStandardHelpOptions = true,
         showEndOfOptionsDelimiterInUsageHelp = true,
-        subcommands = {OneGameOneRomCommand.class})
+        subcommands = {OneGameOneRomCommand.class, DatCommand.class})
 public final class DatRomCommand {
 
     @SuppressWarnings("InstantiationOfUtilityClass")
