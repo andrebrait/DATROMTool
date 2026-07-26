@@ -10,32 +10,36 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Coverage matrix row 6 for issue #16: {@code dat} invoked with no subcommand prints its usage
- * help and exits non-zero, rather than surfacing picocli's default {@code ExecutionException}
- * ("is not a Method, Runnable or Callable") for a group command with no business logic of its own.
+ * Coverage matrix row 6 for issue #16: {@code dat} invoked with no subcommand behaves exactly
+ * like the top-level {@code datrom} group — picocli's default handling prints
+ * "Missing required subcommand" plus usage on stderr and exits with the usage code, keeping
+ * stdout clean for machine-readable output.
  */
 class DatCommandTest {
 
     @Test
-    void noSubcommandPrintsUsageAndExitsNonZero() {
-        DatCommand command = new DatCommand();
-        CommandLine commandLine = new CommandLine(command);
-        commandLine.parseArgs();
-
-        ByteArrayOutputStream captured = new ByteArrayOutputStream();
-        PrintStream original = System.out;
-        System.setOut(new PrintStream(captured));
+    void noSubcommandPrintsMissingSubcommandOnStderrAndExitsUsage() {
+        ByteArrayOutputStream capturedOut = new ByteArrayOutputStream();
+        ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        PrintStream originalErr = System.err;
+        System.setOut(new PrintStream(capturedOut));
+        System.setErr(new PrintStream(capturedErr));
         int exitCode;
         try {
-            exitCode = command.call();
+            exitCode = new CommandLine(new DatCommand()).execute();
         } finally {
-            System.setOut(original);
+            System.setOut(originalOut);
+            System.setErr(originalErr);
         }
 
-        assertTrue(exitCode != 0, "'dat' with no subcommand must exit non-zero");
-        String output = captured.toString();
-        assertTrue(output.contains("Usage:") && output.contains("convert"),
-                "'dat' with no subcommand must print usage help mentioning 'convert', got:\n" + output);
         assertEquals(CommandLine.ExitCode.USAGE, exitCode, "exit code must be picocli's USAGE code");
+        String err = capturedErr.toString();
+        assertTrue(err.contains("Missing required subcommand"),
+                "stderr must name the missing subcommand requirement, got:\n" + err);
+        assertTrue(err.contains("Usage:") && err.contains("convert"),
+                "stderr must include usage help mentioning 'convert', got:\n" + err);
+        assertEquals("", capturedOut.toString(),
+                "stdout must stay clean when no subcommand is given");
     }
 }
