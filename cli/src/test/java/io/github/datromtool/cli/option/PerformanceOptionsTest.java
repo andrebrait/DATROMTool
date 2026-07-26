@@ -1,7 +1,5 @@
 package io.github.datromtool.cli.option;
 
-import io.github.datromtool.cli.converter.ByteSizeConverter;
-import io.github.datromtool.ByteSize;
 import io.github.datromtool.config.AppConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,9 +20,7 @@ class PerformanceOptionsTest {
     }
 
     private static CommandLine newCommandLine(Holder holder) {
-        CommandLine commandLine = new CommandLine(holder);
-        commandLine.registerConverter(ByteSize.class, new ByteSizeConverter());
-        return commandLine;
+        return new CommandLine(holder);
     }
 
     private static PerformanceOptions parse(String... args) {
@@ -40,7 +36,7 @@ class PerformanceOptionsTest {
                 options.merge(AppConfig.FileCopierConfig.builder().build());
         assertEquals(
                 3,
-                merged.getThreads(),
+                merged.getThreads().value(),
                 "--copy-threads must set the copier thread count");
     }
 
@@ -53,11 +49,11 @@ class PerformanceOptionsTest {
                 options.merge(AppConfig.FileCopierConfig.builder().build());
         assertEquals(
                 2,
-                mergedScanner.getThreads(),
+                mergedScanner.getThreads().value(),
                 "--scan-threads must set the scanner thread count");
         assertEquals(
                 3,
-                mergedCopier.getThreads(),
+                mergedCopier.getThreads().value(),
                 "--copy-threads must set the copier thread count, not the scanner's value");
     }
 
@@ -84,7 +80,7 @@ class PerformanceOptionsTest {
                 options.merge(AppConfig.FileScannerConfig.builder().build());
         assertEquals(
                 32 * 1024,
-                merged.getDefaultBufferSize(),
+                merged.getDefaultBufferSize().bytes(),
                 "--scan-buffer 32KB must merge as exactly 32768 bytes");
     }
 
@@ -95,7 +91,7 @@ class PerformanceOptionsTest {
                 options.merge(AppConfig.FileScannerConfig.builder().build());
         assertEquals(
                 1024 * 1024,
-                merged.getDefaultBufferSize(),
+                merged.getDefaultBufferSize().bytes(),
                 "--scan-buffer 1MB must merge as exactly 1048576 bytes");
     }
 
@@ -117,7 +113,7 @@ class PerformanceOptionsTest {
                 options.merge(AppConfig.FileCopierConfig.builder().build());
         assertEquals(
                 32 * 1024,
-                merged.getBufferSize(),
+                merged.getBufferSize().bytes(),
                 "--copy-buffer 32KB must set FileCopierConfig.bufferSize");
     }
 
@@ -129,6 +125,19 @@ class PerformanceOptionsTest {
         assertTrue(
                 merged.isAllowRawZipCopy(),
                 "--copy-raw-zip alone must set FileCopierConfig.allowRawZipCopy true");
+    }
+
+    // Matrix row 6 (issue #14 step 3): scan/copy thread wrappers cannot cross-assign at
+    // compile time; this end-to-end parse pins the runtime merge stays independent too.
+    @Test
+    void scanThreadsThreeAndCopyThreadsFourMergeIntoTheirRespectiveConfigs() {
+        PerformanceOptions options = parse("--scan-threads", "3", "--copy-threads", "4");
+        AppConfig.FileScannerConfig mergedScanner =
+                options.merge(AppConfig.FileScannerConfig.builder().build());
+        AppConfig.FileCopierConfig mergedCopier =
+                options.merge(AppConfig.FileCopierConfig.builder().build());
+        assertEquals(3, mergedScanner.getThreads().value(), "--scan-threads 3 must merge into FileScannerConfig.threads");
+        assertEquals(4, mergedCopier.getThreads().value(), "--copy-threads 4 must merge into FileCopierConfig.threads");
     }
 
     // Hostile row H4 (pinning actual behavior)

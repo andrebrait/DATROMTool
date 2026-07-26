@@ -81,7 +81,7 @@ class FileScannerParameters {
                 .min()
                 .orElse(0);
         if (detectors.isEmpty()) {
-            bufferSize = config.getDefaultBufferSize();
+            bufferSize = config.getDefaultBufferSize().bytes();
             useLazyDetector = false;
             maxRomSize = toRomStream(datafiles)
                     .mapToLong(r -> r.size())
@@ -127,7 +127,7 @@ class FileScannerParameters {
                             .mapToLong(t -> t.getOffset() + t.getValue().length)
                             .max()
                             .orElse(0);
-                    useLazyDetector = max(maxTestOffset, maxStartOffset) <= config.getDefaultBufferSize();
+                    useLazyDetector = max(maxTestOffset, maxStartOffset) <= config.getDefaultBufferSize().bytes();
                 } else {
                     useLazyDetector = false;
                 }
@@ -135,15 +135,15 @@ class FileScannerParameters {
                 useLazyDetector = false;
             }
             if (useLazyDetector) {
-                bufferSize = config.getDefaultBufferSize();
+                bufferSize = config.getDefaultBufferSize().bytes();
             } else {
-                bufferSize = toIntExact(max(min(maxRomSize, config.getMaxBufferSize()), config.getDefaultBufferSize()));
+                bufferSize = toIntExact(max(min(maxRomSize, config.getMaxBufferSize().bytes()), config.getDefaultBufferSize().bytes()));
             }
             String bufferSizeStr = ByteSize.fromBytes(bufferSize).toFormattedString();
             if (bufferSize > MAX_BUFFER_NO_WARNING) {
                 log.warn("Using a bigger I/O buffer size of {} due to header detection", bufferSizeStr);
             }
-            if (bufferSize == config.getMaxBufferSize()) {
+            if (bufferSize == config.getMaxBufferSize().bytes()) {
                 log.warn("Disabling header detection for ROMs larger than {}", bufferSizeStr);
             }
             log.info("Using I/O buffer size of {}", bufferSizeStr);

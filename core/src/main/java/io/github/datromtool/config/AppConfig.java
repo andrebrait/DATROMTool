@@ -27,15 +27,15 @@ public class AppConfig {
 
         @Builder.Default
         @NonNull
-        Integer defaultBufferSize = 32 * 1024; // 32KB
+        ScanBufferSize defaultBufferSize = new ScanBufferSize(32 * 1024); // 32KB
 
         @Builder.Default
         @NonNull
-        Integer maxBufferSize = 256 * 1024 * 1024; // 256MB
+        ScanMaxBufferSize maxBufferSize = new ScanMaxBufferSize(256 * 1024 * 1024); // 256MB
 
         @Builder.Default
         @NonNull
-        Integer threads = Math.max(1, Runtime.getRuntime().availableProcessors() / 2);
+        ScanThreads threads = new ScanThreads(Math.max(1, Runtime.getRuntime().availableProcessors() / 2));
     }
 
     @With
@@ -49,11 +49,11 @@ public class AppConfig {
 
         @Builder.Default
         @NonNull
-        Integer bufferSize = 32 * 1024; // 32KB
+        CopyBufferSize bufferSize = new CopyBufferSize(32 * 1024); // 32KB
 
         @Builder.Default
         @NonNull
-        Integer threads = Math.max(1, Runtime.getRuntime().availableProcessors() / 2);
+        CopyThreads threads = new CopyThreads(Math.max(1, Runtime.getRuntime().availableProcessors() / 2));
 
         @Builder.Default
         boolean allowRawZipCopy = false;

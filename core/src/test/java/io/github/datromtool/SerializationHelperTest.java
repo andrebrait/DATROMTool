@@ -2,6 +2,11 @@ package io.github.datromtool;
 
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.config.AppConfig;
+import io.github.datromtool.config.CopyBufferSize;
+import io.github.datromtool.config.CopyThreads;
+import io.github.datromtool.config.ScanBufferSize;
+import io.github.datromtool.config.ScanMaxBufferSize;
+import io.github.datromtool.config.ScanThreads;
 import io.github.datromtool.data.RegionData;
 import io.github.datromtool.domain.datafile.logiqx.Datafile;
 import io.github.datromtool.domain.detector.Detector;
@@ -126,8 +131,8 @@ class SerializationHelperTest extends TestDirDependantTest {
         AppConfig config = emptyHelper.loadAppConfig(ClassLoader.getSystemResource("config-test.yaml"));
         assertNotNull(config);
         assertNotNull(config.getScanner());
-        assertEquals(4, (int) config.getScanner().getThreads());
-        assertEquals(4 * 1024 * 1024, (int) config.getScanner().getMaxBufferSize());
+        assertEquals(4, config.getScanner().getThreads().value());
+        assertEquals(4 * 1024 * 1024, config.getScanner().getMaxBufferSize().bytes());
     }
 
     @Test
@@ -135,9 +140,51 @@ class SerializationHelperTest extends TestDirDependantTest {
         AppConfig config = testHelper.loadAppConfig();
         assertNotNull(config);
         assertNotNull(config.getScanner());
-        assertEquals(24, (int) config.getScanner().getThreads());
-        assertEquals(32768, (int) config.getScanner().getMaxBufferSize());
-        assertEquals(12, (int) config.getCopier().getThreads());
+        assertEquals(24, config.getScanner().getThreads().value());
+        assertEquals(32768, config.getScanner().getMaxBufferSize().bytes());
+        assertEquals(12, config.getCopier().getThreads().value());
+    }
+
+    // Row: performance-primitive wrapper records serialize as plain numbers, not nested
+    // objects, and round-trip through both JSON and YAML unchanged (issue #14 step 3).
+    @Test
+    void testAppConfigWrapperRecordsSerializeAsPlainNumbersAndRoundTrip() throws Exception {
+        AppConfig config = AppConfig.builder()
+                .scanner(AppConfig.FileScannerConfig.builder()
+                        .threads(new ScanThreads(7))
+                        .defaultBufferSize(new ScanBufferSize(65536))
+                        .maxBufferSize(new ScanMaxBufferSize(1048576))
+                        .build())
+                .copier(AppConfig.FileCopierConfig.builder()
+                        .threads(new CopyThreads(9))
+                        .bufferSize(new CopyBufferSize(4096))
+                        .build())
+                .build();
+
+        String json = emptyHelper.getJsonMapper().writeValueAsString(config);
+        String normalizedJson = json.replaceAll("\\s", "");
+        assertTrue(
+                normalizedJson.contains("\"threads\":7"),
+                "scanner threads must serialize as a plain number, got: " + json);
+        assertTrue(
+                normalizedJson.contains("\"threads\":9"),
+                "copier threads must serialize as a plain number, got: " + json);
+        assertFalse(
+                json.contains("\"value\""),
+                "wrapper records must not serialize as a nested {\"value\": ...} object, got: " + json);
+        assertFalse(
+                json.contains("\"bytes\""),
+                "wrapper records must not serialize as a nested {\"bytes\": ...} object, got: " + json);
+        assertEquals(config, emptyHelper.getJsonMapper().readValue(json, AppConfig.class));
+
+        String yaml = emptyHelper.getYamlMapper().writeValueAsString(config);
+        assertFalse(
+                yaml.contains("value:"),
+                "wrapper records must not serialize as a nested 'value:' object, got: " + yaml);
+        assertFalse(
+                yaml.contains("bytes:"),
+                "wrapper records must not serialize as a nested 'bytes:' object, got: " + yaml);
+        assertEquals(config, emptyHelper.getYamlMapper().readValue(yaml, AppConfig.class));
     }
 
     @Test

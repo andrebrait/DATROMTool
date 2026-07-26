@@ -1,81 +1,78 @@
 package io.github.datromtool.cli.option;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.github.datromtool.ByteSize;
+import io.github.datromtool.cli.converter.CopyBufferSizeConverter;
+import io.github.datromtool.cli.converter.CopyThreadsConverter;
+import io.github.datromtool.cli.converter.ScanBufferSizeConverter;
+import io.github.datromtool.cli.converter.ScanMaxBufferSizeConverter;
+import io.github.datromtool.cli.converter.ScanThreadsConverter;
 import io.github.datromtool.config.AppConfig;
-import lombok.*;
+import io.github.datromtool.config.CopyBufferSize;
+import io.github.datromtool.config.CopyThreads;
+import io.github.datromtool.config.ScanBufferSize;
+import io.github.datromtool.config.ScanMaxBufferSize;
+import io.github.datromtool.config.ScanThreads;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import picocli.CommandLine;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
-import static java.lang.Math.toIntExact;
-import static java.lang.String.format;
-import static lombok.AccessLevel.NONE;
 
 @Data
 @NoArgsConstructor
 @JsonInclude(NON_DEFAULT)
 public class PerformanceOptions {
 
-    private static final ByteSize MAX_BUFFER_SIZE = ByteSize.fromBytes(Integer.MAX_VALUE);
+    private ScanThreads scanThreads;
+    private ScanBufferSize scanBufferSize;
+    private ScanMaxBufferSize scanBufferMaxSize;
 
-    @CommandLine.Spec
-    @ToString.Exclude
-    @JsonIgnore
-    @Getter(NONE)
-    @Setter(NONE)
-    private CommandLine.Model.CommandSpec spec;
-
-    private Integer scanThreads;
-    private ByteSize scanBufferSize;
-    private ByteSize scanBufferMaxSize;
-
-    private Integer copyThreads;
-    private ByteSize copyBufferSize;
+    private CopyThreads copyThreads;
+    private CopyBufferSize copyBufferSize;
     private boolean allowRawZipCopy;
 
     @CommandLine.Option(
             names = "--scan-threads",
             paramLabel = "THREADS",
+            converter = ScanThreadsConverter.class,
             description = "Number of threads to use for scanning files. Defaults to half the number of CPUs.")
-    public void setScanThreads(Integer scanThreads) {
-        validateThreads(scanThreads);
+    public void setScanThreads(ScanThreads scanThreads) {
         this.scanThreads = scanThreads;
     }
 
     @CommandLine.Option(
             names = "--scan-buffer",
             paramLabel = "BYTES",
+            converter = ScanBufferSizeConverter.class,
             description = "Default size for the dynamic I/O buffer used for scanning files (per thread). Defaults to 32KB.")
-    public void setScanBufferSize(ByteSize scanBufferSize) {
-        validateBufferSize(scanBufferSize);
+    public void setScanBufferSize(ScanBufferSize scanBufferSize) {
         this.scanBufferSize = scanBufferSize;
     }
 
     @CommandLine.Option(
             names = "--scan-max-buffer",
             paramLabel = "BYTES",
+            converter = ScanMaxBufferSizeConverter.class,
             description = "Maximum size for the dynamic I/O buffer used for scanning files (per thread). Defaults to 256MB.")
-    public void setScanBufferMaxSize(ByteSize scanBufferMaxSize) {
-        validateBufferSize(scanBufferMaxSize);
+    public void setScanBufferMaxSize(ScanMaxBufferSize scanBufferMaxSize) {
         this.scanBufferMaxSize = scanBufferMaxSize;
     }
 
     @CommandLine.Option(
             names = "--copy-threads",
             paramLabel = "THREADS",
+            converter = CopyThreadsConverter.class,
             description = "Number of threads to use for copying files. Defaults to half the number of CPUs.")
-    public void setCopyThreads(Integer copyThreads) {
-        validateThreads(copyThreads);
+    public void setCopyThreads(CopyThreads copyThreads) {
         this.copyThreads = copyThreads;
     }
 
     @CommandLine.Option(
             names = "--copy-buffer",
             paramLabel = "BYTES",
+            converter = CopyBufferSizeConverter.class,
             description = "Size for the I/O buffer used for copying files (per thread). Defaults to 32KB.")
-    public void setCopyBufferSize(ByteSize copyBufferSize) {
-        validateBufferSize(copyBufferSize);
+    public void setCopyBufferSize(CopyBufferSize copyBufferSize) {
         this.copyBufferSize = copyBufferSize;
     }
 
@@ -87,18 +84,6 @@ public class PerformanceOptions {
         this.allowRawZipCopy = allowRawZipCopy;
     }
 
-    private void validateThreads(Integer threads) {
-        if (threads <= 0) {
-            throw new CommandLine.ParameterException(spec.commandLine(), "Number of threads should be a positive number");
-        }
-    }
-
-    private void validateBufferSize(ByteSize scanBufferMaxSize) {
-        if (scanBufferMaxSize.compareTo(MAX_BUFFER_SIZE) > 0) {
-            throw new CommandLine.ParameterException(spec.commandLine(), format("Maximum byte size is %d bytes", Integer.MAX_VALUE));
-        }
-    }
-
     public AppConfig.FileScannerConfig merge(AppConfig.FileScannerConfig original) {
         if (scanThreads != null
                 || scanBufferSize != null
@@ -108,10 +93,10 @@ public class PerformanceOptions {
                 builder.threads(scanThreads);
             }
             if (scanBufferSize != null) {
-                builder.defaultBufferSize(toIntExact(scanBufferSize.getSizeInBytes()));
+                builder.defaultBufferSize(scanBufferSize);
             }
             if (scanBufferMaxSize != null) {
-                builder.maxBufferSize(toIntExact(scanBufferMaxSize.getSizeInBytes()));
+                builder.maxBufferSize(scanBufferMaxSize);
             }
             return builder.build();
         }
@@ -127,7 +112,7 @@ public class PerformanceOptions {
                 builder.threads(copyThreads);
             }
             if (copyBufferSize != null) {
-                builder.bufferSize(toIntExact(copyBufferSize.getSizeInBytes()));
+                builder.bufferSize(copyBufferSize);
             }
             builder.allowRawZipCopy(allowRawZipCopy);
             return builder.build();
