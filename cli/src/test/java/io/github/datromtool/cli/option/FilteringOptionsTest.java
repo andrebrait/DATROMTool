@@ -14,6 +14,7 @@ import picocli.CommandLine;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -185,7 +186,7 @@ class FilteringOptionsTest {
     @ParameterizedTest
     @EnumSource(GameCategory.class)
     void excludeCategoriesAcceptsEachCategoryCaseInsensitively(GameCategory category) {
-        Filter lower = parse("--exclude-categories", category.name().toLowerCase());
+        Filter lower = parse("--exclude-categories", category.name().toLowerCase(Locale.ROOT));
         assertEquals(
                 Set.of(category),
                 lower.getExcludeCategories(),
@@ -193,11 +194,23 @@ class FilteringOptionsTest {
 
         Filter mixed = parse("--exclude-categories",
                 category.name().charAt(0)
-                        + category.name().substring(1).toLowerCase());
+                        + category.name().substring(1).toLowerCase(Locale.ROOT));
         assertEquals(
                 Set.of(category),
                 mixed.getExcludeCategories(),
                 "mixed-case category name must be accepted, got: " + mixed.getExcludeCategories());
+    }
+
+    // The split regex "\s*,\s*" only strips whitespace around the comma; leading/trailing
+    // whitespace on the whole value must be trimmed by the converter itself.
+    @Test
+    void excludeCategoriesAcceptsOuterWhitespace() {
+        Filter filter = parse("--exclude-categories", " proto , beta ");
+        assertEquals(
+                Set.of(GameCategory.PROTO, GameCategory.BETA),
+                filter.getExcludeCategories(),
+                "outer whitespace around the list must be trimmed, got: "
+                        + filter.getExcludeCategories());
     }
 
     // Row 2: a bogus category value must fail parsing with a clear message.
@@ -212,7 +225,7 @@ class FilteringOptionsTest {
                 "error message must mention the bogus value, got: " + e.getMessage());
         for (GameCategory category : GameCategory.values()) {
             assertTrue(
-                    e.getMessage().contains(category.name()),
+                    e.getMessage().contains(category.name().toLowerCase(Locale.ROOT)),
                     "error message must list valid category " + category + ", got: " + e.getMessage());
         }
     }

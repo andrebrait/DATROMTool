@@ -6,6 +6,7 @@ import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.dataformat.yaml.YAMLMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Coverage matrix row 5 of issue #14 step 2: {@link SortingPreference#getVersions()},
@@ -24,6 +25,16 @@ class SortingPreferenceTest {
                 "default revisions must be LATEST");
         assertEquals(OrderPreference.LATEST, preference.getPrereleases(),
                 "default prereleases must be LATEST");
+    }
+
+    @Test
+    void defaultOrderPreferencesAreOmittedFromSerialization() {
+        SortingPreference preference = SortingPreference.builder().build();
+        JsonMapper mapper = SerializationHelper.getInstance().getJsonMapper();
+        String json = mapper.writeValueAsString(preference);
+        assertFalse(json.contains("versions"), "default versions must be omitted, got: " + json);
+        assertFalse(json.contains("revisions"), "default revisions must be omitted, got: " + json);
+        assertFalse(json.contains("prereleases"), "default prereleases must be omitted, got: " + json);
     }
 
     @Test

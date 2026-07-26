@@ -7,13 +7,14 @@ import picocli.CommandLine;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Locale;
 
 public final class OrderPreferenceConverter
         implements CommandLine.ITypeConverter<OrderPreference>, Iterable<String> {
 
     private final static ImmutableList<String> aliases = Arrays.stream(OrderPreference.values())
             .map(Enum::name)
-            .map(String::toLowerCase)
+            .map(n -> n.toLowerCase(Locale.ROOT))
             .collect(ImmutableList.toImmutableList());
 
     @Override
@@ -24,10 +25,11 @@ public final class OrderPreferenceConverter
 
     @Override
     public OrderPreference convert(String value) {
+        String trimmed = value.trim();
         return aliases.stream()
-                .filter(c -> c.equalsIgnoreCase(value))
+                .filter(c -> c.equalsIgnoreCase(trimmed))
                 .findFirst()
-                .map(String::toUpperCase)
+                .map(c -> c.toUpperCase(Locale.ROOT))
                 .map(OrderPreference::valueOf)
                 .orElseThrow(() -> new CommandLine.TypeConversionException(
                         String.format(

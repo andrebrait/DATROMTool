@@ -3,6 +3,8 @@ package io.github.datromtool.cli.converter;
 import io.github.datromtool.config.ScanThreads;
 import org.junit.jupiter.api.Test;
 
+import java.util.Locale;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -20,7 +22,7 @@ class ScanThreadsConverterTest {
     @Test
     void zeroFailsValidationWithPositiveMessage() {
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> CONVERTER.convert("0"));
-        assertTrue(thrown.getMessage().toLowerCase().contains("positive"));
+        assertTrue(thrown.getMessage().toLowerCase(Locale.ROOT).contains("positive"));
     }
 
     @Test

@@ -58,9 +58,18 @@ public final class GameFilterer {
         return result;
     }
 
+    /**
+     * Asymmetric by design, mirroring pre-enum flag semantics: pattern-backed categories
+     * (BAD/PROGRAM/CHIP/PIRATE/PROMO/UNLICENSED/DLC/UPDATE) used to be exclude patterns fed
+     * into {@link #filterExcludes}, where any {@link Filter#getIncludes()} match rescues the
+     * game from all excludes; that rescue must still apply to them here. Structural categories
+     * (PROTO/BETA/DEMO/SAMPLE/BIOS) were separate boolean filters before and were never
+     * includes-overridable, so they stay non-rescuable.
+     */
     private boolean filterExcludedCategories(ParsedGame p) {
         for (GameCategory category : filter.getExcludeCategories()) {
-            if (matchesCategory(p, category)) {
+            if (matchesCategory(p, category)
+                    && !(category.getPattern().isPresent() && matchesAnyInclude(p))) {
                 if (log.isDebugEnabled()) {
                     log.debug(
                             "Category filter removed '{}' due to excluded category {}",
@@ -71,6 +80,12 @@ public final class GameFilterer {
             }
         }
         return true;
+    }
+
+    private boolean matchesAnyInclude(ParsedGame p) {
+        return filter.getIncludes().stream()
+                .map(e -> e.matcher(p.getGame().getName()))
+                .anyMatch(Matcher::find);
     }
 
     private static boolean matchesCategory(ParsedGame p, GameCategory category) {
@@ -136,9 +151,7 @@ public final class GameFilterer {
         boolean result = filter.getExcludes().stream()
                 .map(e -> e.matcher(p.getGame().getName()))
                 .noneMatch(Matcher::find);
-        result |= filter.getIncludes().stream()
-                .map(e -> e.matcher(p.getGame().getName()))
-                .anyMatch(Matcher::find);
+        result |= matchesAnyInclude(p);
         if (!result) {
             log.debug("Excludes filter removed '{}'", p.getGame().getName());
         }

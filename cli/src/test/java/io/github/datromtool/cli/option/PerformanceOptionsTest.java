@@ -6,6 +6,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import picocli.CommandLine;
 
+import java.util.Locale;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -68,7 +70,7 @@ class PerformanceOptionsTest {
                 () -> commandLine.parseArgs("--scan-threads", value),
                 "--scan-threads " + value + " must be rejected as non-positive");
         assertTrue(
-                thrown.getMessage().toLowerCase().contains("positive"),
+                thrown.getMessage().toLowerCase(Locale.ROOT).contains("positive"),
                 "the error must explain threads must be positive, got: " + thrown.getMessage());
     }
 
