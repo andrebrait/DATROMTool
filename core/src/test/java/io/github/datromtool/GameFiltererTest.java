@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.data.Filter;
 import io.github.datromtool.data.GameCategory;
+import io.github.datromtool.data.NameMatcher;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.PostFilter;
 import io.github.datromtool.data.RegionData;
@@ -13,7 +14,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -172,7 +172,7 @@ class GameFiltererTest {
         // pattern-backed category exclusions included. That rescue must still apply here.
         Filter filter = Filter.builder()
                 .excludeCategories(ImmutableSet.of(GameCategory.BAD))
-                .includes(ImmutableSet.of(Pattern.compile("Zelda")))
+                .includes(ImmutableSet.of(NameMatcher.regex("Zelda")))
                 .build();
         GameFilterer filterer = new GameFilterer(filter, PostFilter.builder().build());
         ParsedGame game = plainGame("Zelda [b]");
@@ -188,7 +188,7 @@ class GameFiltererTest {
         // before this PR and were never includes-overridable; that must stay true.
         Filter filter = Filter.builder()
                 .excludeCategories(ImmutableSet.of(GameCategory.PROTO))
-                .includes(ImmutableSet.of(Pattern.compile("Zelda")))
+                .includes(ImmutableSet.of(NameMatcher.regex("Zelda")))
                 .build();
         GameFilterer filterer = new GameFilterer(filter, PostFilter.builder().build());
         ParsedGame game = ParsedGame.builder()
@@ -206,7 +206,7 @@ class GameFiltererTest {
         GameFilterer filterer = new GameFilterer(
                 Filter.builder().build(),
                 PostFilter.builder()
-                        .excludes(ImmutableSet.of(Pattern.compile("Banned")))
+                        .excludes(ImmutableSet.of(NameMatcher.regex("Banned")))
                         .build());
         ParsedGame banned = plainGame("Banned Game");
         ParsedGame allowed = plainGame("Allowed Game");

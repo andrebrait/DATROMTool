@@ -2,6 +2,7 @@ package io.github.datromtool.cli.option;
 
 import io.github.datromtool.cli.argument.PatternsFileArgument;
 import io.github.datromtool.cli.converter.PatternsFileConverter;
+import io.github.datromtool.data.NameMatcher;
 import io.github.datromtool.data.PostFilter;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
@@ -9,7 +10,6 @@ import picocli.CommandLine;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -42,9 +42,9 @@ class PostFilteringOptionsTest {
         }
     }
 
-    private static boolean anyMatches(Iterable<Pattern> patterns, String candidate) {
-        for (Pattern p : patterns) {
-            if (p.matcher(candidate).matches()) {
+    private static boolean anyMatches(Iterable<NameMatcher> matchers, String candidate) {
+        for (NameMatcher m : matchers) {
+            if (m.getPattern().matcher(candidate).matches()) {
                 return true;
             }
         }

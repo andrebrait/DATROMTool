@@ -9,8 +9,6 @@ import lombok.NonNull;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
-import java.util.regex.Pattern;
-
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -32,11 +30,11 @@ public class SortingPreference {
 
     @NonNull
     @Builder.Default
-    ImmutableSet<Pattern> prefers = ImmutableSet.of();
+    ImmutableSet<NameMatcher> prefers = ImmutableSet.of();
 
     @NonNull
     @Builder.Default
-    ImmutableSet<Pattern> avoids = ImmutableSet.of();
+    ImmutableSet<NameMatcher> avoids = ImmutableSet.of();
 
     @Builder.Default
     boolean prioritizeLanguages = false;
