@@ -15,6 +15,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -48,21 +49,27 @@ public final class GameParser {
 
     public ImmutableList<ParsedGame> parse(Datafile input) {
         return input.getGames().stream()
-                .map(g -> ParsedGame.builder()
-                        .game(g)
-                        .bios(isBios(g))
-                        .parent(isNullOrEmpty(g.getCloneOf()) && isNullOrEmpty(g.getRomOf()))
-                        .bad(detectIsBad(g))
-                        .regionData(detectRegionData(g))
-                        .languages(detectLanguages(g))
-                        .proto(detectProto(g))
-                        .beta(detectBeta(g))
-                        .demo(detectDemo(g))
-                        .sample(detectSample(g))
-                        .revision(detectRevision(g))
-                        .version(detectVersion(g))
-                        .build())
+                .map(this::parseGame)
                 .collect(ImmutableList.toImmutableList());
+    }
+
+    private ParsedGame parseGame(Game g) {
+        List<ParsedGame.Divergence> divergences = new ArrayList<>();
+        return ParsedGame.builder()
+                .game(g)
+                .bios(isBios(g))
+                .parent(isNullOrEmpty(g.getCloneOf()) && isNullOrEmpty(g.getRomOf()))
+                .bad(detectIsBad(g))
+                .regionData(detectRegionData(g, divergences))
+                .languages(detectLanguages(g, divergences))
+                .proto(detectProto(g))
+                .beta(detectBeta(g))
+                .demo(detectDemo(g))
+                .sample(detectSample(g))
+                .revision(detectRevision(g))
+                .version(detectVersion(g))
+                .divergences(ImmutableList.copyOf(divergences))
+                .build();
     }
 
     private static boolean isBios(Game g) {
@@ -83,7 +90,7 @@ public final class GameParser {
         return result;
     }
 
-    private RegionData detectRegionData(Game game) {
+    private RegionData detectRegionData(Game game, List<ParsedGame.Divergence> divergences) {
         Set<RegionData.RegionDataEntry> detected = new LinkedHashSet<>();
         Matcher matcher = Patterns.SECTIONS.matcher(game.getName());
         while (matcher.find()) {
@@ -128,6 +135,10 @@ public final class GameParser {
                     "Detected regions by name do not match with the ones provided by the DAT. "
                             + "Difference(detected={}, provided={}, game={})",
                     detectedCodes, providedCodes, game.getName());
+            divergences.add(new ParsedGame.Divergence(
+                    "region",
+                    ImmutableSet.copyOf(detectedCodes),
+                    ImmutableSet.copyOf(providedCodes)));
         }
         return new RegionData(ImmutableSet.<RegionData.RegionDataEntry>builder()
                 .addAll(detected)
@@ -135,7 +146,7 @@ public final class GameParser {
                 .build());
     }
 
-    private ImmutableSet<String> detectLanguages(Game game) {
+    private ImmutableSet<String> detectLanguages(Game game, List<ParsedGame.Divergence> divergences) {
         Set<String> detected = new LinkedHashSet<>();
         Matcher matcher = Patterns.LANGUAGES.matcher(game.getName());
         while (matcher.find()) {
@@ -172,6 +183,10 @@ public final class GameParser {
                     detected,
                     provided,
                     game.getName());
+            divergences.add(new ParsedGame.Divergence(
+                    "language",
+                    ImmutableSet.copyOf(detected),
+                    ImmutableSet.copyOf(provided)));
         }
         return ImmutableSet.<String>builder()
                 .addAll(detected)

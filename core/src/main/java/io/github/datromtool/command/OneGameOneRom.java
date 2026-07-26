@@ -52,6 +52,8 @@ public final class OneGameOneRom {
     private final PostFilter postFilter;
     @NonNull
     private final SortingPreference sortingPreference;
+    @NonNull
+    private final GameParser.DivergenceDetection divergenceDetection;
 
     public void generate(
             @Nonnull AppConfig appConfig,
@@ -191,10 +193,10 @@ public final class OneGameOneRom {
                 .map(s -> s.map(ScanResultMatcher.GameMatchList::getParsedGame));
     }
 
-    private static ImmutableList<ParsedGame> parseGames(Collection<Datafile> datafiles) throws IOException {
+    private ImmutableList<ParsedGame> parseGames(Collection<Datafile> datafiles) throws IOException {
         GameParser gameParser = new GameParser(
                 SerializationHelper.getInstance().loadRegionData(),
-                GameParser.DivergenceDetection.ONE_WAY);
+                divergenceDetection);
         return datafiles.stream()
                 .map(gameParser::parse)
                 .flatMap(Collection::stream)

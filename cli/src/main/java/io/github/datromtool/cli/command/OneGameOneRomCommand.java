@@ -5,9 +5,11 @@ import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
+import io.github.datromtool.GameParser;
 import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.cli.GitVersionProvider;
 import io.github.datromtool.cli.argument.DatafileArgument;
+import io.github.datromtool.cli.converter.DivergenceDetectionConverter;
 import io.github.datromtool.cli.converter.DumpProfileFormatConverter;
 import io.github.datromtool.cli.converter.ExistingFileConverter;
 import io.github.datromtool.cli.option.DiagnosticOptions;
@@ -127,6 +129,16 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                     + "Options: ${COMPLETION-CANDIDATES} (default: yaml).")
     private DumpProfileFormat dumpProfile;
 
+    @CommandLine.Option(
+            names = "--divergence",
+            paramLabel = "MODE",
+            converter = DivergenceDetectionConverter.class,
+            completionCandidates = DivergenceDetectionConverter.class,
+            description = "How strictly to flag divergences between No-Intro parsed names and "
+                    + "DAT-declared region/language metadata (logged as warnings; does not affect "
+                    + "filtering/output). Options: ${COMPLETION-CANDIDATES} (default: one_way).")
+    private GameParser.DivergenceDetection divergenceDetection = GameParser.DivergenceDetection.ONE_WAY;
+
     @CommandLine.ArgGroup(heading = "Input options\n", exclusive = false)
     private InputOptions inputOptions;
 
@@ -212,7 +224,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                             OutputOptions.FileOptions.OUT_DIR_OPTION,
                             InputOptions.IN_DIR_OPTION));
         }
-        OneGameOneRom oneGameOneRom = new OneGameOneRom(filter, postFilter, sortingPreference);
+        OneGameOneRom oneGameOneRom = new OneGameOneRom(filter, postFilter, sortingPreference, divergenceDetection);
         List<Datafile> realDataFiles = datafiles.stream()
                 .map(DatafileArgument::getDatafile)
                 .collect(ImmutableList.toImmutableList());
