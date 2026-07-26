@@ -204,4 +204,14 @@ class ScanCommandTest {
         }
         assertEquals(2, exitCode, "missing DIR parameter must exit with code 2, stderr was:\n" + capturedErr);
     }
+    @Test
+    void progressOutputStaysPinnedToStderr() {
+        // jline writes progress at file-descriptor level, bypassing System.setOut capture,
+        // so no behavioral test can catch a regression of this choice; the end-to-end
+        // property is jar-probe-verified. This pin fails if anyone flips the mode.
+        assertEquals(
+                org.jline.terminal.TerminalBuilder.SystemOutput.ForcedSysErr,
+                ScanCommand.PROGRESS_OUTPUT,
+                "scan progress must go to stderr so stdout stays machine-readable");
+    }
 }
