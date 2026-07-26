@@ -124,7 +124,7 @@ public class PerformanceOptions {
                 || allowRawZipCopy) {
             AppConfig.FileCopierConfig.FileCopierConfigBuilder builder = original.toBuilder();
             if (copyThreads != null) {
-                builder.threads(scanThreads);
+                builder.threads(copyThreads);
             }
             if (copyBufferSize != null) {
                 builder.bufferSize(toIntExact(copyBufferSize.getSizeInBytes()));
