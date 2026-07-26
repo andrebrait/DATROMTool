@@ -47,6 +47,20 @@ class OneGameOneRomCommandProfileTest {
         return commandLine;
     }
 
+    // F2: OneGameOneRomCommand's --dump-profile snapshot layers the real
+    // ~/.DATROMTool/config.yaml (or built-in defaults, if absent) into the dumped `performance`
+    // section via SerializationHelper#loadAppConfig (see OneGameOneRomCommand line ~172), so on
+    // any machine whose real config.yaml sets a non-default value, comparing the dump against
+    // Profile.builder().build() (always AppConfig's hardcoded defaults) fails for a reason
+    // unrelated to the behavior under test. Building the expected Profile from that same
+    // in-process loadAppConfig() base keeps every other field's default assertion just as
+    // strict while tolerating this one legitimate machine-dependent field.
+    private static Profile defaultProfileWithRealPerformanceBase() {
+        return Profile.builder()
+                .performance(SerializationHelper.getInstance().loadAppConfig())
+                .build();
+    }
+
     private static String runAndCaptureStdout(String... args) {
         OneGameOneRomCommand command = new OneGameOneRomCommand();
         CommandLine commandLine = newCommandLine(command);
@@ -81,7 +95,11 @@ class OneGameOneRomCommandProfileTest {
         Profile reloaded = assertDoesNotThrow(
                 () -> SerializationHelper.getInstance().getYamlMapper().readValue(output, Profile.class),
                 "default --dump-profile output must be valid YAML parseable as a Profile, got:\n" + output);
-        assertEquals(Profile.builder().build(), reloaded, "no flags/profile must dump the default Profile");
+        assertEquals(
+                defaultProfileWithRealPerformanceBase(),
+                reloaded,
+                "no flags/profile must dump the default Profile (performance section compared "
+                        + "against this machine's real loadAppConfig() base, not hardcoded defaults)");
     }
 
     @Test
@@ -100,7 +118,11 @@ class OneGameOneRomCommandProfileTest {
         Profile reloaded = assertDoesNotThrow(
                 () -> SerializationHelper.getInstance().getJsonMapper().readValue(output, Profile.class),
                 "--dump-profile json output must be valid JSON parseable as a Profile, got:\n" + output);
-        assertEquals(Profile.builder().build(), reloaded);
+        assertEquals(
+                defaultProfileWithRealPerformanceBase(),
+                reloaded,
+                "no flags/profile must dump the default Profile (performance section compared "
+                        + "against this machine's real loadAppConfig() base, not hardcoded defaults)");
     }
 
     // Row 4(b): --dump-profile output, reloaded as a --profile, reproduces the same effective

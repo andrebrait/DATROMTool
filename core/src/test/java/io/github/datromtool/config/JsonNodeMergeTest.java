@@ -96,4 +96,24 @@ class JsonNodeMergeTest {
         JsonNode overlay = node("{\"filter\":\"reset\"}");
         assertEquals(node("{\"filter\":\"reset\"}"), JsonNodeMerge.merge(base, overlay));
     }
+
+    // Issue #31 review fix B: an explicit JSON/YAML null in the overlay CLEARS the base's
+    // value for that field entirely (RFC 7386 JSON merge patch semantics) -- contrast with
+    // overlayWithoutFieldLeavesBaseFieldUnchanged, where the field is genuinely MISSING and
+    // survives from base instead.
+    @Test
+    void explicitNullInOverlayClearsBaseField() {
+        JsonNode base = node("{\"a\":1,\"b\":2}");
+        JsonNode overlay = node("{\"a\":null}");
+        assertEquals(node("{\"b\":2}"), JsonNodeMerge.merge(base, overlay));
+    }
+
+    @Test
+    void explicitNullClearsNestedObjectFieldWhileSiblingIsSet() {
+        JsonNode base = node("{\"output\":{\"file\":{\"outputDir\":\"out\"}}}");
+        JsonNode overlay = node("{\"output\":{\"file\":null,\"text\":{\"outputMode\":\"json\"}}}");
+        assertEquals(
+                node("{\"output\":{\"text\":{\"outputMode\":\"json\"}}}"),
+                JsonNodeMerge.merge(base, overlay));
+    }
 }

@@ -1,8 +1,10 @@
 package io.github.datromtool.data;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.github.datromtool.Patterns;
 
 import javax.annotation.Nullable;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -47,5 +49,16 @@ public enum GameCategory {
      */
     public Optional<Pattern> getPattern() {
         return Optional.ofNullable(pattern);
+    }
+
+    /**
+     * Serializes lowercase, matching the {@code type}/{@code archiveType} lowercase contract
+     * elsewhere in the profile schema ({@link NameMatcher.MatchType},
+     * {@link io.github.datromtool.io.ArchiveType}). Reads stay case-insensitive via
+     * {@code MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS} on the shared mappers.
+     */
+    @JsonValue
+    public String toJson() {
+        return name().toLowerCase(Locale.ROOT);
     }
 }

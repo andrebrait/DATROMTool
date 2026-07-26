@@ -1,6 +1,5 @@
 package io.github.datromtool.cli.option;
 
-import io.github.datromtool.Patterns;
 import io.github.datromtool.cli.argument.PatternsFileArgument;
 import io.github.datromtool.cli.converter.GameCategoryConverter;
 import io.github.datromtool.cli.converter.PatternsFileConverter;
@@ -17,7 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -158,20 +156,20 @@ class FilteringOptionsTest {
                 "--includes-file patterns must merge into Filter.includes, got: " + filter.getIncludes());
     }
 
-    // Row 9 (new-surface equivalent of the old rows 9/12: nothing excluded by default)
+    // Row 9 (new-surface equivalent of the old rows 9/12: nothing excluded by default). Fixed
+    // per issue #31 review: `getExcludes()` returns a Set<NameMatcher> (never a raw
+    // java.util.regex.Pattern), so the previous `.contains(Pattern)` checks below always
+    // returned false regardless of `excludes`' actual contents -- a vacuously passing
+    // assertion. Asserting the set is empty actually fails on a regression.
     @Test
     void noFlagsExcludeNoCategoryAndExcludeNothing() {
         Filter filter = parse();
         assertTrue(
                 filter.getExcludeCategories().isEmpty(),
                 "default excludeCategories must be empty, got: " + filter.getExcludeCategories());
-        for (Pattern p : new Pattern[]{
-                Patterns.BAD, Patterns.PROGRAM, Patterns.ENHANCEMENT_CHIP, Patterns.PIRATE,
-                Patterns.PROMO, Patterns.UNLICENSED, Patterns.DLC, Patterns.UPDATE}) {
-            assertFalse(
-                    filter.getExcludes().contains(p),
-                    "default excludes must not contain " + p.pattern() + ", got: " + filter.getExcludes());
-        }
+        assertTrue(
+                filter.getExcludes().isEmpty(),
+                "default excludes must be empty, got: " + filter.getExcludes());
     }
 
     // Row 1 of the coverage matrix: --exclude-categories parses to Filter.excludeCategories,
