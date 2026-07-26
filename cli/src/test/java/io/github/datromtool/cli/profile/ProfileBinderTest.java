@@ -154,6 +154,28 @@ class ProfileBinderTest {
         assertEquals(new ScanThreads(7), withCli.getScanner().getThreads(), "--scan-threads must win over both profile and config.yaml base");
     }
 
+    // Issue #23 / gate finding for issue #15 step 3: profile sets copier.allowRawZipCopy=true;
+    // an explicit --copy-raw-zip=false on the CLI must win (ProfileBinder's documented
+    // "explicit flags win" guarantee), not be silently swallowed by PerformanceOptions#merge's
+    // primitive-boolean guard.
+    @Test
+    void explicitCopyRawZipFalseBeatsProfileAllowRawZipCopyTrue() {
+        AppConfig base = AppConfig.builder().build();
+        AppConfig profilePerformance = AppConfig.builder()
+                .copier(AppConfig.FileCopierConfig.builder()
+                        .allowRawZipCopy(true)
+                        .build())
+                .build();
+
+        Holder holder = new Holder();
+        parsed(holder, "--copy-raw-zip=false");
+        AppConfig effective = ProfileBinder.effectivePerformance(base, profilePerformance, holder.performanceOptions);
+
+        assertFalse(
+                effective.getCopier().isAllowRawZipCopy(),
+                "explicit --copy-raw-zip=false must win over the profile's allowRawZipCopy=true");
+    }
+
     @Test
     void defaultProfilePerformanceLeavesBaseUntouched() {
         AppConfig base = AppConfig.builder()

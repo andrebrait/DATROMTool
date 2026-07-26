@@ -129,6 +129,21 @@ class PerformanceOptionsTest {
                 "--copy-raw-zip alone must set FileCopierConfig.allowRawZipCopy true");
     }
 
+    // Issue #23: a persisted allowRawZipCopy=true must survive a merge triggered by an
+    // unrelated --copy-* flag that doesn't touch --copy-raw-zip at all. Reproduction: config.yaml
+    // has allowRawZipCopy: true, user runs with only --copy-threads 3.
+    @Test
+    void copyThreadsAloneMustNotResetPersistedAllowRawZipCopyToFalse() {
+        PerformanceOptions options = parse("--copy-threads", "3");
+        AppConfig.FileCopierConfig original = AppConfig.FileCopierConfig.builder()
+                .allowRawZipCopy(true)
+                .build();
+        AppConfig.FileCopierConfig merged = options.merge(original);
+        assertTrue(
+                merged.isAllowRawZipCopy(),
+                "--copy-threads alone must not reset a persisted allowRawZipCopy=true to false");
+    }
+
     // Matrix row 6 (issue #14 step 3): scan/copy thread wrappers cannot cross-assign at
     // compile time; this end-to-end parse pins the runtime merge stays independent too.
     @Test
