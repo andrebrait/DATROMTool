@@ -202,4 +202,47 @@ class SubComparatorProviderTest {
         assertTrue(i.next() instanceof PreferParentsSubComparator);
         assertFalse(i.hasNext());
     }
+
+    // Issue #19 step 2: the 2-arg overload with clonelistPrioritiesPresent=false must delegate to
+    // exactly the same chain as the 1-arg overload above (byte-identical, same 15-comparator
+    // list).
+    @Test
+    void testToList_clonelistPrioritiesAbsent_matchesSingleArgOverload() {
+        ImmutableList<SubComparator> withFlag =
+                SubComparatorProvider.INSTANCE.toList(SortingPreference.builder().build(), false);
+        ImmutableList<SubComparator> withoutFlag =
+                SubComparatorProvider.INSTANCE.toList(SortingPreference.builder().build());
+        assertEquals(withoutFlag.size(), withFlag.size());
+        assertEquals(15, withFlag.size());
+    }
+
+    @Test
+    void testToList_clonelistPrioritiesPresent_insertsPriorityRightAfterRegion() {
+        ImmutableList<SubComparator> subComparators = SubComparatorProvider.INSTANCE.toList(
+                SortingPreference.builder().build(),
+                true);
+        assertEquals(16, subComparators.size());
+        Iterator<SubComparator> i = subComparators.iterator();
+        assertTrue(i.next() instanceof BadDumpSubComparator);
+        assertTrue(i.next() instanceof AvoidsListSubComparator);
+        assertTrue(i.next() instanceof RegionSubComparator);
+        assertTrue(i.next() instanceof PrioritySubComparator);
+        assertTrue(i.next() instanceof LanguageSubComparator);
+        assertTrue(i.next() instanceof PrefersListSubComparator);
+    }
+
+    @Test
+    void testToList_clonelistPrioritiesPresent_insertsPriorityRightAfterRegion_prioritizeLanguages() {
+        ImmutableList<SubComparator> subComparators = SubComparatorProvider.INSTANCE.toList(
+                SortingPreference.builder().prioritizeLanguages(true).build(),
+                true);
+        assertEquals(16, subComparators.size());
+        Iterator<SubComparator> i = subComparators.iterator();
+        assertTrue(i.next() instanceof BadDumpSubComparator);
+        assertTrue(i.next() instanceof AvoidsListSubComparator);
+        assertTrue(i.next() instanceof LanguageSubComparator);
+        assertTrue(i.next() instanceof RegionSubComparator);
+        assertTrue(i.next() instanceof PrioritySubComparator);
+        assertTrue(i.next() instanceof PrefersListSubComparator);
+    }
 }

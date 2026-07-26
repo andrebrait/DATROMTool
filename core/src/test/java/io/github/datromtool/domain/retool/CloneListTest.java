@@ -280,6 +280,50 @@ class CloneListTest {
                         + " value, got: " + exception.getMessage());
     }
 
+    // Issue #19 step 2: CloneList#isCompatibleWith, the minimumVersion compat *check* (no
+    // enforcement wiring yet - that's step 3). Real fixture declares minimumVersion "2.4.8".
+    @Test
+    void isCompatibleWith_exactVersionMatches() throws Exception {
+        CloneList cloneList = HELPER.loadCloneList(resource("retool/clonelists/atari-2600-no-intro.json"));
+        assertTrue(cloneList.isCompatibleWith("2.4.8"));
+    }
+
+    @Test
+    void isCompatibleWith_higherVersionIsCompatible() throws Exception {
+        CloneList cloneList = HELPER.loadCloneList(resource("retool/clonelists/atari-2600-no-intro.json"));
+        assertTrue(cloneList.isCompatibleWith("2.5.0"));
+        assertTrue(cloneList.isCompatibleWith("3.0.0"));
+        assertTrue(cloneList.isCompatibleWith("2.4.9"));
+    }
+
+    @Test
+    void isCompatibleWith_lowerVersionIsIncompatible() throws Exception {
+        CloneList cloneList = HELPER.loadCloneList(resource("retool/clonelists/atari-2600-no-intro.json"));
+        assertFalse(cloneList.isCompatibleWith("2.4.7"));
+        assertFalse(cloneList.isCompatibleWith("2.3.9"));
+        assertFalse(cloneList.isCompatibleWith("1.9.9"));
+    }
+
+    @Test
+    void isCompatibleWith_missingTrailingSegmentTreatedAsZero() {
+        CloneList cloneList = new CloneList(
+                new CloneListDescription("Test", "01 January 2026", "2.4"),
+                ImmutableList.of());
+        assertTrue(cloneList.isCompatibleWith("2.4.0"));
+        assertTrue(cloneList.isCompatibleWith("2.4"));
+        assertFalse(cloneList.isCompatibleWith("2.3.9"));
+    }
+
+    @Test
+    void isCompatibleWith_nonNumericSegmentFallsBackToLexicographicCompare() {
+        CloneList cloneList = new CloneList(
+                new CloneListDescription("Test", "01 January 2026", "2.4.8-rc1"),
+                ImmutableList.of());
+        assertTrue(cloneList.isCompatibleWith("2.4.8-rc1"));
+        assertTrue(cloneList.isCompatibleWith("2.4.8-rc2"));
+        assertFalse(cloneList.isCompatibleWith("2.4.8-rc0"));
+    }
+
     // Matrix row 6b: invalid nameType value -> clear error (pinned).
     // Pinned to the actual exception: tools.jackson.databind.exc.InvalidFormatException,
     // "Cannot deserialize value of type `io.github.datromtool.domain.retool.NameType` from

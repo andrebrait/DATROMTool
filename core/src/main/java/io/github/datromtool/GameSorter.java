@@ -36,9 +36,24 @@ public final class GameSorter {
     private static Map<String, List<ParsedGame>> groupByParent(Collection<ParsedGame> parsedGames) {
         return parsedGames.stream()
                 .collect(Collectors.groupingBy(
-                        ParsedGame::getParentName,
+                        GameSorter::groupKey,
                         LinkedHashMap::new,
                         Collectors.toList()));
+    }
+
+    /**
+     * Grouping key for 1G1R candidate sets (issue #19 step 2): a Retool clone list match
+     * ({@link ParsedGame#getClonelistGroup()}) takes precedence over the DAT-declared
+     * parent/clone relationship ({@link ParsedGame#getParentName()}) when present, so a clone
+     * list can unify games across DAT parent/clone boundaries the DAT itself does not declare
+     * (e.g. the Atari 2600 "Air Raiders"/"Bogey Blaster"/"Top Gun" cross-region-rename group).
+     * Absent a clone list match - including every run without clone list data at all, since
+     * {@link ParsedGame#getClonelistGroup()} is then always {@code null} - this is byte-identical
+     * to grouping by {@link ParsedGame#getParentName()} alone.
+     */
+    private static String groupKey(ParsedGame parsedGame) {
+        String clonelistGroup = parsedGame.getClonelistGroup();
+        return clonelistGroup != null ? clonelistGroup : parsedGame.getParentName();
     }
 
     private static void logBeforeSorting(Map.Entry<String, ? extends Collection<ParsedGame>> e) {

@@ -14,6 +14,8 @@ import io.github.datromtool.domain.datafile.logiqx.Datafile;
 import io.github.datromtool.domain.datafile.logiqx.Game;
 import io.github.datromtool.domain.datafile.logiqx.Header;
 import io.github.datromtool.domain.detector.Detector;
+import io.github.datromtool.domain.retool.CloneList;
+import io.github.datromtool.domain.retool.RetoolMetadata;
 import io.github.datromtool.exception.ExecutionException;
 import io.github.datromtool.exception.InvalidDatafileException;
 import io.github.datromtool.exception.WrappedExecutionException;
@@ -21,11 +23,12 @@ import io.github.datromtool.io.ArchiveType;
 import io.github.datromtool.io.FileCopier;
 import io.github.datromtool.io.FileScanner;
 import io.github.datromtool.io.ScanResultMatcher;
+import io.github.datromtool.retool.CloneListMatcher;
+import io.github.datromtool.retool.MetadataEnricher;
 import io.github.datromtool.sorting.GameComparator;
 import io.github.datromtool.sorting.GameNameComparator;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import tools.jackson.core.JacksonException;
 
@@ -44,21 +47,48 @@ import java.util.stream.Stream;
 import static java.lang.String.format;
 
 @Slf4j
-@RequiredArgsConstructor
 public final class OneGameOneRom {
 
-    @NonNull
     private final Filter filter;
-    @NonNull
     private final PostFilter postFilter;
-    @NonNull
     private final SortingPreference sortingPreference;
     // Public getter (not just a private field) so a CLI-level test can pin that the mode it
     // parsed is the one that actually reached this constructor, rather than only re-reading the
     // command's own field (which a hardcoded-at-the-call-site regression wouldn't affect).
-    @NonNull
     @Getter
     private final GameParser.DivergenceDetection divergenceDetection;
+    // Issue #19 step 2: optional Retool input sources. Both null (the 4-arg constructor below)
+    // reproduces byte-identical pre-issue-#19 behavior; wiring these from CLI/profile options is
+    // step 3's job; nothing in `cli` calls the 6-arg constructor yet.
+    @Nullable
+    private final CloneList cloneList;
+    @Nullable
+    private final RetoolMetadata retoolMetadata;
+
+    public OneGameOneRom(
+            @Nonnull Filter filter,
+            @Nonnull PostFilter postFilter,
+            @Nonnull SortingPreference sortingPreference,
+            @Nonnull GameParser.DivergenceDetection divergenceDetection) {
+        this(filter, postFilter, sortingPreference, divergenceDetection, null, null);
+    }
+
+    public OneGameOneRom(
+            @Nonnull Filter filter,
+            @Nonnull PostFilter postFilter,
+            @Nonnull SortingPreference sortingPreference,
+            @Nonnull GameParser.DivergenceDetection divergenceDetection,
+            @Nullable CloneList cloneList,
+            @Nullable RetoolMetadata retoolMetadata) {
+        this.filter = Objects.requireNonNull(filter, "filter is marked non-null but is null");
+        this.postFilter = Objects.requireNonNull(postFilter, "postFilter is marked non-null but is null");
+        this.sortingPreference =
+                Objects.requireNonNull(sortingPreference, "sortingPreference is marked non-null but is null");
+        this.divergenceDetection =
+                Objects.requireNonNull(divergenceDetection, "divergenceDetection is marked non-null but is null");
+        this.cloneList = cloneList;
+        this.retoolMetadata = retoolMetadata;
+    }
 
     public void generate(
             @Nonnull AppConfig appConfig,
@@ -140,13 +170,37 @@ public final class OneGameOneRom {
     }
 
     private ImmutableMap<String, ImmutableList<ParsedGame>> filterAndGroup(
-            Collection<ParsedGame> parsedGames) {
+            Collection<ParsedGame> parsedGames) throws IOException {
         GameFilterer gameFilterer = new GameFilterer(filter, postFilter);
-        GameSorter gameSorter = new GameSorter(new GameComparator(sortingPreference));
-        ImmutableList<ParsedGame> filtered = gameFilterer.filter(parsedGames);
+        ImmutableList<ParsedGame> matched = applyCloneList(parsedGames);
+        GameComparator comparator = new GameComparator(sortingPreference, cloneList != null);
+        GameSorter gameSorter = new GameSorter(comparator);
+        ImmutableList<ParsedGame> filtered = gameFilterer.filter(matched);
         ImmutableMap<String, ImmutableList<ParsedGame>> filteredGamesByParent =
                 gameSorter.sortAndGroupByParent(filtered);
         return gameFilterer.postFilter(filteredGamesByParent);
+    }
+
+    /**
+     * Issue #19 step 2: annotates each game with its Retool clone list group/priority (see
+     * {@link CloneListMatcher}), when a clone list is present. {@code null} {@link #cloneList}
+     * (every run before issue #19, and every run in this step since nothing in {@code cli} wires
+     * it up yet) short-circuits to an identity copy - byte-identical to pre-issue-#19 behavior.
+     */
+    private ImmutableList<ParsedGame> applyCloneList(Collection<ParsedGame> parsedGames) throws IOException {
+        if (cloneList == null) {
+            return ImmutableList.copyOf(parsedGames);
+        }
+        RegionData regionData = SerializationHelper.getInstance().loadRegionData();
+        CloneListMatcher matcher = new CloneListMatcher(cloneList, regionData, sortingPreference);
+        return parsedGames.stream()
+                .map(g -> matcher.match(g)
+                        .map(mr -> g.toBuilder()
+                                .clonelistGroup(mr.group())
+                                .clonelistPriority(mr.priority())
+                                .build())
+                        .orElse(g))
+                .collect(ImmutableList.toImmutableList());
     }
 
     private static void sendToOutput(
@@ -202,10 +256,14 @@ public final class OneGameOneRom {
         GameParser gameParser = new GameParser(
                 SerializationHelper.getInstance().loadRegionData(),
                 divergenceDetection);
-        return datafiles.stream()
+        ImmutableList<ParsedGame> parsed = datafiles.stream()
                 .map(gameParser::parse)
                 .flatMap(Collection::stream)
                 .collect(ImmutableList.toImmutableList());
+        // Issue #19 step 2: null retoolMetadata (every run before issue #19, and every run in
+        // this step since nothing in `cli` wires it up yet) is a no-op copy - see
+        // MetadataEnricher's Javadoc.
+        return MetadataEnricher.enrich(parsed, retoolMetadata);
     }
 
     private static void validate(

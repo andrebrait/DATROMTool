@@ -1588,4 +1588,52 @@ class GameComparatorTest {
         Arrays.sort(parsedGames, comparator);
         assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
     }
+
+    // Issue #19 step 2: PrioritySubComparator is only registered when the caller says clone list
+    // data is present, and even then it compares within the same region (positioned right after
+    // RegionSubComparator - see SubComparatorProvider).
+    @Test
+    void testCompare_shouldSortByClonelistPriorityWithinSameRegionWhenPresent() {
+        GameComparator comparator = new GameComparator(
+                SubComparatorProvider.INSTANCE,
+                SortingPreference.builder().build(),
+                true);
+        ParsedGame tg1 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "USA"))
+                .game(createGame("Test game 1"))
+                .clonelistPriority(2)
+                .build();
+        ParsedGame tg2 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "USA"))
+                .game(createGame("Test game 2"))
+                .clonelistPriority(1)
+                .build();
+        ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
+        Arrays.sort(parsedGames, comparator);
+        assertArrayEquals(new ParsedGame[]{tg2, tg1}, parsedGames);
+    }
+
+    @Test
+    void testCompare_shouldIgnoreClonelistPriorityWhenNotPresent() {
+        GameComparator comparator = new GameComparator(
+                SubComparatorProvider.INSTANCE,
+                SortingPreference.builder().build(),
+                false);
+        ParsedGame tg1 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "USA"))
+                .game(createGame("Test game 1"))
+                .clonelistPriority(1)
+                .build();
+        ParsedGame tg2 = ParsedGame.builder()
+                .regionData(getRegionByCode(regionData, "USA"))
+                .game(createGame("Test game 2"))
+                .clonelistPriority(2)
+                .build();
+        ParsedGame[] parsedGames = new ParsedGame[]{tg1, tg2};
+        Arrays.sort(parsedGames, comparator);
+        assertArrayEquals(
+                new ParsedGame[]{tg1, tg2},
+                parsedGames,
+                "clonelistPrioritiesPresent=false must not register PrioritySubComparator at all");
+    }
 }
