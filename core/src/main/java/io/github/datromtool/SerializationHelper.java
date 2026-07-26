@@ -170,7 +170,9 @@ public final class SerializationHelper {
      */
     public Profile loadProfiles(List<Path> paths) throws IOException {
         if (paths.isEmpty()) {
-            return Profile.builder().build();
+            Profile profile = Profile.builder().build();
+            profile.validate();
+            return profile;
         }
         JsonNode merged = null;
         for (Path path : paths) {
