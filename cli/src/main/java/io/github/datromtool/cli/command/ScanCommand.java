@@ -149,11 +149,16 @@ public final class ScanCommand implements Callable<Integer> {
                 : baseAppConfig.getScanner();
     }
 
+    // Pinned by ScanCommandTest: jline writes at file-descriptor level, so a behavioral
+    // stdout-capture test cannot catch a regression of this choice — the constant is the
+    // testable surface.
+    static final TerminalBuilder.SystemOutput PROGRESS_OUTPUT = TerminalBuilder.SystemOutput.ForcedSysErr;
+
     @Nullable
     private Terminal createTerminal() {
         try {
             return TerminalBuilder.builder()
-                    .systemOutput(TerminalBuilder.SystemOutput.ForcedSysErr)
+                    .systemOutput(PROGRESS_OUTPUT)
                     .build();
         } catch (IOException e) {
             log.error("Error while creating terminal", e);
