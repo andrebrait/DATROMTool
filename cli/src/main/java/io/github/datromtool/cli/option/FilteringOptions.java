@@ -1,16 +1,15 @@
 package io.github.datromtool.cli.option;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import io.github.datromtool.Patterns;
 import io.github.datromtool.cli.argument.PatternsFileArgument;
+import io.github.datromtool.cli.converter.GameCategoryConverter;
 import io.github.datromtool.cli.converter.TrimmingLowerCaseConverter;
 import io.github.datromtool.cli.converter.TrimmingUpperCaseConverter;
 import io.github.datromtool.data.Filter;
+import io.github.datromtool.data.GameCategory;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import picocli.CommandLine;
 
@@ -19,7 +18,6 @@ import java.util.regex.Pattern;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static io.github.datromtool.cli.util.ArgumentUtils.merge;
-import static lombok.AccessLevel.NONE;
 
 @Data
 @NoArgsConstructor
@@ -99,160 +97,14 @@ public final class FilteringOptions {
     private List<PatternsFileArgument> includesFiles = ImmutableList.of();
 
     @CommandLine.Option(
-            names = "--bad",
-            description = "Include/exclude bad dumps",
-            negatable = true)
-    @Getter(NONE)
-    private Boolean allowBad;
-
-    @CommandLine.Option(
-            names = "--proto",
-            description = "Include/exclude prototype entries",
-            negatable = true)
-    @Getter(NONE)
-    private Boolean allowProto;
-
-    @CommandLine.Option(
-            names = "--beta",
-            description = "Include/exclude beta entries",
-            negatable = true)
-    @Getter(NONE)
-    private Boolean allowBeta;
-
-    @CommandLine.Option(
-            names = "--demo",
-            description = "Include/exclude demo entries",
-            negatable = true)
-    @Getter(NONE)
-    private Boolean allowDemo;
-
-    @CommandLine.Option(
-            names = "--sample",
-            description = "Include/exclude sample entries",
-            negatable = true)
-    @Getter(NONE)
-    private Boolean allowSample;
-
-    @CommandLine.Option(
-            names = "--bios",
-            description = "Include/exclude BIOS entries",
-            negatable = true)
-    @Getter(NONE)
-    private Boolean allowBios;
-
-    @CommandLine.Option(
-            names = "--program",
-            description = "Include/exclude program entries",
-            negatable = true)
-    @Getter(NONE)
-    private Boolean allowProgram;
-
-    @CommandLine.Option(
-            names = "--chip",
-            description = "Include/exclude enhancement chip entries",
-            negatable = true)
-    @Getter(NONE)
-    private Boolean allowChip;
-
-    @CommandLine.Option(
-            names = "--pirate",
-            description = "Include/exclude pirate entries",
-            negatable = true)
-    @Getter(NONE)
-    private Boolean allowPirate;
-
-    @CommandLine.Option(
-            names = "--promo",
-            description = "Include/exclude promotion entries",
-            negatable = true)
-    @Getter(NONE)
-    private Boolean allowPromo;
-
-    @CommandLine.Option(
-            names = "--unlicensed",
-            description = "Include/exclude unlicensed entries",
-            negatable = true)
-    @Getter(NONE)
-    private Boolean allowUnlicensed;
-
-    @CommandLine.Option(
-            names = "--dlc",
-            description = "Include/exclude DLCs",
-            negatable = true)
-    @Getter(NONE)
-    private Boolean allowDlc;
-
-    @CommandLine.Option(
-            names = "--update",
-            description = "Include/exclude software update entries",
-            negatable = true)
-    @Getter(NONE)
-    private Boolean allowUpdate;
-
-    @CommandLine.Option(
-            names = "--no-all",
-            description = "Exclude all the above")
-    @Getter(NONE)
-    @JsonIgnore
-    private boolean excludeAll;
-
-    private boolean reallySet(Boolean condition) {
-        return excludeAll
-                ? condition != null && condition
-                : condition == null || condition;
-    }
-
-    public boolean isAllowBad() {
-        return reallySet(allowBad);
-    }
-
-    public boolean isAllowProto() {
-        return reallySet(allowProto);
-    }
-
-    public boolean isAllowBeta() {
-        return reallySet(allowBeta);
-    }
-
-    public boolean isAllowDemo() {
-        return reallySet(allowDemo);
-    }
-
-    public boolean isAllowSample() {
-        return reallySet(allowSample);
-    }
-
-    public boolean isAllowBios() {
-        return reallySet(allowBios);
-    }
-
-    public boolean isAllowProgram() {
-        return reallySet(allowProgram);
-    }
-
-    public boolean isAllowChip() {
-        return reallySet(allowChip);
-    }
-
-    public boolean isAllowPirate() {
-        return reallySet(allowPirate);
-    }
-
-    public boolean isAllowPromo() {
-        return reallySet(allowPromo);
-    }
-
-    public boolean isAllowUnlicensed() {
-        return reallySet(allowUnlicensed);
-    }
-
-    public boolean isAllowDlc() {
-        return reallySet(allowDlc);
-    }
-
-    public boolean isAllowUpdate() {
-        return reallySet(allowUpdate);
-    }
+            names = "--exclude-categories",
+            split = "\\s*,\\s*",
+            splitSynopsisLabel = ",",
+            paramLabel = "CATEGORY",
+            description = "Exclude entries belonging to the given categories. "
+                    + "Options: ${COMPLETION-CANDIDATES}",
+            completionCandidates = GameCategoryConverter.class)
+    private List<GameCategory> excludeCategories = ImmutableList.of();
 
     public Filter toFilter() {
         Filter.FilterBuilder builder = Filter.builder();
@@ -260,38 +112,8 @@ public final class FilteringOptions {
         builder.excludeRegions(ImmutableSet.copyOf(excludeRegions));
         builder.includeLanguages(ImmutableSet.copyOf(includeLanguages));
         builder.excludeLanguages(ImmutableSet.copyOf(excludeLanguages));
-        builder.allowProto(isAllowProto());
-        builder.allowBeta(isAllowBeta());
-        builder.allowDemo(isAllowDemo());
-        builder.allowSample(isAllowSample());
-        builder.allowBios(isAllowBios());
-        ImmutableSet.Builder<Pattern> excludeRegexesBuilder = ImmutableSet.builder();
-        if (!isAllowBad()) {
-            excludeRegexesBuilder.add(Patterns.BAD);
-        }
-        if (!isAllowProgram()) {
-            excludeRegexesBuilder.add(Patterns.PROGRAM);
-        }
-        if (!isAllowChip()) {
-            excludeRegexesBuilder.add(Patterns.ENHANCEMENT_CHIP);
-        }
-        if (!isAllowPirate()) {
-            excludeRegexesBuilder.add(Patterns.PIRATE);
-        }
-        if (!isAllowPromo()) {
-            excludeRegexesBuilder.add(Patterns.PROMO);
-        }
-        if (!isAllowUnlicensed()) {
-            excludeRegexesBuilder.add(Patterns.UNLICENSED);
-        }
-        if (!isAllowDlc()) {
-            excludeRegexesBuilder.add(Patterns.DLC);
-        }
-        if (!isAllowUpdate()) {
-            excludeRegexesBuilder.add(Patterns.UPDATE);
-        }
-        excludeRegexesBuilder.addAll(excludeRegexes);
-        builder.excludes(merge(excludes, excludeRegexesBuilder.build(), excludesFiles));
+        builder.excludeCategories(ImmutableSet.copyOf(excludeCategories));
+        builder.excludes(merge(excludes, excludeRegexes, excludesFiles));
         builder.includes(merge(includes, includeRegexes, includesFiles));
         return builder.build();
     }

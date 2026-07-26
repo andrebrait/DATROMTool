@@ -3,6 +3,7 @@ package io.github.datromtool;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.github.datromtool.data.Filter;
+import io.github.datromtool.data.GameCategory;
 import io.github.datromtool.data.Pair;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.PostFilter;
@@ -39,11 +40,7 @@ public final class GameFilterer {
                     filter);
         }
         ImmutableList<ParsedGame> result = input.stream()
-                .filter(this::filterBioses)
-                .filter(this::filterProto)
-                .filter(this::filterBeta)
-                .filter(this::filterDemo)
-                .filter(this::filterSample)
+                .filter(this::filterExcludedCategories)
                 .filter(this::filterIncludeRegion)
                 .filter(this::filterIncludeLanguage)
                 .filter(this::filterExcludeRegion)
@@ -61,44 +58,34 @@ public final class GameFilterer {
         return result;
     }
 
-    private boolean filterBioses(ParsedGame p) {
-        boolean result = filter.isAllowBios() || !p.isBios();
-        if (!result) {
-            log.debug("BIOS filter removed '{}'", p.getGame().getName());
+    private boolean filterExcludedCategories(ParsedGame p) {
+        for (GameCategory category : filter.getExcludeCategories()) {
+            if (matchesCategory(p, category)) {
+                if (log.isDebugEnabled()) {
+                    log.debug(
+                            "Category filter removed '{}' due to excluded category {}",
+                            p.getGame().getName(),
+                            category);
+                }
+                return false;
+            }
         }
-        return result;
+        return true;
     }
 
-    private boolean filterProto(ParsedGame p) {
-        boolean result = filter.isAllowProto() || p.getProto().isEmpty();
-        if (!result) {
-            log.debug("Proto filter removed '{}'", p.getGame().getName());
-        }
-        return result;
-    }
-
-    private boolean filterBeta(ParsedGame p) {
-        boolean result = filter.isAllowBeta() || p.getBeta().isEmpty();
-        if (!result) {
-            log.debug("Beta filter removed '{}'", p.getGame().getName());
-        }
-        return result;
-    }
-
-    private boolean filterDemo(ParsedGame p) {
-        boolean result = filter.isAllowDemo() || p.getDemo().isEmpty();
-        if (!result) {
-            log.debug("Demo filter removed '{}'", p.getGame().getName());
-        }
-        return result;
-    }
-
-    private boolean filterSample(ParsedGame p) {
-        boolean result = filter.isAllowSample() || p.getSample().isEmpty();
-        if (!result) {
-            log.debug("Sample filter removed '{}'", p.getGame().getName());
-        }
-        return result;
+    private static boolean matchesCategory(ParsedGame p, GameCategory category) {
+        return switch (category) {
+            case PROTO -> !p.getProto().isEmpty();
+            case BETA -> !p.getBeta().isEmpty();
+            case DEMO -> !p.getDemo().isEmpty();
+            case SAMPLE -> !p.getSample().isEmpty();
+            case BIOS -> p.isBios();
+            case BAD, PROGRAM, CHIP, PIRATE, PROMO, UNLICENSED, DLC, UPDATE -> category
+                    .getPattern()
+                    .map(pattern -> pattern.matcher(p.getGame().getName()))
+                    .map(Matcher::find)
+                    .orElse(false);
+        };
     }
 
     private boolean filterIncludeRegion(ParsedGame p) {

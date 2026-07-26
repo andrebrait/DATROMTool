@@ -43,21 +43,10 @@ public class Filter {
     ImmutableSet<Pattern> includes = ImmutableSet.of();
 
     /*
-     * Adding the filters below here saves re-checking all names
+     * Adding the filter below here saves re-checking all names
      */
 
+    @NonNull
     @Builder.Default
-    boolean allowProto = true;
-
-    @Builder.Default
-    boolean allowBeta = true;
-
-    @Builder.Default
-    boolean allowDemo = true;
-
-    @Builder.Default
-    boolean allowSample = true;
-
-    @Builder.Default
-    boolean allowBios = true;
+    ImmutableSet<GameCategory> excludeCategories = ImmutableSet.of();
 }

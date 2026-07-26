@@ -2,21 +2,20 @@ package io.github.datromtool.cli.option;
 
 import io.github.datromtool.Patterns;
 import io.github.datromtool.cli.argument.PatternsFileArgument;
+import io.github.datromtool.cli.converter.GameCategoryConverter;
 import io.github.datromtool.cli.converter.PatternsFileConverter;
 import io.github.datromtool.data.Filter;
+import io.github.datromtool.data.GameCategory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.EnumSource;
 import picocli.CommandLine;
 
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Pins {@link FilteringOptions#toFilter()}: how region/language include-exclude lists case-fold,
- * how the various exclude/include expression sources merge, and the allow/no-all category
- * tri-state.
+ * how the various exclude/include expression sources merge, and how {@code --exclude-categories}
+ * maps onto {@link Filter#getExcludeCategories()}.
  */
 class FilteringOptionsTest {
 
@@ -41,6 +40,7 @@ class FilteringOptionsTest {
         Holder holder = new Holder();
         CommandLine commandLine = new CommandLine(holder);
         commandLine.registerConverter(PatternsFileArgument.class, new PatternsFileConverter());
+        commandLine.registerConverter(GameCategory.class, new GameCategoryConverter());
         commandLine.parseArgs(args);
         return holder.filteringOptions.toFilter();
     }
@@ -154,15 +154,13 @@ class FilteringOptionsTest {
                 "--includes-file patterns must merge into Filter.includes, got: " + filter.getIncludes());
     }
 
-    // Row 9
+    // Row 9 (new-surface equivalent of the old rows 9/12: nothing excluded by default)
     @Test
-    void noFlagsAllowEveryCategoryAndExcludeNothing() {
+    void noFlagsExcludeNoCategoryAndExcludeNothing() {
         Filter filter = parse();
-        assertTrue(filter.isAllowProto(), "default allowProto must be true");
-        assertTrue(filter.isAllowBeta(), "default allowBeta must be true");
-        assertTrue(filter.isAllowDemo(), "default allowDemo must be true");
-        assertTrue(filter.isAllowSample(), "default allowSample must be true");
-        assertTrue(filter.isAllowBios(), "default allowBios must be true");
+        assertTrue(
+                filter.getExcludeCategories().isEmpty(),
+                "default excludeCategories must be empty, got: " + filter.getExcludeCategories());
         for (Pattern p : new Pattern[]{
                 Patterns.BAD, Patterns.PROGRAM, Patterns.ENHANCEMENT_CHIP, Patterns.PIRATE,
                 Patterns.PROMO, Patterns.UNLICENSED, Patterns.DLC, Patterns.UPDATE}) {
@@ -172,100 +170,65 @@ class FilteringOptionsTest {
         }
     }
 
-    // Row 10
-    static Stream<Arguments> categoryBooleanFlags() {
-        return Stream.of(
-                Arguments.of("proto", (Function<Filter, Boolean>) Filter::isAllowProto),
-                Arguments.of("beta", (Function<Filter, Boolean>) Filter::isAllowBeta),
-                Arguments.of("demo", (Function<Filter, Boolean>) Filter::isAllowDemo),
-                Arguments.of("sample", (Function<Filter, Boolean>) Filter::isAllowSample),
-                Arguments.of("bios", (Function<Filter, Boolean>) Filter::isAllowBios));
+    // Row 1 of the coverage matrix: --exclude-categories parses to Filter.excludeCategories,
+    // case-insensitively.
+    @Test
+    void excludeCategoriesParsesCommaSeparatedListIntoFilter() {
+        Filter filter = parse("--exclude-categories", "proto,beta");
+        assertEquals(
+                Set.of(GameCategory.PROTO, GameCategory.BETA),
+                filter.getExcludeCategories(),
+                "--exclude-categories proto,beta must produce {PROTO, BETA}, got: "
+                        + filter.getExcludeCategories());
     }
 
     @ParameterizedTest
-    @MethodSource("categoryBooleanFlags")
-    void noFlagClearsCorrespondingAllowBoolean(String flag, Function<Filter, Boolean> getter) {
-        Filter filter = parse("--no-" + flag);
-        assertFalse(
-                getter.apply(filter),
-                "--no-" + flag + " must clear Filter.allow" + flag);
+    @EnumSource(GameCategory.class)
+    void excludeCategoriesAcceptsEachCategoryCaseInsensitively(GameCategory category) {
+        Filter lower = parse("--exclude-categories", category.name().toLowerCase());
+        assertEquals(
+                Set.of(category),
+                lower.getExcludeCategories(),
+                "lowercase category name must be accepted, got: " + lower.getExcludeCategories());
+
+        Filter mixed = parse("--exclude-categories",
+                category.name().charAt(0)
+                        + category.name().substring(1).toLowerCase());
+        assertEquals(
+                Set.of(category),
+                mixed.getExcludeCategories(),
+                "mixed-case category name must be accepted, got: " + mixed.getExcludeCategories());
     }
 
-    @ParameterizedTest
-    @MethodSource("categoryBooleanFlags")
-    void explicitNoFlagUnderNoAllStaysCleared(String flag, Function<Filter, Boolean> getter) {
-        Filter filter = parse("--no-all", "--no-" + flag);
-        assertFalse(
-                getter.apply(filter),
-                "--no-all --no-" + flag + " must keep Filter.allow" + flag + " cleared");
-    }
-
-    // Row 11
-    static Stream<Arguments> categoryPatternFlags() {
-        return Stream.of(
-                Arguments.of("bad", Patterns.BAD),
-                Arguments.of("program", Patterns.PROGRAM),
-                Arguments.of("chip", Patterns.ENHANCEMENT_CHIP),
-                Arguments.of("pirate", Patterns.PIRATE),
-                Arguments.of("promo", Patterns.PROMO),
-                Arguments.of("unlicensed", Patterns.UNLICENSED),
-                Arguments.of("dlc", Patterns.DLC),
-                Arguments.of("update", Patterns.UPDATE));
-    }
-
-    @ParameterizedTest
-    @MethodSource("categoryPatternFlags")
-    void noFlagAddsCorrespondingPatternsConstantToExcludes(String flag, Pattern expected) {
-        Filter filter = parse("--no-" + flag);
+    // Row 2: a bogus category value must fail parsing with a clear message.
+    @Test
+    void bogusCategoryValueFailsParsingWithValidValuesListed() {
+        CommandLine.ParameterException e = assertThrows(
+                CommandLine.ParameterException.class,
+                () -> parse("--exclude-categories", "not-a-category"),
+                "an invalid --exclude-categories value must be reported as a ParameterException");
         assertTrue(
-                filter.getExcludes().contains(expected),
-                "--no-" + flag + " must add Patterns." + expected.pattern()
-                        + " to Filter.excludes, got: " + filter.getExcludes());
-    }
-
-    // Row 12
-    @Test
-    void noAllAloneDisablesAllCategoriesAndExcludesAllPatterns() {
-        Filter filter = parse("--no-all");
-        assertFalse(filter.isAllowProto(), "--no-all must clear allowProto");
-        assertFalse(filter.isAllowBeta(), "--no-all must clear allowBeta");
-        assertFalse(filter.isAllowDemo(), "--no-all must clear allowDemo");
-        assertFalse(filter.isAllowSample(), "--no-all must clear allowSample");
-        assertFalse(filter.isAllowBios(), "--no-all must clear allowBios");
-        for (Pattern p : new Pattern[]{
-                Patterns.BAD, Patterns.PROGRAM, Patterns.ENHANCEMENT_CHIP, Patterns.PIRATE,
-                Patterns.PROMO, Patterns.UNLICENSED, Patterns.DLC, Patterns.UPDATE}) {
+                e.getMessage().contains("not-a-category"),
+                "error message must mention the bogus value, got: " + e.getMessage());
+        for (GameCategory category : GameCategory.values()) {
             assertTrue(
-                    filter.getExcludes().contains(p),
-                    "--no-all must add " + p.pattern() + " to excludes, got: " + filter.getExcludes());
+                    e.getMessage().contains(category.name()),
+                    "error message must list valid category " + category + ", got: " + e.getMessage());
         }
     }
 
-    // Row 13
+    // Row 6: Filter.excludes no longer receives Patterns.* injected by the CLI; only
+    // --exclude-categories carries category information.
     @Test
-    void noAllWithExplicitProtoReAllowsOnlyProto() {
-        Filter filter = parse("--no-all", "--proto");
-        assertTrue(filter.isAllowProto(), "--no-all --proto must re-allow proto");
-        assertFalse(filter.isAllowBeta(), "--no-all --proto must still clear beta");
-        assertFalse(filter.isAllowDemo(), "--no-all --proto must still clear demo");
-        assertFalse(filter.isAllowSample(), "--no-all --proto must still clear sample");
-        assertFalse(filter.isAllowBios(), "--no-all --proto must still clear bios");
-    }
-
-    // Row 14
-    @Test
-    void noAllWithExplicitBadReAllowsOnlyBadPattern() {
-        Filter filter = parse("--no-all", "--bad");
-        assertFalse(
-                filter.getExcludes().contains(Patterns.BAD),
-                "--no-all --bad must NOT exclude Patterns.BAD, got: " + filter.getExcludes());
-        for (Pattern p : new Pattern[]{
-                Patterns.PROGRAM, Patterns.ENHANCEMENT_CHIP, Patterns.PIRATE,
-                Patterns.PROMO, Patterns.UNLICENSED, Patterns.DLC, Patterns.UPDATE}) {
-            assertTrue(
-                    filter.getExcludes().contains(p),
-                    "--no-all --bad must still exclude " + p.pattern() + ", got: " + filter.getExcludes());
-        }
+    void excludeCategoriesDoesNotPopulateExcludesPatterns() {
+        Filter filter = parse("--exclude-categories", "bad");
+        assertTrue(
+                filter.getExcludes().isEmpty(),
+                "--exclude-categories bad must not populate Filter.excludes, got: " + filter.getExcludes());
+        assertEquals(
+                Set.of(GameCategory.BAD),
+                filter.getExcludeCategories(),
+                "--exclude-categories bad must produce {BAD}, got: " + filter.getExcludeCategories());
     }
 
     // Hostile row H1
