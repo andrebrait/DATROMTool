@@ -8,6 +8,8 @@ import com.google.common.collect.ImmutableList;
 import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.cli.GitVersionProvider;
 import io.github.datromtool.cli.argument.DatafileArgument;
+import io.github.datromtool.cli.converter.DumpProfileFormatConverter;
+import io.github.datromtool.cli.converter.ExistingFileConverter;
 import io.github.datromtool.cli.option.DiagnosticOptions;
 import io.github.datromtool.cli.option.FilteringOptions;
 import io.github.datromtool.cli.option.InputOptions;
@@ -15,9 +17,12 @@ import io.github.datromtool.cli.option.OutputOptions;
 import io.github.datromtool.cli.option.PerformanceOptions;
 import io.github.datromtool.cli.option.PostFilteringOptions;
 import io.github.datromtool.cli.option.SortingOptions;
+import io.github.datromtool.cli.profile.ProfileBinder;
 import io.github.datromtool.cli.progressbar.CommandLineProgressBar;
 import io.github.datromtool.command.OneGameOneRom;
 import io.github.datromtool.config.AppConfig;
+import io.github.datromtool.config.Profile;
+import io.github.datromtool.data.FileOutputOptions;
 import io.github.datromtool.data.Filter;
 import io.github.datromtool.data.PostFilter;
 import io.github.datromtool.data.SortingPreference;
@@ -40,6 +45,7 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
+import tools.jackson.core.JacksonException;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -52,6 +58,28 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static java.lang.String.format;
 import static lombok.AccessLevel.NONE;
 
+/**
+ * Issue #15 step 3 wires the {@link Profile} contract into this command via {@code --profile}
+ * (repeatable, layered by {@link SerializationHelper#loadProfiles}) and {@code --dump-profile}.
+ * Precedence (built-in defaults &lt; profile file(s) &lt; explicit flags) is resolved by
+ * {@link ProfileBinder}, field by field, after a single ordinary parse — <b>not</b> by a picocli
+ * {@link CommandLine.IDefaultValueProvider}. That was probed first and rejected: an
+ * {@code IDefaultValueProvider} only supplies a single default-value string per option, which
+ * {@code picocli} splits into multiple elements only when the option itself declares a
+ * {@code split} regex. None of the free-form expression options that feed
+ * {@link Filter#getExcludes()}/{@link Filter#getIncludes()}/{@link PostFilter#getExcludes()}/
+ * {@code SortingPreference}'s {@code prefers}/{@code avoids} (e.g. {@code --exclude},
+ * {@code --exclude-regex}, {@code --prefer-regex}, ...) declare one, and joining arbitrary
+ * literal/regex values on a delimiter is inherently unsafe (a regex can itself contain the
+ * delimiter). Verified empirically: a provider returning {@code "foo,bar"} for an undeclared-split
+ * {@code List<String>} option binds as the single element {@code "foo,bar"}, not two elements.
+ * Since most of this command's sections are built from exactly these expression options, a
+ * uniform field-overlay mechanism (this one) was chosen over mixing two precedence mechanisms
+ * for different option shapes. A useful side effect: resolving precedence after parsing (rather
+ * than needing the profile file's content before picocli resolves defaults) avoids the two-pass
+ * parse an {@code IDefaultValueProvider} would have required to read {@code --profile} ahead of
+ * everything else.
+ */
 @Slf4j
 @Data
 @NoArgsConstructor
@@ -74,9 +102,30 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
 
     @CommandLine.Parameters(
             description = "DAT file to use when generating the 1G1R set",
-            arity = "1..*",
+            arity = "0..*",
             paramLabel = "DAT_FILE")
     private List<DatafileArgument> datafiles = ImmutableList.of();
+
+    @CommandLine.Option(
+            names = "--profile",
+            paramLabel = "PATH",
+            converter = ExistingFileConverter.class,
+            description = "Load run settings from a profile file (JSON or YAML). Repeatable; "
+                    + "later files are layered over earlier ones. Explicit flags always win over "
+                    + "a profile value.")
+    private List<Path> profiles = ImmutableList.of();
+
+    @CommandLine.Option(
+            names = "--dump-profile",
+            arity = "0..1",
+            fallbackValue = "yaml",
+            paramLabel = "FORMAT",
+            converter = DumpProfileFormatConverter.class,
+            completionCandidates = DumpProfileFormatConverter.class,
+            description = "Print the effective merged configuration (defaults + profile + "
+                    + "flags) as a profile and exit, without running the pipeline. "
+                    + "Options: ${COMPLETION-CANDIDATES} (default: yaml).")
+    private DumpProfileFormat dumpProfile;
 
     @CommandLine.ArgGroup(heading = "Input options\n", exclusive = false)
     private InputOptions inputOptions;
@@ -106,10 +155,56 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
             root.setLevel(Level.DEBUG);
         }
-        if (outputOptions != null
-                && outputOptions.getFileOptions() != null
-                && outputOptions.getFileOptions().getOutputDir() != null
-                && (inputOptions == null || inputOptions.getInputDirs().isEmpty())) {
+
+        CommandLine.ParseResult parseResult = commandSpec.commandLine().getParseResult();
+        Profile profile;
+        try {
+            profile = SerializationHelper.getInstance().loadProfiles(profiles);
+        } catch (IOException e) {
+            throw new CommandLine.ParameterException(commandSpec.commandLine(), e.getMessage());
+        }
+
+        Filter filter = ProfileBinder.effectiveFilter(parseResult, filteringOptions, profile.getFilter());
+        PostFilter postFilter = ProfileBinder.effectivePostFilter(parseResult, postFilteringOptions, profile.getPostFilter());
+        SortingPreference sortingPreference = ProfileBinder.effectiveSortingPreference(parseResult, sortingOptions, profile.getSort());
+        List<Path> effectiveInputDirs = ProfileBinder.effectiveInputDirs(parseResult, inputOptions, profile.getInput());
+        Profile.OutputSection effectiveOutput = ProfileBinder.effectiveOutput(parseResult, outputOptions, profile.getOutput());
+        AppConfig baseAppConfig = SerializationHelper.getInstance().loadAppConfig();
+        AppConfig appConfig = ProfileBinder.effectivePerformance(baseAppConfig, profile.getPerformance(), performanceOptions);
+
+        if (dumpProfile != null) {
+            Profile effectiveProfile = Profile.builder()
+                    .input(Profile.InputSection.builder()
+                            .dats(ImmutableList.copyOf(ProfileBinder.effectiveDats(datafiles, profile.getInput())))
+                            .dirs(ImmutableList.copyOf(effectiveInputDirs))
+                            .build())
+                    .filter(filter)
+                    .sort(sortingPreference)
+                    .postFilter(postFilter)
+                    .output(effectiveOutput)
+                    .performance(appConfig)
+                    .build();
+            try {
+                List<String> lines = dumpProfile == DumpProfileFormat.JSON
+                        ? SerializationHelper.getInstance().writeAsJson(effectiveProfile)
+                        : SerializationHelper.getInstance().writeAsYaml(effectiveProfile);
+                lines.forEach(System.out::println);
+            } catch (JacksonException e) {
+                throw new CommandLine.ParameterException(
+                        commandSpec.commandLine(),
+                        format("Could not dump profile: %s", e.getMessage()));
+            }
+            return 0;
+        }
+
+        if (datafiles.isEmpty()) {
+            throw new CommandLine.ParameterException(
+                    commandSpec.commandLine(),
+                    "Missing required parameter: 'DAT_FILE'");
+        }
+        if (effectiveOutput.getFile() != null
+                && effectiveOutput.getFile().outputDir() != null
+                && effectiveInputDirs.isEmpty()) {
             throw new CommandLine.ParameterException(
                     commandSpec.commandLine(),
                     format(
@@ -117,31 +212,18 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                             OutputOptions.FileOptions.OUT_DIR_OPTION,
                             InputOptions.IN_DIR_OPTION));
         }
-        Filter filter = filteringOptions != null
-                ? filteringOptions.toFilter()
-                : Filter.builder().build();
-        PostFilter postFilter = postFilteringOptions != null
-                ? postFilteringOptions.toPostFilter()
-                : PostFilter.builder().build();
-        SortingPreference sortingPreference = sortingOptions != null
-                ? sortingOptions.toSortingPreference()
-                : SortingPreference.builder().build();
         OneGameOneRom oneGameOneRom = new OneGameOneRom(filter, postFilter, sortingPreference);
         List<Datafile> realDataFiles = datafiles.stream()
                 .map(DatafileArgument::getDatafile)
                 .collect(ImmutableList.toImmutableList());
-        AppConfig appConfig = SerializationHelper.getInstance().loadAppConfig();
-        if (performanceOptions != null) {
-            appConfig = appConfig.withScanner(performanceOptions.merge(appConfig.getScanner()));
-            appConfig = appConfig.withCopier(performanceOptions.merge(appConfig.getCopier()));
-        }
         boolean hasErrors = false;
         try (Terminal terminal = createTerminal()) {
             FileScannerLoggingListener scannerLoggingListener = new FileScannerLoggingListener();
             List<FileScanner.Listener> scannerListeners = ImmutableList.of(
                     scannerLoggingListener,
                     new CommandLineProgressBar(terminal, "Scanning", "Scanning input directories..."));
-            if (outputOptions != null && outputOptions.getFileOptions() != null) {
+            FileOutputOptions fileOutputOptions = effectiveOutput.getFile();
+            if (fileOutputOptions != null) {
                 FileCopierLoggingListener copierLoggingListener = new FileCopierLoggingListener();
                 List<FileCopier.Listener> copierListeners = ImmutableList.of(
                         copierLoggingListener,
@@ -149,23 +231,17 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                 oneGameOneRom.generate(
                         appConfig,
                         realDataFiles,
-                        inputOptions.getInputDirs(),
-                        outputOptions.getFileOptions().toFileOutputOptions(),
+                        effectiveInputDirs,
+                        fileOutputOptions,
                         scannerListeners,
                         copierListeners);
                 hasErrors = scannerLoggingListener.isErrors() || copierLoggingListener.isErrors();
             } else {
-                TextOutputOptions textOutputOptions =
-                        outputOptions != null && outputOptions.getTextOptions() != null
-                                ? outputOptions.getTextOptions().toTextOutputOptions()
-                                : null;
-                List<Path> inputDirs = inputOptions != null
-                        ? inputOptions.getInputDirs()
-                        : null;
+                TextOutputOptions textOutputOptions = effectiveOutput.getText();
                 oneGameOneRom.generate(
                         appConfig,
                         realDataFiles,
-                        inputDirs,
+                        effectiveInputDirs,
                         textOutputOptions,
                         scannerListeners,
                         list -> list.forEach(System.out::println));
