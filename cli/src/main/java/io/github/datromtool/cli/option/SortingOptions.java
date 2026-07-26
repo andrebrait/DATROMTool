@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.cli.argument.PatternsFileArgument;
+import io.github.datromtool.cli.converter.OrderPreferenceConverter;
 import io.github.datromtool.cli.converter.TrimmingLowerCaseConverter;
 import io.github.datromtool.cli.converter.TrimmingUpperCaseConverter;
+import io.github.datromtool.data.OrderPreference;
 import io.github.datromtool.data.SortingPreference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -82,19 +84,31 @@ public final class SortingOptions {
     private boolean prioritizeLanguages;
 
     @CommandLine.Option(
-            names = "--early-versions",
-            description = "Prefer release entries with earlier versions")
-    boolean earlyVersions = false;
+            names = "--versions",
+            paramLabel = "ORDER",
+            converter = OrderPreferenceConverter.class,
+            description = "Sorting order preference for release entries by version. "
+                    + "Options: ${COMPLETION-CANDIDATES}",
+            completionCandidates = OrderPreferenceConverter.class)
+    OrderPreference versions = OrderPreference.LATEST;
 
     @CommandLine.Option(
-            names = "--early-revisions",
-            description = "Prefer release entries with earlier revisions")
-    boolean earlyRevisions = false;
+            names = "--revisions",
+            paramLabel = "ORDER",
+            converter = OrderPreferenceConverter.class,
+            description = "Sorting order preference for release entries by revision. "
+                    + "Options: ${COMPLETION-CANDIDATES}",
+            completionCandidates = OrderPreferenceConverter.class)
+    OrderPreference revisions = OrderPreference.LATEST;
 
     @CommandLine.Option(
-            names = "--early-prereleases",
-            description = "Prefer entries of earlier prerelease versions")
-    boolean earlyPrereleases = false;
+            names = "--prereleases",
+            paramLabel = "ORDER",
+            converter = OrderPreferenceConverter.class,
+            description = "Sorting order preference for prerelease entries (sample, demo, beta, "
+                    + "proto). Options: ${COMPLETION-CANDIDATES}",
+            completionCandidates = OrderPreferenceConverter.class)
+    OrderPreference prereleases = OrderPreference.LATEST;
 
     @CommandLine.Option(
             names = "--prefer-prereleases",
@@ -113,9 +127,9 @@ public final class SortingOptions {
                 .prefers(merge(prefers, preferRegexes, prefersFiles))
                 .avoids(merge(avoids, avoidRegexes, avoidsFiles))
                 .prioritizeLanguages(prioritizeLanguages)
-                .earlyVersions(earlyVersions)
-                .earlyRevisions(earlyRevisions)
-                .earlyPrereleases(earlyPrereleases)
+                .versions(versions)
+                .revisions(revisions)
+                .prereleases(prereleases)
                 .preferPrereleases(preferPrereleases)
                 .preferParents(preferParents)
                 .build();

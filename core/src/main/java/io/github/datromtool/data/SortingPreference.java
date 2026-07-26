@@ -41,14 +41,17 @@ public class SortingPreference {
     @Builder.Default
     boolean prioritizeLanguages = false;
 
+    @NonNull
     @Builder.Default
-    boolean earlyVersions = false;
+    OrderPreference versions = OrderPreference.LATEST;
 
+    @NonNull
     @Builder.Default
-    boolean earlyRevisions = false;
+    OrderPreference revisions = OrderPreference.LATEST;
 
+    @NonNull
     @Builder.Default
-    boolean earlyPrereleases = false;
+    OrderPreference prereleases = OrderPreference.LATEST;
 
     @Builder.Default
     boolean preferParents = false;

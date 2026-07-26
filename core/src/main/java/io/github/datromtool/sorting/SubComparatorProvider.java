@@ -1,6 +1,7 @@
 package io.github.datromtool.sorting;
 
 import com.google.common.collect.ImmutableList;
+import io.github.datromtool.data.OrderPreference;
 import io.github.datromtool.data.SortingPreference;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -30,23 +31,23 @@ class SubComparatorProvider {
             subComparatorsBuilder.add(new PreferParentsSubComparator());
         }
         subComparatorsBuilder.add(new PrefersListSubComparator(sortingPreference));
-        subComparatorsBuilder.add(sortingPreference.isEarlyRevisions()
+        subComparatorsBuilder.add(sortingPreference.getRevisions() == OrderPreference.EARLIEST
                 ? new RevisionSubComparator()
                 : new RevisionSubComparator().reversed());
-        subComparatorsBuilder.add(sortingPreference.isEarlyVersions()
+        subComparatorsBuilder.add(sortingPreference.getVersions() == OrderPreference.EARLIEST
                 ? new VersionSubComparator()
                 : new VersionSubComparator().reversed());
         subComparatorsBuilder.add(new PreferReleasesSubComparator());
-        subComparatorsBuilder.add(sortingPreference.isEarlyPrereleases()
+        subComparatorsBuilder.add(sortingPreference.getPrereleases() == OrderPreference.EARLIEST
                 ? new SampleSubComparator()
                 : new SampleSubComparator().reversed());
-        subComparatorsBuilder.add(sortingPreference.isEarlyPrereleases()
+        subComparatorsBuilder.add(sortingPreference.getPrereleases() == OrderPreference.EARLIEST
                 ? new DemoSubComparator()
                 : new DemoSubComparator().reversed());
-        subComparatorsBuilder.add(sortingPreference.isEarlyPrereleases()
+        subComparatorsBuilder.add(sortingPreference.getPrereleases() == OrderPreference.EARLIEST
                 ? new BetaSubComparator()
                 : new BetaSubComparator().reversed());
-        subComparatorsBuilder.add(sortingPreference.isEarlyPrereleases()
+        subComparatorsBuilder.add(sortingPreference.getPrereleases() == OrderPreference.EARLIEST
                 ? new ProtoSubComparator()
                 : new ProtoSubComparator().reversed());
         subComparatorsBuilder.add(

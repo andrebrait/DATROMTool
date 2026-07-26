@@ -2,11 +2,13 @@ package io.github.datromtool.cli.option;
 
 import io.github.datromtool.cli.argument.PatternsFileArgument;
 import io.github.datromtool.cli.converter.PatternsFileConverter;
+import io.github.datromtool.data.OrderPreference;
 import io.github.datromtool.data.SortingPreference;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import picocli.CommandLine;
 
 import java.net.URISyntaxException;
@@ -14,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -21,6 +24,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SortingOptionsTest {
@@ -141,9 +145,6 @@ class SortingOptionsTest {
     static Stream<Arguments> booleanFlags() {
         return Stream.of(
                 Arguments.of("--prioritize-languages", (Predicate<SortingPreference>) SortingPreference::isPrioritizeLanguages),
-                Arguments.of("--early-versions", (Predicate<SortingPreference>) SortingPreference::isEarlyVersions),
-                Arguments.of("--early-revisions", (Predicate<SortingPreference>) SortingPreference::isEarlyRevisions),
-                Arguments.of("--early-prereleases", (Predicate<SortingPreference>) SortingPreference::isEarlyPrereleases),
                 Arguments.of("--prefer-prereleases", (Predicate<SortingPreference>) SortingPreference::isPreferPrereleases),
                 Arguments.of("--prefer-parents", (Predicate<SortingPreference>) SortingPreference::isPreferParents));
     }
@@ -159,5 +160,55 @@ class SortingOptionsTest {
         assertTrue(
                 getter.test(setPreference),
                 flag + " must set its field to true");
+    }
+
+    // Matrix row 1: --versions/--revisions/--prereleases parse to the order enum, default LATEST.
+    static Stream<Arguments> orderOptions() {
+        return Stream.of(
+                Arguments.of("--versions", (Function<SortingPreference, OrderPreference>) SortingPreference::getVersions),
+                Arguments.of("--revisions", (Function<SortingPreference, OrderPreference>) SortingPreference::getRevisions),
+                Arguments.of("--prereleases", (Function<SortingPreference, OrderPreference>) SortingPreference::getPrereleases));
+    }
+
+    @ParameterizedTest
+    @MethodSource("orderOptions")
+    void orderOptionDefaultsLatestAndSetsEarliestWhenRequested(
+            String option, Function<SortingPreference, OrderPreference> getter) {
+        SortingPreference defaultPreference = parse();
+        assertEquals(
+                OrderPreference.LATEST,
+                getter.apply(defaultPreference),
+                option + " must default to LATEST");
+        SortingPreference earliestPreference = parse(option, "earliest");
+        assertEquals(
+                OrderPreference.EARLIEST,
+                getter.apply(earliestPreference),
+                option + " earliest must set its field to EARLIEST");
+    }
+
+    // Matrix row 2: case-insensitive values are accepted.
+    @ParameterizedTest
+    @ValueSource(strings = {"EARLIEST", "Latest", "latest", "earliest"})
+    void orderOptionAcceptsValueCaseInsensitively(String value) {
+        SortingPreference preference = parse("--versions", value);
+        assertEquals(
+                OrderPreference.valueOf(value.toUpperCase()),
+                preference.getVersions(),
+                "--versions " + value + " must be accepted case-insensitively");
+    }
+
+    // Matrix row 2: a bogus order value must fail parsing with a clear message.
+    @Test
+    void bogusOrderValueFailsParsingWithValidValuesListed() {
+        CommandLine.ParameterException e = assertThrows(
+                CommandLine.ParameterException.class,
+                () -> parse("--versions", "sideways"),
+                "an invalid --versions value must be reported as a ParameterException");
+        assertTrue(
+                e.getMessage().contains("sideways"),
+                "error message must mention the bogus value, got: " + e.getMessage());
+        assertTrue(
+                e.getMessage().contains("latest") && e.getMessage().contains("earliest"),
+                "error message must list valid values latest/earliest, got: " + e.getMessage());
     }
 }
