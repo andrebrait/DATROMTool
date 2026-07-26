@@ -191,6 +191,15 @@ class FilteringOptionsTest {
                 "--no-" + flag + " must clear Filter.allow" + flag);
     }
 
+    @ParameterizedTest
+    @MethodSource("categoryBooleanFlags")
+    void explicitNoFlagUnderNoAllStaysCleared(String flag, Function<Filter, Boolean> getter) {
+        Filter filter = parse("--no-all", "--no-" + flag);
+        assertFalse(
+                getter.apply(filter),
+                "--no-all --no-" + flag + " must keep Filter.allow" + flag + " cleared");
+    }
+
     // Row 11
     static Stream<Arguments> categoryPatternFlags() {
         return Stream.of(
