@@ -76,6 +76,25 @@ public class ParsedGame {
     @Builder.Default
     ImmutableList<Divergence> divergences = ImmutableList.of();
 
+    /**
+     * Retool clone list group assignment (issue #19 step 2), set by
+     * {@code io.github.datromtool.retool.CloneListMatcher} when this game's name matched a
+     * variant title. {@code null} when no clone list is in play, or the clone list matched no
+     * title for this game. {@code GameSorter} groups by this instead of {@link #getParentName()}
+     * when present, letting a clone list unify games the DAT's own parent/clone data does not
+     * (e.g. cross-region renames).
+     */
+    String clonelistGroup;
+
+    /**
+     * Effective priority from a clone list match (issue #19 step 2) - lower is preferred,
+     * matching upstream's "1 is highest priority" convention. {@code null} when no clone list
+     * assigned one (no clone list in play, or this game matched no title). Read by
+     * {@code io.github.datromtool.sorting.PrioritySubComparator}, which stays neutral whenever
+     * either compared game has a {@code null} priority here.
+     */
+    Integer clonelistPriority;
+
     @JsonInclude(NON_DEFAULT)
     public record Divergence(
             @Nonnull String field,

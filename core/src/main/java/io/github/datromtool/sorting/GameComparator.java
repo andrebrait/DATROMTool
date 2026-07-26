@@ -18,11 +18,32 @@ public final class GameComparator implements Comparator<ParsedGame> {
         this.subComparators = SubComparatorProvider.INSTANCE.toList(sortingPreference);
     }
 
+    /**
+     * Issue #19 step 2 overload: threads clone-list-priority awareness into
+     * {@link SubComparatorProvider#toList(SortingPreference, boolean)} - see that overload's
+     * Javadoc. The single-arg constructor above is unchanged and still produces the exact
+     * comparator chain every pre-existing test pins.
+     */
+    public GameComparator(
+            @Nonnull SortingPreference sortingPreference,
+            boolean clonelistPrioritiesPresent) {
+        this.subComparators =
+                SubComparatorProvider.INSTANCE.toList(sortingPreference, clonelistPrioritiesPresent);
+    }
+
     @VisibleForTesting
     GameComparator(
             @Nonnull SubComparatorProvider provider,
             @Nonnull SortingPreference sortingPreference) {
         this.subComparators = provider.toList(sortingPreference);
+    }
+
+    @VisibleForTesting
+    GameComparator(
+            @Nonnull SubComparatorProvider provider,
+            @Nonnull SortingPreference sortingPreference,
+            boolean clonelistPrioritiesPresent) {
+        this.subComparators = provider.toList(sortingPreference, clonelistPrioritiesPresent);
     }
 
     @Override
