@@ -1,0 +1,4 @@
+{
+  "strings": ["FileString"],
+  "patterns": ["FilePattern.*"]
+}

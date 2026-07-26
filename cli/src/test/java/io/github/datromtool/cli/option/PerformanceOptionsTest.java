@@ -1,10 +1,16 @@
 package io.github.datromtool.cli.option;
 
+import io.github.datromtool.cli.converter.ByteSizeConverter;
+import io.github.datromtool.ByteSize;
 import io.github.datromtool.config.AppConfig;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import picocli.CommandLine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PerformanceOptionsTest {
 
@@ -15,9 +21,15 @@ class PerformanceOptionsTest {
         PerformanceOptions performanceOptions = new PerformanceOptions();
     }
 
+    private static CommandLine newCommandLine(Holder holder) {
+        CommandLine commandLine = new CommandLine(holder);
+        commandLine.registerConverter(ByteSize.class, new ByteSizeConverter());
+        return commandLine;
+    }
+
     private static PerformanceOptions parse(String... args) {
         Holder holder = new Holder();
-        new CommandLine(holder).parseArgs(args);
+        newCommandLine(holder).parseArgs(args);
         return holder.performanceOptions;
     }
 
@@ -47,5 +59,87 @@ class PerformanceOptionsTest {
                 3,
                 mergedCopier.getThreads(),
                 "--copy-threads must set the copier thread count, not the scanner's value");
+    }
+
+    // Row 25
+    @ParameterizedTest
+    @ValueSource(strings = {"0", "-1"})
+    void nonPositiveScanThreadsFailsValidation(String value) {
+        Holder holder = new Holder();
+        CommandLine commandLine = newCommandLine(holder);
+        CommandLine.ParameterException thrown = assertThrows(
+                CommandLine.ParameterException.class,
+                () -> commandLine.parseArgs("--scan-threads", value),
+                "--scan-threads " + value + " must be rejected as non-positive");
+        assertTrue(
+                thrown.getMessage().toLowerCase().contains("positive"),
+                "the error must explain threads must be positive, got: " + thrown.getMessage());
+    }
+
+    // Row 26
+    @Test
+    void scanBufferWithUnitSuffixMergesAsExactByteCount() {
+        PerformanceOptions options = parse("--scan-buffer", "32KB");
+        AppConfig.FileScannerConfig merged =
+                options.merge(AppConfig.FileScannerConfig.builder().build());
+        assertEquals(
+                32 * 1024,
+                merged.getDefaultBufferSize(),
+                "--scan-buffer 32KB must merge as exactly 32768 bytes");
+    }
+
+    @Test
+    void scanBufferOneMegabyteMergesAsExactByteCount() {
+        PerformanceOptions options = parse("--scan-buffer", "1MB");
+        AppConfig.FileScannerConfig merged =
+                options.merge(AppConfig.FileScannerConfig.builder().build());
+        assertEquals(
+                1024 * 1024,
+                merged.getDefaultBufferSize(),
+                "--scan-buffer 1MB must merge as exactly 1048576 bytes");
+    }
+
+    @Test
+    void scanMaxBufferOverIntegerMaxValueFailsValidation() {
+        Holder holder = new Holder();
+        CommandLine commandLine = newCommandLine(holder);
+        assertThrows(
+                CommandLine.ParameterException.class,
+                () -> commandLine.parseArgs("--scan-max-buffer", "3GB"),
+                "--scan-max-buffer 3GB exceeds Integer.MAX_VALUE bytes and must be rejected");
+    }
+
+    // Row 27
+    @Test
+    void copyBufferMapsToFileCopierBufferSize() {
+        PerformanceOptions options = parse("--copy-buffer", "32KB");
+        AppConfig.FileCopierConfig merged =
+                options.merge(AppConfig.FileCopierConfig.builder().build());
+        assertEquals(
+                32 * 1024,
+                merged.getBufferSize(),
+                "--copy-buffer 32KB must set FileCopierConfig.bufferSize");
+    }
+
+    @Test
+    void copyRawZipAloneSetsAllowRawZipCopyTrue() {
+        PerformanceOptions options = parse("--copy-raw-zip");
+        AppConfig.FileCopierConfig merged =
+                options.merge(AppConfig.FileCopierConfig.builder().build());
+        assertTrue(
+                merged.isAllowRawZipCopy(),
+                "--copy-raw-zip alone must set FileCopierConfig.allowRawZipCopy true");
+    }
+
+    // Hostile row H4 (pinning actual behavior)
+    @Test
+    void negativeScanBufferValueFailsParsing() {
+        Holder holder = new Holder();
+        CommandLine commandLine = newCommandLine(holder);
+        assertThrows(
+                CommandLine.ParameterException.class,
+                () -> commandLine.parseArgs("--scan-buffer", "-1KB"),
+                "--scan-buffer -1KB does not match the byte-size grammar (no sign allowed) "
+                        + "and must fail as a ParameterException");
     }
 }
