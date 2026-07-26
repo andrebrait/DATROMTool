@@ -161,6 +161,35 @@ class ScanCommandTest {
         assertFalse(node.isEmpty(), "stdout must parse cleanly as the YAML report alone");
     }
 
+    // Row 7: an empty directory scan must not crash. Previously
+    // CommandLineProgressBar.printMainBar divided by totalItems == 0 (ArithmeticException) once
+    // FileScanner.reportTotalItems(0) fired for a dir with nothing to scan.
+    @Test
+    void emptyDirectoryScanProducesEmptyReport(@TempDir Path emptyDir) {
+        String stdout = captureStdout(() -> assertEquals(
+                0,
+                run(new ScanCommand(), emptyDir.toString(), "--out-mode", "json"),
+                "scan of an empty dir must exit 0"));
+        ArrayNode node = (ArrayNode) new JsonMapper().readTree(stdout);
+        assertTrue(node.isEmpty(), "report for an empty dir must be an empty JSON array, got:\n" + stdout);
+    }
+
+    // Row 8: fewer files than configured scan threads must not crash. Previously
+    // CommandLineProgressBar.reportAllFinished/getFinalAverage NPE'd indexing threadLineData
+    // slots for threads that never received reportStart.
+    @Test
+    void scanningFewerFilesThanThreadsSucceeds(@TempDir Path tempDir) throws IOException {
+        Files.writeString(tempDir.resolve("a.bin"), "aa");
+        Files.writeString(tempDir.resolve("b.bin"), "bb");
+        String stdout = captureStdout(() -> assertEquals(
+                0,
+                run(new ScanCommand(),
+                        tempDir.toString(), "--out-mode", "json", "--scan-threads", "4"),
+                "scan with more threads than files must exit 0"));
+        ArrayNode node = (ArrayNode) new JsonMapper().readTree(stdout);
+        assertEquals(2, node.size(), "report must contain both scanned files, got:\n" + stdout);
+    }
+
     // Row 6: no dirs at all is a missing-parameter error, exit 2.
     @Test
     void noDirsFailsWithMissingParameterExitCode2() {

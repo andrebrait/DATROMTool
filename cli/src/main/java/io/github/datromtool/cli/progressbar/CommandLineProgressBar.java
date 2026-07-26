@@ -100,6 +100,12 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
     }
 
     private synchronized void printMainBar(int curr) {
+        if (totalItems <= 0) {
+            // Nothing to divide curr/totalItems by (e.g. a scan of an empty directory) and
+            // nothing meaningful to draw either: skip the bar entirely instead of a
+            // division-by-zero.
+            return;
+        }
         int size = Math.max(0, availableColumns(mainBarPrint, terminal));
         int x = size * curr / totalItems;
         int lineDiff = numThreads + 1;
@@ -237,7 +243,9 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
     @Override
     public void reportTotalItems(int totalItems) {
         this.totalItems = totalItems;
-        int totalItemsLength = (int) Math.floor(Math.log10(totalItems)) + 1;
+        // Math.log10(0) is -Infinity: guard so an empty scan doesn't build a garbage (negative)
+        // field width for mainBarPrint, even though printMainBar() itself now skips drawing it.
+        int totalItemsLength = totalItems > 0 ? (int) Math.floor(Math.log10(totalItems)) + 1 : 1;
         this.mainBarPrint = action + " [%s%s%s] %" + totalItemsLength + "d/" + totalItems;
         printMainBar(0);
     }
@@ -273,7 +281,13 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
     @Override
     public synchronized void reportAllFinished() {
         for (int i = 1; i <= numThreads; i++) {
-            printThread(i, "FINISHED", "", 100, getFinalAverage(i, threadLineData[i - 1]));
+            // Threads that never got a reportStart() (fewer files than configured threads)
+            // leave a null slot: skip them instead of NPE'ing on lineData.getEndInstant().
+            LineData lineData = threadLineData[i - 1];
+            if (lineData == null) {
+                continue;
+            }
+            printThread(i, "FINISHED", "", 100, getFinalAverage(i, lineData));
         }
         printMainBar(totalItems);
         writer.print(ansi()
