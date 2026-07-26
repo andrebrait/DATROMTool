@@ -3,6 +3,8 @@ package io.github.datromtool;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.collect.ImmutableList;
 import io.github.datromtool.config.AppConfig;
+import io.github.datromtool.config.JsonNodeMerge;
+import io.github.datromtool.config.Profile;
 import io.github.datromtool.data.RegionData;
 import io.github.datromtool.domain.datafile.logiqx.Datafile;
 import io.github.datromtool.domain.detector.Detector;
@@ -12,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.StreamWriteFeature;
 import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.SerializationFeature;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.dataformat.xml.XmlMapper;
@@ -26,6 +30,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
@@ -100,6 +105,7 @@ public final class SerializationHelper {
     private static JsonMapper createJsonMapper() {
         return JsonMapper.builder()
                 .addModule(new GuavaModule())
+                .addModule(PathJacksonModule.INSTANCE)
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(StreamWriteFeature.WRITE_BIGDECIMAL_AS_PLAIN)
                 .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
@@ -111,6 +117,7 @@ public final class SerializationHelper {
     private static YAMLMapper createYamlMapper() {
         return YAMLMapper.builder()
                 .addModule(new GuavaModule())
+                .addModule(PathJacksonModule.INSTANCE)
                 .enable(SerializationFeature.INDENT_OUTPUT)
                 .enable(StreamWriteFeature.WRITE_BIGDECIMAL_AS_PLAIN)
                 .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
@@ -141,6 +148,74 @@ public final class SerializationHelper {
             return loadJson(file, tClass);
         } catch (JacksonException ignore) {
             return loadYaml(file, tClass);
+        }
+    }
+
+    /**
+     * Loads a single {@link Profile} file (JSON or YAML, dispatched by extension exactly like
+     * {@link #loadJsonOrYaml}). Validates the result (see {@link Profile#validate()}) before
+     * returning it. Any parse or validation failure is wrapped so the offending file's path is
+     * part of the exception message.
+     */
+    public Profile loadProfile(Path path) throws IOException {
+        return toProfile(readProfileTree(path), path);
+    }
+
+    /**
+     * Loads and layers multiple {@link Profile} files, later files taking precedence over
+     * earlier ones. Each file is read to a tree first and merged with {@link JsonNodeMerge}
+     * (see {@link Profile}'s Javadoc for the merge rule) before the fully-merged tree is bound
+     * to {@link Profile} once, so the result reflects every file's contribution rather than
+     * repeated whole-object replacement. An empty list yields a default {@link Profile}.
+     */
+    public Profile loadProfiles(List<Path> paths) throws IOException {
+        if (paths.isEmpty()) {
+            return Profile.builder().build();
+        }
+        JsonNode merged = null;
+        for (Path path : paths) {
+            JsonNode node = readProfileTree(path);
+            merged = merged == null ? node : JsonNodeMerge.merge(merged, node);
+        }
+        return toProfile(merged, paths.get(paths.size() - 1));
+    }
+
+    private JsonNode readProfileTree(Path path) throws IOException {
+        String fileName = path.getFileName().toString();
+        try {
+            if (JSON_PATTERN.matcher(fileName).matches()) {
+                return readTree(path, jsonMapper);
+            } else if (YAML_PATTERN.matcher(fileName).matches()) {
+                return readTree(path, yamlMapper);
+            }
+            // We have no idea what this file is, so let's try JSON first and then YAML if it fails.
+            // Each attempt re-opens the file: a mapper that fails partway through may have already
+            // consumed part of a shared stream, so a fresh stream per attempt is required.
+            try {
+                return readTree(path, jsonMapper);
+            } catch (JacksonException ignore) {
+                return readTree(path, yamlMapper);
+            }
+        } catch (JacksonException e) {
+            throw new IOException("Failed to parse profile file '" + path + "': " + e.getMessage(), e);
+        }
+    }
+
+    private static JsonNode readTree(Path path, ObjectMapper mapper) throws IOException {
+        try (InputStream inputStream = Files.newInputStream(path)) {
+            return mapper.readTree(inputStream);
+        }
+    }
+
+    private Profile toProfile(JsonNode node, Path path) throws IOException {
+        try {
+            Profile profile = jsonMapper.treeToValue(node, Profile.class);
+            profile.validate();
+            return profile;
+        } catch (JacksonException e) {
+            throw new IOException("Failed to load profile from '" + path + "': " + e.getMessage(), e);
+        } catch (IllegalArgumentException e) {
+            throw new IOException("Invalid profile in '" + path + "': " + e.getMessage(), e);
         }
     }
 
