@@ -6,6 +6,7 @@ import io.github.datromtool.cli.converter.GameCategoryConverter;
 import io.github.datromtool.cli.converter.PatternsFileConverter;
 import io.github.datromtool.data.Filter;
 import io.github.datromtool.data.GameCategory;
+import io.github.datromtool.data.NameMatcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -57,8 +58,10 @@ class FilteringOptionsTest {
         }
     }
 
-    private static boolean anyMatches(Set<Pattern> patterns, String candidate) {
-        return patterns.stream().anyMatch(p -> p.matcher(candidate).matches());
+    private static boolean anyMatches(Set<NameMatcher> matchers, String candidate) {
+        return matchers.stream()
+                .map(NameMatcher::getPattern)
+                .anyMatch(p -> p.matcher(candidate).matches());
     }
 
     // Row 1

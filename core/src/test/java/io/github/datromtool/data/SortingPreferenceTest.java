@@ -1,5 +1,6 @@
 package io.github.datromtool.data;
 
+import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.SerializationHelper;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.json.JsonMapper;
@@ -7,6 +8,7 @@ import tools.jackson.dataformat.yaml.YAMLMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Coverage matrix row 5 of issue #14 step 2: {@link SortingPreference#getVersions()},
@@ -67,5 +69,46 @@ class SortingPreferenceTest {
                 preference,
                 roundTripped,
                 "SortingPreference with EARLIEST order preferences must round-trip through YAML, got: " + yaml);
+    }
+
+    // Issue #15 step 1, coverage matrix row 3: prefers/avoids carry structured NameMatcher
+    // entries, and a literal entry must not leak \Q...\E quoting into the serialized form.
+    @Test
+    void prefersAndAvoidsRoundTripThroughJsonWithNoQuoteLeakage() {
+        SortingPreference preference = SortingPreference.builder()
+                .prefers(ImmutableSet.of(NameMatcher.literal("a(b")))
+                .avoids(ImmutableSet.of(NameMatcher.regex("c.d")))
+                .build();
+        JsonMapper mapper = SerializationHelper.getInstance().getJsonMapper();
+        String json = mapper.writeValueAsString(preference);
+        assertTrue(
+                json.replaceAll("\\s+", "").contains("\"type\":\"literal\""),
+                "serialized literal prefers entry must contain lowercase type, got: " + json);
+        assertTrue(
+                json.replaceAll("\\s+", "").contains("\"type\":\"regex\""),
+                "serialized regex avoids entry must contain lowercase type, got: " + json);
+        assertFalse(
+                json.contains("\\Q"),
+                "serialized SortingPreference with a literal matcher must not leak \\Q quoting, got: " + json);
+        SortingPreference roundTripped = mapper.readValue(json, SortingPreference.class);
+        assertEquals(
+                preference,
+                roundTripped,
+                "SortingPreference with prefers/avoids NameMatcher sets must round-trip through JSON, got: " + json);
+    }
+
+    @Test
+    void prefersAndAvoidsRoundTripThroughYaml() {
+        SortingPreference preference = SortingPreference.builder()
+                .prefers(ImmutableSet.of(NameMatcher.literal("a(b")))
+                .avoids(ImmutableSet.of(NameMatcher.regex("c.d")))
+                .build();
+        YAMLMapper mapper = SerializationHelper.getInstance().getYamlMapper();
+        String yaml = mapper.writeValueAsString(preference);
+        SortingPreference roundTripped = mapper.readValue(yaml, SortingPreference.class);
+        assertEquals(
+                preference,
+                roundTripped,
+                "SortingPreference with prefers/avoids NameMatcher sets must round-trip through YAML, got: " + yaml);
     }
 }

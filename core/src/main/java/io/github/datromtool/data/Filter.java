@@ -5,8 +5,6 @@ import com.google.common.collect.ImmutableSet;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
-import java.util.regex.Pattern;
-
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -36,11 +34,11 @@ public class Filter {
 
     @NonNull
     @Builder.Default
-    ImmutableSet<Pattern> excludes = ImmutableSet.of();
+    ImmutableSet<NameMatcher> excludes = ImmutableSet.of();
 
     @NonNull
     @Builder.Default
-    ImmutableSet<Pattern> includes = ImmutableSet.of();
+    ImmutableSet<NameMatcher> includes = ImmutableSet.of();
 
     /*
      * Adding the filter below here saves re-checking all names

@@ -3,6 +3,7 @@ package io.github.datromtool.sorting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.SerializationHelper;
+import io.github.datromtool.data.NameMatcher;
 import io.github.datromtool.data.OrderPreference;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.RegionData;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.regex.Pattern;
 
 import static io.github.datromtool.util.TestUtils.createGame;
 import static io.github.datromtool.util.TestUtils.getRegionByCode;
@@ -1534,7 +1534,7 @@ class GameComparatorTest {
     void testCompare_shouldAvoid_ifInAvoidsList() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .avoids(ImmutableSet.of(Pattern.compile("(?i)game 1")))
+                        .avoids(ImmutableSet.of(NameMatcher.regex("(?i)game 1")))
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))
@@ -1554,7 +1554,7 @@ class GameComparatorTest {
     void testCompare_shouldPrefer_ifInPrefersList() {
         GameComparator comparator =
                 new GameComparator(SubComparatorProvider.INSTANCE, SortingPreference.builder()
-                        .prefers(ImmutableSet.of(Pattern.compile("(?i)game 2")))
+                        .prefers(ImmutableSet.of(NameMatcher.regex("(?i)game 2")))
                         .build());
         ParsedGame tg1 = ParsedGame.builder()
                 .regionData(getRegionByCode(regionData, "USA"))

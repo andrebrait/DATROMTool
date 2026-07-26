@@ -3,6 +3,7 @@ package io.github.datromtool.cli.util;
 import com.google.common.collect.ImmutableSet;
 import io.github.datromtool.cli.argument.PatternsFileArgument;
 import io.github.datromtool.cli.argument.StringFilterArgument;
+import io.github.datromtool.data.NameMatcher;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -14,31 +15,37 @@ import java.util.stream.Stream;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ArgumentUtils {
 
-    public static ImmutableSet<Pattern> merge(
+    public static ImmutableSet<NameMatcher> merge(
             Collection<String> strings,
             Collection<Pattern> patterns,
             Collection<PatternsFileArgument> patternsFiles) {
-        return ImmutableSet.<Pattern>builder()
-                .addAll(toLiteralPatterns(strings).iterator())
-                .addAll(patterns)
+        return ImmutableSet.<NameMatcher>builder()
+                .addAll(toLiteralMatchers(strings).iterator())
+                .addAll(toRegexMatchers(patterns).iterator())
                 .addAll(patternsFiles.stream()
                         .map(PatternsFileArgument::getStringFilter)
                         .map(StringFilterArgument::strings)
-                        .flatMap(ArgumentUtils::toLiteralPatterns)
+                        .flatMap(ArgumentUtils::toLiteralMatchers)
                         .iterator())
                 .addAll(patternsFiles.stream()
                         .map(PatternsFileArgument::getStringFilter)
                         .map(StringFilterArgument::patterns)
-                        .flatMap(Collection::stream)
+                        .flatMap(ArgumentUtils::toRegexMatchers)
                         .iterator())
                 .build();
     }
 
     @Nonnull
-    private static Stream<Pattern> toLiteralPatterns(Collection<String> strings) {
+    private static Stream<NameMatcher> toLiteralMatchers(Collection<String> strings) {
         return strings.stream()
-                .map(Pattern::quote)
-                .map(Pattern::compile);
+                .map(NameMatcher::literal);
+    }
+
+    @Nonnull
+    private static Stream<NameMatcher> toRegexMatchers(Collection<Pattern> patterns) {
+        return patterns.stream()
+                .map(Pattern::pattern)
+                .map(NameMatcher::regex);
     }
 
 }

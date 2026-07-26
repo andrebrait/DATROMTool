@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import io.github.datromtool.data.Filter;
 import io.github.datromtool.data.GameCategory;
 import io.github.datromtool.data.Pair;
+import io.github.datromtool.data.NameMatcher;
 import io.github.datromtool.data.ParsedGame;
 import io.github.datromtool.data.PostFilter;
 import io.github.datromtool.domain.datafile.logiqx.Game;
@@ -84,6 +85,7 @@ public final class GameFilterer {
 
     private boolean matchesAnyInclude(ParsedGame p) {
         return filter.getIncludes().stream()
+                .map(NameMatcher::getPattern)
                 .map(e -> e.matcher(p.getGame().getName()))
                 .anyMatch(Matcher::find);
     }
@@ -149,6 +151,7 @@ public final class GameFilterer {
 
     private boolean filterExcludes(ParsedGame p) {
         boolean result = filter.getExcludes().stream()
+                .map(NameMatcher::getPattern)
                 .map(e -> e.matcher(p.getGame().getName()))
                 .noneMatch(Matcher::find);
         result |= matchesAnyInclude(p);
@@ -168,11 +171,12 @@ public final class GameFilterer {
                             .toList(),
                     filter);
         }
-        for (Pattern exclude : postFilter.getExcludes()) {
+        for (NameMatcher exclude : postFilter.getExcludes()) {
+            Pattern excludePattern = exclude.getPattern();
             if (input.stream()
                     .map(ParsedGame::getGame)
                     .map(Game::getName)
-                    .map(exclude::matcher)
+                    .map(excludePattern::matcher)
                     .anyMatch(Matcher::find)) {
                 if (log.isDebugEnabled()) {
                     log.debug(

@@ -2,6 +2,7 @@ package io.github.datromtool.cli.option;
 
 import io.github.datromtool.cli.argument.PatternsFileArgument;
 import io.github.datromtool.cli.converter.PatternsFileConverter;
+import io.github.datromtool.data.NameMatcher;
 import io.github.datromtool.data.OrderPreference;
 import io.github.datromtool.data.SortingPreference;
 import org.junit.jupiter.api.Test;
@@ -56,12 +57,17 @@ class SortingOptionsTest {
         }
     }
 
-    private static Set<String> patternsOf(Set<Pattern> patterns) {
-        return patterns.stream().map(Pattern::pattern).collect(Collectors.toSet());
+    private static Set<String> patternsOf(Set<NameMatcher> matchers) {
+        return matchers.stream()
+                .map(NameMatcher::getPattern)
+                .map(Pattern::pattern)
+                .collect(Collectors.toSet());
     }
 
-    private static boolean anyMatches(Set<Pattern> patterns, String candidate) {
-        return patterns.stream().anyMatch(p -> p.matcher(candidate).matches());
+    private static boolean anyMatches(Set<NameMatcher> matchers, String candidate) {
+        return matchers.stream()
+                .map(NameMatcher::getPattern)
+                .anyMatch(p -> p.matcher(candidate).matches());
     }
 
     @Test

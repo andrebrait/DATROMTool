@@ -2,6 +2,7 @@ package io.github.datromtool.sorting;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
+import io.github.datromtool.data.NameMatcher;
 import io.github.datromtool.data.ParsedGame;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,6 @@ import java.util.Iterator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -53,24 +53,25 @@ public abstract class SubComparator implements Comparator<ParsedGame> {
     protected int comparePatterns(
             ParsedGame o1,
             ParsedGame o2,
-            ImmutableCollection<Pattern> patterns) {
-        int matches1 = computeMatches(o1, patterns);
-        int matches2 = computeMatches(o2, patterns);
+            ImmutableCollection<NameMatcher> matchers) {
+        int matches1 = computeMatches(o1, matchers);
+        int matches2 = computeMatches(o2, matchers);
         return Integer.compare(matches1, matches2);
     }
 
-    private int computeMatches(ParsedGame parsedGame, ImmutableCollection<Pattern> patterns) {
-        int matches = countMatches(parsedGame.getGame().getName(), patterns);
+    private int computeMatches(ParsedGame parsedGame, ImmutableCollection<NameMatcher> matchers) {
+        int matches = countMatches(parsedGame.getGame().getName(), matchers);
         log.trace(
                 "Obtained {} matches in patterns list {} for '{}'",
                 matches,
-                patterns,
+                matchers,
                 parsedGame.getGame().getName());
         return matches;
     }
 
-    private int countMatches(String string, ImmutableCollection<Pattern> patterns) {
-        return Math.toIntExact(patterns.stream()
+    private int countMatches(String string, ImmutableCollection<NameMatcher> matchers) {
+        return Math.toIntExact(matchers.stream()
+                .map(NameMatcher::getPattern)
                 .map(p -> p.matcher(string))
                 .filter(Matcher::find)
                 .count());
