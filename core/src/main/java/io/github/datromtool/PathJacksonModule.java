@@ -35,7 +35,11 @@ final class PathJacksonModule extends SimpleModule {
         addSerializer(Path.class, new ValueSerializer<Path>() {
             @Override
             public void serialize(Path value, JsonGenerator gen, SerializationContext ctxt) throws JacksonException {
-                gen.writeString(value.toString());
+                // Always emit '/' so a profile written on Windows stays readable everywhere;
+                // separators cannot occur inside a file name, so the replacement is lossless.
+                String separator = value.getFileSystem().getSeparator();
+                String text = value.toString();
+                gen.writeString("/".equals(separator) ? text : text.replace(separator, "/"));
             }
         });
         addDeserializer(Path.class, new ValueDeserializer<Path>() {

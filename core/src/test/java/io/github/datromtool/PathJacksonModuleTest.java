@@ -51,7 +51,9 @@ class PathJacksonModuleTest {
 
     @Test
     void absolutePathRoundTripsThroughJson() {
-        Path path = Paths.get("/tmp/roms/game.zip");
+        // Built from the working directory so the path is genuinely absolute on every OS
+        // (a literal "/tmp/..." is not absolute on Windows).
+        Path path = Paths.get("").toAbsolutePath().resolve("roms").resolve("game.zip");
         String json = JSON.writeValueAsString(path);
         assertFalse(json.contains("file:"), "absolute Path must not serialize as a file:// URI, got: " + json);
         Path roundTripped = JSON.readValue(json, Path.class);
