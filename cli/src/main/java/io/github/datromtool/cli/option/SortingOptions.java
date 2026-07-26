@@ -111,7 +111,7 @@ public final class SortingOptions {
                 .regions(ImmutableSet.copyOf(regions))
                 .languages(ImmutableSet.copyOf(languages))
                 .prefers(merge(prefers, preferRegexes, prefersFiles))
-                .avoids(merge(avoids, preferRegexes, avoidsFiles))
+                .avoids(merge(avoids, avoidRegexes, avoidsFiles))
                 .prioritizeLanguages(prioritizeLanguages)
                 .earlyVersions(earlyVersions)
                 .earlyRevisions(earlyRevisions)
