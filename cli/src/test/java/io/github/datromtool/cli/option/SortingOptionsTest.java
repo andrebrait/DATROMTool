@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -192,9 +193,19 @@ class SortingOptionsTest {
     void orderOptionAcceptsValueCaseInsensitively(String value) {
         SortingPreference preference = parse("--versions", value);
         assertEquals(
-                OrderPreference.valueOf(value.toUpperCase()),
+                OrderPreference.valueOf(value.toUpperCase(Locale.ROOT)),
                 preference.getVersions(),
                 "--versions " + value + " must be accepted case-insensitively");
+    }
+
+    // Matrix row 2: outer whitespace on the raw value must be trimmed by the converter.
+    @Test
+    void orderOptionAcceptsOuterWhitespace() {
+        SortingPreference preference = parse("--versions", " earliest ");
+        assertEquals(
+                OrderPreference.EARLIEST,
+                preference.getVersions(),
+                "--versions ' earliest ' must be trimmed and accepted");
     }
 
     // Matrix row 2: a bogus order value must fail parsing with a clear message.

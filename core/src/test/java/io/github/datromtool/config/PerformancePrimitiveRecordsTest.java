@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Locale;
 import java.util.function.IntConsumer;
 import java.util.stream.Stream;
 
@@ -42,7 +43,7 @@ class PerformancePrimitiveRecordsTest {
                 () -> c.constructor().accept(0),
                 c.name() + "(0) must be rejected as non-positive");
         assertTrue(
-                thrown.getMessage().toLowerCase().contains("positive"),
+                thrown.getMessage().toLowerCase(Locale.ROOT).contains("positive"),
                 c.name() + " error must explain the value must be positive, got: " + thrown.getMessage());
     }
 
@@ -54,7 +55,7 @@ class PerformancePrimitiveRecordsTest {
                 () -> c.constructor().accept(-1),
                 c.name() + "(-1) must be rejected as non-positive");
         assertTrue(
-                thrown.getMessage().toLowerCase().contains("positive"),
+                thrown.getMessage().toLowerCase(Locale.ROOT).contains("positive"),
                 c.name() + " error must explain the value must be positive, got: " + thrown.getMessage());
     }
 

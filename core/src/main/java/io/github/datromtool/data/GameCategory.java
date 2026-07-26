@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
  * --unlicensed --dlc --update} negatable flags plus the {@code --no-all} tri-state.
  *
  * <p>{@link #PROTO}, {@link #BETA}, {@link #DEMO}, {@link #SAMPLE} and {@link #BIOS} are
- * structural: {@link GameFilterer} decides membership from {@link ParsedGame} fields parsed out
- * of the name (no regex needed here, so {@link #getPattern()} is empty). The remaining
- * categories are pattern-backed: membership is decided by matching the game name against the
- * category's {@link Patterns} regex.
+ * structural: {@link io.github.datromtool.GameFilterer} decides membership from
+ * {@link ParsedGame} fields parsed out of the name (no regex needed here, so
+ * {@link #getPattern()} is empty). The remaining categories are pattern-backed: membership is
+ * decided by matching the game name against the category's {@link Patterns} regex.
  */
 public enum GameCategory {
 

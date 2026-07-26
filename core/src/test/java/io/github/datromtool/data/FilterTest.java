@@ -7,6 +7,7 @@ import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.dataformat.yaml.YAMLMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -21,6 +22,16 @@ class FilterTest {
         assertTrue(
                 filter.getExcludeCategories().isEmpty(),
                 "default Filter.excludeCategories must be empty, got: " + filter.getExcludeCategories());
+    }
+
+    @Test
+    void defaultExcludeCategoriesIsOmittedFromSerialization() {
+        Filter filter = Filter.builder().build();
+        JsonMapper mapper = SerializationHelper.getInstance().getJsonMapper();
+        String json = mapper.writeValueAsString(filter);
+        assertFalse(
+                json.contains("excludeCategories"),
+                "default excludeCategories must be omitted, got: " + json);
     }
 
     @Test

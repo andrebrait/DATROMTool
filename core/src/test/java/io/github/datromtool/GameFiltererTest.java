@@ -166,6 +166,42 @@ class GameFiltererTest {
     }
 
     @Test
+    void includesRescuePatternBackedCategoryExclusion() {
+        // Pre-PR parity: the CLI used to inject Patterns.* into Filter.excludes, and
+        // filterExcludes let any Filter.includes match rescue the game from ALL excludes,
+        // pattern-backed category exclusions included. That rescue must still apply here.
+        Filter filter = Filter.builder()
+                .excludeCategories(ImmutableSet.of(GameCategory.BAD))
+                .includes(ImmutableSet.of(Pattern.compile("Zelda")))
+                .build();
+        GameFilterer filterer = new GameFilterer(filter, PostFilter.builder().build());
+        ParsedGame game = plainGame("Zelda [b]");
+        assertTrue(
+                isKept(filterer, game),
+                "an include pattern matching the game name must rescue it from a pattern-backed"
+                        + " category exclusion");
+    }
+
+    @Test
+    void includesDoNotRescueStructuralCategoryExclusion() {
+        // Structural categories (PROTO/BETA/DEMO/SAMPLE/BIOS) were separate boolean filters
+        // before this PR and were never includes-overridable; that must stay true.
+        Filter filter = Filter.builder()
+                .excludeCategories(ImmutableSet.of(GameCategory.PROTO))
+                .includes(ImmutableSet.of(Pattern.compile("Zelda")))
+                .build();
+        GameFilterer filterer = new GameFilterer(filter, PostFilter.builder().build());
+        ParsedGame game = ParsedGame.builder()
+                .game(Game.builder().name("Zelda (Proto)").description("Zelda (Proto)").build())
+                .regionData(EMPTY_REGION_DATA)
+                .proto(ImmutableList.of(1L))
+                .build();
+        assertFalse(
+                isKept(filterer, game),
+                "an include pattern must NOT rescue a game from a structural category exclusion");
+    }
+
+    @Test
     void testPostFilter() {
         GameFilterer filterer = new GameFilterer(
                 Filter.builder().build(),
