@@ -29,7 +29,7 @@ public class PerformanceOptions {
 
     private CopyThreads copyThreads;
     private CopyBufferSize copyBufferSize;
-    private boolean allowRawZipCopy;
+    private Boolean allowRawZipCopy;
 
     @CommandLine.Option(
             names = "--scan-threads",
@@ -80,7 +80,7 @@ public class PerformanceOptions {
             names = "--copy-raw-zip",
             description = "Allow raw copies when copying from/to ZIP file. \n" +
                     "Improves performance, but it disables the renaming of files inside the generated ZIP files.")
-    public void setAllowRawZipCopy(boolean allowRawZipCopy) {
+    public void setAllowRawZipCopy(Boolean allowRawZipCopy) {
         this.allowRawZipCopy = allowRawZipCopy;
     }
 
@@ -106,7 +106,7 @@ public class PerformanceOptions {
     public AppConfig.FileCopierConfig merge(AppConfig.FileCopierConfig original) {
         if (copyThreads != null
                 || copyBufferSize != null
-                || allowRawZipCopy) {
+                || allowRawZipCopy != null) {
             AppConfig.FileCopierConfig.FileCopierConfigBuilder builder = original.toBuilder();
             if (copyThreads != null) {
                 builder.threads(copyThreads);
@@ -114,7 +114,9 @@ public class PerformanceOptions {
             if (copyBufferSize != null) {
                 builder.bufferSize(copyBufferSize);
             }
-            builder.allowRawZipCopy(allowRawZipCopy);
+            if (allowRawZipCopy != null) {
+                builder.allowRawZipCopy(allowRawZipCopy);
+            }
             return builder.build();
         }
         return original;
