@@ -1,0 +1,566 @@
+{
+	"description": {
+		"name": "Atari - Atari 2600 (No-Intro)",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "2.4.8"
+	},
+	"variants": [
+		{
+			"group": "Adventures of TRON",
+			"titles": [
+				{"searchTerm": "Adventures of TRON"},
+				{"searchTerm": "Adventures on GX-12"}
+			]
+		},
+		{
+			"group": "Air Raiders",
+			"titles": [
+				{"searchTerm": "Air Raiders"},
+				{"searchTerm": "Bogey Blaster"},
+				{"searchTerm": "Top Gun"}
+			]
+		},
+		{
+			"group": "Air-Sea Battle ~ Target Fun",
+			"titles": [
+				{"searchTerm": "Air-Sea Battle"},
+				{"searchTerm": "Air-Sea Battle ~ Target Fun"}
+			]
+		},
+		{
+			"group": "Alien's Return",
+			"titles": [
+				{"searchTerm": "Alien's Return"},
+				{"searchTerm": "Col 'N'", "priority": 2}
+			]
+		},
+		{
+			"group": "Alpha Beam with Ernie",
+			"titles": [
+				{"searchTerm": "Alpha Beam with Ernie"},
+				{"searchTerm": "Alpha Beam", "priority": 2}
+			]
+		},
+		{
+			"group": "Amoeba Jump",
+			"titles": [
+				{"searchTerm": "Amoeba Jump"},
+				{"searchTerm": "Amoeba Jump (Retron 77 Version)", "priority": 2}
+			]
+		},
+		{
+			"group": "Assault",
+			"titles": [
+				{"searchTerm": "Assault"},
+				{"searchTerm": "Fire Birds"},
+				{"searchTerm": "Sky Alien ~ Assault"}
+			]
+		},
+		{
+			"group": "Atlantis",
+			"titles": [
+				{"searchTerm": "Atlantis"},
+				{"searchTerm": "Strahlen der Teufelsvogel"}
+			]
+		},
+		{
+			"group": "Baseball",
+			"titles": [
+				{"searchTerm": "Baseball"},
+				{"searchTerm": "Home Run ~ Baseball"}
+			]
+		},
+		{
+			"group": "BASIC Programming",
+			"categories": ["Applications"],
+			"titles": [
+				{"searchTerm": "BASIC Programming"}
+			]
+		},
+		{
+			"group": "Berzerk",
+			"titles": [
+				{"searchTerm": "Berzerk"}
+			],
+			"supersets": [
+				{"searchTerm": "Berzerk (Enhanced Edition)"}
+			]
+		},
+		{
+			"group": "Boxing",
+			"titles": [
+				{"searchTerm": "Boxen"},
+				{"searchTerm": "Boxing"}
+			]
+		},
+		{
+			"group": "Breakout ~ Breakaway IV",
+			"titles": [
+				{"searchTerm": "Breakout"},
+				{"searchTerm": "Breakout ~ Breakaway IV"}
+			]
+		},
+		{
+			"group": "Burgertime",
+			"titles": [
+				{"searchTerm": "Burgertime"},
+				{"searchTerm": "Burgertime (PROPER 12K)", "priority": 2}
+			]
+		},
+		{
+			"group": "Casino ~ Poker Plus",
+			"titles": [
+				{"searchTerm": "Casino"},
+				{"searchTerm": "Casino ~ Poker Plus"}
+			]
+		},
+		{
+			"group": "Challenge",
+			"titles": [
+				{"searchTerm": "Challenge"},
+				{"searchTerm": "Mein Weg"}
+			]
+		},
+		{
+			"group": "Championship Soccer ~ Soccer",
+			"titles": [
+				{"searchTerm": "Championship Soccer"},
+				{"searchTerm": "Championship Soccer ~ Soccer"}
+			]
+		},
+		{
+			"group": "Chopper Command",
+			"titles": [
+				{"searchTerm": "Chopper Command"},
+				{"searchTerm": "Wustenschlacht"}
+			]
+		},
+		{
+			"group": "Chuck Norris Superkicks",
+			"titles": [
+				{"searchTerm": "Chuck Norris Superkicks"},
+				{"searchTerm": "Kung Fu Superkicks"}
+			]
+		},
+		{
+			"group": "Color Bar Generator",
+			"categories": ["Applications"],
+			"titles": [
+				{"searchTerm": "Color Bar Generator"}
+			]
+		},
+		{
+			"group": "Colors",
+			"categories": ["Applications", "Preproduction"],
+			"titles": [
+				{"searchTerm": "Colors"}
+			]
+		},
+		{
+			"group": "Colours (Demo)",
+			"categories": ["Applications", "Demos"],
+			"titles": [
+				{"searchTerm": "Colours (Demo)"}
+			]
+		},
+		{
+			"group": "Combat ~ Tank-Plus",
+			"titles": [
+				{"searchTerm": "Combat"},
+				{"searchTerm": "Combat ~ Tank-Plus"},
+				{"searchTerm": "Tank AI", "priority": 2}
+			]
+		},
+		{
+			"group": "Crackpots",
+			"titles": [
+				{"searchTerm": "Boom Bang"},
+				{"searchTerm": "Crackpots"}
+			]
+		},
+		{
+			"group": "Dishaster",
+			"titles": [
+				{"searchTerm": "Dancing Plate"},
+				{"searchTerm": "Dishaster"},
+				{"searchTerm": "Tanzende Teller"}
+			]
+		},
+		{
+			"group": "Dodge 'Em ~ Dodger Cars",
+			"titles": [
+				{"searchTerm": "Dodge 'Em"},
+				{"searchTerm": "Dodge 'Em ~ Dodger Cars"}
+			]
+		},
+		{
+			"group": "Enduro",
+			"titles": [
+				{"searchTerm": "Enduro"},
+				{"searchTerm": "Super-Ferrari"}
+			]
+		},
+		{
+			"group": "Fire Fighter",
+			"titles": [
+				{"searchTerm": "Feuerwehr im Einsatz"},
+				{"searchTerm": "Fire Fighter"}
+			]
+		},
+		{
+			"group": "Forest",
+			"titles": [
+				{"searchTerm": "Forest (Two Player)"},
+				{"searchTerm": "Forest (Two Player) (Muted)", "priority": 2},
+				{"searchTerm": "Forest (One Player)", "priority": 3},
+				{"searchTerm": "Forest (One Player) (Muted)", "priority": 4}
+			]
+		},
+		{
+			"group": "Freeway",
+			"titles": [
+				{"searchTerm": "Freeway"},
+				{"searchTerm": "Bloody Human Freeway", "priority": 2}
+			]
+		},
+		{
+			"group": "Frisco",
+			"titles": [
+				{"searchTerm": "Frisco"},
+				{"searchTerm": "Peter Penguin"}
+			]
+		},
+		{
+			"group": "Frostbite",
+			"titles": [
+				{"searchTerm": "Frostbite"},
+				{"searchTerm": "kleine Bar, Der"}
+			]
+		},
+		{
+			"group": "G.I. Joe - Cobra Strike",
+			"titles": [
+				{"searchTerm": "Action Man - Action Force"},
+				{"searchTerm": "G.I. Joe - Cobra Strike"}
+			]
+		},
+		{
+			"group": "Gas Hog",
+			"titles": [
+				{"searchTerm": "Gas Hog"},
+				{"searchTerm": "Piraten Schiff"}
+			]
+		},
+		{
+			"group": "Grover's Music Maker",
+			"titles": [
+				{"searchTerm": "Grover's Music Maker"},
+				{"searchTerm": "Monkey Music"}
+			]
+		},
+		{
+			"group": "Indy 500 ~ Race",
+			"titles": [
+				{"searchTerm": "Indy 500"},
+				{"searchTerm": "Indy 500 ~ Race"}
+			]
+		},
+		{
+			"group": "Infiltrate",
+			"titles": [
+				{"searchTerm": "Infiltrate"},
+				{"searchTerm": "Springteufel, Die"}
+			]
+		},
+		{
+			"group": "IQ 180",
+			"titles": [
+				{"searchTerm": "I.Q. Memory Teaser"},
+				{"searchTerm": "IQ 180"},
+				{"searchTerm": "I.Q. 180", "priority": 2}
+			]
+		},
+		{
+			"group": "Kid Vid Voice Module (Audio Tapes)",
+			"categories": ["BIOS"],
+			"titles": [
+				{"searchTerm": "Kid Vid Voice Module (Audio Tapes)"}
+			]
+		},
+		{
+			"group": "Laser Gates",
+			"titles": [
+				{"searchTerm": "Laaser Voley"},
+				{"searchTerm": "Laser Gates"}
+			]
+		},
+		{
+			"group": "M.A.D.",
+			"titles": [
+				{"searchTerm": "Angriff der Luftflotten"},
+				{"searchTerm": "M.A.D."}
+			]
+		},
+		{
+			"group": "Maze Craze - A Game of Cops 'n Robbers ~ Maze Mania - A Game of Cops 'n Robbers",
+			"titles": [
+				{"searchTerm": "Labyrinth"},
+				{"searchTerm": "Maze Craze - A Game of Cops 'n Robbers ~ Maze Mania - A Game of Cops 'n Robbers"}
+			]
+		},
+		{
+			"group": "Missile War ~ Astro War",
+			"titles": [
+				{"searchTerm": "Astrowar"},
+				{"searchTerm": "Meteor Defense"},
+				{"searchTerm": "Missile War ~ Astro War"}
+			]
+		},
+		{
+			"group": "Mission 3,000 A.D.",
+			"titles": [
+				{"searchTerm": "Mission 3,000 A.D."},
+				{"searchTerm": "Mission 3000"}
+			]
+		},
+		{
+			"group": "Open Sesame",
+			"titles": [
+				{"searchTerm": "Abre-te, Sesamo!"},
+				{"searchTerm": "Apples and Dolls"},
+				{"searchTerm": "Open Sesame"},
+				{"searchTerm": "Sesam Offne Dich!"}
+			]
+		},
+		{
+			"group": "Outlaw ~ Gunslinger",
+			"titles": [
+				{"searchTerm": "Outlaw"},
+				{"searchTerm": "Outlaw ~ Gunslinger"}
+			]
+		},
+		{
+			"group": "Parachute",
+			"titles": [
+				{"searchTerm": "Parachute"},
+				{"searchTerm": "Skydiver"}
+			]
+		},
+		{
+			"group": "Pitfall! - Pitfall Harry's Jungle Adventure",
+			"titles": [
+				{"searchTerm": "Dschungel Boy", "priority": 2}
+			],
+			"supersets": [
+				{"searchTerm": "Pitfall! - Pitfall Harry's Jungle Adventure"}
+			]
+		},
+		{
+			"group": "Pooyan",
+			"titles": [
+				{"searchTerm": "Ente und der Wolf, Die"},
+				{"searchTerm": "Pooyan"}
+			]
+		},
+		{
+			"group": "Quick Step!",
+			"titles": [
+				{"searchTerm": "Quick Step"},
+				{"searchTerm": "Quick Step!"}
+			]
+		},
+		{
+			"group": "Racing Car",
+			"titles": [
+				{"searchTerm": "Hell Driver"},
+				{"searchTerm": "Racing Car"}
+			]
+		},
+		{
+			"group": "Radar",
+			"titles": [
+				{"searchTerm": "Exocet"},
+				{"searchTerm": "Radar"}
+			]
+		},
+		{
+			"group": "RealSports Baseball",
+			"titles": [
+				{"searchTerm": "RealSports Baseball"},
+				{"searchTerm": "Super Baseball", "priority": 2}
+			]
+		},
+		{
+			"group": "Rubik's Cube",
+			"titles": [
+				{"searchTerm": "Rubik's Cube"},
+				{"searchTerm": "Atari Video Cube", "priority": 2}
+			]
+		},
+		{
+			"group": "Sea Hawk",
+			"titles": [
+				{"searchTerm": "Marineflieger"},
+				{"searchTerm": "Sea Hawk"},
+				{"searchTerm": "Seahawk"}
+			]
+		},
+		{
+			"group": "Sea Hunt ~ Scuba Diver",
+			"titles": [
+				{"searchTerm": "Sea Hunt ~ Scuba Diver"},
+				{"searchTerm": "Skindiver"}
+			]
+		},
+		{
+			"group": "Sea Monster",
+			"titles": [
+				{"searchTerm": "O Monstro Marinho"},
+				{"searchTerm": "Sea Monster"}
+			]
+		},
+		{
+			"group": "Seaquest",
+			"titles": [
+				{"searchTerm": "Seaquest"},
+				{"searchTerm": "Seaquest - International Edition"}
+			]
+		},
+		{
+			"group": "Ski Hunt",
+			"titles": [
+				{"searchTerm": "Mountain Man"},
+				{"searchTerm": "Ski Hunt"}
+			]
+		},
+		{
+			"group": "Sky Diver ~ Dare Diver",
+			"titles": [
+				{"searchTerm": "Sky Diver"},
+				{"searchTerm": "Sky Diver ~ Dare Diver"}
+			]
+		},
+		{
+			"group": "Slot Racers",
+			"titles": [
+				{"searchTerm": "Slot Racers"},
+				{"searchTerm": "Slot Racers ~ Maze"}
+			]
+		},
+		{
+			"group": "Sound (Demo)",
+			"categories": ["Applications", "Demos"],
+			"titles": [
+				{"searchTerm": "Sound (Demo)"}
+			]
+		},
+		{
+			"group": "Space Tunnel",
+			"titles": [
+				{"searchTerm": "Space Tunnel"},
+				{"searchTerm": "Space Tunnel & Weltraum-Tunnel"},
+				{"searchTerm": "Tunnel de L'Espace, Le"}
+			]
+		},
+		{
+			"group": "Space War ~ Space Combat",
+			"titles": [
+				{"searchTerm": "Space War"},
+				{"searchTerm": "Space War ~ Space Combat"}
+			]
+		},
+		{
+			"group": "Squirrel ~ O Esquilo",
+			"titles": [
+				{"searchTerm": "Snail against Squirrel"},
+				{"searchTerm": "Squirrel ~ O Esquilo"}
+			]
+		},
+		{
+			"group": "Stargate",
+			"titles": [
+				{"searchTerm": "Stargate"},
+				{"searchTerm": "Defender II", "priority": 2}
+			]
+		},
+		{
+			"group": "StarMaster",
+			"titles": [
+				{"searchTerm": "StarMaster"},
+				{"searchTerm": "Starmaster - International Edition"}
+			]
+		},
+		{
+			"group": "Street Racer ~ Speedway II",
+			"titles": [
+				{"searchTerm": "Street Racer - Speedway II"},
+				{"searchTerm": "Street Racer ~ Speedway II"}
+			]
+		},
+		{
+			"group": "Stunt Man",
+			"titles": [
+				{"searchTerm": "Nightmare"},
+				{"searchTerm": "Stunt Man"}
+			]
+		},
+		{
+			"group": "Super Challenge Baseball",
+			"titles": [
+				{"searchTerm": "Super Challenge Baseball"},
+				{"searchTerm": "World Championship Baseball"}
+			]
+		},
+		{
+			"group": "Surround ~ Chase",
+			"titles": [
+				{"searchTerm": "Surround"},
+				{"searchTerm": "Surround ~ Chase"}
+			]
+		},
+		{
+			"group": "Tanks but No Tanks",
+			"titles": [
+				{"searchTerm": "Phantom Tank"},
+				{"searchTerm": "Phantom-Panzer + Phantom Tank"},
+				{"searchTerm": "Tanks but No Tanks"}
+			]
+		},
+		{
+			"group": "Tennis",
+			"titles": [
+				{"searchTerm": "Tennis"},
+				{"searchTerm": "Tennis - International Edition"}
+			]
+		},
+		{
+			"group": "Video Chess",
+			"titles": [
+				{"searchTerm": "Chess"},
+				{"searchTerm": "Computer Chess"},
+				{"searchTerm": "Video Chess"}
+			]
+		},
+		{
+			"group": "Video Pinball ~ Arcade Pinball",
+			"titles": [
+				{"searchTerm": "Video Pinball"},
+				{"searchTerm": "Video Pinball ~ Arcade Pinball"}
+			]
+		},
+		{
+			"group": "Wall-Defender",
+			"titles": [
+				{"searchTerm": "Wall Break"},
+				{"searchTerm": "Wall-Defender"}
+			]
+		},
+		{
+			"group": "Wizard of Wor",
+			"titles": [
+				{"searchTerm": "Wizard of War"},
+				{"searchTerm": "Wizard of Wor"}
+			]
+		}
+	]
+}

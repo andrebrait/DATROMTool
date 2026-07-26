@@ -8,6 +8,8 @@ import io.github.datromtool.config.Profile;
 import io.github.datromtool.data.RegionData;
 import io.github.datromtool.domain.datafile.logiqx.Datafile;
 import io.github.datromtool.domain.detector.Detector;
+import io.github.datromtool.domain.retool.CloneList;
+import io.github.datromtool.domain.retool.RetoolMetadata;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -249,6 +251,24 @@ public final class SerializationHelper {
 
     public <T> T loadYaml(InputStream inputStream, Class<T> tClass) {
         return yamlMapper.readValue(inputStream, tClass);
+    }
+
+    /**
+     * Loads a Retool clone list (issue #19 step 1). Upstream always ships these as {@code .json}
+     * (see the {@code retool-clonelists-metadata} repository's {@code clonelists/} directory),
+     * so this dispatches straight to {@link #loadJson}, unlike {@link Profile}, which supports
+     * either JSON or YAML because our own profile files may be hand-authored in either format.
+     */
+    public CloneList loadCloneList(Path path) throws IOException {
+        return loadJson(path, CloneList.class);
+    }
+
+    /**
+     * Loads a Retool metadata file (issue #19 step 1) - see {@link #loadCloneList} for why this
+     * dispatches to {@link #loadJson} rather than {@link #loadJsonOrYaml}.
+     */
+    public RetoolMetadata loadRetoolMetadata(Path path) throws IOException {
+        return loadJson(path, RetoolMetadata.class);
     }
 
     public RegionData loadRegionData(Path path) throws IOException {

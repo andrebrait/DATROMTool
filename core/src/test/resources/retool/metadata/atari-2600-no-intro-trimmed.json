@@ -1,0 +1,57 @@
+{
+  "Air Raiders (USA)": {
+    "languages": [
+      "En"
+    ]
+  },
+  "Air Raiders (Europe)": {
+    "languages": [
+      "En"
+    ]
+  },
+  "Bogey Blaster (Europe)": {
+    "languages": [
+      "En"
+    ]
+  },
+  "Top Gun (Germany)": {
+    "languages": [
+      "De"
+    ]
+  },
+  "Adventures of TRON (USA)": {
+    "languages": [
+      "En"
+    ]
+  },
+  "Adventures on GX-12 (Europe)": {
+    "languages": [
+      "En"
+    ]
+  },
+  "Donkey Kong Junior (USA)": {
+    "languages": [
+      "En"
+    ]
+  },
+  "Donkey Kong Junior (Australia) (En,De)": {
+    "languages": [
+      "De",
+      "En"
+    ]
+  },
+  "RealSports Baseball (USA) (NTSC)": {
+    "languages": [
+      "En"
+    ]
+  },
+  "RealSports Baseball (USA, Europe) (En,Fr,De,Es,It)": {
+    "languages": [
+      "De",
+      "En",
+      "Es",
+      "Fr",
+      "It"
+    ]
+  }
+}
