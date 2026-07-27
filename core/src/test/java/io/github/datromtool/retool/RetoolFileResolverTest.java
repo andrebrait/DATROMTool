@@ -19,6 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Coverage matrix rows 3 (minimumVersion compatibility) and 4 (directory auto-match) for issue
  * #19 step 3's {@link RetoolFileResolver}.
+ *
+ * <p><b>Correction round:</b> the {@code minimumVersion} gate compares against {@link
+ * RetoolFileResolver#SUPPORTED_CLONELIST_SPEC_VERSION} (a constant this codebase declares and
+ * controls), not DATROMTool's own running version - see that constant's Javadoc for why. This
+ * repo's real upstream fixture ({@code atari-2600-no-intro.json}, {@code minimumVersion:
+ * "2.4.8"}) is therefore compatible (it is, in fact, the fixture the constant is pinned from);
+ * the incompatible-rejection test instead uses a small synthetic fixture demanding a
+ * deliberately unreachable {@code minimumVersion} ({@code "99.0.0"}).
  */
 class RetoolFileResolverTest {
 
@@ -59,37 +67,36 @@ class RetoolFileResolverTest {
                 "error must name the header name searched, got: " + ex.getMessage());
     }
 
-    // --- stripPrereleaseSuffix ---
+    // --- loadCloneList: minimumVersion compatibility gate, against SUPPORTED_CLONELIST_SPEC_VERSION ---
 
+    // Frozen red-first proof (correction round): the real upstream fixture (minimumVersion
+    // "2.4.8") must load successfully. RED on the interim/pre-correction code (which compared
+    // against DATROMTool's own running app version, ~"1.0.0" - lower than "2.4.8", so this threw);
+    // GREEN once the gate compares against SUPPORTED_CLONELIST_SPEC_VERSION ("2.4.8") instead.
     @Test
-    void stripPrereleaseSuffixStripsRcAndSnapshot() {
-        assertEquals("1.0.0", RetoolFileResolver.stripPrereleaseSuffix("1.0.0-RC3-SNAPSHOT"));
-        assertEquals("1.0.0", RetoolFileResolver.stripPrereleaseSuffix("1.0.0-SNAPSHOT"));
-        assertEquals("1.0.0", RetoolFileResolver.stripPrereleaseSuffix("1.0.0-rc1"));
-        assertEquals("2.5.0", RetoolFileResolver.stripPrereleaseSuffix("2.5.0"));
+    void realUpstreamFixtureLoadsSuccessfully() throws Exception {
+        Path file = resource("retool/clonelists/atari-2600-no-intro.json");
+        CloneList cloneList = RetoolFileResolver.loadCloneList(file, "Atari - Atari 2600 (No-Intro)");
+        assertEquals("Atari - Atari 2600 (No-Intro)", cloneList.description().name());
     }
-
-    // --- loadCloneList: minimumVersion compatibility gate ---
 
     @Test
     void loadCloneListRejectsIncompatibleMinimumVersion() throws Exception {
-        Path file = resource("retool/clonelists/atari-2600-no-intro.json");
-        // The real upstream fixture declares minimumVersion 2.4.8; our synthetic "running app
-        // version" here is deliberately far below it, mirroring this codebase's own real
-        // pre-1.0 version (see RetoolFileResolver's Javadoc "known limitation" note for why
-        // that real-world comparison is itself surprising).
+        Path file = resource("retool/clonelists/huge-minimum-version.json");
         IOException ex = assertThrows(
                 IOException.class,
-                () -> RetoolFileResolver.loadCloneList(file, "Atari - Atari 2600 (No-Intro)", "1.0.0-RC3-SNAPSHOT"));
+                () -> RetoolFileResolver.loadCloneList(file, "Huge Minimum Version Test"));
         assertTrue(ex.getMessage().contains(file.toString()), "error must name the file, got: " + ex.getMessage());
-        assertTrue(ex.getMessage().contains("2.4.8"), "error must name the clone list's minimumVersion, got: " + ex.getMessage());
-        assertTrue(ex.getMessage().contains("1.0.0-RC3-SNAPSHOT"), "error must name the running app version, got: " + ex.getMessage());
+        assertTrue(ex.getMessage().contains("99.0.0"), "error must name the clone list's minimumVersion, got: " + ex.getMessage());
+        assertTrue(
+                ex.getMessage().contains(RetoolFileResolver.SUPPORTED_CLONELIST_SPEC_VERSION),
+                "error must name the supported spec version, got: " + ex.getMessage());
     }
 
     @Test
     void loadCloneListAcceptsCompatibleMinimumVersion() throws Exception {
         Path file = resource("retool/clonelists/atari-2600-no-intro.json");
-        CloneList cloneList = RetoolFileResolver.loadCloneList(file, "Atari - Atari 2600 (No-Intro)", "999.0.0");
+        CloneList cloneList = RetoolFileResolver.loadCloneList(file, "Atari - Atari 2600 (No-Intro)");
         assertEquals("Atari - Atari 2600 (No-Intro)", cloneList.description().name());
     }
 
@@ -99,10 +106,20 @@ class RetoolFileResolverTest {
         Path target = dir.resolve("Atari - Atari 2600 (No-Intro).json");
         Files.copy(source, target);
 
+        CloneList cloneList = RetoolFileResolver.loadCloneList(dir, "Atari - Atari 2600 (No-Intro)");
+        assertEquals("Atari - Atari 2600 (No-Intro)", cloneList.description().name());
+    }
+
+    @Test
+    void loadCloneListAutoMatchesThenRejectsIncompatible(@TempDir Path dir) throws Exception {
+        Path source = resource("retool/clonelists/huge-minimum-version.json");
+        Path target = dir.resolve("Huge Minimum Version Test.json");
+        Files.copy(source, target);
+
         IOException ex = assertThrows(
                 IOException.class,
-                () -> RetoolFileResolver.loadCloneList(dir, "Atari - Atari 2600 (No-Intro)", "1.0.0"));
-        assertTrue(ex.getMessage().contains("2.4.8"));
+                () -> RetoolFileResolver.loadCloneList(dir, "Huge Minimum Version Test"));
+        assertTrue(ex.getMessage().contains("99.0.0"));
     }
 
     // --- loadRetoolMetadata: no compatibility gate, same auto-match ---
@@ -129,7 +146,7 @@ class RetoolFileResolverTest {
     void loadCloneListDelegatesToSerializationHelper() throws Exception {
         Path file = resource("retool/clonelists/atari-2600-no-intro.json");
         CloneList direct = SerializationHelper.getInstance().loadCloneList(file);
-        CloneList viaResolver = RetoolFileResolver.loadCloneList(file, "Atari - Atari 2600 (No-Intro)", "999.0.0");
+        CloneList viaResolver = RetoolFileResolver.loadCloneList(file, "Atari - Atari 2600 (No-Intro)");
         assertEquals(direct, viaResolver);
     }
 }
