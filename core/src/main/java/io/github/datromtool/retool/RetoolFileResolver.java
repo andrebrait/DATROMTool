@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -95,13 +96,24 @@ public final class RetoolFileResolver {
         return candidate;
     }
 
+    // A header name the platform cannot even express as a path (NUL bytes, for instance) is
+    // unsafe by definition; Paths.get would throw an unchecked InvalidPathException past our
+    // IOException contract.
+    private static boolean isAbsolutePath(String headerName) {
+        try {
+            return Paths.get(headerName).isAbsolute();
+        } catch (InvalidPathException e) {
+            return true;
+        }
+    }
+
     private static void rejectUnsafeHeaderName(String headerName) throws IOException {
         boolean unsafe = headerName.isEmpty()
                 || headerName.contains("/")
                 || headerName.contains("\\")
                 || headerName.equals("..")
                 || headerName.equals(".")
-                || Paths.get(headerName).isAbsolute();
+                || isAbsolutePath(headerName);
         if (unsafe) {
             throw new IOException(format(
                     "DAT header name '%s' is not a valid bare file name (must not be absolute, "

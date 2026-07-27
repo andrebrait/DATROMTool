@@ -49,10 +49,8 @@ public final class GameSorter {
      * own {@link ParsedGame#getParentName()} happens to be the identical literal string, silently
      * merging two unrelated games into one 1G1R candidate list (one of them then vanishes from
      * output, since only the top-sorted candidate per key survives). Prefixing every clone-list
-     * key with this marker guarantees it can never equal a raw DAT parent name, since no DAT
-     * parent/clone name can itself begin with this literal prefix followed by a colon in the way
-     * this grouping key does (parent names are the DAT's own {@code <game name="...">}
-     * value, never synthesized here).
+     * key with this marker separates the two namespaces in practice: a DAT would have to name a
+     * game {@code clonelist:<some group>} to collide, which no real DAT does.
      */
     private static final String CLONELIST_GROUP_KEY_PREFIX = "clonelist:";
 
