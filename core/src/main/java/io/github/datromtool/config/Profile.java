@@ -63,6 +63,20 @@ public class Profile {
         @NonNull
         @Builder.Default
         ImmutableList<Path> dirs = ImmutableList.of();
+
+        /**
+         * A Retool clone list JSON file, or a directory of clone list files to auto-match by
+         * DAT header name (issue #19 step 3) - see {@code io.github.datromtool.retool
+         * .RetoolFileResolver}. {@code null} (the default) means no clone list source.
+         */
+        Path clonelists;
+
+        /**
+         * A Retool metadata JSON file, or a directory of metadata files to auto-match by DAT
+         * header name (issue #19 step 3) - see {@code io.github.datromtool.retool
+         * .RetoolFileResolver}. {@code null} (the default) means no metadata source.
+         */
+        Path metadata;
     }
 
     /**

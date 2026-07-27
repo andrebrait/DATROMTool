@@ -52,16 +52,24 @@ import java.util.regex.Pattern;
  *       (same rationale as {@code FULL}).</li>
  *   <li>{@link NameType#SHORT} (default) - upstream's short-name algorithm (naming-system doc,
  *       verbatim): "1. Normalize disc designations... 2. Remove tags and version strings... 3.
- *       Remove regions and languages... 4. Convert to lowercase", worked example
- *       {@code "Air Raiders (USA)"} -&gt; {@code "air raiders"}. Steps 1-2 (disc-designation
+ *       Remove regions and languages... 4. Convert to lowercase". Upstream's own worked example
+ *       (naming-system doc, verbatim) takes the full names {@code "This is a title (USA) (En,Fr)
+ *       (Disc A) (Best Collection)"}, {@code "This is a title (Canada) (Disc 1)"}, {@code "This
+ *       is a title (Europe) (De,It) (Disc A)"}, and {@code "This is a title V3 (Spain) (Disco
+ *       Uno)"} to the single short name {@code "this is a title (disc 1)"} - note that upstream
+ *       <b>retains</b> a normalized disc designator ({@code "(disc 1)"}) in the short name; only
+ *       region, language, version, and edition tags are stripped. Steps 1-2 (disc-designation
  *       normalization and upstream's configured tag/version-string dictionary) are approximated
- *       here by stripping <em>every</em> parenthetical group rather than a curated tag list - a
- *       deliberate over-approximation, not a curated port of upstream's tag dictionary. This is a
- *       faithful approximation for typical No-Intro/Redump names (region, revision, version,
- *       disc, and language are all parenthetical there), but would diverge from upstream on a
- *       name whose title itself legitimately contains a trailing parenthetical that upstream's
- *       dictionary would not have stripped. Both sides of the comparison (the full game name and
- *       the title's {@code searchTerm}) go through the same transform, then compare
+ *       here by stripping <em>every</em> parenthetical group, including disc designators - a
+ *       deliberate, <b>documented divergence</b> from upstream (which normalizes and keeps them),
+ *       not a curated port of upstream's tag dictionary or disc-normalization table. This is a
+ *       faithful approximation for typical No-Intro/Redump names as far as <em>matching two names
+ *       against each other</em> goes (both sides of a comparison go through the identical
+ *       over-strip, so a shared disc designator does not break the match), but would diverge from
+ *       upstream on a name whose title itself legitimately contains a trailing parenthetical that
+ *       upstream's dictionary would not have stripped, or on any clone list authored assuming disc
+ *       designators survive into the short name. Both sides of the comparison (the full game name
+ *       and the title's {@code searchTerm}) go through the same transform, then compare
  *       case-insensitively.</li>
  * </ul>
  *
