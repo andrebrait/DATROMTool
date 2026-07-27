@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Coverage matrix rows 3 (minimumVersion compatibility) and 4 (directory auto-match) for issue
@@ -223,5 +224,26 @@ class RetoolFileResolverTest {
         assertTrue(
                 thrown.getMessage().contains("not a valid bare file name"),
                 "rejection must use the unsafe-header-name message, got: " + thrown.getMessage());
+    }
+    @Test
+    void resolveFileRejectsSymlinkEscapingTheDirectory(@TempDir Path dir, @TempDir Path outside)
+            throws IOException {
+        // Lexical normalization cannot see that a name inside the directory is a symlink pointing
+        // out of it; containment must hold for the real path too.
+        Path target = outside.resolve("evil.json");
+        Files.writeString(target, "{}");
+        Path link = dir.resolve("Escaping DAT.json");
+        try {
+            Files.createSymbolicLink(link, target);
+        } catch (UnsupportedOperationException | IOException e) {
+            assumeTrue(false, "symlinks unavailable on this platform: " + e.getMessage());
+        }
+        IOException thrown = assertThrows(
+                IOException.class,
+                () -> RetoolFileResolver.resolveFile(dir, "Escaping DAT"),
+                "a candidate whose real path leaves the directory must be rejected");
+        assertTrue(
+                thrown.getMessage().contains("Escaping DAT"),
+                "rejection must name the offending header, got: " + thrown.getMessage());
     }
 }
