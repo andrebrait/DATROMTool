@@ -212,4 +212,16 @@ class RetoolFileResolverTest {
         CloneList viaResolver = RetoolFileResolver.loadCloneList(file, "Atari - Atari 2600 (No-Intro)");
         assertEquals(direct, viaResolver);
     }
+    @Test
+    void resolveFileRejectsHeaderNameThePlatformCannotExpressAsAPath(@TempDir Path dir) {
+        // A NUL byte cannot appear in a real Logiqx header, but the guard must still answer with
+        // its documented IOException rather than an unchecked InvalidPathException.
+        IOException thrown = assertThrows(
+                IOException.class,
+                () -> RetoolFileResolver.resolveFile(dir, "\u0000evil"),
+                "a header name that is not expressible as a path must be rejected as unsafe");
+        assertTrue(
+                thrown.getMessage().contains("not a valid bare file name"),
+                "rejection must use the unsafe-header-name message, got: " + thrown.getMessage());
+    }
 }
