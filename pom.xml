@@ -53,6 +53,12 @@
         <versions-maven-plugin.version>2.21.0</versions-maven-plugin.version>
         <maven-scm-provider-gitexe.version>2.2.1</maven-scm-provider-gitexe.version>
         <maven-scm-api.version>2.2.1</maven-scm-api.version>
+        <!-- Issue #44's Verification section: "one explicitly-tagged integration check against
+             the real endpoint, excluded from the default suite" - kept as a property (not a
+             literal in the surefire <configuration>) so `mvn test -Dtest.excludedGroups=` (empty)
+             still lets a caller opt into running it explicitly; -DexcludedGroups on its own
+             cannot override a literal <excludedGroups> value already set in this pom. -->
+        <test.excludedGroups>integration</test.excludedGroups>
         <!-- Maven plugins -->
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
@@ -189,6 +195,13 @@
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <!-- Keeps `mvn verify`/`mvn test` fully offline by default
+                             (RetoolDownloaderTest#realEndpointSyncs... is @Tag("integration"));
+                             run it explicitly with `mvn test -Dtest.excludedGroups=
+                             -Dtest=RetoolDownloaderTest#realEndpointSyncsClonelistsAndMetadataWithoutFailures`. -->
+                        <excludedGroups>${test.excludedGroups}</excludedGroups>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>

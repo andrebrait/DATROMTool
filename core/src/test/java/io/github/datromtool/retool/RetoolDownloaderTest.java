@@ -2,8 +2,11 @@ package io.github.datromtool.retool;
 
 import io.github.datromtool.SerializationHelper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -399,6 +402,147 @@ class RetoolDownloaderTest {
                 () -> RetoolDownloader.HttpFetcher.readBounded(unbounded, 10, BASE));
         assertTrue(e.getMessage().contains("10"), "error must name the cap that was exceeded, got: " + e.getMessage());
         assertTrue(e.getMessage().contains(BASE.toString()), "error must name the URI, got: " + e.getMessage());
+    }
+
+    // --- CodeRabbit review round (PR #45), finding 1: a successful fetch whose bytes do not
+    // hash to the manifest's expected sha256 must be treated as failed and never persisted - a
+    // truncated/corrupted download must not be silently written and later trusted. ---
+
+    @Test
+    void corruptedDownloadHashMismatchIsRecordedFailedAndNotWritten() throws IOException {
+        byte[] expectedContent = "correct content\n".getBytes(StandardCharsets.UTF_8);
+        byte[] corruptedContent = "corrupted!\n".getBytes(StandardCharsets.UTF_8);
+        fetcher.stub(uri("clonelists/hash.json"), hashJson(Map.of("foo.json", sha256Hex(expectedContent))));
+        fetcher.stub(uri("metadata/hash.json"), hashJson(Map.of()));
+        fetcher.stub(uri("clonelists/foo.json"), corruptedContent);
+
+        RetoolDownloader.Result result = downloader().sync();
+
+        Path localFile = cacheDir.resolve("clonelists").resolve("foo.json");
+        assertFalse(Files.exists(localFile), "a hash-mismatched download must never be written to disk");
+        RetoolDownloader.DirectoryResult dirResult = directoryResult(result, "clonelists");
+        assertEquals(List.of("foo.json"), dirResult.failedFiles());
+        assertEquals(0, dirResult.downloaded());
+    }
+
+    @Test
+    void corruptedDownloadHashMismatchLeavesPreExistingFileUntouched() throws IOException {
+        // The existing local file's hash doesn't match either (forcing a re-download attempt),
+        // but the downloaded replacement is itself corrupted - the stale-but-intact local file
+        // must be left exactly as it was, never overwritten with worse (corrupted) data.
+        byte[] staleContent = "stale content\n".getBytes(StandardCharsets.UTF_8);
+        byte[] expectedContent = "correct content\n".getBytes(StandardCharsets.UTF_8);
+        byte[] corruptedContent = "corrupted!\n".getBytes(StandardCharsets.UTF_8);
+        Path localFile = cacheDir.resolve("clonelists").resolve("foo.json");
+        Files.createDirectories(localFile.getParent());
+        Files.write(localFile, staleContent);
+
+        fetcher.stub(uri("clonelists/hash.json"), hashJson(Map.of("foo.json", sha256Hex(expectedContent))));
+        fetcher.stub(uri("metadata/hash.json"), hashJson(Map.of()));
+        fetcher.stub(uri("clonelists/foo.json"), corruptedContent);
+
+        RetoolDownloader.Result result = downloader().sync();
+
+        assertArrayEquals(staleContent, Files.readAllBytes(localFile),
+                "a hash-mismatched download must leave the pre-existing file untouched");
+        assertEquals(List.of("foo.json"), directoryResult(result, "clonelists").failedFiles());
+    }
+
+    // --- CodeRabbit review round, finding 2: a manifest key the platform cannot even express as
+    // a path (e.g. a NUL byte) must not let an unchecked InvalidPathException escape syncFile -
+    // per syncDirectory's ExecutionException handling, an escaping unchecked exception there
+    // would take down the whole directory sync, not just the one bad entry. ---
+
+    @Test
+    void manifestKeyWithNulByteIsRecordedFailedWithoutAbortingTheDirectory() throws IOException {
+        String badName = "bad" + (char) 0 + "name.json";
+        byte[] goodContent = "good\n".getBytes(StandardCharsets.UTF_8);
+        fetcher.stub(uri("clonelists/hash.json"), hashJson(Map.of(
+                badName, sha256Hex("irrelevant".getBytes(StandardCharsets.UTF_8)),
+                "good.json", sha256Hex(goodContent))));
+        fetcher.stub(uri("metadata/hash.json"), hashJson(Map.of()));
+        fetcher.stub(uri("clonelists/good.json"), goodContent);
+
+        RetoolDownloader.Result result = downloader().sync();
+
+        RetoolDownloader.DirectoryResult dirResult = directoryResult(result, "clonelists");
+        assertEquals(List.of(badName), dirResult.failedFiles(),
+                "a NUL-byte name must be recorded failed, not escape as an unchecked InvalidPathException");
+        assertEquals(1, dirResult.downloaded(), "other manifest entries in the same directory must still sync");
+        assertArrayEquals(goodContent, Files.readAllBytes(cacheDir.resolve("clonelists").resolve("good.json")));
+    }
+
+    // --- CodeRabbit review round, finding 3: a Windows drive-relative shaped name ("C:payload")
+    // isn't caught by any existing shape check (no '/', no '\\', not ".."/".") - on Windows,
+    // Path#resolve treats a leading "X:" as drive-relative, resolving against that drive's
+    // current directory and escaping the cache directory entirely. Rejected by name shape
+    // regardless of which OS actually runs this test. ---
+
+    @Test
+    void windowsDriveRelativeFileNameIsRejected() throws IOException {
+        String badName = "C:payload.json";
+        byte[] content = "payload\n".getBytes(StandardCharsets.UTF_8);
+        fetcher.stub(uri("clonelists/hash.json"), hashJson(Map.of(badName, sha256Hex(content))));
+        fetcher.stub(uri("metadata/hash.json"), hashJson(Map.of()));
+
+        RetoolDownloader.Result result = downloader().sync();
+
+        RetoolDownloader.DirectoryResult dirResult = directoryResult(result, "clonelists");
+        assertEquals(List.of(badName), dirResult.failedFiles(),
+                "a drive-relative-shaped name must be rejected before any fetch/write is attempted");
+        assertEquals(0, dirResult.downloaded());
+        assertEquals(3, fetcher.calls().size(),
+                "only config/internal-config.json + the two hash.json manifests must be fetched - "
+                        + "never a per-file fetch for the rejected name, got calls: " + fetcher.calls());
+        try (Stream<Path> entries = Files.walk(cacheDir)) {
+            assertTrue(
+                    entries.filter(Files::isRegularFile).noneMatch(p -> p.getFileName().toString().contains("payload")),
+                    "no file must be written for a rejected drive-relative name");
+        }
+    }
+
+    // --- CodeRabbit review round, finding 5 (top-tier follow-up): the unsafe-file-name guard
+    // shipped with no dedicated coverage - deleting isUnsafeFileName entirely still left the full
+    // suite green. This battery pins every shape the guard must reject, each proven to never
+    // reach the network fetch at all (not merely "some later step also happens to fail"), and
+    // proven by mutation (see this class's Javadoc note / the PR handoff for the delete-and-
+    // restore run). ---
+
+    @ParameterizedTest
+    @ValueSource(strings = {"../../evil.json", "a/b.json", "/abs.json", "..\\win.json", "", ".", ".."})
+    void unsafeFileNameShapesAreRejectedBeforeAnyFetch(String badName) throws IOException {
+        byte[] content = "payload\n".getBytes(StandardCharsets.UTF_8);
+        fetcher.stub(uri("clonelists/hash.json"), hashJson(Map.of(badName, sha256Hex(content))));
+        fetcher.stub(uri("metadata/hash.json"), hashJson(Map.of()));
+
+        RetoolDownloader.Result result = downloader().sync();
+
+        RetoolDownloader.DirectoryResult dirResult = directoryResult(result, "clonelists");
+        assertEquals(List.of(badName), dirResult.failedFiles(),
+                "unsafe name '" + badName + "' must be recorded failed");
+        assertEquals(0, dirResult.downloaded());
+        assertEquals(3, fetcher.calls().size(),
+                "only config/internal-config.json + the two hash.json manifests must be fetched for '"
+                        + badName + "', got calls: " + fetcher.calls());
+    }
+
+    // --- Issue #44's own Verification section: "one explicitly-tagged integration check against
+    // the real endpoint, excluded from the default suite." Hits the real upstream data repository
+    // over the network - excluded from `mvn verify`'s default run via the root pom's surefire
+    // pluginManagement <excludedGroups>integration</excludedGroups> (verified separately that the
+    // default suite skips it and that `-Dgroups=integration` still runs and passes it). ---
+
+    @Tag("integration")
+    @Test
+    void realEndpointSyncsClonelistsAndMetadataWithoutFailures(@TempDir Path realCacheDir) {
+        RetoolDownloader downloader = new RetoolDownloader(
+                URI.create(RetoolDownloader.DEFAULT_BASE_URL), realCacheDir);
+
+        RetoolDownloader.Result result = downloader.sync();
+
+        assertFalse(result.hasFailures(), "real endpoint sync must complete without failures");
+        assertTrue(Files.isDirectory(realCacheDir.resolve("clonelists")));
+        assertTrue(Files.isDirectory(realCacheDir.resolve("metadata")));
     }
 
     /**
