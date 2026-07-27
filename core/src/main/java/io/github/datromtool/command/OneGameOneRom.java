@@ -100,7 +100,7 @@ public final class OneGameOneRom {
             throws InvalidDatafileException, ExecutionException {
         try {
             validate(inputDirs, fileOutputOptions);
-            ImmutableList<ParsedGame> parsedGames = parseGames(datafiles);
+            ImmutableList<ParsedGame> parsedGames = applyCloneList(parseGames(datafiles));
             validate(parsedGames);
             ImmutableMap<String, ImmutableList<ParsedGame>> filteredAndGrouped =
                     filterAndGroup(parsedGames);
@@ -135,7 +135,7 @@ public final class OneGameOneRom {
         try {
             validate(textOutputOptions);
             validateDetectors(datafiles, textOutputOptions);
-            ImmutableList<ParsedGame> parsedGames = parseGames(datafiles);
+            ImmutableList<ParsedGame> parsedGames = applyCloneList(parseGames(datafiles));
             validate(parsedGames);
             ImmutableMap<String, ImmutableList<ParsedGame>> filteredAndGrouped =
                     filterAndGroup(parsedGames);
@@ -169,13 +169,18 @@ public final class OneGameOneRom {
         }
     }
 
+    /**
+     * Filters, groups, and post-filters an already clone-list-annotated game list (see
+     * {@link #applyCloneList}, which callers run first - issue #19 step 3 moved that step ahead
+     * of {@link #validate(Collection)} so that check can see clone-list-assigned groups too; see
+     * that method's Javadoc).
+     */
     private ImmutableMap<String, ImmutableList<ParsedGame>> filterAndGroup(
-            Collection<ParsedGame> parsedGames) throws IOException {
+            Collection<ParsedGame> parsedGames) {
         GameFilterer gameFilterer = new GameFilterer(filter, postFilter);
-        ImmutableList<ParsedGame> matched = applyCloneList(parsedGames);
         GameComparator comparator = new GameComparator(sortingPreference, cloneList != null);
         GameSorter gameSorter = new GameSorter(comparator);
-        ImmutableList<ParsedGame> filtered = gameFilterer.filter(matched);
+        ImmutableList<ParsedGame> filtered = gameFilterer.filter(parsedGames);
         ImmutableMap<String, ImmutableList<ParsedGame>> filteredGamesByParent =
                 gameSorter.sortAndGroupByParent(filtered);
         return gameFilterer.postFilter(filteredGamesByParent);
@@ -184,8 +189,11 @@ public final class OneGameOneRom {
     /**
      * Issue #19 step 2: annotates each game with its Retool clone list group/priority (see
      * {@link CloneListMatcher}), when a clone list is present. {@code null} {@link #cloneList}
-     * (every run before issue #19, and every run in this step since nothing in {@code cli} wires
-     * it up yet) short-circuits to an identity copy - byte-identical to pre-issue-#19 behavior.
+     * (every run before issue #19, and every run whose {@code cli}/profile input supplied no
+     * {@code --clonelist}) short-circuits to an identity copy - byte-identical to pre-issue-#19
+     * behavior. Issue #19 step 3 moved the call site of this method ahead of {@link
+     * #validate(Collection)} (previously it ran later, inside {@link #filterAndGroup}) - see that
+     * method's Javadoc for why.
      */
     private ImmutableList<ParsedGame> applyCloneList(Collection<ParsedGame> parsedGames) throws IOException {
         if (cloneList == null) {
@@ -300,13 +308,27 @@ public final class OneGameOneRom {
         }
     }
 
+    /**
+     * @param parsedGames already clone-list-annotated (see {@link #applyCloneList}) - a game
+     *                     matched into a clone list group ({@link ParsedGame#getClonelistGroup()}
+     *                     non-{@code null}) counts as having grouping information even when the
+     *                     DAT itself declares none, since issue #19's entire point is that a
+     *                     clone list supplies 1G1R grouping for DATs that lack native
+     *                     Parent/Clone data (e.g. the Atari 2600 "Air Raiders" cross-region-rename
+     *                     group). Before issue #19 step 3, this check ran on the raw,
+     *                     pre-clone-list parsed games, which made the clone list feature
+     *                     unusable for exactly its intended case - every game in such a DAT is
+     *                     {@link ParsedGame#isParent()} (no native clone data at all), so the
+     *                     "lack of Parent/Clone information" error fired unconditionally,
+     *                     regardless of any clone list supplied.
+     */
     private static void validate(Collection<ParsedGame> parsedGames)
             throws InvalidDatafileException {
         if (parsedGames.isEmpty()) {
             throw new InvalidDatafileException(
                     "Cannot generate 1G1R set. Reason: DAT files contain no valid entries");
         }
-        if (parsedGames.stream().allMatch(ParsedGame::isParent)) {
+        if (parsedGames.stream().allMatch(g -> g.isParent() && g.getClonelistGroup() == null)) {
             throw new InvalidDatafileException(
                     "Cannot generate 1G1R set. Reason: DAT files lack Parent/Clone information");
         }

@@ -268,4 +268,82 @@ class ProfileBinderTest {
 
         assertEquals(profileOutput, effective, "with no output flags matched, the profile's section passes through unchanged");
     }
+
+    // --- issue #19 step 3: effectiveClonelist / effectiveRetoolMetadata / effectiveDatafiles ---
+
+    private static Path minimalDatFixture() {
+        try {
+            return Paths.get(ProfileBinderTest.class.getClassLoader()
+                    .getResource("datafiles/minimal.dat")
+                    .toURI());
+        } catch (java.net.URISyntaxException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Test
+    void effectiveClonelistFallsBackToProfileWhenNoFlag() {
+        Holder holder = new Holder();
+        CommandLine commandLine = parsed(holder);
+        Path effective = ProfileBinder.effectiveClonelist(
+                commandLine.getParseResult(),
+                holder.inputOptions,
+                Profile.InputSection.builder().clonelists(Paths.get("clonelist.json")).build());
+        assertEquals(Paths.get("clonelist.json"), effective, "--clonelist absent must fall back to the profile's clonelists");
+    }
+
+    @Test
+    void explicitClonelistFlagBeatsProfileClonelists() {
+        Holder holder = new Holder();
+        CommandLine commandLine = parsed(holder, "--clonelist", minimalDatFixture().toString());
+        Path effective = ProfileBinder.effectiveClonelist(
+                commandLine.getParseResult(),
+                holder.inputOptions,
+                Profile.InputSection.builder().clonelists(Paths.get("profile-clonelist.json")).build());
+        assertEquals(minimalDatFixture(), effective, "--clonelist must win over the profile's clonelists");
+    }
+
+    @Test
+    void effectiveRetoolMetadataFallsBackToProfileWhenNoFlag() {
+        Holder holder = new Holder();
+        CommandLine commandLine = parsed(holder);
+        Path effective = ProfileBinder.effectiveRetoolMetadata(
+                commandLine.getParseResult(),
+                holder.inputOptions,
+                Profile.InputSection.builder().metadata(Paths.get("metadata.json")).build());
+        assertEquals(Paths.get("metadata.json"), effective, "--retool-metadata absent must fall back to the profile's metadata");
+    }
+
+    @Test
+    void explicitRetoolMetadataFlagBeatsProfileMetadata() {
+        Holder holder = new Holder();
+        CommandLine commandLine = parsed(holder, "--retool-metadata", minimalDatFixture().toString());
+        Path effective = ProfileBinder.effectiveRetoolMetadata(
+                commandLine.getParseResult(),
+                holder.inputOptions,
+                Profile.InputSection.builder().metadata(Paths.get("profile-metadata.json")).build());
+        assertEquals(minimalDatFixture(), effective, "--retool-metadata must win over the profile's metadata");
+    }
+
+    @Test
+    void effectiveDatafilesUsesProfileDatsWhenNoPositionalArgs() throws java.io.IOException {
+        java.util.List<io.github.datromtool.domain.datafile.logiqx.Datafile> result =
+                ProfileBinder.effectiveDatafiles(
+                        java.util.List.of(),
+                        Profile.InputSection.builder().dats(ImmutableList.of(minimalDatFixture())).build());
+        assertEquals(1, result.size(), "no positional DAT_FILE must fall back to loading the profile's input.dats");
+        assertEquals("Test DAT", result.get(0).getHeader().getName());
+    }
+
+    @Test
+    void effectiveDatafilesPositionalArgsWinOverProfileDats() throws java.io.IOException {
+        io.github.datromtool.cli.argument.DatafileArgument cliArg =
+                io.github.datromtool.cli.argument.DatafileArgument.from(minimalDatFixture());
+        java.util.List<io.github.datromtool.domain.datafile.logiqx.Datafile> result =
+                ProfileBinder.effectiveDatafiles(
+                        java.util.List.of(cliArg),
+                        Profile.InputSection.builder().dats(ImmutableList.of(Paths.get("/no/such/profile-dat.xml"))).build());
+        assertEquals(1, result.size(), "positional DAT_FILE must win, never touching the (bogus) profile dats path");
+        assertEquals(cliArg.getDatafile(), result.get(0));
+    }
 }

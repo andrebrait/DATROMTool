@@ -1,0 +1,17 @@
+{
+	"description": {
+		"name": "Atari - Atari 2600 (No-Intro)",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "0.0.1"
+	},
+	"variants": [
+		{
+			"group": "Air Raiders",
+			"titles": [
+				{"searchTerm": "Air Raiders"},
+				{"searchTerm": "Bogey Blaster"},
+				{"searchTerm": "Top Gun"}
+			]
+		}
+	]
+}

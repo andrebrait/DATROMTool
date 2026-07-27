@@ -30,12 +30,16 @@ import io.github.datromtool.data.PostFilter;
 import io.github.datromtool.data.SortingPreference;
 import io.github.datromtool.data.TextOutputOptions;
 import io.github.datromtool.domain.datafile.logiqx.Datafile;
+import io.github.datromtool.domain.datafile.logiqx.Header;
+import io.github.datromtool.domain.retool.CloneList;
+import io.github.datromtool.domain.retool.RetoolMetadata;
 import io.github.datromtool.exception.ExecutionException;
 import io.github.datromtool.exception.InvalidDatafileException;
 import io.github.datromtool.io.FileCopier;
 import io.github.datromtool.io.FileScanner;
 import io.github.datromtool.io.logging.FileCopierLoggingListener;
 import io.github.datromtool.io.logging.FileScannerLoggingListener;
+import io.github.datromtool.retool.RetoolFileResolver;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -193,6 +197,8 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
         SortingPreference sortingPreference = ProfileBinder.effectiveSortingPreference(parseResult, sortingOptions, profile.getSort());
         List<Path> effectiveInputDirs = ProfileBinder.effectiveInputDirs(parseResult, inputOptions, profile.getInput());
         Profile.OutputSection effectiveOutput = ProfileBinder.effectiveOutput(parseResult, outputOptions, profile.getOutput());
+        Path effectiveClonelistPath = ProfileBinder.effectiveClonelist(parseResult, inputOptions, profile.getInput());
+        Path effectiveMetadataPath = ProfileBinder.effectiveRetoolMetadata(parseResult, inputOptions, profile.getInput());
         AppConfig baseAppConfig = SerializationHelper.getInstance().loadAppConfig();
         AppConfig appConfig = ProfileBinder.effectivePerformance(baseAppConfig, profile.getPerformance(), performanceOptions);
 
@@ -201,6 +207,8 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                     .input(Profile.InputSection.builder()
                             .dats(ImmutableList.copyOf(ProfileBinder.effectiveDats(datafiles, profile.getInput())))
                             .dirs(ImmutableList.copyOf(effectiveInputDirs))
+                            .clonelists(effectiveClonelistPath)
+                            .metadata(effectiveMetadataPath)
                             .build())
                     .filter(filter)
                     .sort(sortingPreference)
@@ -221,10 +229,14 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             return 0;
         }
 
-        if (datafiles.isEmpty()) {
+        // Issue #19 step 3 (the PR #31 deferred obligation): positional DAT_FILE arguments win
+        // when present; otherwise fall back to the effective profile's input.dats. The
+        // requiredness check below only fires when *both* are absent.
+        List<Path> effectiveDatPaths = ProfileBinder.effectiveDats(datafiles, profile.getInput());
+        if (effectiveDatPaths.isEmpty()) {
             throw new CommandLine.ParameterException(
                     commandSpec.commandLine(),
-                    "Missing required parameter: 'DAT_FILE'");
+                    "Missing required parameter: 'DAT_FILE' (or set input.dats in a --profile file)");
         }
         if (effectiveOutput.getFile() != null
                 && effectiveOutput.getFile().outputDir() != null
@@ -236,10 +248,51 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                             OutputOptions.FileOptions.OUT_DIR_OPTION,
                             InputOptions.IN_DIR_OPTION));
         }
-        oneGameOneRom = new OneGameOneRom(filter, postFilter, sortingPreference, divergenceDetection);
-        List<Datafile> realDataFiles = datafiles.stream()
-                .map(DatafileArgument::getDatafile)
-                .collect(ImmutableList.toImmutableList());
+        List<Datafile> realDataFiles;
+        try {
+            realDataFiles = ProfileBinder.effectiveDatafiles(datafiles, profile.getInput());
+        } catch (IOException e) {
+            throw new CommandLine.ParameterException(
+                    commandSpec.commandLine(),
+                    format("Could not load DAT file from profile input.dats: %s", e.getMessage()));
+        }
+        CloneList cloneList = null;
+        RetoolMetadata retoolMetadata = null;
+        if (effectiveClonelistPath != null || effectiveMetadataPath != null) {
+            String headerName = realDataFiles.stream()
+                    .findFirst()
+                    .map(Datafile::getHeader)
+                    .map(Header::getName)
+                    .orElse(null);
+            if (headerName == null) {
+                throw new CommandLine.ParameterException(
+                        commandSpec.commandLine(),
+                        "Cannot resolve --clonelist/--retool-metadata: the DAT file has no header name");
+            }
+            if (effectiveClonelistPath != null) {
+                try {
+                    cloneList = RetoolFileResolver.loadCloneList(
+                            effectiveClonelistPath,
+                            headerName,
+                            SerializationHelper.getInstance().getVersionString());
+                } catch (IOException e) {
+                    throw new CommandLine.ParameterException(
+                            commandSpec.commandLine(),
+                            format("Could not load clone list: %s", e.getMessage()));
+                }
+            }
+            if (effectiveMetadataPath != null) {
+                try {
+                    retoolMetadata = RetoolFileResolver.loadRetoolMetadata(effectiveMetadataPath, headerName);
+                } catch (IOException e) {
+                    throw new CommandLine.ParameterException(
+                            commandSpec.commandLine(),
+                            format("Could not load Retool metadata: %s", e.getMessage()));
+                }
+            }
+        }
+        oneGameOneRom = new OneGameOneRom(
+                filter, postFilter, sortingPreference, divergenceDetection, cloneList, retoolMetadata);
         boolean hasErrors = false;
         try (Terminal terminal = createTerminal()) {
             FileScannerLoggingListener scannerLoggingListener = new FileScannerLoggingListener();

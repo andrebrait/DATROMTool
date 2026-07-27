@@ -1,6 +1,7 @@
 package io.github.datromtool.cli.profile;
 
 import com.google.common.collect.ImmutableList;
+import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.cli.argument.DatafileArgument;
 import io.github.datromtool.cli.option.FilteringOptions;
 import io.github.datromtool.cli.option.InputOptions;
@@ -15,11 +16,13 @@ import io.github.datromtool.data.Filter;
 import io.github.datromtool.data.PostFilter;
 import io.github.datromtool.data.SortingPreference;
 import io.github.datromtool.data.TextOutputOptions;
+import io.github.datromtool.domain.datafile.logiqx.Datafile;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import picocli.CommandLine;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -168,6 +171,66 @@ public final class ProfileBinder {
                     .collect(ImmutableList.toImmutableList());
         }
         return profileInput.getDats();
+    }
+
+    /**
+     * Real DAT input execution wiring (issue #19 step 3 - the PR #31 deferred obligation):
+     * positional {@code DAT_FILE} arguments win when present (their {@link Datafile}s are
+     * already parsed, held by their {@link DatafileArgument}); otherwise the effective profile's
+     * {@code input.dats} paths are loaded fresh here - they were never converted to a {@link
+     * DatafileArgument} at parse time, since a profile file is itself just a path parsed well
+     * after positional {@code DAT_FILE} parameters are resolved. An {@link IOException} loading
+     * one of those paths propagates to the caller, which wraps it into a {@link
+     * CommandLine.ParameterException} exactly like every other profile-loading failure in
+     * {@code OneGameOneRomCommand}.
+     */
+    public static List<Datafile> effectiveDatafiles(
+            List<DatafileArgument> cliDatafiles,
+            Profile.InputSection profileInput) throws IOException {
+        if (!cliDatafiles.isEmpty()) {
+            return cliDatafiles.stream()
+                    .map(DatafileArgument::getDatafile)
+                    .collect(ImmutableList.toImmutableList());
+        }
+        ImmutableList.Builder<Datafile> builder = ImmutableList.builder();
+        for (Path path : profileInput.getDats()) {
+            builder.add(SerializationHelper.getInstance().loadXml(path, Datafile.class));
+        }
+        return builder.build();
+    }
+
+    /**
+     * Same flag-beats-profile precedence as {@link #effectiveInputDirs}, for {@code --clonelist}
+     * (issue #19 step 3): the flag's path wins when {@code --clonelist} was explicitly matched,
+     * otherwise the profile's {@code input.clonelists} value (possibly {@code null}, meaning no
+     * clone list source) survives.
+     */
+    @Nullable
+    public static Path effectiveClonelist(
+            CommandLine.ParseResult pr,
+            @Nullable InputOptions cli,
+            Profile.InputSection profileInput) {
+        if (cli != null && pr.hasMatchedOption(InputOptions.CLONELIST_OPTION)) {
+            return cli.getClonelist();
+        }
+        return profileInput.getClonelists();
+    }
+
+    /**
+     * Same flag-beats-profile precedence as {@link #effectiveInputDirs}, for
+     * {@code --retool-metadata} (issue #19 step 3): the flag's path wins when
+     * {@code --retool-metadata} was explicitly matched, otherwise the profile's
+     * {@code input.metadata} value (possibly {@code null}, meaning no metadata source) survives.
+     */
+    @Nullable
+    public static Path effectiveRetoolMetadata(
+            CommandLine.ParseResult pr,
+            @Nullable InputOptions cli,
+            Profile.InputSection profileInput) {
+        if (cli != null && pr.hasMatchedOption(InputOptions.RETOOL_METADATA_OPTION)) {
+            return cli.getRetoolMetadata();
+        }
+        return profileInput.getMetadata();
     }
 
     /**

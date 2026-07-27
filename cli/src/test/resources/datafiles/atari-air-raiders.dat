@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Atari - Atari 2600 (No-Intro)</name>
+		<description>Atari - Atari 2600 (No-Intro)</description>
+		<version>1.0</version>
+		<author>Test Author</author>
+	</header>
+	<game name="Air Raiders (USA)">
+		<description>Air Raiders (USA)</description>
+		<rom name="Air Raiders (USA).a26" size="1" crc="00000001"/>
+	</game>
+	<game name="Bogey Blaster (Europe)">
+		<description>Bogey Blaster (Europe)</description>
+		<rom name="Bogey Blaster (Europe).a26" size="1" crc="00000002"/>
+	</game>
+	<game name="Top Gun (Germany)">
+		<description>Top Gun (Germany)</description>
+		<rom name="Top Gun (Germany).a26" size="1" crc="00000003"/>
+	</game>
+</datafile>

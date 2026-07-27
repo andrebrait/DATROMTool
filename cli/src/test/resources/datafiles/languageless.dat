@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Test Metadata DAT</name>
+		<description>Test Metadata DAT</description>
+		<version>1.0</version>
+		<author>Test Author</author>
+	</header>
+	<game name="Mystery Game (Japan)">
+		<description>Mystery Game (Japan)</description>
+		<rom name="Mystery Game (Japan).bin" size="1" crc="00000004"/>
+	</game>
+	<game name="Control Game (Japan)" cloneof="Mystery Game (Japan)">
+		<description>Control Game (Japan)</description>
+		<rom name="Control Game (Japan).bin" size="1" crc="00000005"/>
+	</game>
+</datafile>
