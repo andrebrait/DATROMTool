@@ -330,17 +330,20 @@ class RetoolDownloaderTest {
         assertFalse(directoryResult(result, "metadata").directorySkipped());
     }
 
-    // A2 (issue #44 step 2 gate finding): row 10 above only fails the FETCH, so atomicWrite's own
-    // write-stage failure/cleanup path (tmp file created and written successfully, then the
-    // Files.move itself fails) was never exercised - mutating that code away would not fail any
-    // existing test. Pinned here for real: the destination is pre-created as a non-empty
-    // directory, so a regular-file source can never atomically replace it via Files.move with
-    // ATOMIC_MOVE, on any of this project's CI platforms (POSIX rename()/Windows MoveFileEx both
-    // refuse to replace a directory with a file, regardless of emptiness) - forcing the actual
-    // catch-and-delete-the-tmp-file path to run after a successful fetch and a successful
-    // tmp-file write.
+    // A2 (issue #44, step-2 gate finding): row 10 above only fails the FETCH, so nothing pinned
+    // what happens when a write to the destination fails after a successful fetch. This does.
+    //
+    // What it does NOT pin: that the write goes through a temp file and an ATOMIC_MOVE. A later
+    // gate proved that by mutation - reverting atomicWrite to a bare Files.write leaves this test
+    // green, because writing to a directory path fails identically either way. That is not a gap
+    // in the test so much as a property that cannot be observed from inside the process: the
+    // atomic move exists so that a process killed mid-write leaves the old file intact rather
+    // than a truncated one, and an in-process test cannot kill itself between the write and the
+    // move. What IS pinned here, and what mutation confirms: a failed write records the file as
+    // failed, leaves the pre-existing destination untouched, and leaves no .tmp residue behind
+    // (dropping the cleanup in atomicWrite's catch block does fail this test).
     @Test
-    void atomicWriteCleansUpTempFileWhenTheMoveItselfFails() throws IOException {
+    void failedWriteRecordsFailureAndLeavesNoTempFileBehind() throws IOException {
         byte[] content = "new content\n".getBytes(StandardCharsets.UTF_8);
         Path localFile = cacheDir.resolve("clonelists").resolve("foo.json");
         Files.createDirectories(localFile); // "foo.json" pre-exists as a DIRECTORY, not a file
@@ -353,15 +356,15 @@ class RetoolDownloaderTest {
         RetoolDownloader.Result result = downloader().sync();
 
         assertTrue(Files.isDirectory(localFile),
-                "the pre-existing directory must be untouched since the move itself must fail");
+                "the pre-existing destination must be untouched when the write fails");
         assertTrue(Files.isRegularFile(localFile.resolve("dummy.txt")),
                 "directory contents must be untouched");
         try (Stream<Path> entries = Files.list(cacheDir.resolve("clonelists"))) {
             assertTrue(entries.noneMatch(p -> p.getFileName().toString().endsWith(".tmp")),
-                    "atomicWrite's catch block must delete the temp file when the move itself fails");
+                    "a failed write must not leave a temp file behind");
         }
         assertEquals(List.of("foo.json"), directoryResult(result, "clonelists").failedFiles(),
-                "a move failure must be recorded as a failed file, not a silent success");
+                "a write failure must be recorded as a failed file, not a silent success");
     }
 
     // A3 (issue #44 step 2 gate finding): HttpFetcher previously read a response body fully via
