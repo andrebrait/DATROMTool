@@ -1,13 +1,11 @@
 #!/bin/sh
 # mcp-token-savior.sh — shared Claude/Codex stdio launcher for the token-savior MCP
 # server (wired via .mcp.json and .codex/config.toml).
-# Installs TS_SOURCE into a per-user cached venv, then execs it. The default TS_SOURCE is the
-# andrebrait/token-savior fork's `integration` branch pinned by commit — it carries fixes and
-# language support not yet merged upstream (Mibayy/token-savior PRs #47 #53 #54 #57 #58 #59
-# #60 #62 #64 #66 #68); repoint to PyPI's token-savior-recall[mcp,memory-vector] once those merge. A TS_SOURCE change (e.g. a
-# new pinned commit) is detected via the .pfb-ts-source stamp and triggers a clean venv rebuild;
+# Installs TS_SOURCE into a per-user cached venv, then execs it. The default TS_SOURCE pins
+# upstream token-savior-recall 4.20.0 with the MCP and vector-memory extras. A TS_SOURCE change
+# is detected via the .pfb-ts-source stamp and triggers a clean venv rebuild;
 # a mkdir lock serializes concurrent sessions racing that rebuild (the venv is one shared
-# per-user cache). Requires python3 >= 3.11 and git (pip installs from a git URL).
+# per-user cache). Requires python3 >= 3.11.
 # Env (all optional):
 #   WORKSPACE_ROOTS        comma-separated project roots (default: every usable worktree
 #                          of the current Git repository, otherwise current directory)
@@ -17,7 +15,7 @@
 #                          passes codex explicitly)
 #   TOKEN_SAVIOR_PROFILE   server tool profile (default: optimized)
 #   TS_VENV                venv location (default: ${XDG_CACHE_HOME:-$HOME/.cache}/token-savior/venv)
-#   TS_SOURCE              pip requirement to install (default: the pinned fork commit)
+#   TS_SOURCE              pip requirement to install (default: upstream 4.20.0)
 #   TS_LOCK_WAIT           max seconds to wait on another session's rebuild (default 300)
 #   INCLUDE_PATTERNS       colon-separated index globs; the default below REPLACES the
 #                          server's built-in list with Java-oriented globs for this repo
@@ -44,7 +42,7 @@ if [ "$venv_bad" = 1 ]; then
 fi
 bin="$venv/bin/token-savior"
 stamp="$venv/.pfb-ts-source"
-TS_SOURCE="${TS_SOURCE:-token-savior-recall[mcp,memory-vector] @ git+https://github.com/andrebrait/token-savior@9110e4341951f13fb112fb5b6c54c6e6e5540b30}"
+TS_SOURCE="${TS_SOURCE:-token-savior-recall[mcp,memory-vector]==4.20.0}"
 
 # stdout is the MCP stdio channel — install chatter must stay on stderr
 if [ ! -x "$bin" ] || [ "$(cat "$stamp" 2>/dev/null || true)" != "$TS_SOURCE" ]; then
