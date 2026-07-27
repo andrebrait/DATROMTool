@@ -271,10 +271,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             }
             if (effectiveClonelistPath != null) {
                 try {
-                    cloneList = RetoolFileResolver.loadCloneList(
-                            effectiveClonelistPath,
-                            headerName,
-                            SerializationHelper.getInstance().getVersionString());
+                    cloneList = RetoolFileResolver.loadCloneList(effectiveClonelistPath, headerName);
                 } catch (IOException e) {
                     throw new CommandLine.ParameterException(
                             commandSpec.commandLine(),

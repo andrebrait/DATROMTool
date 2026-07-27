@@ -4,6 +4,7 @@ import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.cli.argument.DatafileArgument;
 import io.github.datromtool.cli.converter.DatafileConverter;
 import io.github.datromtool.config.Profile;
+import io.github.datromtool.retool.RetoolFileResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import picocli.CommandLine;
@@ -29,18 +30,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@link OneGameOneRomCommandProfileDatsExecutionTest}; row 8 (oracle - unaffected runs stay
  * green) is every other test in this suite, unedited.
  *
- * <p><b>Fixture note on the {@code minimumVersion} gate</b> (see {@code
- * io.github.datromtool.retool.RetoolFileResolver}'s Javadoc for the full explanation): this
- * repository's own real, upstream-pinned clone list fixture ({@code
- * real-atari-2600-no-intro.json}, a verbatim copy of {@code core}'s {@code
- * atari-2600-no-intro.json}) declares {@code minimumVersion: "2.4.8"}, which is incompatible
- * with DATROMTool's actual running pre-1.0 version - so it is used here for the
- * <em>rejection</em> test, not the successful-grouping one. The successful-grouping test instead
- * uses a small, hand-authored clone list ({@code Atari - Atari 2600 (No-Intro).json}) containing
- * the same real "Air Raiders"/"Bogey Blaster"/"Top Gun" group upstream declares, with a
- * deliberately low {@code minimumVersion} ({@code "0.0.1"}) so it is compatible with any
- * DATROMTool version. This is a deviation from reusing the full real fixture end to end, made
- * necessary by the version-scheme mismatch documented in {@code RetoolFileResolver}.
+ * <p><b>Fixture note on the {@code minimumVersion} gate</b> (correction round; see {@code
+ * io.github.datromtool.retool.RetoolFileResolver}'s Javadoc for the full design rationale): the
+ * gate compares against {@code RetoolFileResolver.SUPPORTED_CLONELIST_SPEC_VERSION}
+ * ({@code "2.4.8"}), not DATROMTool's own running version. {@code
+ * "Atari - Atari 2600 (No-Intro).json"} here is now a verbatim copy of {@code core}'s real,
+ * upstream-pinned {@code atari-2600-no-intro.json} fixture (itself {@code minimumVersion:
+ * "2.4.8"}) - compatible, since it is in fact the fixture the constant is pinned from - used for
+ * both the successful-grouping tests and the directory auto-match tests. The rejection test uses
+ * a separate small synthetic fixture ({@code huge-minimum-version.json}, {@code minimumVersion:
+ * "99.0.0"}) demanding a spec version this build does not support.
  */
 class OneGameOneRomCommandRetoolTest {
 
@@ -134,20 +133,20 @@ class OneGameOneRomCommandRetoolTest {
     // --- Row 3: minimumVersion compatibility gate ---
 
     @Test
-    void incompatibleClonelistFailsNamingFileAndBothVersions() {
+    void incompatibleClonelistFailsNamingFileAndSpecVersions() {
         OneGameOneRomCommand command = new OneGameOneRomCommand();
         CommandLine commandLine = newCommandLine(command);
-        Path realClonelist = fixture("retool/clonelists/real-atari-2600-no-intro.json");
+        Path hugeMinimumClonelist = fixture("retool/clonelists/huge-minimum-version.json");
         commandLine.parseArgs(
-                "--clonelist", realClonelist.toString(),
+                "--clonelist", hugeMinimumClonelist.toString(),
                 fixture("datafiles/atari-air-raiders.dat").toString());
 
         CommandLine.ParameterException ex = assertThrows(CommandLine.ParameterException.class, command::call);
-        assertTrue(ex.getMessage().contains(realClonelist.toString()), "error must name the file, got: " + ex.getMessage());
-        assertTrue(ex.getMessage().contains("2.4.8"), "error must name the clone list's minimumVersion, got: " + ex.getMessage());
+        assertTrue(ex.getMessage().contains(hugeMinimumClonelist.toString()), "error must name the file, got: " + ex.getMessage());
+        assertTrue(ex.getMessage().contains("99.0.0"), "error must name the clone list's minimumVersion, got: " + ex.getMessage());
         assertTrue(
-                ex.getMessage().contains(SerializationHelper.getInstance().getVersionString()),
-                "error must name the running DATROMTool version, got: " + ex.getMessage());
+                ex.getMessage().contains(RetoolFileResolver.SUPPORTED_CLONELIST_SPEC_VERSION),
+                "error must name the supported spec version, got: " + ex.getMessage());
     }
 
     @Test
