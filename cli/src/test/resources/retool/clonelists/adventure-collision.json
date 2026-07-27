@@ -1,0 +1,15 @@
+{
+	"description": {
+		"name": "Adventure Collision Test",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "1.0.0"
+	},
+	"variants": [
+		{
+			"group": "Adventure",
+			"titles": [
+				{"searchTerm": "Mystery Quest (USA)", "nameType": "full"}
+			]
+		}
+	]
+}

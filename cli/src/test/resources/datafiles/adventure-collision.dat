@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Adventure Collision Test</name>
+		<description>Adventure Collision Test</description>
+		<version>1.0</version>
+		<author>Test Author</author>
+	</header>
+	<game name="Adventure">
+		<description>Adventure</description>
+		<rom name="Adventure.bin" size="1" crc="00000020"/>
+	</game>
+	<game name="Mystery Quest (USA)">
+		<description>Mystery Quest (USA)</description>
+		<rom name="Mystery Quest (USA).bin" size="1" crc="00000021"/>
+	</game>
+</datafile>

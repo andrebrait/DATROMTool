@@ -13,6 +13,7 @@ import io.github.datromtool.domain.retool.VariantGroup;
 import io.github.datromtool.domain.retool.VariantTitle;
 
 import javax.annotation.Nonnull;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -156,13 +157,53 @@ public final class CloneListMatcher {
             if (group.ignore()) {
                 continue;
             }
-            for (VariantTitle title : group.titles()) {
-                if (matchesTitle(title, fullName)) {
-                    return Optional.of(applyFilters(group, title, game, fullName));
-                }
+            Optional<VariantTitle> best = bestMatch(group, fullName);
+            if (best.isPresent()) {
+                return Optional.of(applyFilters(group, best.get(), game, fullName));
             }
         }
         return Optional.empty();
+    }
+
+    /**
+     * Picks the most specific matching title within {@code group} (review round: short-name
+     * collapse picking the wrong title/priority). {@link NameType#SHORT} folds distinct full
+     * names to the same key (e.g. this repo's own bundled Atari 2600 fixture's "Forest" group -
+     * "Forest (Two Player)", "Forest (Two Player) (Muted)", "Forest (One Player)", and
+     * "Forest (One Player) (Muted)" all fold to {@code "forest"}), so more than one title in a
+     * group can legitimately match the same game; taking the first one in file order (the
+     * pre-fix behavior) silently picks the wrong title/priority whenever the actually-intended
+     * title is not first.
+     *
+     * <p>Specificity, most to least specific: an exact, case-sensitive literal match of
+     * {@code fullName} against a title's {@code searchTerm} - this is what a {@link
+     * NameType#FULL} match always is, but any other nameType can also coincidentally match
+     * literally (e.g. "Forest (One Player)" against the searchTerm of the very title with that
+     * name) - beats {@link NameType#REGION_FREE}, which beats {@link NameType#REGEX}, which
+     * beats {@link NameType#SHORT} (fold-based, hence the least specific: it is what collapses
+     * distinct names together in the first place). Ties within the same tier prefer the longer
+     * {@code searchTerm} (a longer literal/pattern is narrower, hence more specific), then file
+     * order, for a fully deterministic result.
+     */
+    private Optional<VariantTitle> bestMatch(VariantGroup group, String fullName) {
+        Comparator<VariantTitle> bySpecificity = Comparator
+                .comparingInt((VariantTitle t) -> specificityRank(t, fullName))
+                .thenComparing(t -> t.searchTerm().length(), Comparator.reverseOrder());
+        return group.titles().stream()
+                .filter(t -> matchesTitle(t, fullName))
+                .min(bySpecificity);
+    }
+
+    private static int specificityRank(VariantTitle title, String fullName) {
+        if (fullName.equals(title.searchTerm())) {
+            return 0;
+        }
+        return switch (title.nameType()) {
+            case FULL -> 0; // unreachable in practice: a FULL match is always a literal match
+            case REGION_FREE -> 1;
+            case REGEX -> 2;
+            case SHORT -> 3;
+        };
     }
 
     private boolean matchesTitle(VariantTitle title, String fullName) {

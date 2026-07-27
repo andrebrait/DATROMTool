@@ -9,7 +9,12 @@ import io.github.datromtool.data.RegionData;
 import io.github.datromtool.domain.datafile.logiqx.Datafile;
 import io.github.datromtool.domain.detector.Detector;
 import io.github.datromtool.domain.retool.CloneList;
+import io.github.datromtool.domain.retool.NameType;
 import io.github.datromtool.domain.retool.RetoolMetadata;
+import io.github.datromtool.domain.retool.VariantCompilation;
+import io.github.datromtool.domain.retool.VariantFilter;
+import io.github.datromtool.domain.retool.VariantGroup;
+import io.github.datromtool.domain.retool.VariantTitle;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +40,9 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
+import static java.lang.String.format;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -258,17 +265,85 @@ public final class SerializationHelper {
      * (see the {@code retool-clonelists-metadata} repository's {@code clonelists/} directory),
      * so this dispatches straight to {@link #loadJson}, unlike {@link Profile}, which supports
      * either JSON or YAML because our own profile files may be hand-authored in either format.
+     *
+     * <p>Review round: Jackson 3's {@link JacksonException} is <em>unchecked</em>, so a malformed
+     * file (truncated JSON, a missing required field, ...) previously escaped this method as a
+     * raw Jackson exception - a 36-line stack trace with no file name attached, surfaced to the
+     * user as "!!! Errors during execution detected !!!" with nothing actionable. Wrapped here
+     * exactly like {@link #toProfile} already wraps profile-loading failures, so the file path
+     * is always part of the message. This is also where {@code regex}-nameType {@code
+     * searchTerm}s and filter {@code matchString} patterns are validated (compiled once, then
+     * discarded - {@link io.github.datromtool.retool.CloneListMatcher} recompiles them per match,
+     * unchanged by this step): an invalid pattern previously surfaced as a {@link
+     * java.util.regex.PatternSyntaxException} mid-pipeline, during matching, far from the file
+     * that caused it and framed as an unrelated execution error; validating at load time instead
+     * fails immediately with a message naming both the file and the offending pattern.
      */
     public CloneList loadCloneList(Path path) throws IOException {
-        return loadJson(path, CloneList.class);
+        CloneList cloneList;
+        try {
+            cloneList = loadJson(path, CloneList.class);
+        } catch (JacksonException e) {
+            throw new IOException(format("Failed to load clone list from '%s': %s", path, e.getMessage()), e);
+        }
+        validateCloneListPatterns(cloneList, path);
+        return cloneList;
+    }
+
+    private static void validateCloneListPatterns(CloneList cloneList, Path path) throws IOException {
+        for (VariantGroup group : cloneList.variants()) {
+            validateTitlePatterns(group.titles(), path);
+            validateTitlePatterns(group.supersets(), path);
+            for (VariantCompilation compilation : group.compilations()) {
+                validateSearchTermPattern(compilation.nameType(), compilation.searchTerm(), path);
+            }
+        }
+    }
+
+    private static void validateTitlePatterns(List<VariantTitle> titles, Path path) throws IOException {
+        for (VariantTitle title : titles) {
+            validateSearchTermPattern(title.nameType(), title.searchTerm(), path);
+            for (VariantFilter filter : title.filters()) {
+                VariantFilter.Conditions conditions = filter.conditions();
+                String matchString = conditions == null ? null : conditions.matchString();
+                if (matchString != null) {
+                    compilePattern(
+                            matchString,
+                            path,
+                            format("filter matchString for title '%s'", title.searchTerm()));
+                }
+            }
+        }
+    }
+
+    private static void validateSearchTermPattern(NameType nameType, String searchTerm, Path path) throws IOException {
+        if (nameType == NameType.REGEX) {
+            compilePattern(searchTerm, path, format("searchTerm '%s'", searchTerm));
+        }
+    }
+
+    private static void compilePattern(String pattern, Path path, String what) throws IOException {
+        try {
+            Pattern.compile(pattern);
+        } catch (PatternSyntaxException e) {
+            throw new IOException(
+                    format("Invalid regex in clone list '%s': %s: %s", path, what, e.getMessage()),
+                    e);
+        }
     }
 
     /**
      * Loads a Retool metadata file (issue #19 step 1) - see {@link #loadCloneList} for why this
-     * dispatches to {@link #loadJson} rather than {@link #loadJsonOrYaml}.
+     * dispatches to {@link #loadJson} rather than {@link #loadJsonOrYaml}, and (review round) why
+     * a {@link JacksonException} is wrapped here too. Metadata files carry no regex-shaped
+     * fields, so no pattern validation is needed here, unlike {@link #loadCloneList}.
      */
     public RetoolMetadata loadRetoolMetadata(Path path) throws IOException {
-        return loadJson(path, RetoolMetadata.class);
+        try {
+            return loadJson(path, RetoolMetadata.class);
+        } catch (JacksonException e) {
+            throw new IOException(format("Failed to load Retool metadata from '%s': %s", path, e.getMessage()), e);
+        }
     }
 
     public RegionData loadRegionData(Path path) throws IOException {

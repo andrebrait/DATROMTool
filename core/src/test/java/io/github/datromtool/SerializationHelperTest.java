@@ -19,6 +19,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.FilterInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
@@ -245,6 +246,65 @@ class SerializationHelperTest extends TestDirDependantTest {
         assertNotNull(regionData);
         assertNotNull(regionData.regions());
         assertFalse(regionData.regions().isEmpty());
+    }
+
+    // --- Review round: loadCloneList/loadRetoolMetadata must not let Jackson 3's unchecked
+    // JacksonException escape raw (36-line stack trace, no file name) - wrap it like toProfile
+    // already does. Also: validate regex-nameType searchTerms and matchString patterns at LOAD
+    // time, so an invalid pattern fails with a clear file+term message instead of surfacing as a
+    // mid-pipeline PatternSyntaxException much later, during matching. ---
+
+    private static Path resource(String name) throws Exception {
+        return Paths.get(ClassLoader.getSystemResource(name).toURI());
+    }
+
+    @Test
+    void loadCloneListWrapsTruncatedJsonNamingTheFile() throws Exception {
+        Path file = resource("retool/clonelists/truncated.json");
+        IOException ex = assertThrows(IOException.class, () -> emptyHelper.loadCloneList(file));
+        assertTrue(ex.getMessage().contains(file.toString()), "error must name the file, got: " + ex.getMessage());
+    }
+
+    @Test
+    void loadCloneListWrapsMissingRequiredFieldNamingTheFile() throws Exception {
+        Path file = resource("retool/clonelists/missing-description.json");
+        IOException ex = assertThrows(IOException.class, () -> emptyHelper.loadCloneList(file));
+        assertTrue(ex.getMessage().contains(file.toString()), "error must name the file, got: " + ex.getMessage());
+    }
+
+    @Test
+    void loadCloneListRejectsInvalidRegexSearchTermAtLoadTime() throws Exception {
+        Path file = resource("retool/clonelists/invalid-regex-searchterm.json");
+        IOException ex = assertThrows(IOException.class, () -> emptyHelper.loadCloneList(file));
+        assertTrue(ex.getMessage().contains(file.toString()), "error must name the file, got: " + ex.getMessage());
+        assertTrue(
+                ex.getMessage().contains("Unclosed Character Class"),
+                "error must name the offending search term, got: " + ex.getMessage());
+    }
+
+    @Test
+    void loadCloneListRejectsInvalidRegexMatchStringAtLoadTime() throws Exception {
+        Path file = resource("retool/clonelists/invalid-regex-matchstring.json");
+        IOException ex = assertThrows(IOException.class, () -> emptyHelper.loadCloneList(file));
+        assertTrue(ex.getMessage().contains(file.toString()), "error must name the file, got: " + ex.getMessage());
+        assertTrue(
+                ex.getMessage().contains("Unclosed Character Class"),
+                "error must name the offending matchString, got: " + ex.getMessage());
+    }
+
+    // Oracle: a real, valid clone list still loads cleanly through this same wrapping method.
+    @Test
+    void loadCloneListStillLoadsValidFixture() throws Exception {
+        Path file = resource("retool/clonelists/atari-2600-no-intro.json");
+        assertNotNull(emptyHelper.loadCloneList(file));
+    }
+
+    @Test
+    void loadRetoolMetadataWrapsTruncatedJsonNamingTheFile(@org.junit.jupiter.api.io.TempDir Path dir) throws Exception {
+        Path file = dir.resolve("truncated-metadata.json");
+        Files.writeString(file, "{\"Some Game (USA)\": {\"languages\": [\"en\"");
+        IOException ex = assertThrows(IOException.class, () -> emptyHelper.loadRetoolMetadata(file));
+        assertTrue(ex.getMessage().contains(file.toString()), "error must name the file, got: " + ex.getMessage());
     }
 
     static Stream<Arguments> validLogiqxDats() throws Exception {

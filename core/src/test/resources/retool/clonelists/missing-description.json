@@ -1,0 +1,10 @@
+{
+	"variants": [
+		{
+			"group": "G",
+			"titles": [
+				{"searchTerm": "T"}
+			]
+		}
+	]
+}

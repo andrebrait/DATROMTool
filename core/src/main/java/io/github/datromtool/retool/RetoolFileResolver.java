@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static java.lang.String.format;
 import static lombok.AccessLevel.PRIVATE;
@@ -53,7 +54,21 @@ public final class RetoolFileResolver {
      * an existing file or directory - so ambiguity (multiple candidate files) cannot arise: the
      * match is a single, deterministic exact-name lookup, not a search.
      *
-     * @throws IOException naming both {@code input} and {@code headerName} if {@code input} is a
+     * <p><b>Security (review round):</b> {@code headerName} comes from the DAT's own
+     * {@code <header><name>} - content a hostile DAT author fully controls, not a trusted local
+     * value. Treated here as a bare file name only: rejected outright (before any filesystem
+     * access) if it is an absolute path, contains a path separator ({@code /} or {@code \}), or
+     * is exactly {@code ".."} or {@code "."} - closing both the relative traversal case (a
+     * header of {@code "../evil"} escaping {@code input} one directory up) and the absolute-path
+     * case ({@link Path#resolve(String)} discards {@code input} entirely when its argument is
+     * itself absolute - documented behavior, not a bug in {@code resolve}). The normalized
+     * candidate is then asserted to still be contained in {@code input} as a second, independent
+     * check - defense in depth against any traversal shape the name-shape check above did not
+     * anticipate.
+     *
+     * @throws IOException naming the offending {@code headerName} if it is not a valid bare file
+     *                      name, or its resolved candidate would fall outside {@code input}; or
+     *                      naming both {@code input} and {@code headerName} if {@code input} is a
      *                      directory with no matching file inside
      */
     @Nonnull
@@ -61,7 +76,15 @@ public final class RetoolFileResolver {
         if (!Files.isDirectory(input)) {
             return input;
         }
-        Path candidate = input.resolve(headerName + ".json");
+        rejectUnsafeHeaderName(headerName);
+        Path normalizedInput = input.normalize();
+        Path candidate = normalizedInput.resolve(headerName + ".json").normalize();
+        if (!candidate.startsWith(normalizedInput)) {
+            throw new IOException(format(
+                    "DAT header name '%s' resolves outside directory '%s' - refusing to use it",
+                    headerName,
+                    input));
+        }
         if (!Files.isRegularFile(candidate)) {
             throw new IOException(format(
                     "No file matching DAT header name '%s' found in directory '%s' (expected '%s')",
@@ -70,6 +93,21 @@ public final class RetoolFileResolver {
                     candidate.getFileName()));
         }
         return candidate;
+    }
+
+    private static void rejectUnsafeHeaderName(String headerName) throws IOException {
+        boolean unsafe = headerName.isEmpty()
+                || headerName.contains("/")
+                || headerName.contains("\\")
+                || headerName.equals("..")
+                || headerName.equals(".")
+                || Paths.get(headerName).isAbsolute();
+        if (unsafe) {
+            throw new IOException(format(
+                    "DAT header name '%s' is not a valid bare file name (must not be absolute, "
+                            + "empty, or contain a path separator or '..'/'.')",
+                    headerName));
+        }
     }
 
     /**

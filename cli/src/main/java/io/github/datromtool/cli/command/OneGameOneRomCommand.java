@@ -256,6 +256,22 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                     commandSpec.commandLine(),
                     format("Could not load DAT file from profile input.dats: %s", e.getMessage()));
         }
+        // Review round: --clonelist/--retool-metadata (flag or profile-equivalent) resolve
+        // against a single DAT header name (see the block below) - with more than one DAT
+        // supplied, that resolution is ambiguous (silently wrong for every DAT but the first, or
+        // a hard failure, depending on header/file-name luck). Per-DAT resolution is not
+        // implemented, so reject up front rather than silently misapplying one clone
+        // list/metadata file across every supplied DAT.
+        if ((effectiveClonelistPath != null || effectiveMetadataPath != null) && realDataFiles.size() > 1) {
+            throw new CommandLine.ParameterException(
+                    commandSpec.commandLine(),
+                    format(
+                            "%s/%s cannot be used with more than one DAT file (got %d): per-DAT "
+                                    + "clone list/metadata resolution is not yet supported",
+                            InputOptions.CLONELIST_OPTION,
+                            InputOptions.RETOOL_METADATA_OPTION,
+                            realDataFiles.size()));
+        }
         CloneList cloneList = null;
         RetoolMetadata retoolMetadata = null;
         if (effectiveClonelistPath != null || effectiveMetadataPath != null) {

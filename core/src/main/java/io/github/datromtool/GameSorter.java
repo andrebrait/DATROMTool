@@ -42,6 +42,21 @@ public final class GameSorter {
     }
 
     /**
+     * Namespace prefix for clone-list-derived group keys (review round - SECURITY/correctness:
+     * clone list group keys sharing a namespace with raw DAT parent names). A clone list author
+     * controls {@code group} freely (e.g. literally naming a group {@code "Adventure"}); without
+     * this prefix, that string can collide with an entirely unrelated, untagged DAT game whose
+     * own {@link ParsedGame#getParentName()} happens to be the identical literal string, silently
+     * merging two unrelated games into one 1G1R candidate list (one of them then vanishes from
+     * output, since only the top-sorted candidate per key survives). Prefixing every clone-list
+     * key with this marker guarantees it can never equal a raw DAT parent name, since no DAT
+     * parent/clone name can itself begin with this literal prefix followed by a colon in the way
+     * this grouping key does (parent names are the DAT's own {@code <game name="...">}
+     * value, never synthesized here).
+     */
+    private static final String CLONELIST_GROUP_KEY_PREFIX = "clonelist:";
+
+    /**
      * Grouping key for 1G1R candidate sets (issue #19 step 2): a Retool clone list match
      * ({@link ParsedGame#getClonelistGroup()}) takes precedence over the DAT-declared
      * parent/clone relationship ({@link ParsedGame#getParentName()}) when present, so a clone
@@ -50,10 +65,17 @@ public final class GameSorter {
      * Absent a clone list match - including every run without clone list data at all, since
      * {@link ParsedGame#getClonelistGroup()} is then always {@code null} - this is byte-identical
      * to grouping by {@link ParsedGame#getParentName()} alone.
+     *
+     * <p>A present clone list group is namespaced with {@link #CLONELIST_GROUP_KEY_PREFIX} (review
+     * round) so it can never collide with a raw DAT parent name - see that constant's Javadoc.
+     * {@link io.github.datromtool.command.OneGameOneRom#generate} also unions a matched group
+     * across its whole DAT parent/clone family before this method ever runs, so a clone list
+     * match on only part of a family does not split it - see that class's Javadoc for the union
+     * rule.
      */
     private static String groupKey(ParsedGame parsedGame) {
         String clonelistGroup = parsedGame.getClonelistGroup();
-        return clonelistGroup != null ? clonelistGroup : parsedGame.getParentName();
+        return clonelistGroup != null ? CLONELIST_GROUP_KEY_PREFIX + clonelistGroup : parsedGame.getParentName();
     }
 
     private static void logBeforeSorting(Map.Entry<String, ? extends Collection<ParsedGame>> e) {

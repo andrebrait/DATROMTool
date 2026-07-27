@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Foo Bar Family Test</name>
+		<description>Foo Bar Family Test</description>
+		<version>1.0</version>
+		<author>Test Author</author>
+	</header>
+	<game name="Foo (USA)">
+		<description>Foo (USA)</description>
+		<rom name="Foo (USA).bin" size="1" crc="00000010"/>
+	</game>
+	<game name="Bar (Europe)" cloneof="Foo (USA)">
+		<description>Bar (Europe)</description>
+		<rom name="Bar (Europe).bin" size="1" crc="00000011"/>
+	</game>
+</datafile>

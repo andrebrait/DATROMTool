@@ -84,6 +84,31 @@ class CloneListMatcherTest {
         assertEquals(1, germany.get().priority());
     }
 
+    // Review round (short-name collapse picks the wrong title/priority): the real Atari 2600
+    // fixture's "Forest" group has 4 titles, all defaulting to SHORT nameType, whose search
+    // terms ("Forest (Two Player)", "Forest (Two Player) (Muted)", "Forest (One Player)",
+    // "Forest (One Player) (Muted)") all fold to the identical short name "forest" (SHORT
+    // strips every parenthetical group - see CloneListMatcher's class Javadoc). A game named
+    // exactly "Forest (One Player)" therefore short-name-matches all 4 titles; picking the
+    // first in file order (the old behavior) wrongly returns "Forest (Two Player)"'s priority
+    // (1) instead of its own exact title's priority (3). The literal, case-sensitive equality
+    // between the game's full name and a title's searchTerm is the most specific match
+    // possible, and must win over every other title that only matches via short-name folding.
+    @Test
+    void mostSpecificMatchWinsOverFirstShortNameFold() {
+        CloneListMatcher m = matcher(atari, SortingPreference.builder().build());
+
+        Optional<CloneListMatcher.MatchResult> result = m.match(gameNamed("Forest (One Player)"));
+
+        assertTrue(result.isPresent());
+        assertEquals("Forest", result.get().group());
+        assertEquals(
+                3,
+                result.get().priority(),
+                "the exact-match title ('Forest (One Player)', priority 3) must win over the "
+                        + "first short-name fold ('Forest (Two Player)', priority 1)");
+    }
+
     @Test
     void unmatchedGameNameReturnsEmpty() {
         CloneListMatcher m = matcher(atari, SortingPreference.builder().build());
