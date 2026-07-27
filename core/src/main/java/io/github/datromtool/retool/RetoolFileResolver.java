@@ -93,6 +93,14 @@ public final class RetoolFileResolver {
                     input,
                     candidate.getFileName()));
         }
+        // startsWith above is lexical: a name inside the directory can still be a symlink out of
+        // it, so containment has to hold once links are resolved too.
+        if (!candidate.toRealPath().startsWith(normalizedInput.toRealPath())) {
+            throw new IOException(format(
+                    "DAT header name '%s' resolves outside directory '%s' through a link - refusing to use it",
+                    headerName,
+                    input));
+        }
         return candidate;
     }
 
