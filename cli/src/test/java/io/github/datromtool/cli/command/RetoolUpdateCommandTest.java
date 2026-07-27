@@ -169,6 +169,54 @@ class RetoolUpdateCommandTest {
         assertTrue(Files.isDirectory(notYetCreated), "--dir must be created if it did not already exist");
     }
 
+    // --- CodeRabbit review round (PR #45), finding 7: a non-HTTPS --base-url must surface as a
+    // clean picocli ParameterException (exit code 2, like the sibling --dir/cache-dir-creation
+    // failure just above), not an IllegalArgumentException raw stack trace escaping from
+    // RetoolDownloader's constructor. ---
+
+    @Test
+    void nonHttpsBaseUrlSurfacesAsParameterExceptionExitCode2(@TempDir Path tempDir) {
+        ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
+        PrintStream originalErr = System.err;
+        System.setErr(new PrintStream(capturedErr));
+        int exitCode;
+        try {
+            exitCode = new CommandLine(new RetoolUpdateCommand())
+                    .execute("--base-url", "http://insecure.example/data", "--dir", tempDir.toString());
+        } finally {
+            System.setErr(originalErr);
+        }
+        assertEquals(2, exitCode, "a non-HTTPS --base-url must exit 2, stderr was:\n" + capturedErr);
+        assertTrue(capturedErr.toString().contains("HTTPS"),
+                "error must name HTTPS as the requirement, got:\n" + capturedErr);
+    }
+
+    // --- CodeRabbit review round, finding 8: internal-config.json's cloneListMetadataUrl can
+    // retarget the sync to a different host; printing only the originally-configured base (as
+    // this command did before this fix) means the user never sees which host was actually used. ---
+
+    @Test
+    void retargetedBaseUrlIsSurfacedOnStderr(@TempDir Path tempDir) throws IOException {
+        URI overrideBase = URI.create("https://override.example/other");
+        FakeFetcher fetcher = new FakeFetcher();
+        fetcher.stub(uri("config/internal-config.json"), hashJson(Map.of("cloneListMetadataUrl", overrideBase.toString())));
+        fetcher.stub(URI.create(overrideBase + "/clonelists/hash.json"), hashJson(Map.of()));
+        fetcher.stub(URI.create(overrideBase + "/metadata/hash.json"), hashJson(Map.of()));
+
+        RetoolUpdateCommand command = newCommand(tempDir, fetcher);
+        ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
+        PrintStream originalErr = System.err;
+        System.setErr(new PrintStream(capturedErr));
+        try {
+            captureStdout(command::call);
+        } finally {
+            System.setErr(originalErr);
+        }
+
+        assertTrue(capturedErr.toString().contains(overrideBase.toString()),
+                "stderr must surface the actually-used (retargeted) base URL, got:\n" + capturedErr);
+    }
+
     /**
      * Same in-memory {@link RetoolDownloader.Fetcher} test double shape as {@code
      * RetoolDownloaderTest}'s own {@code FakeFetcher} (core module) - duplicated here rather than

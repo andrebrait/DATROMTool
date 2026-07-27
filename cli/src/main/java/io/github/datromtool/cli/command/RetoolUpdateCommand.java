@@ -74,6 +74,16 @@ public final class RetoolUpdateCommand implements Callable<Integer> {
 
     @Override
     public Integer call() {
+        // Review round, finding 7: RetoolDownloader's constructor rejects a non-HTTPS baseUrl
+        // with an IllegalArgumentException - fine for a programming error, but a raw stack trace
+        // is the wrong surface for a user-supplied --base-url. Validated here, before
+        // buildDownloader() ever constructs one, so this is a clean picocli ParameterException
+        // (exit code 2) like the sibling --dir/cache-dir-creation failure just below.
+        if (!"https".equalsIgnoreCase(baseUrl.getScheme())) {
+            throw new CommandLine.ParameterException(
+                    commandSpec.commandLine(),
+                    format("--base-url must use HTTPS, got: '%s'", baseUrl));
+        }
         try {
             Files.createDirectories(dir);
         } catch (IOException e) {
@@ -83,6 +93,14 @@ public final class RetoolUpdateCommand implements Callable<Integer> {
         }
         System.err.printf("Syncing Retool clone lists/metadata from '%s' into '%s'...%n", baseUrl, dir);
         RetoolDownloader.Result result = buildDownloader().sync();
+        // Review round, finding 8: internal-config.json can retarget the sync to a different
+        // host (RetoolDownloader#resolveEffectiveBase) - the line above only ever named the
+        // *configured* base, so a retarget was invisible to the user even though a different
+        // host entirely was actually used. Surfaced here, after the sync, since the effective
+        // base is only known once RetoolDownloader has resolved it.
+        if (!result.effectiveBaseUrl().equals(baseUrl)) {
+            System.err.printf("Retargeted to '%s' per upstream internal-config.json%n", result.effectiveBaseUrl());
+        }
         System.err.println("Retool sync finished.");
         printReport(result);
         return result.hasFailures() ? 1 : 0;

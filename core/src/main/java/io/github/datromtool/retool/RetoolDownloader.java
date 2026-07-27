@@ -16,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
@@ -145,7 +146,7 @@ public final class RetoolDownloader {
                 results.add(syncDirectory(executorService, effectiveBase, directory));
             }
         }
-        return new Result(results.build());
+        return new Result(results.build(), effectiveBase);
     }
 
     /**
@@ -247,19 +248,40 @@ public final class RetoolDownloader {
      * path is caught and converted to {@link FileOutcome#failed} - this method is invoked as an
      * {@link ExecutorService} task and must never let an exception escape, or one bad file would
      * poison {@link ExecutorService#invokeAll} for the whole directory.
+     *
+     * <p><b>Review round (issue #44 PR #45), finding 1:</b> a successful fetch is no longer
+     * trusted blindly - its LF-normalized bytes must hash to {@code expectedHash} (the same
+     * comparison {@link #needsDownload} uses) before {@link #atomicWrite} ever runs. A mismatch
+     * (truncated/corrupted transfer, or a manifest/file pair that disagree) is a failure, not a
+     * silent write of bad data that a later run might not even notice re-downloading, since the
+     * corrupted bytes would already be on disk influencing behavior until then.
      */
     private FileOutcome syncFile(URI base, String directory, Path dirPath, String fileName, String expectedHash) {
         if (isUnsafeFileName(fileName)) {
             log.warn("Refusing to sync unsafe file name '{}' from directory '{}' manifest", fileName, directory);
             return FileOutcome.failed(fileName);
         }
-        Path localFile = dirPath.resolve(fileName);
+        Path localFile;
+        try {
+            localFile = resolveWithinCache(dirPath, fileName);
+        } catch (IOException e) {
+            log.warn("Refusing to sync file name '{}' from directory '{}' manifest: {}", fileName, directory, e.getMessage());
+            return FileOutcome.failed(fileName);
+        }
         try {
             if (!needsDownload(localFile, expectedHash)) {
                 return FileOutcome.skipped(fileName);
             }
             URI fileUri = join(base, directory, percentEncodeSegment(fileName));
             byte[] content = fetchWithRetry(fileUri);
+            byte[] normalized = normalizeLineEndings(content);
+            String actualHash = sha256Hex(normalized);
+            if (!actualHash.equalsIgnoreCase(expectedHash)) {
+                log.warn(
+                        "Refusing to write '{}/{}': downloaded content hash '{}' does not match manifest hash '{}'",
+                        directory, fileName, actualHash, expectedHash);
+                return FileOutcome.failed(fileName);
+            }
             atomicWrite(localFile, content);
             return FileOutcome.downloaded(fileName);
         } catch (Exception e) {
@@ -272,12 +294,49 @@ public final class RetoolDownloader {
     // input - but a compromised/misconfigured source publishing "../../evil" as a key must not
     // be able to write outside the cache directory, so the same bare-name shape check
     // RetoolFileResolver applies to DAT header names applies here too.
+    //
+    // Review round, finding 3: ':' is also rejected - "C:payload" isn't caught by any of the
+    // other shape checks (no '/', no '\\', not ".."/"."), but on Windows Path#resolve treats a
+    // leading "X:" as drive-relative, resolving against that drive's current directory and
+    // escaping the cache directory entirely.
     private static boolean isUnsafeFileName(String fileName) {
         return fileName.isEmpty()
                 || fileName.contains("/")
                 || fileName.contains("\\")
+                || fileName.contains(":")
                 || fileName.equals("..")
                 || fileName.equals(".");
+    }
+
+    /**
+     * Resolves {@code fileName} within {@code dirPath}, given the platform cannot even express
+     * every string as a path (e.g. a NUL byte - review round, finding 2) and {@link
+     * Path#resolve(String)} throws an <em>unchecked</em> {@link InvalidPathException} for those,
+     * which - unlike every other failure in {@link #syncFile} - was escaping this method
+     * entirely, because the resolve previously ran before any try block. Per {@link
+     * #syncDirectory}'s {@link ExecutionException} handling, an escaping unchecked exception here
+     * would poison the whole directory sync, not just the one bad manifest entry.
+     *
+     * <p>Also asserts containment (defense in depth, mirroring {@link
+     * RetoolFileResolver#resolveFile}'s own containment assert for the same class of
+     * hostile-manifest-entry threat): {@link #isUnsafeFileName} already rejects every traversal
+     * shape this class knows of, but a resolved candidate that somehow still escapes {@code
+     * dirPath} must never be written to, regardless of which check let it through.
+     */
+    private static Path resolveWithinCache(Path dirPath, String fileName) throws IOException {
+        Path normalizedDir = dirPath.normalize();
+        Path candidate;
+        try {
+            candidate = normalizedDir.resolve(fileName).normalize();
+        } catch (InvalidPathException e) {
+            throw new IOException(format("'%s' is not a valid path on this platform", fileName), e);
+        }
+        if (!candidate.startsWith(normalizedDir)) {
+            throw new IOException(format(
+                    "File name '%s' resolves outside cache directory '%s' - refusing to use it",
+                    fileName, dirPath));
+        }
+        return candidate;
     }
 
     /**
@@ -455,8 +514,15 @@ public final class RetoolDownloader {
         }
     }
 
-    /** The overall sync outcome - one {@link DirectoryResult} per {@link #SYNCED_DIRECTORIES} entry. */
-    public record Result(ImmutableList<DirectoryResult> directories) {
+    /**
+     * The overall sync outcome - one {@link DirectoryResult} per {@link #SYNCED_DIRECTORIES}
+     * entry, plus {@code effectiveBaseUrl}: the base actually used after {@link
+     * #resolveEffectiveBase()} - which may differ from the configured {@link #baseUrl} if
+     * upstream's {@code internal-config.json} retargeted it (issue #44 review round, finding 8:
+     * callers need this to surface a retarget to the user, since printing the configured base
+     * alone can silently name the wrong host).
+     */
+    public record Result(ImmutableList<DirectoryResult> directories, URI effectiveBaseUrl) {
 
         public boolean hasFailures() {
             return directories.stream()

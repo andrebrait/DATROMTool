@@ -145,6 +145,73 @@ class OneGameOneRomCommandRetoolCacheFallbackTest {
         assertTrue(output.contains("Foo (USA)"), "output must contain the DAT's own parent entry, got:\n" + output);
     }
 
+    // --- CodeRabbit review round (PR #45), finding 4: only clone-list cache fallback had
+    // end-to-end coverage; a regression in the metadata half of the same fallback block stayed
+    // green. Same shape as OneGameOneRomCommandRetoolTest's
+    // retoolMetadataEnrichesLanguagelessDatSoIncludeLanguagesMatches, but via the cache fallback
+    // (retoolCacheDir) instead of an explicit --retool-metadata flag. ---
+
+    @Test
+    void metadataCacheFallbackAppliesWhenNoMetadataFlagGiven(@TempDir Path tempDir) throws IOException {
+        Path cacheDir = tempDir.resolve("retool");
+        Path cachedMetadata = cacheDir.resolve("metadata");
+        Files.createDirectories(cachedMetadata);
+        Files.copy(
+                fixture("retool/metadata/Test Metadata DAT.json"),
+                cachedMetadata.resolve("Test Metadata DAT.json"));
+
+        OneGameOneRomCommand command = new OneGameOneRomCommand();
+        command.retoolCacheDir = cacheDir;
+        CommandLine commandLine = newCommandLine(command);
+        commandLine.parseArgs(
+                "--include-languages", "en",
+                fixture("datafiles/languageless.dat").toString());
+
+        String output = runAndCaptureStdout(command);
+
+        assertTrue(
+                output.contains("Mystery Game (Japan)"),
+                "cache-fallback metadata must enrich the languageless DAT so --include-languages en "
+                        + "matches, got:\n" + output);
+    }
+
+    // --- CodeRabbit review round, finding 6: the fallback's only signal was log.info, which
+    // cli/src/main/resources/logback.xml routes to the FILE appender only - never the console -
+    // so a user running with a stale/absent-flag cache silently got different 1G1R grouping with
+    // no on-screen indication at all. A notice must reach stderr (matching RetoolUpdateCommand's
+    // own stderr progress convention), and stdout must stay clean/machine-parseable. ---
+
+    @Test
+    void cacheFallbackNoticeAppearsOnStderrNotStdout(@TempDir Path tempDir) throws IOException {
+        Path cacheDir = tempDir.resolve("retool");
+        Path cachedClonelists = cacheDir.resolve("clonelists");
+        Files.createDirectories(cachedClonelists);
+        Files.copy(
+                fixture("retool/clonelists/Atari - Atari 2600 (No-Intro).json"),
+                cachedClonelists.resolve("Atari - Atari 2600 (No-Intro).json"));
+
+        OneGameOneRomCommand command = new OneGameOneRomCommand();
+        command.retoolCacheDir = cacheDir;
+        CommandLine commandLine = newCommandLine(command);
+        commandLine.parseArgs(fixture("datafiles/atari-air-raiders.dat").toString());
+
+        ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
+        PrintStream originalErr = System.err;
+        System.setErr(new PrintStream(capturedErr));
+        String stdout;
+        try {
+            stdout = runAndCaptureStdout(command);
+        } finally {
+            System.setErr(originalErr);
+        }
+
+        String stderr = capturedErr.toString();
+        assertTrue(stderr.contains(cachedClonelists.toString()),
+                "cache fallback must be visible on stderr (console), naming the directory used, got:\n" + stderr);
+        assertFalse(stdout.contains(cachedClonelists.toString()),
+                "stdout must stay clean/machine-parseable - the fallback notice must not leak into it, got:\n" + stdout);
+    }
+
     // --- Row 7: multi-DAT interaction - fallback does not apply, no error, run proceeds ---
 
     @Test

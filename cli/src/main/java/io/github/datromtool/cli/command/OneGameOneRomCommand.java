@@ -289,10 +289,20 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             if (Files.isDirectory(cachedClonelists)) {
                 log.info("No {} given; falling back to the cached clone lists at '{}'",
                         InputOptions.CLONELIST_OPTION, cachedClonelists);
+                // Review round, finding 6: logback.xml routes the root logger to the FILE
+                // appender only (no console appender) - the log.info above never reaches the
+                // terminal, so a user with a stale/absent-flag cache got silently different 1G1R
+                // grouping with no on-screen indication at all. Printed to stderr (not stdout,
+                // matching RetoolUpdateCommand's own stderr progress convention) so stdout stays
+                // clean/machine-parseable.
+                System.err.printf("No %s given; using cached clone lists at '%s'%n",
+                        InputOptions.CLONELIST_OPTION, cachedClonelists);
                 effectiveClonelistPath = cachedClonelists;
             }
             if (Files.isDirectory(cachedMetadata)) {
                 log.info("No {} given; falling back to the cached metadata at '{}'",
+                        InputOptions.RETOOL_METADATA_OPTION, cachedMetadata);
+                System.err.printf("No %s given; using cached metadata at '%s'%n",
                         InputOptions.RETOOL_METADATA_OPTION, cachedMetadata);
                 effectiveMetadataPath = cachedMetadata;
             }
