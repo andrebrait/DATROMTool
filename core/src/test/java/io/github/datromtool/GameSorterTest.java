@@ -21,6 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * DAT-declared parent/clone relationship ({@link ParsedGame#getParentName()}) otherwise - so a
  * run without clone list data (every {@link ParsedGame#getClonelistGroup()} is {@code null})
  * groups exactly as it did before issue #19.
+ *
+ * <p>Review round: a clone-list-derived key is namespaced with a {@code "clonelist:"} prefix
+ * (see {@code GameSorter}'s private {@code CLONELIST_GROUP_KEY_PREFIX}), so every {@code
+ * clonelistGroup}-driven expected key below is {@code "clonelist:<group name>"}, not the bare
+ * group name - proving this test still pins the exact same grouping *behavior* (same games
+ * unified, same games kept apart), just against the corrected, collision-proof key shape.
  */
 class GameSorterTest {
 
@@ -79,8 +85,8 @@ class GameSorterTest {
                 .sortAndGroupByParent(ImmutableList.of(airRaiders, bogeyBlaster, topGun));
 
         assertEquals(1, grouped.size());
-        assertTrue(grouped.containsKey("Air Raiders"));
-        List<ParsedGame> group = grouped.get("Air Raiders");
+        assertTrue(grouped.containsKey("clonelist:Air Raiders"));
+        List<ParsedGame> group = grouped.get("clonelist:Air Raiders");
         assertEquals(3, group.size());
         assertTrue(group.containsAll(List.of(airRaiders, bogeyBlaster, topGun)));
     }
@@ -100,8 +106,8 @@ class GameSorterTest {
                 defaultSorter().sortAndGroupByParent(ImmutableList.of(parent, clone));
 
         assertEquals(1, grouped.size());
-        assertTrue(grouped.containsKey("Renamed Group"));
-        assertEquals(2, grouped.get("Renamed Group").size());
+        assertTrue(grouped.containsKey("clonelist:Renamed Group"));
+        assertEquals(2, grouped.get("clonelist:Renamed Group").size());
     }
 
     // Games the clone list didn't match (clonelistGroup null) keep grouping by their own DAT
@@ -121,7 +127,7 @@ class GameSorterTest {
                 ImmutableList.of(matchedParent, matchedClone, unmatchedParent, unmatchedClone));
 
         assertEquals(2, grouped.size());
-        assertEquals(2, grouped.get("Air Raiders").size());
+        assertEquals(2, grouped.get("clonelist:Air Raiders").size());
         assertEquals(2, grouped.get("Unrelated Game (USA)").size());
     }
 }

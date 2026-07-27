@@ -60,6 +60,19 @@ class OneGameOneRomCommandRetoolTest {
         return commandLine;
     }
 
+    // Windows CI fix (review round): hand-writing YAML with an interpolated absolute path inside
+    // a double-quoted scalar breaks on Windows, where the path's own backslashes are themselves
+    // YAML escape sequences ("while scanning a double-quoted scalar"). Serializing a real
+    // {@link Profile} through SerializationHelper's YAML mapper instead always emits forward
+    // slashes regardless of platform (see PathJacksonModule), which is both portable and, unlike
+    // a hand-built string, guaranteed to stay in sync with the profile's actual schema.
+    private static void writeProfileWithClonelists(Path profileFile, Path clonelists) throws IOException {
+        Profile profile = Profile.builder()
+                .input(Profile.InputSection.builder().clonelists(clonelists).build())
+                .build();
+        Files.write(profileFile, SerializationHelper.getInstance().writeAsYaml(profile));
+    }
+
     private static String runAndCaptureStdout(OneGameOneRomCommand command, CommandLine commandLine) {
         ByteArrayOutputStream captured = new ByteArrayOutputStream();
         PrintStream original = System.out;
@@ -202,9 +215,7 @@ class OneGameOneRomCommandRetoolTest {
     @Test
     void profileClonelistsPathBehavesSameAsFlag(@TempDir Path tempDir) throws IOException {
         Path profile = tempDir.resolve("profile.yaml");
-        Files.writeString(
-                profile,
-                "input:\n  clonelists: \"" + fixture("retool/clonelists/Atari - Atari 2600 (No-Intro).json") + "\"\n");
+        writeProfileWithClonelists(profile, fixture("retool/clonelists/Atari - Atari 2600 (No-Intro).json"));
 
         OneGameOneRomCommand command = new OneGameOneRomCommand();
         CommandLine commandLine = newCommandLine(command);
@@ -228,7 +239,7 @@ class OneGameOneRomCommandRetoolTest {
         // the explicit flag points at the real compatible fixture. The run must succeed, proving
         // the flag - not the profile's (bogus) value - is what got used.
         Path profile = tempDir.resolve("profile.yaml");
-        Files.writeString(profile, "input:\n  clonelists: \"" + tempDir + "\"\n");
+        writeProfileWithClonelists(profile, tempDir);
 
         OneGameOneRomCommand command = new OneGameOneRomCommand();
         CommandLine commandLine = newCommandLine(command);
@@ -245,6 +256,66 @@ class OneGameOneRomCommandRetoolTest {
             }
         }
         assertEquals(1, matches, "explicit --clonelist must win over the profile's input.clonelists, got:\n" + output);
+    }
+
+    // --- Review round: --clonelist/--retool-metadata resolve from the FIRST DAT's header only
+    // (multi-DAT runs are silently wrong or hard-fail depending on DAT order) - reject up front
+    // instead, naming the limitation, until per-DAT resolution is supported. ---
+
+    @Test
+    void clonelistWithMultipleDatsFailsClearly() {
+        OneGameOneRomCommand command = new OneGameOneRomCommand();
+        CommandLine commandLine = newCommandLine(command);
+        commandLine.parseArgs(
+                "--clonelist", fixture("retool/clonelists/Atari - Atari 2600 (No-Intro).json").toString(),
+                fixture("datafiles/minimal.dat").toString(),
+                fixture("datafiles/clean.dat").toString());
+
+        CommandLine.ParameterException ex = assertThrows(CommandLine.ParameterException.class, command::call);
+        assertTrue(
+                ex.getMessage().contains("--clonelist"),
+                "error must name --clonelist, got: " + ex.getMessage());
+        assertTrue(
+                ex.getMessage().toLowerCase().contains("per-dat")
+                        || ex.getMessage().toLowerCase().contains("not yet supported"),
+                "error must state per-DAT resolution is not yet supported, got: " + ex.getMessage());
+    }
+
+    @Test
+    void retoolMetadataWithMultipleDatsFailsClearly() {
+        OneGameOneRomCommand command = new OneGameOneRomCommand();
+        CommandLine commandLine = newCommandLine(command);
+        commandLine.parseArgs(
+                "--retool-metadata", fixture("retool/metadata/Test Metadata DAT.json").toString(),
+                fixture("datafiles/minimal.dat").toString(),
+                fixture("datafiles/clean.dat").toString());
+
+        CommandLine.ParameterException ex = assertThrows(CommandLine.ParameterException.class, command::call);
+        assertTrue(
+                ex.getMessage().contains("--retool-metadata"),
+                "error must name --retool-metadata, got: " + ex.getMessage());
+        assertTrue(
+                ex.getMessage().toLowerCase().contains("per-dat")
+                        || ex.getMessage().toLowerCase().contains("not yet supported"),
+                "error must state per-DAT resolution is not yet supported, got: " + ex.getMessage());
+    }
+
+    // Discriminating control: multiple DATs with neither option set must proceed normally -
+    // proves the rejection above is scoped to clonelist/metadata, not a blanket multi-DAT
+    // regression.
+    @Test
+    void multipleDatsWithoutClonelistOrMetadataStillProceed() {
+        // languageless.dat has an internal cloneof relationship, so the combined DAT set is not
+        // all-parent - unrelated to this fix, but required for the run to clear the pre-existing
+        // "DAT files lack Parent/Clone information" validation and actually reach output.
+        OneGameOneRomCommand command = new OneGameOneRomCommand();
+        CommandLine commandLine = newCommandLine(command);
+        commandLine.parseArgs(
+                fixture("datafiles/minimal.dat").toString(),
+                fixture("datafiles/languageless.dat").toString());
+
+        String output = runAndCaptureStdout(command, commandLine);
+        assertFalse(output.isBlank(), "multiple DATs without --clonelist/--retool-metadata must still proceed");
     }
 
     // --- Row 7: --dump-profile round-trip with the new input fields populated ---

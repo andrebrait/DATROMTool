@@ -1,0 +1,23 @@
+{
+	"description": {
+		"name": "Invalid Regex MatchString Test",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "1.0.0"
+	},
+	"variants": [
+		{
+			"group": "G",
+			"titles": [
+				{
+					"searchTerm": "T",
+					"filters": [
+						{
+							"conditions": {"matchString": "[Unclosed Character Class"},
+							"results": {"priority": 5}
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -67,6 +67,69 @@ class RetoolFileResolverTest {
                 "error must name the header name searched, got: " + ex.getMessage());
     }
 
+    // --- resolveFile: path traversal (SECURITY, review round) - headerName comes from the
+    // DAT's <header><name>, external content a hostile DAT author fully controls. Executed
+    // before this fix: a header of "../evil" resolved a file one directory above the intended
+    // clone list/metadata directory; an absolute-path header discarded the directory entirely
+    // (java.nio.file.Path#resolve's documented behavior for an absolute argument); a
+    // separator-containing header could reach a subdirectory the directory auto-match contract
+    // never intended to search. All three must now be rejected with a message naming the
+    // offending header, before any filesystem access against the resolved candidate.
+
+    @Test
+    void resolveFileRejectsParentTraversalHeaderName(@TempDir Path root) throws IOException {
+        Path input = Files.createDirectory(root.resolve("input"));
+        // The traversal target: a file one directory above `input`, reachable via "../evil".
+        Files.writeString(root.resolve("evil.json"), "{}");
+
+        IOException ex = assertThrows(
+                IOException.class,
+                () -> RetoolFileResolver.resolveFile(input, "../evil"));
+        assertTrue(
+                ex.getMessage().contains("../evil"),
+                "error must name the offending header, got: " + ex.getMessage());
+    }
+
+    @Test
+    void resolveFileRejectsAbsolutePathHeaderName(@TempDir Path root) throws IOException {
+        Path input = Files.createDirectory(root.resolve("input"));
+        Path outside = Files.createDirectory(root.resolve("outside"));
+        Files.writeString(outside.resolve("secret.json"), "{}");
+        String absoluteHeaderName = outside.resolve("secret").toString();
+
+        IOException ex = assertThrows(
+                IOException.class,
+                () -> RetoolFileResolver.resolveFile(input, absoluteHeaderName));
+        assertTrue(
+                ex.getMessage().contains(absoluteHeaderName),
+                "error must name the offending header, got: " + ex.getMessage());
+    }
+
+    @Test
+    void resolveFileRejectsSeparatorContainingHeaderName(@TempDir Path dir) throws IOException {
+        Path sub = Files.createDirectory(dir.resolve("sub"));
+        Files.writeString(sub.resolve("evil.json"), "{}");
+
+        IOException ex = assertThrows(
+                IOException.class,
+                () -> RetoolFileResolver.resolveFile(dir, "sub/evil"));
+        assertTrue(
+                ex.getMessage().contains("sub/evil"),
+                "error must name the offending header, got: " + ex.getMessage());
+    }
+
+    // Discriminating control: a header name with no separators/traversal still resolves
+    // normally - proves the rejection above is about the offending shape, not a blanket
+    // regression on directory auto-match.
+    @Test
+    void resolveFileStillAutoMatchesOrdinaryHeaderNameAfterTraversalFix(@TempDir Path dir) throws IOException {
+        Path expected = dir.resolve("Atari - Atari 2600 (No-Intro).json");
+        Files.writeString(expected, "{}");
+
+        Path resolved = RetoolFileResolver.resolveFile(dir, "Atari - Atari 2600 (No-Intro)");
+        assertEquals(expected, resolved);
+    }
+
     // --- loadCloneList: minimumVersion compatibility gate, against SUPPORTED_CLONELIST_SPEC_VERSION ---
 
     // Frozen red-first proof (correction round): the real upstream fixture (minimumVersion

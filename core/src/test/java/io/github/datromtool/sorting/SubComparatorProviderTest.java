@@ -206,14 +206,28 @@ class SubComparatorProviderTest {
     // Issue #19 step 2: the 2-arg overload with clonelistPrioritiesPresent=false must delegate to
     // exactly the same chain as the 1-arg overload above (byte-identical, same 15-comparator
     // list).
+    //
+    // Review round (test honesty): the previous version of this test only compared list sizes,
+    // which passes even if the two overloads produced the same 15 comparators in a different
+    // order (e.g. a future edit that makes the 1-arg overload stop delegating to the 2-arg one
+    // and instead duplicate its logic with a transposed pair) - a real divergence between the
+    // two overloads that a size-only check cannot catch. Strengthened to compare the full
+    // ordered comparator sequence, via each comparator's own `criteria` description (which
+    // already encodes reversed-ness too - see SubComparator.ReversedSubComparator), not just
+    // `getClass()` (which would not distinguish *what* a ReversedSubComparator wraps).
     @Test
     void testToList_clonelistPrioritiesAbsent_matchesSingleArgOverload() {
         ImmutableList<SubComparator> withFlag =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder().build(), false);
         ImmutableList<SubComparator> withoutFlag =
                 SubComparatorProvider.INSTANCE.toList(SortingPreference.builder().build());
-        assertEquals(withoutFlag.size(), withFlag.size());
         assertEquals(15, withFlag.size());
+        assertEquals(
+                withoutFlag.stream().map(SubComparator::getCriteria).toList(),
+                withFlag.stream().map(SubComparator::getCriteria).toList(),
+                "the 2-arg overload with clonelistPrioritiesPresent=false must produce the "
+                        + "identical *ordered* comparator chain as the 1-arg overload, not just "
+                        + "the same length");
     }
 
     @Test

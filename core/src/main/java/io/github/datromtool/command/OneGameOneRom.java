@@ -194,6 +194,15 @@ public final class OneGameOneRom {
      * behavior. Issue #19 step 3 moved the call site of this method ahead of {@link
      * #validate(Collection)} (previously it ran later, inside {@link #filterAndGroup}) - see that
      * method's Javadoc for why.
+     *
+     * <p>Review round: {@link CloneListMatcher} matches each game independently, purely by its
+     * own DAT name - so a clone list title that only matches one member of a DAT-declared
+     * parent/clone family (e.g. the family's parent, but not its clone) leaves the rest of that
+     * family unmatched. {@link io.github.datromtool.GameSorter#sortAndGroupByParent} then keys
+     * the matched member by its (namespaced) clone list group and the unmatched rest by their
+     * raw DAT parent name, splitting one family into two 1G1R groups - the unmatched half
+     * orphaned from the matched half. {@link #unifyClonelistGroupsAcrossDatFamilies} closes that
+     * gap by propagating a family's winning match to every member before grouping ever runs.
      */
     private ImmutableList<ParsedGame> applyCloneList(Collection<ParsedGame> parsedGames) throws IOException {
         if (cloneList == null) {
@@ -201,7 +210,7 @@ public final class OneGameOneRom {
         }
         RegionData regionData = SerializationHelper.getInstance().loadRegionData();
         CloneListMatcher matcher = new CloneListMatcher(cloneList, regionData, sortingPreference);
-        return parsedGames.stream()
+        ImmutableList<ParsedGame> matched = parsedGames.stream()
                 .map(g -> matcher.match(g)
                         .map(mr -> g.toBuilder()
                                 .clonelistGroup(mr.group())
@@ -209,6 +218,71 @@ public final class OneGameOneRom {
                                 .build())
                         .orElse(g))
                 .collect(ImmutableList.toImmutableList());
+        return unifyClonelistGroupsAcrossDatFamilies(matched);
+    }
+
+    /**
+     * A DAT parent/clone family's winning clone list match (review round), by group name and
+     * effective priority - see {@link #unifyClonelistGroupsAcrossDatFamilies}'s Javadoc for how
+     * a family's winner is picked when more than one member matched.
+     */
+    private record FamilyMatch(@Nonnull String group, int priority) {
+    }
+
+    /**
+     * Propagates a matched clone list group/priority across its whole DAT parent/clone family
+     * (review round: partial clone list matches splitting a DAT family - see
+     * {@link #applyCloneList}'s Javadoc for the mechanism). Families are computed from the DAT's
+     * own parent/clone data ({@link ParsedGame#getParentName()}), independent of any clone list
+     * match, so this runs correctly even though some family members may already carry a clone
+     * list group assignment from {@link CloneListMatcher} and others may not.
+     *
+     * <p>A DAT family whose members matched more than one distinct clone list group is possible
+     * (a clone list authored loosely, or independent titles each happening to match a different
+     * member of the same family). This picks a single winner deterministically, so the outcome
+     * never depends on input iteration order: the family's own <b>parent</b>'s match wins
+     * outright if the parent matched one; otherwise, the matched group with the lowest (most
+     * preferred - upstream's "1 is highest priority" convention) {@link
+     * ParsedGame#getClonelistPriority()} wins, ties broken lexicographically by group name. Every
+     * family member whose own group differs from the winner (including members that matched
+     * nothing at all) is rewritten to the winning group/priority pair; a member that already
+     * carries the winning group is left untouched.
+     */
+    private static ImmutableList<ParsedGame> unifyClonelistGroupsAcrossDatFamilies(
+            Collection<ParsedGame> matched) {
+        Map<String, List<ParsedGame>> families = matched.stream()
+                .collect(Collectors.groupingBy(
+                        ParsedGame::getParentName,
+                        LinkedHashMap::new,
+                        Collectors.toList()));
+        Map<String, FamilyMatch> winnerByFamily = new HashMap<>();
+        for (Map.Entry<String, List<ParsedGame>> entry : families.entrySet()) {
+            familyWinner(entry.getValue()).ifPresent(winner -> winnerByFamily.put(entry.getKey(), winner));
+        }
+        return matched.stream()
+                .map(g -> {
+                    FamilyMatch winner = winnerByFamily.get(g.getParentName());
+                    if (winner == null || winner.group().equals(g.getClonelistGroup())) {
+                        return g;
+                    }
+                    return g.toBuilder()
+                            .clonelistGroup(winner.group())
+                            .clonelistPriority(winner.priority())
+                            .build();
+                })
+                .collect(ImmutableList.toImmutableList());
+    }
+
+    private static Optional<FamilyMatch> familyWinner(List<ParsedGame> family) {
+        for (ParsedGame g : family) {
+            if (g.isParent() && g.getClonelistGroup() != null) {
+                return Optional.of(new FamilyMatch(g.getClonelistGroup(), g.getClonelistPriority()));
+            }
+        }
+        return family.stream()
+                .filter(g -> g.getClonelistGroup() != null)
+                .map(g -> new FamilyMatch(g.getClonelistGroup(), g.getClonelistPriority()))
+                .min(Comparator.comparingInt(FamilyMatch::priority).thenComparing(FamilyMatch::group));
     }
 
     private static void sendToOutput(

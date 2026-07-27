@@ -1,7 +1,10 @@
 package io.github.datromtool.cli.command;
 
+import com.google.common.collect.ImmutableList;
+import io.github.datromtool.SerializationHelper;
 import io.github.datromtool.cli.argument.DatafileArgument;
 import io.github.datromtool.cli.converter.DatafileConverter;
+import io.github.datromtool.config.Profile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import picocli.CommandLine;
@@ -50,11 +53,24 @@ class OneGameOneRomCommandProfileDatsExecutionTest {
         return commandLine;
     }
 
+    // Windows CI fix (review round): hand-writing YAML with an interpolated absolute path inside
+    // a double-quoted scalar breaks on Windows - the path's own backslashes are themselves YAML
+    // escape sequences ("while scanning a double-quoted scalar"). Serializing a real
+    // {@link Profile} through SerializationHelper's YAML mapper instead always emits forward
+    // slashes regardless of platform (see PathJacksonModule), which is both portable and,
+    // unlike a hand-built string, guaranteed to stay in sync with the profile's actual schema.
+    private static void writeProfileWithDats(Path profileFile, Path... dats) throws IOException {
+        Profile profile = Profile.builder()
+                .input(Profile.InputSection.builder().dats(ImmutableList.copyOf(dats)).build())
+                .build();
+        Files.write(profileFile, SerializationHelper.getInstance().writeAsYaml(profile));
+    }
+
     @Test
     void profileOnlyDatsRunsPastDatRequirednessCheck(@TempDir Path tempDir) throws IOException {
         Path datPath = fixture("datafiles/minimal.dat");
         Path profile = tempDir.resolve("profile.yaml");
-        Files.writeString(profile, "input:\n  dats:\n    - \"" + datPath + "\"\n");
+        writeProfileWithDats(profile, datPath);
 
         OneGameOneRomCommand command = new OneGameOneRomCommand();
         CommandLine commandLine = newCommandLine(command);
