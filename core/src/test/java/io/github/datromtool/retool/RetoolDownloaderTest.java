@@ -503,10 +503,16 @@ class RetoolDownloaderTest {
 
     // --- CodeRabbit review round, finding 5 (top-tier follow-up): the unsafe-file-name guard
     // shipped with no dedicated coverage - deleting isUnsafeFileName entirely still left the full
-    // suite green. This battery pins every shape the guard must reject, each proven to never
-    // reach the network fetch at all (not merely "some later step also happens to fail"), and
-    // proven by mutation (see this class's Javadoc note / the PR handoff for the delete-and-
-    // restore run). ---
+    // suite green. This battery pins every shape that must be rejected, each proven to never
+    // reach the network fetch at all (not merely "some later step also happens to fail").
+    //
+    // On what mutation actually proves here, precisely: deleting isUnsafeFileName flips four of
+    // these seven shapes ("a/b.json", "..\win.json", "" and "."). The other three stay green
+    // because resolveWithinCache's containment check catches them independently - which is the
+    // layering working as intended, not a hole. The converse does not hold: disabling only the
+    // containment check flips nothing, because the name guard already excludes every shape that
+    // could escape. That assert is deliberate belt-and-braces against a future name guard that
+    // misses something, and no test can currently distinguish it. ---
 
     @ParameterizedTest
     @ValueSource(strings = {"../../evil.json", "a/b.json", "/abs.json", "..\\win.json", "", ".", ".."})
