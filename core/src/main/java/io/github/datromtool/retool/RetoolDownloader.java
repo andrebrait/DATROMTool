@@ -9,6 +9,7 @@ import tools.jackson.databind.json.JsonMapper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -74,9 +75,22 @@ public final class RetoolDownloader {
     public static final String DEFAULT_BASE_URL =
             "https://raw.githubusercontent.com/unexpectedpanda/retool-clonelists-metadata/main";
 
-    private static final List<String> SYNCED_DIRECTORIES = List.of("clonelists", "metadata");
+    /** Directory names within the cache/upstream repo - also the names {@code cli}'s 1G1R
+     * command uses for its cache-fallback directories (issue #44 step 2), kept as one source of
+     * truth rather than a second hardcoded copy of these literals. */
+    public static final String CLONELISTS_DIRECTORY = "clonelists";
+    public static final String METADATA_DIRECTORY = "metadata";
 
-    private static final int DEFAULT_CONCURRENCY = 10;
+    private static final List<String> SYNCED_DIRECTORIES =
+            List.of(CLONELISTS_DIRECTORY, METADATA_DIRECTORY);
+
+    /** {@code ~/.DATROMTool/retool} - beside the existing {@code config.yaml}/
+     * {@code region-data.yaml} (issue #44 step 2's default {@code --dir} and 1G1R's cache-fallback
+     * base), reusing {@link SerializationHelper#DEFAULT_BASE_PATH} rather than a second hardcoded
+     * copy of {@code .DATROMTool}. */
+    public static final Path DEFAULT_CACHE_DIR = SerializationHelper.DEFAULT_BASE_PATH.resolve("retool");
+
+    public static final int DEFAULT_CONCURRENCY = 10;
 
     /** A few bounded attempts on transport failure, per the issue's error policy; a 404 never
      * retries (see {@link #fetchWithRetry}). Upstream retries 5 times with a fixed 5s sleep; a
@@ -479,6 +493,14 @@ public final class RetoolDownloader {
         private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(10);
         private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(30);
 
+        /** A3 (issue #44 step 2 gate finding): the largest real upstream file is ~53KB (per the
+         * issue), so 32MB is generous headroom while still bounding memory use against a
+         * misbehaving/malicious server streaming an unbounded response - {@link
+         * HttpResponse.BodyHandlers#ofByteArray} previously buffered a response fully before this
+         * class got any chance to check its size. Enforced by {@link #readBounded} while the body
+         * is still being streamed, not after the fact. */
+        private static final long MAX_RESPONSE_BYTES = 32L * 1024 * 1024;
+
         private final HttpClient client;
         private final String userAgent;
 
@@ -503,16 +525,42 @@ public final class RetoolDownloader {
                     .GET()
                     .build();
             try {
-                HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+                HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
                 int status = response.statusCode();
-                if (status < 200 || status >= 300) {
-                    throw new HttpStatusException(uri, status);
+                try (InputStream body = response.body()) {
+                    if (status < 200 || status >= 300) {
+                        throw new HttpStatusException(uri, status);
+                    }
+                    return readBounded(body, MAX_RESPONSE_BYTES, uri);
                 }
-                return response.body();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new IOException(format("Interrupted while fetching '%s'", uri), e);
             }
+        }
+
+        /**
+         * Reads {@code in} fully into a byte array, throwing {@link IOException} as soon as more
+         * than {@code maxBytes} have been read - never buffering past the cap - rather than
+         * reading an unbounded response and only checking its size afterward. Package-visible and
+         * parameterized on {@code maxBytes} (rather than hardcoding {@link #MAX_RESPONSE_BYTES}
+         * internally) so it is unit-testable with a small cap and a cheap synthetic stream,
+         * without needing an actual multi-megabyte payload or any real network/socket.
+         */
+        static byte[] readBounded(InputStream in, long maxBytes, URI uri) throws IOException {
+            java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+            byte[] chunk = new byte[8192];
+            long total = 0;
+            int read;
+            while ((read = in.read(chunk)) != -1) {
+                total += read;
+                if (total > maxBytes) {
+                    throw new IOException(format(
+                            "Response body for '%s' exceeded the %d-byte cap", uri, maxBytes));
+                }
+                buffer.write(chunk, 0, read);
+            }
+            return buffer.toByteArray();
         }
     }
 

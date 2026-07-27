@@ -5,13 +5,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -304,6 +307,95 @@ class RetoolDownloaderTest {
         assertEquals(1, dirResult.skipped());
         assertEquals(1, dirResult.failedFiles().size());
         assertEquals(dirResult.checked(), dirResult.downloaded() + dirResult.skipped() + dirResult.failedFiles().size());
+    }
+
+    // A1 (issue #44 step 2 gate finding): a non-HTTPS cloneListMetadataUrl override must be
+    // ignored - the sync keeps using the originally configured HTTPS base rather than following
+    // (or merely failing on) the insecure override. Code was already correct by inspection; this
+    // closes the coverage gap.
+    @Test
+    void nonHttpsCloneListMetadataUrlOverrideIsIgnored() throws IOException {
+        fetcher.stub(uri("config/internal-config.json"),
+                hashJson(Map.of("cloneListMetadataUrl", "http://insecure.test/other")));
+        fetcher.stub(uri("clonelists/hash.json"), hashJson(Map.of()));
+        fetcher.stub(uri("metadata/hash.json"), hashJson(Map.of()));
+
+        RetoolDownloader.Result result = downloader().sync();
+
+        assertTrue(fetcher.calls().contains(uri("clonelists/hash.json")),
+                "the original HTTPS base's hash.json must still be used when the override is rejected");
+        assertTrue(fetcher.calls().contains(uri("metadata/hash.json")),
+                "the original HTTPS base's hash.json must still be used when the override is rejected");
+        assertFalse(directoryResult(result, "clonelists").directorySkipped());
+        assertFalse(directoryResult(result, "metadata").directorySkipped());
+    }
+
+    // A2 (issue #44 step 2 gate finding): row 10 above only fails the FETCH, so atomicWrite's own
+    // write-stage failure/cleanup path (tmp file created and written successfully, then the
+    // Files.move itself fails) was never exercised - mutating that code away would not fail any
+    // existing test. Pinned here for real: the destination is pre-created as a non-empty
+    // directory, so a regular-file source can never atomically replace it via Files.move with
+    // ATOMIC_MOVE, on any of this project's CI platforms (POSIX rename()/Windows MoveFileEx both
+    // refuse to replace a directory with a file, regardless of emptiness) - forcing the actual
+    // catch-and-delete-the-tmp-file path to run after a successful fetch and a successful
+    // tmp-file write.
+    @Test
+    void atomicWriteCleansUpTempFileWhenTheMoveItselfFails() throws IOException {
+        byte[] content = "new content\n".getBytes(StandardCharsets.UTF_8);
+        Path localFile = cacheDir.resolve("clonelists").resolve("foo.json");
+        Files.createDirectories(localFile); // "foo.json" pre-exists as a DIRECTORY, not a file
+        Files.writeString(localFile.resolve("dummy.txt"), "not empty");
+
+        fetcher.stub(uri("clonelists/hash.json"), hashJson(Map.of("foo.json", sha256Hex(content))));
+        fetcher.stub(uri("metadata/hash.json"), hashJson(Map.of()));
+        fetcher.stub(uri("clonelists/foo.json"), content);
+
+        RetoolDownloader.Result result = downloader().sync();
+
+        assertTrue(Files.isDirectory(localFile),
+                "the pre-existing directory must be untouched since the move itself must fail");
+        assertTrue(Files.isRegularFile(localFile.resolve("dummy.txt")),
+                "directory contents must be untouched");
+        try (Stream<Path> entries = Files.list(cacheDir.resolve("clonelists"))) {
+            assertTrue(entries.noneMatch(p -> p.getFileName().toString().endsWith(".tmp")),
+                    "atomicWrite's catch block must delete the temp file when the move itself fails");
+        }
+        assertEquals(List.of("foo.json"), directoryResult(result, "clonelists").failedFiles(),
+                "a move failure must be recorded as a failed file, not a silent success");
+    }
+
+    // A3 (issue #44 step 2 gate finding): HttpFetcher previously read a response body fully via
+    // BodyHandlers.ofByteArray() before this class got any chance to check its size. readBounded
+    // is the extracted, pure enforcement logic (parameterized on maxBytes rather than hardcoding
+    // HttpFetcher's real 32MB cap) so it is unit-testable with a tiny cap and a cheap synthetic
+    // stream - no real network/socket, no actual multi-megabyte payload needed.
+    @Test
+    void readBoundedReturnsExactBytesWhenUnderCap() throws IOException {
+        byte[] data = "hello world".getBytes(StandardCharsets.UTF_8);
+        byte[] result = RetoolDownloader.HttpFetcher.readBounded(new ByteArrayInputStream(data), 1024, BASE);
+        assertArrayEquals(data, result);
+    }
+
+    @Test
+    void readBoundedThrowsClearExceptionWhenStreamExceedsCap() {
+        // Yields an effectively unbounded number of bytes without needing an actual
+        // multi-megabyte backing array - read(byte[], int, int) always fills the whole buffer.
+        InputStream unbounded = new InputStream() {
+            @Override
+            public int read() {
+                return 'a';
+            }
+
+            @Override
+            public int read(byte[] b, int off, int len) {
+                Arrays.fill(b, off, off + len, (byte) 'a');
+                return len;
+            }
+        };
+        IOException e = assertThrows(IOException.class,
+                () -> RetoolDownloader.HttpFetcher.readBounded(unbounded, 10, BASE));
+        assertTrue(e.getMessage().contains("10"), "error must name the cap that was exceeded, got: " + e.getMessage());
+        assertTrue(e.getMessage().contains(BASE.toString()), "error must name the URI, got: " + e.getMessage());
     }
 
     /**

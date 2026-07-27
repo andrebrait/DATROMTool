@@ -39,6 +39,7 @@ import io.github.datromtool.io.FileCopier;
 import io.github.datromtool.io.FileScanner;
 import io.github.datromtool.io.logging.FileCopierLoggingListener;
 import io.github.datromtool.io.logging.FileScannerLoggingListener;
+import io.github.datromtool.retool.RetoolDownloader;
 import io.github.datromtool.retool.RetoolFileResolver;
 import lombok.Data;
 import lombok.Getter;
@@ -55,6 +56,7 @@ import tools.jackson.core.JacksonException;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -117,6 +119,17 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
     @Getter(NONE)
     @Setter(NONE)
     OneGameOneRom oneGameOneRom;
+
+    // Package-private, test-only override (issue #44 step 2): production always resolves the
+    // Retool cache base from RetoolDownloader.DEFAULT_CACHE_DIR (~/.DATROMTool/retool); tests
+    // point this at a temp directory instead so no test ever touches the real home-directory
+    // cache. Same test-only-visibility pattern as this class's own oneGameOneRom field /
+    // ScanCommand.PROGRESS_OUTPUT.
+    @ToString.Exclude
+    @JsonIgnore
+    @Getter(NONE)
+    @Setter(NONE)
+    Path retoolCacheDir = RetoolDownloader.DEFAULT_CACHE_DIR;
 
     @CommandLine.Parameters(
             description = "DAT file to use when generating the 1G1R set",
@@ -255,6 +268,34 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
             throw new CommandLine.ParameterException(
                     commandSpec.commandLine(),
                     format("Could not load DAT file from profile input.dats: %s", e.getMessage()));
+        }
+        // Issue #44 step 2: when neither --clonelist/--retool-metadata nor their profile
+        // equivalents are given, fall back to the Retool update cache's directories IF they
+        // exist - the existing header-name auto-match (RetoolFileResolver#resolveFile) then
+        // applies exactly as it would for an explicitly-passed directory. An absent cache leaves
+        // both paths null, i.e. today's behavior exactly (the oracle case). Never triggers a
+        // network fetch itself - "retool update" is the only network path (RetoolUpdateCommand).
+        //
+        // Deliberately scoped to realDataFiles.size() == 1: with more than one DAT, per-DAT
+        // resolution is unsupported (see the guard just below) and the user never asked for
+        // --clonelist/--retool-metadata, so silently guessing which DAT's header the cache should
+        // match would be surprising. Skipping the fallback outright (rather than erroring, as the
+        // guard below does for an explicit flag) is the chosen behavior: an implicit,
+        // best-effort convenience should degrade to "not applied," not become a hard failure the
+        // user never opted into.
+        if (effectiveClonelistPath == null && effectiveMetadataPath == null && realDataFiles.size() == 1) {
+            Path cachedClonelists = retoolCacheDir.resolve(RetoolDownloader.CLONELISTS_DIRECTORY);
+            Path cachedMetadata = retoolCacheDir.resolve(RetoolDownloader.METADATA_DIRECTORY);
+            if (Files.isDirectory(cachedClonelists)) {
+                log.info("No {} given; falling back to the cached clone lists at '{}'",
+                        InputOptions.CLONELIST_OPTION, cachedClonelists);
+                effectiveClonelistPath = cachedClonelists;
+            }
+            if (Files.isDirectory(cachedMetadata)) {
+                log.info("No {} given; falling back to the cached metadata at '{}'",
+                        InputOptions.RETOOL_METADATA_OPTION, cachedMetadata);
+                effectiveMetadataPath = cachedMetadata;
+            }
         }
         // Review round: --clonelist/--retool-metadata (flag or profile-equivalent) resolve
         // against a single DAT header name (see the block below) - with more than one DAT
