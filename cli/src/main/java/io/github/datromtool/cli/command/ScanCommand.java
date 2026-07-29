@@ -143,11 +143,9 @@ public final class ScanCommand implements Callable<Integer> {
         if (!loggingListener.isErrors()) {
             return 0;
         }
-        // Scan failures are logged, and logback's CLI config deliberately has no console
-        // appender: one would interleave arbitrary lines into the reserved block the progress
-        // bar draws into (see CommandLineProgressBar#printOutOfBand). So say it once here, the
-        // way OneGameOneRomCommand does — after the bar is finished, and on stderr, since
-        // stdout carries the machine-readable report.
+        // issue #75: failures only reach datromtool.log — a console appender would interleave
+        // into the block the progress bar draws into. Hence a notice here instead: after the
+        // bar is finished, and on stderr, since stdout carries the report.
         Path logFile = Paths.get("").toAbsolutePath().normalize().resolve("datromtool.log");
         System.err.println("!!! Errors during execution detected: the report may be incomplete !!!");
         System.err.printf("Check the generated log file for details: '%s'%n", logFile);
