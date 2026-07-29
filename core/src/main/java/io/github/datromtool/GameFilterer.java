@@ -1,5 +1,6 @@
 package io.github.datromtool;
 
+import io.github.datromtool.util.UntrustedPatterns;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.github.datromtool.data.Filter;
@@ -86,8 +87,7 @@ public final class GameFilterer {
     private boolean matchesAnyInclude(ParsedGame p) {
         return filter.getIncludes().stream()
                 .map(NameMatcher::getPattern)
-                .map(e -> e.matcher(p.getGame().getName()))
-                .anyMatch(Matcher::find);
+                .anyMatch(pattern -> UntrustedPatterns.find(pattern, p.getGame().getName()));
     }
 
     private static boolean matchesCategory(ParsedGame p, GameCategory category) {
@@ -152,8 +152,7 @@ public final class GameFilterer {
     private boolean filterExcludes(ParsedGame p) {
         boolean result = filter.getExcludes().stream()
                 .map(NameMatcher::getPattern)
-                .map(e -> e.matcher(p.getGame().getName()))
-                .noneMatch(Matcher::find);
+                .noneMatch(pattern -> UntrustedPatterns.find(pattern, p.getGame().getName()));
         result |= matchesAnyInclude(p);
         if (!result) {
             log.debug("Excludes filter removed '{}'", p.getGame().getName());
@@ -176,8 +175,7 @@ public final class GameFilterer {
             if (input.stream()
                     .map(ParsedGame::getGame)
                     .map(Game::getName)
-                    .map(excludePattern::matcher)
-                    .anyMatch(Matcher::find)) {
+                    .anyMatch(name -> UntrustedPatterns.find(excludePattern, name))) {
                 if (log.isDebugEnabled()) {
                     log.debug(
                             "Post-filter exclusions removed {}",
