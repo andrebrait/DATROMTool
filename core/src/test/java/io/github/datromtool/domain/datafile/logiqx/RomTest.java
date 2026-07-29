@@ -8,10 +8,8 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HexFormat;
+import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,9 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RomTest {
 
     /** Four bytes so the last one is distinguishable from a truncated rendering. */
-    private static final byte[] NES_HEADER = {0x4E, 0x45, 0x53, 0x1A};
+    private static final ImmutableList<Byte> NES_HEADER =
+            ImmutableList.of((byte) 0x4E, (byte) 0x45, (byte) 0x53, (byte) 0x1A);
 
-    private static Rom romWithHeader(byte[] header) {
+    private static Rom romWithHeader(ImmutableList<Byte> header) {
         return new Rom(
                 "Some Game (USA).nes",
                 1024L,
@@ -43,14 +42,14 @@ class RomTest {
     }
 
     @Test
-    void givenByteEqualHeadersInDistinctArrays_whenCompared_thenRomsAreEqual() {
-        Rom one = romWithHeader(NES_HEADER.clone());
-        Rom other = romWithHeader(NES_HEADER.clone());
+    void givenByteEqualHeadersInDistinctInstances_whenCompared_thenRomsAreEqual() {
+        Rom one = romWithHeader(copyOf(NES_HEADER));
+        Rom other = romWithHeader(copyOf(NES_HEADER));
 
         assertNotEquals(
                 System.identityHashCode(one.header()),
                 System.identityHashCode(other.header()),
-                "test premise: the two headers must be distinct array instances");
+                "test premise: the two headers must be distinct instances");
         assertEquals(one, other, "ROMs with byte-equal headers must be equal");
         assertEquals(
                 one.hashCode(),
@@ -60,18 +59,19 @@ class RomTest {
 
     @Test
     void givenDifferentHeaderContent_whenCompared_thenRomsAreNotEqual() {
-        Rom one = romWithHeader(NES_HEADER.clone());
-        Rom other = romWithHeader(new byte[]{0x4E, 0x45, 0x53, 0x1B});
+        Rom one = romWithHeader(NES_HEADER);
+        Rom other = romWithHeader(
+                ImmutableList.of((byte) 0x4E, (byte) 0x45, (byte) 0x53, (byte) 0x1B));
 
         assertNotEquals(one, other, "ROMs whose header bytes differ must not be equal");
     }
 
     @Test
     void givenAHeaderedRom_whenRenderedAsText_thenTheHeaderContentIsVisible() {
-        String rendered = romWithHeader(NES_HEADER.clone()).toString();
+        String rendered = romWithHeader(NES_HEADER).toString();
 
         assertTrue(
-                rendered.contains(Arrays.toString(NES_HEADER)),
+                rendered.contains(NES_HEADER.toString()),
                 () -> "toString must render header content, got: " + rendered);
     }
 
@@ -83,19 +83,23 @@ class RomTest {
                 .games(ImmutableList.of(Game.builder()
                         .name("Some Game (USA)")
                         .description("Some Game (USA)")
-                        .roms(ImmutableList.of(romWithHeader(NES_HEADER.clone())))
+                        .roms(ImmutableList.of(romWithHeader(NES_HEADER)))
                         .build()))
                 .build();
 
         byte[] xml = helper.getXmlMapper().writeValueAsBytes(datafile);
         Datafile parsed = helper.loadXml(new ByteArrayInputStream(xml), Datafile.class);
 
-        byte[] parsedHeader = parsed.getGames().get(0).getRoms().get(0).header();
-        assertArrayEquals(
+        ImmutableList<Byte> parsedHeader = parsed.getGames().get(0).getRoms().get(0).header();
+        assertEquals(
                 NES_HEADER,
                 parsedHeader,
-                () -> "header bytes must survive the round trip, wrote: " + new String(xml)
-                        + " read back: " + HexFormat.of().formatHex(parsedHeader));
+                () -> "header bytes must survive the round trip, wrote: " + new String(xml));
         assertEquals(datafile, parsed, "a round-tripped DAT must equal the one written");
+    }
+
+    /** A distinct instance holding the same bytes. */
+    private static ImmutableList<Byte> copyOf(ImmutableList<Byte> header) {
+        return ImmutableList.copyOf(new ArrayList<>(header));
     }
 }
