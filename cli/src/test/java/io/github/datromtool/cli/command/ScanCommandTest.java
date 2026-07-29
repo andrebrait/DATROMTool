@@ -228,6 +228,59 @@ class ScanCommandTest {
         }
     }
 
+    // Row 10: an errored scan must say so on the terminal too (issue #75). Failures only ever
+    // reach datromtool.log — logback's CLI config has no console appender on purpose — so an
+    // exit code alone leaves an interactive user with no hint that the report is incomplete.
+    @Test
+    void erroredScanReportsFailuresOnStderr(@TempDir Path tempDir) throws IOException {
+        Files.write(tempDir.resolve("rom.bin"), new byte[16 * 1024]);
+        Path unlistable = Files.createDirectory(tempDir.resolve("unlistable"));
+        assumeTrue(makeUnlistable(unlistable), "this filesystem/user cannot make a directory unlistable");
+        ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
+        PrintStream originalErr = System.err;
+        System.setErr(new PrintStream(capturedErr));
+        String stdout;
+        try {
+            stdout = captureStdout(() -> assertEquals(
+                    1,
+                    run(new ScanCommand(), tempDir.toString(), "--out-mode", "json"),
+                    "a scan that could not list a subdirectory must not exit 0"));
+        } finally {
+            System.setErr(originalErr);
+            Files.setPosixFilePermissions(unlistable, Set.of(
+                    PosixFilePermission.OWNER_READ,
+                    PosixFilePermission.OWNER_WRITE,
+                    PosixFilePermission.OWNER_EXECUTE));
+        }
+        String stderr = capturedErr.toString();
+        assertTrue(stderr.contains("Errors during execution detected"),
+                "stderr must announce that the scan hit errors, got:\n" + stderr);
+        assertTrue(stderr.contains("datromtool.log"),
+                "stderr must point at the log file holding the details, got:\n" + stderr);
+        // The report itself stays machine-readable: the notice belongs on stderr only.
+        assertFalse(stdout.contains("Errors during execution detected"),
+                "the error notice must not pollute the stdout report, got:\n" + stdout);
+    }
+
+    // Row 11: a clean scan stays quiet — the notice is not an unconditional banner.
+    @Test
+    void cleanScanPrintsNoErrorNotice(@TempDir Path tempDir) throws IOException {
+        Files.write(tempDir.resolve("rom.bin"), new byte[16 * 1024]);
+        ByteArrayOutputStream capturedErr = new ByteArrayOutputStream();
+        PrintStream originalErr = System.err;
+        System.setErr(new PrintStream(capturedErr));
+        try {
+            captureStdout(() -> assertEquals(
+                    0,
+                    run(new ScanCommand(), tempDir.toString(), "--out-mode", "json"),
+                    "a clean scan must exit 0"));
+        } finally {
+            System.setErr(originalErr);
+        }
+        assertFalse(capturedErr.toString().contains("Errors during execution detected"),
+                "a clean scan must not claim errors, got:\n" + capturedErr);
+    }
+
     /**
      * Strips every permission bit and confirms the directory really became unlistable — it does
      * not on a filesystem without POSIX permissions, nor for a superuser.

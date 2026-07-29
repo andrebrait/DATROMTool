@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -139,7 +140,18 @@ public final class ScanCommand implements Callable<Integer> {
         } else {
             lines.forEach(System.out::println);
         }
-        return loggingListener.isErrors() ? 1 : 0;
+        if (!loggingListener.isErrors()) {
+            return 0;
+        }
+        // Scan failures are logged, and logback's CLI config deliberately has no console
+        // appender: one would interleave arbitrary lines into the reserved block the progress
+        // bar draws into (see CommandLineProgressBar#printOutOfBand). So say it once here, the
+        // way OneGameOneRomCommand does — after the bar is finished, and on stderr, since
+        // stdout carries the machine-readable report.
+        Path logFile = Paths.get("").toAbsolutePath().normalize().resolve("datromtool.log");
+        System.err.println("!!! Errors during execution detected: the report may be incomplete !!!");
+        System.err.printf("Check the generated log file for details: '%s'%n", logFile);
+        return 1;
     }
 
     AppConfig.FileScannerConfig resolveScannerConfig() {
