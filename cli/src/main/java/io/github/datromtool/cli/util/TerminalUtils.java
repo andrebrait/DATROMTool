@@ -6,12 +6,27 @@ import org.jline.terminal.Terminal;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.regex.Pattern;
 
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class TerminalUtils {
 
     private static final String TRIM_PREFIX = "(...)";
+
+    /** Control characters (C0 and DEL) plus the invisible format characters, e.g. bidi overrides. */
+    private static final Pattern TERMINAL_UNSAFE = Pattern.compile("[\\p{Cntrl}\\p{Cf}]");
+
+    /**
+     * Renders characters a terminal would obey rather than display — escape sequences, carriage
+     * returns, bidi overrides — as their inert {@code \\uXXXX} spelling. Filenames and archive
+     * entry names are attacker-controlled, so everything derived from them is rendered through
+     * this before it reaches the screen (CWE-150).
+     */
+    public static String sanitizeForTerminal(@Nonnull String text) {
+        return TERMINAL_UNSAFE.matcher(text)
+                .replaceAll(match -> String.format("\\\\u%04X", (int) match.group().charAt(0)));
+    }
 
     public static int availableColumns(@Nonnull String text, @Nullable Terminal terminal) {
         int width = terminal != null ? terminal.getWidth() : 80;

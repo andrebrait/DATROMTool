@@ -85,9 +85,9 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
         }
 
         public String makeItemName() {
-            return destination != null
+            return sanitizeForTerminal(destination != null
                     ? (source + " -> " + destination)
-                    : source.toString();
+                    : source.toString());
         }
     }
 
@@ -187,7 +187,7 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
 
     @Override
     public void reportListing(Path path) {
-        writer.printf("Listing files under '%s'%n", path);
+        writer.printf("Listing files under '%s'%n", sanitizeForTerminal(path.toString()));
     }
 
     @Override
@@ -265,7 +265,7 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
         LineData lineData = threadLineData[thread - 1];
         lineData.setEndInstant(System.nanoTime());
         lineData.setStatus(LineData.Status.SKIPPED);
-        printThread(thread, "SKIPPED: ", path.toString(), 0, getAverage(lineData));
+        printThread(thread, "SKIPPED: ", sanitizeForTerminal(path.toString()), 0, getAverage(lineData));
     }
 
     @Override
@@ -273,7 +273,7 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
         if (thread == FileScanner.Listener.NO_THREAD) {
             // Listing failures and interrupted result collection belong to no scanner line:
             // there is no LineData slot to update, so they get a plain line.
-            writer.printf("FAILED: %s ('%s')%n", message, path);
+            writer.printf("FAILED: %s ('%s')%n", sanitizeForTerminal(message), sanitizeForTerminal(String.valueOf(path)));
             return;
         }
         reportFailure(thread, path, null, message, cause);
