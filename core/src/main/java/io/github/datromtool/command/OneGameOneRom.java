@@ -211,12 +211,16 @@ public final class OneGameOneRom {
         RegionData regionData = SerializationHelper.getInstance().loadRegionData();
         CloneListMatcher matcher = new CloneListMatcher(cloneList, regionData, sortingPreference);
         ImmutableList<ParsedGame> matched = parsedGames.stream()
-                .map(g -> matcher.match(g)
-                        .map(mr -> g.toBuilder()
-                                .clonelistGroup(mr.group())
-                                .clonelistPriority(mr.priority())
-                                .build())
-                        .orElse(g))
+                .flatMap(g -> matcher.match(g)
+                        // An ignored group removes its titles from the run entirely, so the game
+                        // never reaches grouping, 1G1R selection, or the output.
+                        .map(mr -> mr.ignored()
+                                ? Stream.<ParsedGame>empty()
+                                : Stream.of(g.toBuilder()
+                                        .clonelistGroup(mr.group())
+                                        .clonelistPriority(mr.priority())
+                                        .build()))
+                        .orElseGet(() -> Stream.of(g)))
                 .collect(ImmutableList.toImmutableList());
         return unifyClonelistGroupsAcrossDatFamilies(matched);
     }

@@ -1,0 +1,22 @@
+{
+	"description": {
+		"name": "Ignored Group Test",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "1.0.0"
+	},
+	"variants": [
+		{
+			"group": "Mystery Quest",
+			"ignore": true,
+			"titles": [
+				{"searchTerm": "Mystery Quest (USA)", "nameType": "full"}
+			]
+		},
+		{
+			"group": "Adventure Group",
+			"titles": [
+				{"searchTerm": "Adventure", "nameType": "full"}
+			]
+		}
+	]
+}

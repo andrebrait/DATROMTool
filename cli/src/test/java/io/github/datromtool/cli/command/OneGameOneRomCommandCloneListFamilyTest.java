@@ -12,6 +12,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Review round fix: clone list group keys sharing a namespace with raw DAT parent names, and
@@ -80,6 +82,29 @@ class OneGameOneRomCommandCloneListFamilyTest {
                 matches,
                 "a clone list match on only the family's parent must still unify the whole "
                         + "DAT parent/clone family into exactly one 1G1R entry, got:\n" + output);
+    }
+
+    // (c): upstream's ignore flag "force removes the title from Retool's consideration" - an
+    // ignored title must be gone from the 1G1R output, not merely left on its DAT grouping
+    // (issue #43). "Mystery Quest (USA)" is the only member of its ignored group, so it would
+    // otherwise win outright and be listed; the unrelated "Adventure" must stay.
+    @Test
+    void ignoredGroupRemovesItsTitleFromTheOutput() {
+        OneGameOneRomCommand command = new OneGameOneRomCommand();
+        CommandLine commandLine = newCommandLine(command);
+        commandLine.parseArgs(
+                "--clonelist", fixture("retool/clonelists/mystery-quest-ignored.json").toString(),
+                fixture("datafiles/adventure-collision.dat").toString());
+
+        String output = runAndCaptureStdout(command, commandLine);
+
+        assertTrue(
+                output.contains("Adventure"),
+                "a game untouched by the clone list must still be listed, got:\n" + output);
+        assertFalse(
+                output.contains("Mystery Quest"),
+                "a title in a group flagged ignore must be removed from consideration "
+                        + "entirely, got:\n" + output);
     }
 
     // (b): a clone list group literally named the same as an unrelated, untagged DAT game must

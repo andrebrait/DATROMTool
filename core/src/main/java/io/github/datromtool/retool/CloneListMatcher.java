@@ -116,6 +116,15 @@ public final class CloneListMatcher {
 
     private static final String ALL_OTHER_REGIONS = "All other regions";
 
+    /**
+     * How much of a game's name one clone list pattern may read before it is given up on. A
+     * clone list is community data a user points {@code --clonelist} at, and {@code
+     * java.util.regex} has no match timeout, so a catastrophically backtracking pattern would
+     * otherwise monopolize the run's thread (CWE-1333). Legitimate patterns read a small multiple
+     * of the name's length; this leaves three orders of magnitude of headroom.
+     */
+    private static final int MAX_PATTERN_CHARACTER_READS = 100_000;
+
     private static final Pattern PAREN_GROUP = Pattern.compile("\\([^()]+\\)");
     private static final Pattern WHITESPACE = Pattern.compile("\\s+");
     private static final Pattern LANGUAGE_GROUP =
@@ -140,25 +149,42 @@ public final class CloneListMatcher {
      * {@code PrioritySubComparator} should compare by (both after any matching
      * {@link VariantFilter.Results} override has been applied).
      */
-    public record MatchResult(@Nonnull String group, int priority) {
+    public record MatchResult(@Nonnull String group, int priority, boolean ignored) {
+    }
+
+    /**
+     * Thrown when a clone list pattern reads more of a game's name than
+     * {@link #MAX_PATTERN_CHARACTER_READS} allows, which means it is backtracking
+     * catastrophically (CWE-1333).
+     */
+    public static final class PatternBudgetExceededException extends RuntimeException {
+
+        PatternBudgetExceededException(String message) {
+            super(message);
+        }
     }
 
     /**
      * @return the match for {@code game}, or {@link Optional#empty()} if no variant title in the
      * clone list's {@code titles} (see class Javadoc for why {@code supersets}/
      * {@code compilations} are excluded) matched its full name. Groups are searched in file
-     * order; a group with {@code ignore=true} is skipped entirely (upstream: {@code ignore}
-     * "force removes the title from Retool's consideration").
+     * order; a match inside a group with {@code ignore=true} comes back
+     * {@link MatchResult#ignored()}, which drops the game from the run entirely (upstream:
+     * {@code ignore} "force removes the title from Retool's consideration" - "ignored titles are
+     * completely removed from Retool's consideration during processing"). Keeping such a title on
+     * its DAT grouping instead would leave it in the 1G1R output, where it can still win its
+     * group.
      */
     @Nonnull
     public Optional<MatchResult> match(@Nonnull ParsedGame game) {
         String fullName = game.getGame().getName();
         for (VariantGroup group : cloneList.variants()) {
-            if (group.ignore()) {
-                continue;
-            }
             Optional<VariantTitle> best = bestMatch(group, fullName);
             if (best.isPresent()) {
+                if (group.ignore()) {
+                    return Optional.of(
+                            new MatchResult(group.group(), best.get().priority(), true));
+                }
                 return Optional.of(applyFilters(group, best.get(), game, fullName));
             }
         }
@@ -210,10 +236,74 @@ public final class CloneListMatcher {
         String searchTerm = title.searchTerm();
         return switch (title.nameType()) {
             case FULL -> fullName.equals(searchTerm);
-            case REGEX -> Pattern.compile(searchTerm).matcher(fullName).matches();
+            case REGEX -> matchesBounded(searchTerm, fullName);
             case REGION_FREE -> regionFreeName(fullName).equals(searchTerm);
             case SHORT -> shortName(fullName).equals(shortName(searchTerm));
         };
+    }
+
+    /**
+     * Matches {@code regex} against a character source that stops the engine once it has read
+     * {@link #MAX_PATTERN_CHARACTER_READS} characters — the backtracking engine reads the input
+     * once per step, so the read count bounds the work regardless of how the pattern is written.
+     *
+     * @throws PatternBudgetExceededException naming the pattern that ran out of budget
+     */
+    private static boolean matchesBounded(String regex, String fullName) {
+        try {
+            return Pattern.compile(regex)
+                    .matcher(new BudgetedCharSequence(fullName, MAX_PATTERN_CHARACTER_READS))
+                    .matches();
+        } catch (BudgetExceeded e) {
+            throw new PatternBudgetExceededException(String.format(
+                    "Clone list pattern '%s' read more than %d characters of '%s' without "
+                            + "deciding: it backtracks catastrophically and was given up on",
+                    regex,
+                    MAX_PATTERN_CHARACTER_READS,
+                    fullName));
+        }
+    }
+
+    /** Internal signal, converted to a {@link PatternBudgetExceededException} by its only caller. */
+    private static final class BudgetExceeded extends RuntimeException {
+
+        BudgetExceeded() {
+            super(null, null, false, false);
+        }
+    }
+
+    private static final class BudgetedCharSequence implements CharSequence {
+
+        private final CharSequence delegate;
+        private int readsLeft;
+
+        BudgetedCharSequence(CharSequence delegate, int readsLeft) {
+            this.delegate = delegate;
+            this.readsLeft = readsLeft;
+        }
+
+        @Override
+        public char charAt(int index) {
+            if (--readsLeft < 0) {
+                throw new BudgetExceeded();
+            }
+            return delegate.charAt(index);
+        }
+
+        @Override
+        public int length() {
+            return delegate.length();
+        }
+
+        @Override
+        public CharSequence subSequence(int start, int end) {
+            return delegate.subSequence(start, end);
+        }
+
+        @Override
+        public String toString() {
+            return delegate.toString();
+        }
     }
 
     private MatchResult applyFilters(
@@ -238,7 +328,7 @@ public final class CloneListMatcher {
                 break;
             }
         }
-        return new MatchResult(effectiveGroup, effectivePriority);
+        return new MatchResult(effectiveGroup, effectivePriority, false);
     }
 
     private boolean conditionsMatch(VariantFilter.Conditions conditions, ParsedGame game, String fullName) {
@@ -249,7 +339,7 @@ public final class CloneListMatcher {
             return false;
         }
         if (conditions.matchString() != null
-                && !Pattern.compile(conditions.matchString()).matcher(fullName).matches()) {
+                && !matchesBounded(conditions.matchString(), fullName)) {
             return false;
         }
         return conditions.regionOrder() == null || matchRegionOrder(conditions.regionOrder());
