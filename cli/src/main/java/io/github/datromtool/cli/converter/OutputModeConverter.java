@@ -7,13 +7,14 @@ import picocli.CommandLine;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Locale;
 
 public final class OutputModeConverter
         implements CommandLine.ITypeConverter<OutputMode>, Iterable<String> {
 
     private final static ImmutableList<String> aliases = Arrays.stream(OutputMode.values())
             .map(Enum::name)
-            .map(String::toLowerCase)
+            .map(s -> s.toLowerCase(Locale.ROOT))
             .collect(ImmutableList.toImmutableList());
 
     @Override
@@ -27,7 +28,7 @@ public final class OutputModeConverter
         return aliases.stream()
                 .filter(c -> c.equalsIgnoreCase(value))
                 .findFirst()
-                .map(String::toUpperCase)
+                .map(s -> s.toUpperCase(Locale.ROOT))
                 .map(OutputMode::valueOf)
                 .orElseThrow(() -> new CommandLine.TypeConversionException(
                         String.format(

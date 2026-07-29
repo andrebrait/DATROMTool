@@ -27,6 +27,7 @@ import io.github.datromtool.retool.CloneListMatcher;
 import io.github.datromtool.retool.MetadataEnricher;
 import io.github.datromtool.sorting.GameComparator;
 import io.github.datromtool.sorting.GameNameComparator;
+import java.util.Locale;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -702,7 +703,7 @@ public final class OneGameOneRom {
             @Nonnull FileOutputOptions fileOutputOptions) throws ExecutionException {
         Path baseDir = fileOutputOptions.outputDir();
         if (fileOutputOptions.alphabetic()) {
-            char firstLetter = game.getName().toLowerCase().charAt(0);
+            char firstLetter = game.getName().toLowerCase(Locale.ROOT).charAt(0);
             if (firstLetter >= 'a' && firstLetter <= 'z') {
                 baseDir = baseDir.resolve(String.valueOf(firstLetter));
             } else {

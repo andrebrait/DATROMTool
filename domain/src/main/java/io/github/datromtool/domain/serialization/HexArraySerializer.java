@@ -5,6 +5,8 @@ import tools.jackson.core.JsonGenerator;
 import tools.jackson.databind.SerializationContext;
 import tools.jackson.databind.ValueSerializer;
 
+import java.util.Locale;
+
 public final class HexArraySerializer extends ValueSerializer<byte[]> {
 
     @Override
@@ -12,7 +14,7 @@ public final class HexArraySerializer extends ValueSerializer<byte[]> {
         if (value == null) {
             gen.writeNull();
         } else {
-            gen.writeString(Hex.encodeHexString(value).toUpperCase());
+            gen.writeString(Hex.encodeHexString(value).toUpperCase(Locale.ROOT));
         }
     }
 }

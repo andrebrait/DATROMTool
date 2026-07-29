@@ -8,6 +8,7 @@ import tools.jackson.databind.ValueDeserializer;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import java.util.Locale;
 
 public final class CommaSeparatedStringListDeserializer extends ValueDeserializer<List<String>> {
 
@@ -18,7 +19,7 @@ public final class CommaSeparatedStringListDeserializer extends ValueDeserialize
         String valueAsString = p.getValueAsString();
         if (valueAsString != null) {
             return StreamSupport.stream(SPLITTER.split(valueAsString).spliterator(), false)
-                    .map(String::toLowerCase)
+                    .map(s -> s.toLowerCase(Locale.ROOT))
                     .collect(Collectors.toList());
         }
         return null;
