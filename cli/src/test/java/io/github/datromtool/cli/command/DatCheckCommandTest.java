@@ -57,6 +57,22 @@ class DatCheckCommandTest {
         }
     }
 
+    // A DAT can legally carry C1 control characters in a game name (XML 1.0 permits them), so
+    // the report must render them inertly like every other terminal-bound label (issue #38).
+    @Test
+    void controlCharactersInAGameNameAreRenderedInertly() {
+        ByteArrayOutputStream captured = new ByteArrayOutputStream();
+        run(captured, fixture("control-chars.dat").toString());
+        String stdout = captured.toString();
+
+        assertTrue(
+                stdout.contains("Evil"),
+                "test premise: the offending game must reach the report, got:\n" + stdout);
+        assertFalse(
+                stdout.contains("\u009B"),
+                "a C1 control character from a DAT must not reach the terminal, got:\n" + stdout);
+    }
+
     // Row 1(a) + row 2: a fixture DAT with a known divergence is reported (game name +
     // divergence kind), and the exit code is 1.
     @Test

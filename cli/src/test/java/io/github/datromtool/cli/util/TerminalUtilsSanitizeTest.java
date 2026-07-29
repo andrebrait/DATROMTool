@@ -28,6 +28,12 @@ class TerminalUtilsSanitizeTest {
                 argumentSet("NUL", "a\u0000b", "a\\u0000b"),
                 argumentSet("DEL", "a\u007Fb", "a\\u007Fb"),
                 argumentSet("bidi override", "a\u202Eb", "a\\u202Eb"),
+                argumentSet("C1 CSI (8-bit control)", "a\u009Bb", "a\\u009Bb"),
+                argumentSet("C1 NEL", "a\u0085b", "a\\u0085b"),
+                argumentSet(
+                        "C1 CSI colour injection",
+                        "evil\u009B31mRED\u009B0m.rom",
+                        "evil\\u009B31mRED\\u009B0m.rom"),
                 argumentSet(
                         "OSC window-title injection",
                         "evil\u001B]0;pwned\u0007.rom",
