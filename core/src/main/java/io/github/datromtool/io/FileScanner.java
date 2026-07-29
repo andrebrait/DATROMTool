@@ -324,6 +324,12 @@ public final class FileScanner {
                             file,
                             archiveType,
                             e);
+                    // The entries this archive would have contributed are missing from the
+                    // report, and the fallback below hashes the archive file itself instead —
+                    // neither is a complete scan of it.
+                    for (Listener listener : listeners) {
+                        listener.reportFailure(index, file, "Could not read the archive", e);
+                    }
                 }
             }
             if (!scanned || fileScannerParameters.getAlsoScanArchives().contains(archiveType)) {

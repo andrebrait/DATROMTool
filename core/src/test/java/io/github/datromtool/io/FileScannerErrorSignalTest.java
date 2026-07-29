@@ -14,6 +14,8 @@ import java.nio.file.Path;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -121,6 +123,21 @@ class FileScannerErrorSignalTest {
         assertTrue(
                 Thread.interrupted(),
                 "the interrupt must be handed back to the caller, not swallowed");
+    }
+
+    @Test
+    void givenAnArchiveThatCannotBeRead_whenScanning_thenTheFailureIsReported(@TempDir Path tempDir)
+            throws IOException {
+        // Named like an archive, but its content is not one: the archive reader fails, and the
+        // entries it would have contributed are missing from the report.
+        Files.write(tempDir.resolve("broken.zip"), "not really a zip file".getBytes(UTF_8));
+        FileScannerLoggingListener listener = new FileScannerLoggingListener();
+
+        scannerWith(listener).scan(ImmutableList.of(tempDir));
+
+        assertTrue(
+                listener.isErrors(),
+                "an archive that could not be read must not look like a complete scan of it");
     }
 
     /**
