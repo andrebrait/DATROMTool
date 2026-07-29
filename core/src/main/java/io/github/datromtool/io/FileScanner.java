@@ -140,6 +140,9 @@ public final class FileScanner {
 
     public interface Listener {
 
+        /** Thread index for a failure that belongs to no scanning thread. */
+        int NO_THREAD = 0;
+
         void reportListing(Path path);
 
         void reportFinishedListing(int amount);
@@ -154,6 +157,11 @@ public final class FileScanner {
 
         void reportSkip(int thread, Path path, String message);
 
+        /**
+         * @param thread the 1-based scanning thread the failure happened on, or
+         *               {@link #NO_THREAD} for a failure outside any scanning thread (listing a
+         *               directory, or collecting a worker's results).
+         */
         void reportFailure(int thread, Path path, String message, Throwable cause);
 
         void reportFinish(int thread, Path path);
@@ -163,7 +171,7 @@ public final class FileScanner {
     }
 
     @AllArgsConstructor
-    private final static class AppendingFileVisitor extends SimpleFileVisitor<Path> {
+    private final class AppendingFileVisitor extends SimpleFileVisitor<Path> {
 
         private final Consumer<FileMetadata> onVisited;
 
@@ -179,7 +187,14 @@ public final class FileScanner {
         @Override
         public FileVisitResult visitFileFailed(Path file, IOException exc) {
             log.warn("Failed to scan '{}'", file, exc);
+            reportFailure(file, "Could not list", exc);
             return FileVisitResult.SKIP_SUBTREE;
+        }
+    }
+
+    private void reportFailure(Path path, String message, Throwable cause) {
+        for (Listener listener : listeners) {
+            listener.reportFailure(Listener.NO_THREAD, path, message, cause);
         }
     }
 
@@ -203,6 +218,7 @@ public final class FileScanner {
                     Files.walkFileTree(directory, new AppendingFileVisitor(pathsBuilder::add));
                 } catch (Exception e) {
                     log.error("Could not scan '{}'", directory, e);
+                    reportFailure(directory, "Could not list the directory", e);
                 }
             }
             ImmutableList<FileMetadata> paths = pathsBuilder.build();
@@ -213,10 +229,10 @@ public final class FileScanner {
             }
             ImmutableList<Result> results = paths.stream()
                     .sorted(FILE_SIZE_DESCENDING_COMPARATOR)
-                    .map(fm -> executorService.submit(() -> scanFile(fm)))
+                    .map(fm -> new ScanTask(fm.getPath(), executorService.submit(() -> scanFile(fm))))
                     .collect(ImmutableList.toImmutableList())
                     .stream()
-                    .flatMap(FileScanner::streamResults)
+                    .flatMap(this::streamResults)
                     .collect(ImmutableList.toImmutableList());
             for (Listener listener : listeners) {
                 listener.reportAllFinished();
@@ -230,11 +246,20 @@ public final class FileScanner {
         }
     }
 
-    private static <T> Stream<T> streamResults(Future<ImmutableList<T>> future) {
+    private record ScanTask(Path path, Future<ImmutableList<Result>> future) {
+    }
+
+    private Stream<Result> streamResults(ScanTask task) {
         try {
-            return future.get().stream();
+            return task.future().get().stream();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Interrupted while collecting the results of '{}'", task.path(), e);
+            reportFailure(task.path(), "Interrupted while collecting the scan results", e);
+            return Stream.empty();
         } catch (Exception e) {
             log.error("Unexpected exception thrown", e);
+            reportFailure(task.path(), "Could not collect the scan results", e);
             return Stream.empty();
         }
     }

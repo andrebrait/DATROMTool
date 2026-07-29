@@ -12,14 +12,18 @@ import tools.jackson.dataformat.yaml.YAMLMapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Coverage matrix for issue #17's {@code scan} subcommand.
@@ -204,6 +208,43 @@ class ScanCommandTest {
         }
         assertEquals(2, exitCode, "missing DIR parameter must exit with code 2, stderr was:\n" + capturedErr);
     }
+    // Row 9: a scan that could not list part of the tree reports a truncated report through its
+    // exit code instead of passing it off as a complete one (issue #37).
+    @Test
+    void unlistableSubdirectoryMakesScanExitNonZero(@TempDir Path tempDir) throws IOException {
+        Files.write(tempDir.resolve("rom.bin"), new byte[16 * 1024]);
+        Path unlistable = Files.createDirectory(tempDir.resolve("unlistable"));
+        assumeTrue(makeUnlistable(unlistable), "this filesystem/user cannot make a directory unlistable");
+        try {
+            captureStdout(() -> assertEquals(
+                    1,
+                    run(new ScanCommand(), tempDir.toString(), "--out-mode", "json"),
+                    "a scan that could not list a subdirectory must not exit 0"));
+        } finally {
+            Files.setPosixFilePermissions(unlistable, Set.of(
+                    PosixFilePermission.OWNER_READ,
+                    PosixFilePermission.OWNER_WRITE,
+                    PosixFilePermission.OWNER_EXECUTE));
+        }
+    }
+
+    /**
+     * Strips every permission bit and confirms the directory really became unlistable — it does
+     * not on a filesystem without POSIX permissions, nor for a superuser.
+     */
+    private static boolean makeUnlistable(Path directory) {
+        try {
+            Files.setPosixFilePermissions(directory, Set.of());
+        } catch (UnsupportedOperationException | IOException e) {
+            return false;
+        }
+        try (DirectoryStream<Path> ignored = Files.newDirectoryStream(directory)) {
+            return false;
+        } catch (IOException expected) {
+            return true;
+        }
+    }
+
     @Test
     void progressOutputStaysPinnedToStderr() {
         // jline writes progress at file-descriptor level, bypassing System.setOut capture,

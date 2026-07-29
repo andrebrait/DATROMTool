@@ -270,6 +270,12 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
 
     @Override
     public void reportFailure(int thread, Path path, String message, Throwable cause) {
+        if (thread == FileScanner.Listener.NO_THREAD) {
+            // Listing failures and interrupted result collection belong to no scanner line:
+            // there is no LineData slot to update, so they get a plain line.
+            writer.printf("FAILED: %s ('%s')%n", message, path);
+            return;
+        }
         reportFailure(thread, path, null, message, cause);
     }
 
