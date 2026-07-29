@@ -272,11 +272,34 @@ public final class CommandLineProgressBar implements FileScanner.Listener, FileC
     public void reportFailure(int thread, Path path, String message, Throwable cause) {
         if (thread == FileScanner.Listener.NO_THREAD) {
             // Listing failures and interrupted result collection belong to no scanner line:
-            // there is no LineData slot to update, so they get a plain line.
-            writer.printf("FAILED: %s ('%s')%n", sanitizeForTerminal(message), sanitizeForTerminal(String.valueOf(path)));
+            // there is no LineData slot to update, so they get a line of their own.
+            printOutOfBand(format(
+                    "FAILED: %s ('%s')",
+                    sanitizeForTerminal(message),
+                    sanitizeForTerminal(String.valueOf(path))));
             return;
         }
         reportFailure(thread, path, null, message, cause);
+    }
+
+    /**
+     * Writes a line that belongs to none of the bar's rows. Every other draw path returns the
+     * cursor to where it found it; this one has no row of its own, so it re-opens the block the
+     * bar draws into afterwards. Without that, each such line shifts every later row down by one.
+     */
+    private synchronized void printOutOfBand(String text) {
+        if (threadLineData == null) {
+            // Before init(): nothing is reserved yet and plain lines are the norm here.
+            writer.printf("%s%n", text);
+            return;
+        }
+        Ansi ansi = ansi().reset().a(text).eraseLine().a(NEW_LINE);
+        for (int i = 0; i <= numThreads; i++) {
+            ansi.eraseLine();
+            ansi.a(NEW_LINE);
+        }
+        ansi.cursorUpLine(numThreads + 1);
+        writer.print(ansi);
     }
 
     @Override
