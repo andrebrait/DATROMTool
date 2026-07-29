@@ -15,17 +15,20 @@ import io.github.datromtool.domain.retool.VariantGroup;
 import io.github.datromtool.domain.retool.VariantTitle;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static io.github.datromtool.util.TestUtils.createGame;
 import static io.github.datromtool.util.TestUtils.getRegionByCode;
 import static io.github.datromtool.util.TestUtils.loadRegionData;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -291,8 +294,11 @@ class CloneListMatcherTest {
         assertEquals(1, japanLast.orElseThrow().priority());
     }
 
+    // Issue #43 item 2: a group flagged ignore does not merely go unmatched (which left its
+    // titles on their DAT grouping, still able to win the 1G1R output) - upstream removes them
+    // from consideration entirely, which the caller can only do if the match says so.
     @Test
-    void variantGroupWithIgnoreFlagIsSkipped() {
+    void variantGroupWithIgnoreFlagMarksItsTitleIgnored() {
         CloneList cloneList = new CloneList(
                 new CloneListDescription("Test", "x", "1.0"),
                 ImmutableList.of(new VariantGroup(
@@ -312,8 +318,99 @@ class CloneListMatcherTest {
                         ImmutableList.of())));
         CloneListMatcher m = matcher(cloneList, SortingPreference.builder().build());
 
-        assertFalse(m.match(gameNamed("Some Game (USA)")).isPresent());
+        CloneListMatcher.MatchResult result = m.match(gameNamed("Some Game (USA)"))
+                .orElseThrow(() -> new AssertionError(
+                        "a title inside an ignored group must still be recognised as matched"));
+        assertTrue(result.ignored(), "a match inside an ignored group must be flagged ignored");
+        assertEquals("Ignored Group", result.group());
     }
+
+    @Test
+    void variantGroupWithoutIgnoreFlagIsNotMarkedIgnored() {
+        CloneListMatcher m = matcher(
+                singleTitleCloneList(NameType.FULL, "Some Game (USA)"),
+                SortingPreference.builder().build());
+
+        assertFalse(
+                m.match(gameNamed("Some Game (USA)")).orElseThrow().ignored(),
+                "an ordinary match must not be flagged ignored");
+    }
+
+    /**
+     * A clone list is community data a user points {@code --clonelist} at, so its patterns are
+     * untrusted input (CWE-1333). A catastrophically backtracking pattern must be given up on
+     * with a message naming it, not evaluated until the run is over.
+     */
+    @Test
+    @Timeout(value = 20, unit = TimeUnit.SECONDS, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+    void catastrophicallyBacktrackingSearchTermIsGivenUpOn() {
+        CloneListMatcher m = matcher(
+                singleTitleCloneList(NameType.REGEX, EVIL_PATTERN),
+                SortingPreference.builder().build());
+
+        RuntimeException thrown = assertThrows(
+                RuntimeException.class,
+                () -> m.match(gameNamed(HOSTILE_NAME)),
+                "an unbounded clone list pattern must be given up on, not run to exhaustion");
+        assertTrue(
+                thrown.getMessage().contains(EVIL_PATTERN),
+                () -> "the failure must name the offending pattern, got: " + thrown.getMessage());
+    }
+
+    /** The same protection on the other pattern a clone list can carry: a filter's matchString. */
+    @Test
+    @Timeout(value = 20, unit = TimeUnit.SECONDS, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+    void catastrophicallyBacktrackingFilterMatchStringIsGivenUpOn() {
+        CloneList cloneList = new CloneList(
+                new CloneListDescription("Test", "x", "1.0"),
+                ImmutableList.of(new VariantGroup(
+                        "Group",
+                        ImmutableList.of(),
+                        false,
+                        ImmutableList.of(new VariantTitle(
+                                HOSTILE_NAME,
+                                NameType.FULL,
+                                1,
+                                ImmutableList.of(),
+                                false,
+                                false,
+                                ImmutableMap.of(),
+                                ImmutableList.of(new VariantFilter(
+                                        new VariantFilter.Conditions(
+                                                ImmutableList.of(),
+                                                ImmutableList.of(),
+                                                EVIL_PATTERN,
+                                                null),
+                                        new VariantFilter.Results(
+                                                null,
+                                                5,
+                                                ImmutableList.of(),
+                                                null,
+                                                null,
+                                                null,
+                                                ImmutableMap.of()))))),
+                        ImmutableList.of(),
+                        ImmutableList.of())));
+        CloneListMatcher m = matcher(cloneList, SortingPreference.builder().build());
+
+        RuntimeException thrown = assertThrows(
+                RuntimeException.class,
+                () -> m.match(gameNamed(HOSTILE_NAME)),
+                "an unbounded filter matchString must be given up on, not run to exhaustion");
+        assertTrue(
+                thrown.getMessage().contains(EVIL_PATTERN),
+                () -> "the failure must name the offending pattern, got: " + thrown.getMessage());
+    }
+
+    /**
+     * A pattern that backtracks exponentially, and a name it can never match. Not the textbook
+     * {@code (a+)+$}: current JDKs collapse nested single-character quantifiers, so that one
+     * returns instantly. Nested {@code .*} loops still explode — probed on this JDK, matching
+     * this pattern costs ~3.6 s at 29 characters and grows by ~10x per 4 more, so the 46-character
+     * name below is hours of CPU.
+     */
+    private static final String EVIL_PATTERN = "(.*a){15}";
+    private static final String HOSTILE_NAME = "a".repeat(45) + "!";
 
     private static CloneList singleTitleCloneList(NameType nameType, String searchTerm) {
         return new CloneList(
