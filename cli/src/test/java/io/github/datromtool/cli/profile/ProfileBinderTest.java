@@ -31,6 +31,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Coverage matrix for issue #15 step 3's {@link ProfileBinder} (the "Option B" field-overlay
@@ -63,6 +65,42 @@ class ProfileBinderTest {
         commandLine.registerConverter(CopyThreads.class, new CopyThreadsConverter());
         commandLine.parseArgs(args);
         return commandLine;
+    }
+
+    // A profile file reaches Filter/SortingPreference through Jackson, never through the CLI
+    // converters, so it could still smuggle in the blank entry issue #26 is about: a non-empty
+    // include set is a real restriction, and no game's region is ever "".
+    @Test
+    void blankRegionInAProfileFilterIsRejected() {
+        Holder holder = new Holder();
+        CommandLine commandLine = parsed(holder);
+        Filter profileFilter = Filter.builder()
+                .includeRegions(ImmutableSet.of(""))
+                .build();
+
+        CommandLine.ParameterException thrown = assertThrows(
+                CommandLine.ParameterException.class,
+                () -> ProfileBinder.effectiveFilter(
+                        commandLine.getParseResult(), holder.filteringOptions, profileFilter),
+                "a profile with a blank region must be rejected, not silently filter everything out");
+        assertTrue(
+                thrown.getMessage().contains("includeRegions"),
+                "the error must name the offending profile field, got: " + thrown.getMessage());
+    }
+
+    @Test
+    void blankLanguageInAProfileSortIsRejected() {
+        Holder holder = new Holder();
+        CommandLine commandLine = parsed(holder);
+        SortingPreference profileSort = SortingPreference.builder()
+                .languages(ImmutableSet.of(" "))
+                .build();
+
+        assertThrows(
+                CommandLine.ParameterException.class,
+                () -> ProfileBinder.effectiveSortingPreference(
+                        commandLine.getParseResult(), holder.sortingOptions, profileSort),
+                "a profile with a blank sort language must be rejected");
     }
 
     // Row 1: a profile-only run (no CLI flags at all) reproduces the same Filter as the
