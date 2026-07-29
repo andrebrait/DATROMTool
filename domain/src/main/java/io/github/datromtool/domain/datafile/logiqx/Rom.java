@@ -13,6 +13,9 @@ import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import javax.annotation.Nonnull;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 
 @JsonInclude(NON_DEFAULT)
@@ -70,5 +73,64 @@ public record Rom(
 
     public Rom(String name, Long size) {
         this(name, size, null, YesNo.NO, null, null, null, null, null, null, null, null);
+    }
+
+    // The generated record methods compare header by array identity, which makes two ROMs
+    // describing the same dumped file unequal. Header content is part of a ROM's value.
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        return obj instanceof Rom other
+                && Objects.equals(name, other.name)
+                && Objects.equals(size, other.size)
+                && Arrays.equals(header, other.header)
+                && mia == other.mia
+                && Objects.equals(crc, other.crc)
+                && Objects.equals(md5, other.md5)
+                && Objects.equals(sha1, other.sha1)
+                && Objects.equals(sha256, other.sha256)
+                && Objects.equals(merge, other.merge)
+                && status == other.status
+                && Objects.equals(date, other.date)
+                && Objects.equals(serial, other.serial);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                name,
+                size,
+                Arrays.hashCode(header),
+                mia,
+                crc,
+                md5,
+                sha1,
+                sha256,
+                merge,
+                status,
+                date,
+                serial);
+    }
+
+    @Override
+    public String toString() {
+        return ("Rom[name=%s, size=%s, header=%s, mia=%s, crc=%s, md5=%s, sha1=%s, sha256=%s, "
+                + "merge=%s, status=%s, date=%s, serial=%s]")
+                .formatted(
+                        name,
+                        size,
+                        Arrays.toString(header),
+                        mia,
+                        crc,
+                        md5,
+                        sha1,
+                        sha256,
+                        merge,
+                        status,
+                        date,
+                        serial);
     }
 }
