@@ -1,5 +1,6 @@
 package io.github.datromtool.data;
 
+import io.github.datromtool.util.UntrustedPatterns;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -81,7 +82,7 @@ public final class NameMatcher {
         try {
             return switch (type) {
                 case LITERAL -> Pattern.compile(Pattern.quote(value));
-                case REGEX -> Pattern.compile(value);
+                case REGEX -> UntrustedPatterns.compile(value);
             };
         } catch (PatternSyntaxException e) {
             throw new IllegalArgumentException(
