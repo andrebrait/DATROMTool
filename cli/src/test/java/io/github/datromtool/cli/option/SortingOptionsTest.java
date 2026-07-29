@@ -31,6 +31,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SortingOptionsTest {
 
+    // The sorting options case-fold through the same converters as the filtering ones, so a
+    // blank value must be rejected there too rather than becoming an empty preference entry.
+    @ParameterizedTest
+    @ValueSource(strings = {"--sort-regions", "--sort-languages"})
+    void blankRegionOrLanguageValueIsRejected(String option) {
+        assertThrows(
+                CommandLine.ParameterException.class,
+                () -> parse(option, ""),
+                option + " with an empty value must be rejected, not read as a literal empty code");
+    }
+
+
     @CommandLine.Command
     private static final class Holder {
 

@@ -9,6 +9,7 @@ import io.github.datromtool.data.NameMatcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import picocli.CommandLine;
 
 import java.net.URISyntaxException;
@@ -254,18 +255,20 @@ class FilteringOptionsTest {
                 "an invalid --exclude-regex must be reported as a picocli ParameterException");
     }
 
-    // Hostile row H2 (pinning actual behavior)
-    @Test
-    void emptyIncludeRegionsValueYieldsSingleEmptyStringEntry() {
-        Filter filter = parse("--include-regions", "");
-        // Unlike a commas-only value (H3), a bare empty value has no comma for picocli's
-        // split-respecting-quoted-strings routine to match against, so it keeps the single
-        // (empty) raw token instead of collapsing it away.
-        assertEquals(
-                Set.of(""),
-                filter.getIncludeRegions(),
-                "an empty --include-regions value must survive as a single empty-string region, got: "
-                        + filter.getIncludeRegions());
+    // Hostile row H2: a blank value is rejected at parse time. It reads as "no restriction" but
+    // used to mean "keep only games whose region is the empty string" - i.e. an empty 1G1R set,
+    // silently, which is exactly what `--include-regions "$UNSET_VAR"` produces.
+    @ParameterizedTest
+    @ValueSource(strings = {"--include-regions", "--exclude-regions", "--include-languages", "--exclude-languages"})
+    void blankRegionOrLanguageValueIsRejected(String option) {
+        assertThrows(
+                CommandLine.ParameterException.class,
+                () -> parse(option, ""),
+                option + " with an empty value must be rejected, not read as a literal empty code");
+        assertThrows(
+                CommandLine.ParameterException.class,
+                () -> parse(option, "   "),
+                option + " with a whitespace-only value must be rejected too");
     }
 
     // Hostile row H3 (pinning actual behavior)
