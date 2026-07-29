@@ -42,6 +42,10 @@ class ScanCommandTest {
     private static final String KNOWN_MD5 = "25fb98425aea8268ba4e26c00eef4a00";
     private static final String KNOWN_SHA1 = "c502ca2c1cd3e7301028fe4f29ac51101c3866e7";
 
+    // The second line of the errored-scan notice; pinned separately from the first so a
+    // regression that misroutes only the log pointer cannot slip through.
+    private static final String LOG_FILE_NOTICE = "Check the generated log file for details:";
+
     private static int run(ScanCommand command, String... args) {
         CommandLine commandLine = new CommandLine(command);
         commandLine.parseArgs(args);
@@ -255,11 +259,15 @@ class ScanCommandTest {
         String stderr = capturedErr.toString();
         assertTrue(stderr.contains("Errors during execution detected"),
                 "stderr must announce that the scan hit errors, got:\n" + stderr);
-        assertTrue(stderr.contains("datromtool.log"),
+        assertTrue(stderr.contains(LOG_FILE_NOTICE),
                 "stderr must point at the log file holding the details, got:\n" + stderr);
-        // The report itself stays machine-readable: the notice belongs on stderr only.
+        assertTrue(stderr.contains("datromtool.log"),
+                "the log-file notice must name the log file itself, got:\n" + stderr);
+        // The report itself stays machine-readable: both notice lines belong on stderr only.
         assertFalse(stdout.contains("Errors during execution detected"),
                 "the error notice must not pollute the stdout report, got:\n" + stdout);
+        assertFalse(stdout.contains(LOG_FILE_NOTICE),
+                "the log-file notice must not pollute the stdout report, got:\n" + stdout);
     }
 
     // Row 11: a clean scan stays quiet — the notice is not an unconditional banner.
@@ -277,8 +285,11 @@ class ScanCommandTest {
         } finally {
             System.setErr(originalErr);
         }
-        assertFalse(capturedErr.toString().contains("Errors during execution detected"),
-                "a clean scan must not claim errors, got:\n" + capturedErr);
+        String stderr = capturedErr.toString();
+        assertFalse(stderr.contains("Errors during execution detected"),
+                "a clean scan must not claim errors, got:\n" + stderr);
+        assertFalse(stderr.contains(LOG_FILE_NOTICE),
+                "a clean scan must not send the user to the log file, got:\n" + stderr);
     }
 
     /**
