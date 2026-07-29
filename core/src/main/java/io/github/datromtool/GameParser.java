@@ -11,6 +11,7 @@ import io.github.datromtool.domain.datafile.logiqx.Release;
 import io.github.datromtool.domain.datafile.logiqx.Rom;
 import io.github.datromtool.domain.datafile.logiqx.enumerations.Status;
 import io.github.datromtool.domain.datafile.logiqx.enumerations.YesNo;
+import java.util.Locale;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -109,7 +110,7 @@ public final class GameParser {
         Set<RegionData.RegionDataEntry> provided = new LinkedHashSet<>();
         for (Release release : game.getReleases()) {
             if (!release.region().isEmpty()) {
-                String code = release.region().trim().toUpperCase();
+                String code = release.region().trim().toUpperCase(Locale.ROOT);
                 RegionData.RegionDataEntry regionDataEntry = regionData.regions().stream()
                         .filter(e -> e.code().equals(code))
                         .findFirst()
@@ -151,7 +152,7 @@ public final class GameParser {
         Matcher matcher = Patterns.LANGUAGES.matcher(game.getName());
         while (matcher.find()) {
             for (String part : COMMA_OR_PLUS.split(matcher.group(1))) {
-                String language = part.trim().toLowerCase();
+                String language = part.trim().toLowerCase(Locale.ROOT);
                 if (!language.isEmpty()) {
                     log.debug(
                             "Detected language '{}' for '{}'",
@@ -165,7 +166,7 @@ public final class GameParser {
         for (Release release : game.getReleases()) {
             if (release.language() != null && !release.language().isEmpty()) {
                 for (String part : COMMA_OR_PLUS.split(release.language())) {
-                    String language = part.trim().toLowerCase();
+                    String language = part.trim().toLowerCase(Locale.ROOT);
                     if (!language.isEmpty()) {
                         log.debug(
                                 "DAT provided language '{}' for '{}'",
@@ -264,7 +265,7 @@ public final class GameParser {
                         if (NUMERIC_HEX.matcher(n).matches()) {
                             return Long.valueOf(n, 16);
                         }
-                        return n.toLowerCase().chars()
+                        return n.toLowerCase(Locale.ROOT).chars()
                                 .mapToObj(Long::valueOf)
                                 .reduce(0L, (i, j) -> (i * 16) + j);
                     }).collect(ImmutableList.toImmutableList());

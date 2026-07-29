@@ -4,6 +4,8 @@ import lombok.Getter;
 
 import static java.lang.String.format;
 
+import java.util.Locale;
+
 @Getter
 public enum ByteUnit {
     BYTE(1L, "B"),
@@ -39,7 +41,7 @@ public enum ByteUnit {
 
     public static ByteUnit fromString(String str) {
         String value = str != null
-                ? str.trim().toUpperCase()
+                ? str.trim().toUpperCase(Locale.ROOT)
                 : null;
         if (value == null || value.isEmpty()) {
             return BYTE;
