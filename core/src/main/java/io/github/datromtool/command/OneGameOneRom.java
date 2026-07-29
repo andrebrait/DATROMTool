@@ -703,18 +703,24 @@ public final class OneGameOneRom {
             @Nonnull FileOutputOptions fileOutputOptions) throws ExecutionException {
         Path baseDir = fileOutputOptions.outputDir();
         if (fileOutputOptions.alphabetic()) {
-            char firstLetter = game.getName().toLowerCase(Locale.ROOT).charAt(0);
-            if (firstLetter >= 'a' && firstLetter <= 'z') {
-                baseDir = baseDir.resolve(String.valueOf(firstLetter));
-            } else {
-                baseDir = baseDir.resolve("#");
-            }
+            baseDir = baseDir.resolve(alphabeticBucket(game.getName()));
         }
         if (fileOutputOptions.forceSubfolder() || game.getRoms().size() > 1) {
             baseDir = baseDir.resolve(game.getName());
         }
         createDirectory(baseDir);
         return baseDir;
+    }
+
+    /**
+     * The subfolder an alphabetically-organised output puts {@code gameName} in: its first
+     * letter, or {@code "#"} for anything that does not start with an ASCII letter. Folding with
+     * the default locale would file "Ikari Warriors" under {@code #} in Turkish, since 'I' lowers
+     * to the dotless 'i' there.
+     */
+    static String alphabeticBucket(@Nonnull String gameName) {
+        char firstLetter = gameName.toLowerCase(Locale.ROOT).charAt(0);
+        return firstLetter >= 'a' && firstLetter <= 'z' ? String.valueOf(firstLetter) : "#";
     }
 
     private static ImmutableList<Detector> loadDetectors(Collection<Datafile> datafiles) {
