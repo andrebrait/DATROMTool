@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
+<datafile>
+	<header>
+		<name>Control Character Test</name>
+		<description>Control Character Test</description>
+		<version>1.0</version>
+		<author>Test Author</author>
+	</header>
+	<game name="Evil&#155;31mRED&#155;0m (USA)">
+		<description>Evil&#155;31mRED&#155;0m (USA)</description>
+		<release name="Evil (USA)" region="EUR"/>
+		<rom name="Evil (USA).bin" size="1" crc="00000030"/>
+	</game>
+	<game name="Quiet Game (Europe)">
+		<description>Quiet Game (Europe)</description>
+		<rom name="Quiet Game (Europe).bin" size="1" crc="00000031"/>
+	</game>
+</datafile>

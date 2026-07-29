@@ -17,6 +17,8 @@ import java.util.concurrent.Callable;
 
 import static java.lang.String.format;
 
+import static io.github.datromtool.cli.util.TerminalUtils.sanitizeForTerminal;
+
 /**
  * Issue #18: surfaces {@link GameParser}'s divergence detection (previously only visible as a
  * {@code log.warn}, invisible to a normal run) as a standalone report. Detection logic stays in
@@ -84,21 +86,21 @@ public final class DatCheckCommand implements Callable<Integer> {
                     .filter(pg -> !pg.getDivergences().isEmpty())
                     .toList();
             if (divergent.isEmpty()) {
-                System.out.printf("%s: no divergences%n", datafileArgument.getPath());
+                System.out.printf("%s: no divergences%n", sanitizeForTerminal(datafileArgument.getPath().toString()));
                 continue;
             }
             anyDivergence = true;
             System.out.printf("%s: %d game(s) with divergences%n",
-                    datafileArgument.getPath(), divergent.size());
+                    sanitizeForTerminal(datafileArgument.getPath().toString()), divergent.size());
             for (ParsedGame parsedGame : divergent) {
                 Game game = parsedGame.getGame();
                 for (ParsedGame.Divergence divergence : parsedGame.getDivergences()) {
                     System.out.printf(
                             "  %s: %s divergence: detected=%s, provided=%s%n",
-                            game.getName(),
+                            sanitizeForTerminal(game.getName()),
                             divergence.field(),
-                            divergence.detected(),
-                            divergence.provided());
+                            sanitizeForTerminal(String.valueOf(divergence.detected())),
+                            sanitizeForTerminal(String.valueOf(divergence.provided())));
                 }
             }
         }

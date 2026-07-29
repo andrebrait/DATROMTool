@@ -66,6 +66,8 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 import static java.lang.String.format;
 import static lombok.AccessLevel.NONE;
 
+import static io.github.datromtool.cli.util.TerminalUtils.sanitizeForTerminal;
+
 /**
  * Issue #15 step 3 wires the {@link Profile} contract into this command via {@code --profile}
  * (repeatable, layered by {@link SerializationHelper#loadProfiles}) and {@code --dump-profile}.
@@ -385,7 +387,7 @@ public final class OneGameOneRomCommand implements Callable<Integer> {
                         effectiveInputDirs,
                         textOutputOptions,
                         scannerListeners,
-                        list -> list.forEach(System.out::println));
+                        list -> list.forEach(line -> System.out.println(sanitizeForTerminal(line))));
                 hasErrors = scannerLoggingListener.isErrors();
             }
         } catch (InvalidDatafileException e) {

@@ -14,8 +14,13 @@ public final class TerminalUtils {
 
     private static final String TRIM_PREFIX = "(...)";
 
-    /** Control characters (C0 and DEL) plus the invisible format characters, e.g. bidi overrides. */
-    private static final Pattern TERMINAL_UNSAFE = Pattern.compile("[\\p{Cntrl}\\p{Cf}]");
+    /**
+     * Control characters plus the invisible format characters (e.g. bidi overrides). {@code \\p{Cc}}
+     * rather than {@code \\p{Cntrl}}: the latter is the POSIX class, ASCII-only, so it misses the C1
+     * block — and U+009B is a single-character CSI that xterm-compatible terminals obey in 8-bit
+     * mode, i.e. a complete bypass.
+     */
+    private static final Pattern TERMINAL_UNSAFE = Pattern.compile("[\\p{Cc}\\p{Cf}]");
 
     /**
      * Renders characters a terminal would obey rather than display — escape sequences, carriage
