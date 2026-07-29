@@ -30,6 +30,18 @@ Scope: writing or changing `*.java`. Load when: any touched Java file.
   `DatRomCommand` own process exit codes.
 - **Collections** — prefer Guava immutable collections (`ImmutableList`/`ImmutableSet`/
   `ImmutableMap`) consistent with the codebase for returned/stored data.
+- **No arrays as fields of a value type.** A `record`'s generated `equals`/`hashCode`/
+  `toString` compare an array component **by identity**, so two otherwise-identical values
+  are unequal, hash differently, and print `[B@1f2e3d`. Store the data as an immutable
+  collection instead — `ImmutableList<Byte>` for a byte payload (`Rom.header`) — so the
+  generated methods are correct by construction. Do **not** hand-write
+  `equals`/`hashCode`/`toString` around an array field: that is the same maintenance burden
+  Lombok and records exist to remove, and it silently rots as components are added. Lombok
+  `@Value` classes do generate `Arrays.equals`/`Arrays.hashCode`, so an array field there is
+  not broken, but new value types still use the collection. Arrays remain the right choice
+  for **buffers and parameters** on the scanning/detector hot path (`FileScanner`'s read
+  buffer, `Rule.apply(byte[], …)`) — those are not value components, and boxing them per
+  byte would be paid on every file scanned.
 - **Style** — match the indentation and conventions of the surrounding file. No linter or
   formatter is configured yet (Checkstyle/Spotless are a future addition), so there is no
   auto-fix to lean on — `mvn verify` is the gate.
