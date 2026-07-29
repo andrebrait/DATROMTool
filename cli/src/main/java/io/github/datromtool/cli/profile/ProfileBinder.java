@@ -24,7 +24,10 @@ import picocli.CommandLine;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
+
+import static java.lang.String.format;
 
 /**
  * Applies issue #15's precedence rule (built-in defaults &lt; {@code ~/.DATROMTool/config.yaml}
@@ -53,7 +56,7 @@ public final class ProfileBinder {
             Filter profileFilter) {
         Filter.FilterBuilder builder = profileFilter.toBuilder();
         if (cli == null) {
-            return builder.build();
+            return validated(pr, builder.build());
         }
         Filter cliFilter = cli.toFilter();
         if (pr.hasMatchedOption("--include-regions")) {
@@ -81,8 +84,17 @@ public final class ProfileBinder {
                 || pr.hasMatchedOption("--includes-file")) {
             builder.includes(cliFilter.getIncludes());
         }
-        return builder.build();
+        return validated(pr, builder.build());
     }
+
+    private static Filter validated(CommandLine.ParseResult pr, Filter filter) {
+        rejectBlankEntries(pr, "includeRegions", filter.getIncludeRegions());
+        rejectBlankEntries(pr, "excludeRegions", filter.getExcludeRegions());
+        rejectBlankEntries(pr, "includeLanguages", filter.getIncludeLanguages());
+        rejectBlankEntries(pr, "excludeLanguages", filter.getExcludeLanguages());
+        return filter;
+    }
+
 
     public static PostFilter effectivePostFilter(
             CommandLine.ParseResult pr,
@@ -106,7 +118,7 @@ public final class ProfileBinder {
             SortingPreference profileSort) {
         SortingPreference.SortingPreferenceBuilder builder = profileSort.toBuilder();
         if (cli == null) {
-            return builder.build();
+            return validated(pr, builder.build());
         }
         SortingPreference cliSort = cli.toSortingPreference();
         if (pr.hasMatchedOption("--sort-regions")) {
@@ -143,8 +155,36 @@ public final class ProfileBinder {
         if (pr.hasMatchedOption("--prefer-parents")) {
             builder.preferParents(cliSort.isPreferParents());
         }
-        return builder.build();
+        return validated(pr, builder.build());
     }
+
+    private static SortingPreference validated(
+            CommandLine.ParseResult pr,
+            SortingPreference sortingPreference) {
+        rejectBlankEntries(pr, "regions", sortingPreference.getRegions());
+        rejectBlankEntries(pr, "languages", sortingPreference.getLanguages());
+        return sortingPreference;
+    }
+
+    /**
+     * A profile file binds straight off its YAML/JSON tree, never through the CLI's trimming
+     * converters, so it is the other door onto issue #26's defect: a blank region or language
+     * entry reads as "no restriction" but is a real restriction that no game can satisfy.
+     */
+    private static void rejectBlankEntries(
+            CommandLine.ParseResult pr,
+            String field,
+            Collection<String> values) {
+        if (values.stream().anyMatch(String::isBlank)) {
+            throw new CommandLine.ParameterException(
+                    pr.commandSpec().commandLine(),
+                    format(
+                            "profile field '%s' contains a blank entry: remove it to apply no "
+                                    + "restriction",
+                            field));
+        }
+    }
+
 
     public static List<Path> effectiveInputDirs(
             CommandLine.ParseResult pr,
