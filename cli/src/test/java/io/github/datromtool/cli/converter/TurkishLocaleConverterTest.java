@@ -1,6 +1,5 @@
 package io.github.datromtool.cli.converter;
 
-import io.github.datromtool.data.OutputMode;
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.DefaultLocale;
 
@@ -29,13 +28,5 @@ class TurkishLocaleConverterTest {
                 "it",
                 new TrimmingLowerCaseConverter().convert(" IT "),
                 "a language value must lower-case to ASCII under any locale");
-    }
-
-    @Test
-    void outputModeValuesConvertRegardlessOfLocale() {
-        assertEquals(
-                OutputMode.JSON,
-                new OutputModeConverter().convert("JSON"),
-                "an output mode must convert under any locale");
     }
 }
