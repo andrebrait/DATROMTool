@@ -103,7 +103,7 @@ DATROMTool/
 ├── .agents/   # policy/ + context/ + skills/ + model-tiers.conf + plugins/  (this bootstrap's home)
 ├── .claude/   # Claude adapter: settings.json, hooks/, skills/ (symlinked from .agents/skills/)
 ├── .codex/    # Codex adapter: config.toml, hooks.json, agents/*.toml
-├── scripts/   # Dev tooling: agent/ ops, git hooks setup, token-savior/rtk launchers
+├── scripts/   # Dev tooling: agent ops, git hooks setup, token-savior launchers
 └── .githooks/ # prepare-commit-msg + pre-push (activate via scripts/setup-hooks.sh)
 ```
 
@@ -136,8 +136,6 @@ Vendor-specific surfaces live in each vendor's own adapter, never in this neutra
   that file; **read it at session start** for the canonical-noun → Codex translation table and
   Codex specifics (subagents, attribution, resume, hook/marker surfaces; marker
   `CODEX_THREAD_ID`).
-
-@RTK.md
 
 Respond terse like smart caveman. All technical substance stay. Only fluff die. Drop
 articles/filler/pleasantries/hedging; fragments OK; technical terms exact; code unchanged.

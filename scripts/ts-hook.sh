@@ -4,8 +4,8 @@
 # scripts/mcp-token-savior.sh installs. Pass-through no-op when the venv is absent
 # (first session, before the MCP launcher has installed it).
 # Env (optional): TS_VENV — venv location (default: ${XDG_CACHE_HOME:-$HOME/.cache}/token-savior/venv).
-# Only tool_capture_hook is wired in .claude/settings.json and .codex/hooks.json — the
-# bash rewriter/compactors stay unwired (Bash-output compaction is rtk's job now).
+# Only tool_capture_hook is wired in .claude/settings.json and .codex/hooks.json;
+# the bash rewriter/compactors stay unwired.
 set -eu
 
 py="${TS_VENV:-${XDG_CACHE_HOME:-$HOME/.cache}/token-savior/venv}/bin/python3"
