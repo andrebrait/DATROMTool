@@ -28,29 +28,14 @@
   },
   "permissions": {
     "allow": [
-      "Bash(gh pr merge:*)",
-      "Bash(rtk gh pr merge:*)"
+      "Bash(gh pr merge:*)"
     ],
     "deny": [
       "Bash(git stash)",
-      "Bash(git stash:*)",
-      "Bash(rtk git stash)",
-      "Bash(rtk git stash:*)"
+      "Bash(git stash:*)"
     ]
   },
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "sh \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/rtk-hook.sh\"",
-            "timeout": 2000
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
         "matcher": "Bash|WebFetch|Read|Grep|mcp__token-savior-recall__.*",
@@ -79,10 +64,6 @@
           {
             "type": "command",
             "command": "command -v zstd >/dev/null 2>&1 || python3 -c 'import zstandard' 2>/dev/null || pip3 install -q zstandard >/dev/null 2>&1 || true"
-          },
-          {
-            "type": "command",
-            "command": "sh \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/rtk-install.sh\""
           },
           {
             "type": "command",

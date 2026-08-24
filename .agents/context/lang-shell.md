@@ -1,7 +1,7 @@
 # Shell — language context
 
 Scope: writing or changing POSIX shell in the repo's agent/runtime **tooling** scripts
-(token-savior, rtk, agent-ops, git hooks). Load when: any touched `*.sh` file.
+(token-savior, agent-ops, git hooks). Load when: any touched `*.sh` file.
 
 - POSIX sh only (`#!/bin/sh`); no bash-isms (`[[`, arrays, `$RANDOM`). Quote all expansions.
 - **POSIX-compliant means correct under strict-POSIX SEMANTICS (ash/dash), not merely free of

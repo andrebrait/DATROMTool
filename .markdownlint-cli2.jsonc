@@ -2,12 +2,12 @@
   // markdownlint-cli2 runner config (globs + ignores). Rule set lives in
   // `.markdownlint.jsonc`. Run from the repo root: `npx markdownlint-cli2`
   // (add `--fix` to auto-fix). Lints the repo's own authored docs (AGENTS.md,
-  // CLAUDE.md, RTK.md, .agents/policy/, .agents/context/); skips dependency
+  // CLAUDE.md, .agents/policy/, .agents/context/); skips dependency
   // trees and the VENDORED third-party skill trees. Scoped to the agent-
   // guidance corpus (this is the surface the policy owns); the project's own
   // pre-existing READMEs/module docs are out of scope until someone opts them
   // in by widening these globs.
-  "globs": ["AGENTS.md", "CLAUDE.md", "RTK.md", ".agents/**/*.md"],
+  "globs": ["AGENTS.md", "CLAUDE.md", ".agents/**/*.md"],
   "ignores": [
     "node_modules",
     "**/node_modules/**",

@@ -20,6 +20,6 @@ Codex translates canonical nouns mechanically:
 
 Codex specifics: reviews use `adversarial-reviewer`(-`top`/-`mid`) per `.agents/policy/`;
 `work-branch.sh --worktree` resolves the primary checkout from a Codex session worktree; the
-Codex `SessionStart` hook runs rtk-install + branch-freshness (session-branch-sync);
+Codex `SessionStart` hook runs branch-freshness (session-branch-sync);
 `.codex/config.toml`/`hooks.json`/agents load only after trust; the shared git-hook marker is
 `CODEX_THREAD_ID`; resume via `codex resume` (`--last`, `<session-id-or-name>`).
