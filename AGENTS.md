@@ -124,6 +124,27 @@ one-line status marker `<emoji> ***ID***(***#PR***): ***Title***` (~28 chars; �
 🏗️ implementing · 🤔 investigating · 🛠️ fixing · 👀 awaiting review · ⏳ awaiting CI ·
 🏁 merged/cleanup); omit on plain conversational turns.
 
+## Code Review Rules
+
+Every review bot (Codex reads this section natively) applies these rules to a pull request:
+
+- **Do not review:** `**/*.md`, `.agents/**`, `.claude/**`, `.codex/**`, `test-data/**`
+  fixtures, and generated output (`target/**`, `graphify-out/**`, `.codegraph/**`).
+- **Read docs on demand only:** open `.agents/policy/coding.md`,
+  `.agents/context/lang-<java|shell>.md`, or `.agents/policy/testing.md` only when a
+  changed line needs that convention; never comment on documentation outside the diff.
+- **Focus** on module sources and tests (`domain/`, `core/`, `cli/`, `logging/`), `pom.xml`,
+  `scripts/`, `.githooks/`, and CI (`.github/workflows/**`):
+  - **Correctness:** unhandled edge cases, null/type errors, off-by-one errors, races,
+    resource leaks, and broken control flow.
+  - **Security:** hostile DAT/archive input, path traversal (including archive entry
+    names), command injection, and unchecked I/O failures.
+  - **Test integrity:** tests assert observable behavior and fail on regression; flag
+    coverage theater and vacuous assertions.
+  - **Repository invariants:** flag a behavior change without its tests and non-POSIX
+    shell in `scripts/` or `.githooks/`.
+  - **Noise:** do not flag formatting, whitespace, import order, or style choices.
+
 ## Vendor adapters
 
 Vendor-specific surfaces live in each vendor's own adapter, never in this neutral file:

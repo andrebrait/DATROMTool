@@ -201,6 +201,25 @@ never append `[bot]` yourself):
   FINISHED / QUOTA / NOTPRESENT / TIMEOUT. For a human handle the first new review
   or comment since the wait started is FINISHED.
 
+### Codex (on request, advisory)
+
+Codex code review (ChatGPT Codex Connector, login `chatgpt-codex-connector`) is a second
+on-request review bot. It applies `AGENTS.md` § "Code Review Rules" and tags findings P0–P2.
+
+- **Available** only once this repository shows a Codex review or reaction, or the owner
+  confirms it in conversation. Otherwise skip it and say so in the audit comment.
+- **Same floors as CodeRabbit:** advisory, never gates a merge, never replaces the
+  adversarial review. Codex settings keep **Automatic review** off; reviews spend the
+  owner's ChatGPT quota.
+- **Ask once, at the top of the review step** (alongside the three sources above): one
+  top-level comment holding the live handle plus `review`. Write the handle broken
+  (`@ codex`) everywhere else: any other live mention starts a Codex cloud task.
+- **Wait** with `wait-reviewer.sh --handle chatgpt-codex-connector --until finished
+  --since <now>`. FINISHED means any new bot comment, so read it: a usage-limit notice is
+  not a review. Record Codex unavailable for that head and do not re-ask. NOTPRESENT or
+  TIMEOUT → unavailable; the adversarial review carries the review step.
+- Triage its findings like any other source (below). Never ask Codex to fix them.
+
 ### Finding intake — enumerate everything
 
 Reconcile the branch first: fetch and **fast-forward** the local head to the remote
