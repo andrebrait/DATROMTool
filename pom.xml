@@ -42,7 +42,7 @@
         <picocli.version>4.7.7</picocli.version>
         <slf4j-api.version>2.0.18</slf4j-api.version>
         <logback.version>1.6.0</logback.version>
-        <guava.version>33.6.0-jre</guava.version>
+        <guava.version>33.7.1-jre</guava.version>
         <jackson.version>3.2.1</jackson.version>
         <xz.version>1.12</xz.version>
         <junrar.version>8.0.0</junrar.version>
